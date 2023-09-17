@@ -33,18 +33,6 @@ abstract class EnhancedOpMode: LinearOpMode ()
         }
     }
 
-    protected open fun runBlocking(a: Action) {
-        val c = Canvas()
-        a.preview(c)
-        var b = true
-        while (b && !isStopRequested) {
-            val p = TelemetryPacket()
-            p.fieldOverlay().operations.addAll(c.operations)
-            b = a.run(p)
-            dash.sendTelemetryPacket(p)
-        }
-    }
-
     private fun printError()
     {
         telemetry.addData("Coroutine Error", error)

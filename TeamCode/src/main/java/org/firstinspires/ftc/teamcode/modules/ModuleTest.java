@@ -5,19 +5,17 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Actions;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 
 public class ModuleTest extends Module
 {
     DcMotorEx motor;
-    double currentMotorPower;
+    public double currentMotorPower;
 
     public enum State implements ModuleState
     {
@@ -29,14 +27,19 @@ public class ModuleTest extends Module
         {
             power=pow;
         }
+
+        @Override
+        public double getOutput(int... index)
+        {
+            return power;
+        }
     }
 
     State state;
 
-    public ModuleTest(HardwareMap hardwareMap, Telemetry tel)
+    public ModuleTest(HardwareMap hardwareMap)
     {
-        super(hardwareMap, tel, false);
-
+        super(true);
         motor=hardwareMap.get(DcMotorEx.class, "motor");
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
@@ -50,7 +53,7 @@ public class ModuleTest extends Module
     @Override
     protected void internalUpdate()
     {
-        currentMotorPower=state.power;
+        currentMotorPower=getState().getOutput();
     }
 
     @Override
@@ -60,10 +63,11 @@ public class ModuleTest extends Module
         setInternalStates(state);
     }
 
+
     @Override
     protected void updateInternalStatus()
     {
-        if((currentTimeout>0&&timer.milliseconds()>currentTimeout)||state==State.OFF)
+        if(getState()==State.OFF||(currentTimeout>0&&timer.milliseconds()>currentTimeout))
         {
             status=Status.IDLE;
         }
@@ -84,11 +88,11 @@ public class ModuleTest extends Module
 
     public class runFor implements Action
     {
-        int seconds;
-        public runFor(State state, int seconds)
+        int miliseconds;
+        public runFor(State state, int miliseconds)
         {
-            this.seconds=seconds;
-            setState(state, seconds);
+            this.miliseconds=miliseconds;
+            setState(state, miliseconds);
         }
 
         @Override
@@ -103,11 +107,11 @@ public class ModuleTest extends Module
             if(!isBusy())
             {
                 setState(State.OFF);
-                return true;
+                return false;
             }
             else
             {
-                return false;
+                return true;
             }
         }
     }

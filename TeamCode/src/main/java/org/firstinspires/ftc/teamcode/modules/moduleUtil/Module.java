@@ -1,19 +1,18 @@
 package org.firstinspires.ftc.teamcode.modules.moduleUtil;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.Context;
 
 public abstract class Module
 {
     //Is an array for the modules that have multiple states to them
     private ModuleState[] states;
-    private HardwareMap hardwareMap;
     boolean constantUpdate;
     boolean stateChanged;
 
-    Telemetry tel;
+    public String telIdentifier;
+
     protected ElapsedTime timer;
     protected int currentTimeout;
 
@@ -26,13 +25,12 @@ public abstract class Module
 
     //constructor. gives module all information to do tasks. constantUpdate is used for modules with PID
     // or some other controller that needs constant updating
-    public Module(HardwareMap hardwareMap, Telemetry tel, boolean constantUpdate)
+    public Module(boolean constantUpdate)
     {
         this.constantUpdate=constantUpdate;
-        this.hardwareMap=hardwareMap;
-        this.tel=tel;
         timer=new ElapsedTime();
         initInternalStates();
+        telIdentifier=this.getClass().toString().substring(this.getClass().toString().lastIndexOf('.')+1);
     }
 
     //needed to store states of a module within this class(array to store if same class has multiple states.
@@ -110,6 +108,7 @@ public abstract class Module
         internalUpdate();
     }
 
+
     //way to call update loop from opMode
     public void updateLoop()
     {
@@ -151,13 +150,16 @@ public abstract class Module
     //prints telemetry stuff. can rewrite implementation for it(if you want less or more info)
     protected void telemetryUpdate()
     {
-        tel.addData(this.getClass()+": time spent in state", timeSpentInState());
-        tel.addData(this.getClass()+" status", status);
+
+        Context.tel.addData(telIdentifier+": time spent in state", timeSpentInState());
+        Context.tel.addData(telIdentifier+" status", status);
         for(ModuleState s: states)
         {
-            tel.addData(this.getClass()+": "+ s.getClass()+" state", s);
+            Context.tel.addData(telIdentifier+": "+ s.getClass()+" state", s);
         }
     }
+
+
 
     //write implementation for updating internally(setting powers to something)
     protected abstract void internalUpdate();

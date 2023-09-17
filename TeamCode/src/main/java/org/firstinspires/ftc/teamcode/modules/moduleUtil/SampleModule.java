@@ -9,11 +9,21 @@ public class SampleModule extends Module
     public enum State1 implements ModuleState
     {
         HI, BYE;
+
+        @Override
+        public double getOutput(int... index) {
+            return 0;
+        }
     }
 
     public enum State2 implements ModuleState
     {
         HELLO, GOODBYE;
+
+        @Override
+        public double getOutput(int... index) {
+            return 0;
+        }
     }
 
     State1 state1=State1.BYE;
@@ -21,7 +31,7 @@ public class SampleModule extends Module
 
     public SampleModule(HardwareMap hardwareMap, Telemetry tel)
     {
-        super(hardwareMap, tel, true);
+        super(true);
     }
 
     @Override

@@ -40,6 +40,12 @@ public class TaskListBuilder
         return this;
     }
 
+    public TaskListBuilder moduleAction(Module m, ModuleState s, int timeout)
+    {
+        tasks.add(new ExecutionTask(()->m.setState(s, timeout)));
+        return this;
+    }
+
     public TaskListBuilder await(Callable<Boolean> runCondition)
     {
         tasks.add(new AwaitTask(runCondition));

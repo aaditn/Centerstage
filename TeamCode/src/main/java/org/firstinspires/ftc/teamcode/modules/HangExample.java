@@ -21,6 +21,12 @@ public class HangExample extends Module
         {
             this.power=power;
         }
+
+        @Override
+        public double getOutput(int... index)
+        {
+            return power;
+        }
     }
 
     double currentPower;
@@ -29,19 +35,19 @@ public class HangExample extends Module
 
     public HangExample(HardwareMap hardwareMap, Telemetry tel)
     {
-        super(hardwareMap, tel, false);
+        super(false);
         h1=hardwareMap.get(DcMotorEx.class, "h1");
         h2=hardwareMap.get(DcMotorEx.class, "h2");
 
         h1.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
+
     @Override
     protected void write()
     {
         h1.setPower(currentPower);
         h2.setPower(currentPower);
-
     }
 
     @Override

@@ -5,16 +5,19 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.SampleModule;
+import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskList;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
+import java.util.List;
+
 public class TestOpMode extends EnhancedOpMode
 {
     SampleModule m;
     TaskListBuilder builder;
-    TaskList testTaskList;
+    List<Task> testTaskList;
     TaskScheduler scheduler;
 
     Robot r;

@@ -9,12 +9,19 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.modules.ModuleTest;
+import org.firstinspires.ftc.teamcode.task_scheduler.AwaitTask;
+import org.firstinspires.ftc.teamcode.task_scheduler.DelayTask;
+import org.firstinspires.ftc.teamcode.task_scheduler.ExecutionTask;
+import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskList;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.OneCallAction;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @TeleOp
@@ -24,15 +31,14 @@ public class TestOpMode3 extends EnhancedOpMode
     boolean help=false;
 
     TaskListBuilder builder;
-    TaskList testTaskList;
+    List<Task> testTaskList;
+
+    List<Task> taskList;
     TaskScheduler scheduler;
 
     @Override
     public void linearOpMode()
     {
-
-        waitForStart();
-
         testTaskList=builder.createNew()
                 //.moduleAction(test, ModuleTest.State.FWD)
                 .executeCode(()->test.setState(ModuleTest.State.FWD))
@@ -47,7 +53,9 @@ public class TestOpMode3 extends EnhancedOpMode
                 .executeCode(()->help=true)
                 .build();
 
-        scheduler.scheduleTaskList(testTaskList);
+        waitForStart();
+
+        scheduler.scheduleTaskList(taskList);
 
 
 
@@ -63,7 +71,6 @@ public class TestOpMode3 extends EnhancedOpMode
 
         scheduler=new TaskScheduler();
         builder=new TaskListBuilder(this);
-
     }
 
     @Override
@@ -71,6 +78,7 @@ public class TestOpMode3 extends EnhancedOpMode
     {
         test.updateLoop();
         Context.tel.addData("help", help);
+        Context.tel.addData("task list size", testTaskList.size());
         Context.tel.update();
     }
 
@@ -81,6 +89,7 @@ public class TestOpMode3 extends EnhancedOpMode
         test.writeLoop();
         Context.tel.addData("help", help);
         Context.tel.addData("motor power", test.currentMotorPower);
+        Context.tel.addData("task list size", testTaskList.size());
         Context.tel.update();
     }
 }

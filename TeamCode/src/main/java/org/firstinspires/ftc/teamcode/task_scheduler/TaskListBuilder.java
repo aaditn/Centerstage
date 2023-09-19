@@ -70,10 +70,9 @@ public class TaskListBuilder
         return this;
     }
 
-    public TaskList build()
+    public List<Task> build()
     {
-        TaskList taskList=new TaskList(tasks);
-        tasks.clear();
-        return taskList;
+        //tasks.clear();
+        return tasks;
     }
 }

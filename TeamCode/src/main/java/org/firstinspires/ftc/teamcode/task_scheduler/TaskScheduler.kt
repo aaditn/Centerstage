@@ -19,11 +19,11 @@ class TaskScheduler
     fun scheduleTaskList(t: List<Task>): Unit
     {
         val taskList: List<Task> = t
-        GlobalScope.launch(Dispatchers.Default)
+        GlobalScope.launch(Dispatchers.IO)
         {
             for(task in taskList)
             {
-                val job = GlobalScope.launch(Dispatchers.Default){task.execute()}
+                val job = async(Dispatchers.Default){task.execute()}
                 if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java)
                 {
                     job.join()

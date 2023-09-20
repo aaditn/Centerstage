@@ -88,11 +88,11 @@ public class ModuleTest extends Module
 
     public class runFor implements Action
     {
-        int miliseconds;
         public runFor(State state, int miliseconds)
         {
-            this.miliseconds=miliseconds;
             setState(state, miliseconds);
+            updateLoop();
+            writeLoop();
         }
 
         @Override
@@ -104,9 +104,12 @@ public class ModuleTest extends Module
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket)
         {
+            updateLoop();
+
             if(!isBusy())
             {
                 setState(State.OFF);
+                writeLoop();
                 return false;
             }
             else

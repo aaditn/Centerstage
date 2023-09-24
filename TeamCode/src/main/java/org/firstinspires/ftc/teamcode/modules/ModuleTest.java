@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -76,47 +75,4 @@ public class ModuleTest extends Module
             status=Status.TRANSITIONING;
         }
     }
-
-
-    //Actions here
-
-
-    public Action runFor(State state, int miliseconds)
-    {
-        return new runFor(state, miliseconds);
-    }
-
-    public class runFor implements Action
-    {
-        public runFor(State state, int miliseconds)
-        {
-            setState(state, miliseconds);
-            updateLoop();
-            writeLoop();
-        }
-
-        @Override
-        public void preview(@NonNull Canvas canvas)
-        {
-
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket)
-        {
-            updateLoop();
-
-            if(!isBusy())
-            {
-                setState(State.OFF);
-                writeLoop();
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-    }
-
 }

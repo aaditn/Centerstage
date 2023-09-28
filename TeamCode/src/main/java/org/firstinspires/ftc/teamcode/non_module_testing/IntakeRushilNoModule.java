@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class IntakeRushilNoModule extends LinearOpMode {
 // s1: 0.20, 0.6
 // s2: 0.34, 0.67
+
     public static double s1Up = 0.3;
     public static double s1Mid = 0.46;
     public static double s1down = 0.59;
@@ -23,6 +24,15 @@ public class IntakeRushilNoModule extends LinearOpMode {
     public static double s2Up = 0.67;
     public static double s2Mid = 0.46;
     public static double s2down = 0.25;
+
+//    public static double s1Up = 0.6;
+//    public static double s1down = 0.20;
+//
+//    public static double s1Mid = 0.4;
+//    public static double s2Up = 0.4;
+//
+//    public static double s2Mid = 0.5;
+//    public static double s2down = 0.63;
 
     @Override
     public void runOpMode() throws InterruptedException {

@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.task_scheduler;
 
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +20,17 @@ public class TaskListBuilder
     ModuleState lastModuleStateCalled;
     LinearOpMode l;
 
+    SampleMecanumDrive drive;
+
     public TaskListBuilder(LinearOpMode l)
     {
         this.l=l;
+    }
+
+    public TaskListBuilder(LinearOpMode l, SampleMecanumDrive drive)
+    {
+        this.l=l;
+        this.drive=drive;
     }
 
     public TaskListBuilder createNew()
@@ -37,12 +48,17 @@ public class TaskListBuilder
     public TaskListBuilder moduleAction(Module m, ModuleState s)
     {
         tasks.add(new ExecutionTask(()->m.setState(s)));
+        lastModuleCalled=m;
+        lastModuleStateCalled=s;
         return this;
     }
 
     public TaskListBuilder moduleAction(Module m, ModuleState s, int timeout)
     {
+
         tasks.add(new ExecutionTask(()->m.setState(s, timeout)));
+        lastModuleCalled=m;
+        lastModuleStateCalled=s;
         return this;
     }
 
@@ -54,7 +70,7 @@ public class TaskListBuilder
 
     public TaskListBuilder awaitPreviousModuleActionCompletion()
     {
-        tasks.add(new AwaitTask(()->!lastModuleCalled.isBusy()&&lastModuleCalled.getState()==lastModuleStateCalled));
+        tasks.add(new AwaitTask(()->!lastModuleCalled.isBusy()/*&&lastModuleCalled.getState()==lastModuleStateCalled*/));
         return this;
     }
 
@@ -70,9 +86,43 @@ public class TaskListBuilder
         return this;
     }
 
+    public TaskListBuilder executeBlockingCode(codeExecutable code)
+    {
+        tasks.add(new BlockingTask(code));
+        return this;
+    }
+
+    public TaskListBuilder driveTrajAsync(TrajectorySequence sequence)
+    {
+        tasks.add(new ExecutionTask(()->drive.followTrajectorySequenceAsync(sequence)));
+        return this;
+    }
+
+    public TaskListBuilder awaitDrivetrainCompletion()
+    {
+        tasks.add(new AwaitTask(()->!drive.isBusy()));
+        return this;
+    }
+
+    public TaskListBuilder addTaskList(List<Task> task)
+    {
+        for(Task t: task)
+        {
+            tasks.add(t);
+        }
+        return this;
+    }
+
+    public TaskListBuilder addTask(Task t)
+    {
+        tasks.add(t);
+        return this;
+    }
+
     public List<Task> build()
     {
         //tasks.clear();
         return tasks;
     }
+
 }

@@ -4,60 +4,129 @@ package org.firstinspires.ftc.teamcode.non_module_testing;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 @Config
 public class IntakeJarrettNoModule extends LinearOpMode {
 // s1: 0.20, 0.6
 // s2: 0.34, 0.67
-    public static double s1down = 0.6;
-    public static double s1Mid = 0.37;
-    public static double s1Up = 0;
 
-
-    public static double s2down = 0.34;
-    public static double s2Mid = 0.5;
-    public static double s2Up = 0.67;
-
+    public static double se5 = 0.18;
+    public static double se4 = 0.16;
+    public static double se3 = 0.13;
+    public static double se2 = 0.09;
+    public static double se1 = 0.06;
+    public static double se0 = 0.03;
+    int state = 0;
+    boolean intake = false;
+    DcMotorEx lb, lf, rb, rf;
+    IMU imu;
     @Override
     public void runOpMode() throws InterruptedException {
-
+boolean stater = false;
         DcMotorEx intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         Servo s1 = hardwareMap.get(Servo.class, "s1");
         Servo s2 = hardwareMap.get(Servo.class, "s2");
-
+s1.setDirection(Servo.Direction.REVERSE);
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
         TelemetryPacket packet = new TelemetryPacket();
+        lb = hardwareMap.get(DcMotorEx.class, "lb");
+        lf = hardwareMap.get(DcMotorEx.class, "lf");
+        rb = hardwareMap.get(DcMotorEx.class, "rb");
+        rf = hardwareMap.get(DcMotorEx.class, "rf");
+
+        lb.setDirection(DcMotorSimple.Direction.REVERSE);
+        lf.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        imu = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+        imu.initialize(parameters);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            intakeMotor.setPower(gamepad1.right_trigger);
-            if (gamepad1.a) {
-                s1.setPosition(s1Up);
-                s2.setPosition(s2Up);
+            double y = -gamepad1.left_stick_y/1.2;
+            double x = gamepad1.left_stick_x/1.2;
+            double rx = gamepad1.right_stick_x/1.5;
+
+            lf.setPower(y + x + rx);
+            lb.setPower(y - x + rx);
+            rf.setPower(y - x - rx);
+            rb.setPower(y + x - rx);
+            if(stater&&!gamepad1.a&&!gamepad1.b&&(gamepad1.right_trigger<0.2)) {
+                stater=false;
             }
-            if (gamepad1.y) {
-                s1.setPosition(s1Mid);
-                s2.setPosition(s2Mid);
+            else if(stater){
+
             }
-            if (gamepad1.b) {
-                s1.setPosition(s1down);
-                s2.setPosition(s2down);
+            else if(gamepad1.a){
+                state++;
+                stater=true;
+            }
+            else if(gamepad1.b){
+                state--;
+                stater=true;
+            }
+            else if(gamepad1.right_trigger>0&&intake){
+                intake=false;
+                stater=true;
+            }
+            else if(gamepad1.right_trigger>0.2){
+                intake=true;
+                stater=true;
             }
 
-            packet.put("s1 pos", s1Mid);
-            packet.put("s2 pos", s2Mid);
-            packet.put("s1 pos", s1down);
-            packet.put("s2 pos", s2down);
-            packet.put("s1 pos", s1Up);
-            packet.put("s2 pos", s2Up);
+
+            if(intake){
+                intakeMotor.setPower(1);
+            }
+            else{
+                intakeMotor.setPower(0);
+            }
+
+
+          if(state == 0){
+              s1.setPosition(se0);
+              s2.setPosition(se0);
+          }
+          else if(state==1){
+
+              s1.setPosition(se1);
+              s2.setPosition(se1);
+          }
+          else if(state==2){
+
+              s1.setPosition(se2);
+              s2.setPosition(se2);
+          }
+          else if(state==3){
+
+              s1.setPosition(se3);
+              s2.setPosition(se3);
+          }
+          else if(state==4){
+
+              s1.setPosition(se4);
+              s2.setPosition(se4);
+          }
+          else if(state==5){
+
+              s1.setPosition(se5);
+              s2.setPosition(se5);
+          }
+telemetry.addData("state",state);
+          telemetry.update();
             dashboard.sendTelemetryPacket(packet);
         }
 

@@ -5,7 +5,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.modules.ModuleTest;
-import org.firstinspires.ftc.teamcode.roadrunner.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
@@ -24,7 +23,6 @@ public class TestOpMode3 extends EnhancedOpMode
     TaskListBuilder builder;
     List<Task> testTaskList;
 
-    MecanumDrive drive;
 
     TaskScheduler scheduler;
 
@@ -41,8 +39,8 @@ public class TestOpMode3 extends EnhancedOpMode
                 .moduleAction(test, ModuleTest.State.FWD, 1000)
                 //.executeCode(()->test.setState(ModuleTest.State.FWD, 1000))
                 //.await(()->!test.isBusy())
-                //.awaitPreviousModuleActionCompletion()
-                .await(()->!test.isBusy())
+                .awaitPreviousModuleActionCompletion()
+                //.await(()->!test.isBusy())
                 .moduleAction(test, ModuleTest.State.OFF)
                 .executeCode(()->help=true)
                 .build();

@@ -19,7 +19,7 @@ class TaskScheduler
     fun scheduleTaskList(t: List<Task>): Unit
     {
         val taskList: List<Task> = t
-        GlobalScope.launch(Dispatchers.IO)
+        GlobalScope.launch(Dispatchers.Default)
         {
             for(task in taskList)
             {

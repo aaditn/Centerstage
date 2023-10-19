@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -18,6 +19,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class IntakeJarrettNoModule extends LinearOpMode {
 // s1: 0.20, 0.6
 // s2: 0.34, 0.67
+public int liftPos = 0;
+
 
     public static double se5 = 0.18;
     public static double se4 = 0.16;
@@ -42,6 +45,14 @@ public class IntakeJarrettNoModule extends LinearOpMode {
     IMU imu;
     @Override
     public void runOpMode() throws InterruptedException {
+
+        DcMotor left = hardwareMap.get(DcMotor.class, "leftSlides");
+        DcMotor right = hardwareMap.get(DcMotor.class, "rightSlides");
+        left.setDirection(DcMotorSimple.Direction.REVERSE);
+        left.setTargetPosition(liftPos);
+        right.setTargetPosition(liftPos);
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 boolean stater = false;
         DcMotorEx intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         Servo s1 = hardwareMap.get(Servo.class, "s1");
@@ -123,11 +134,22 @@ s1.setDirection(Servo.Direction.REVERSE);
             }
 
             if(gamepad1.dpad_up){
+                liftPos += 1;
+            }
+            if(gamepad1.dpad_down){
+                liftPos -= 1;
+            }
+
+            left.setTargetPosition(liftPos);
+            right.setTargetPosition(liftPos);
+            left.setPower(0.1);
+            right.setPower(0.1);
+/*            if(gamepad1.dpad_up){
                 p.setPosition(depositSinglePusher);
             }
             if(gamepad1.dpad_down){
                 p.setPosition(depositDoublePusher);
-            }
+            }*/
           if(state == 0){
               s1.setPosition(se0);
               s2.setPosition(se0);

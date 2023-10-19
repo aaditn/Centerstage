@@ -25,9 +25,20 @@ public class IntakeJarrettNoModule extends LinearOpMode {
     public static double se2 = 0.09;
     public static double se1 = 0.06;
     public static double se0 = 0.03;
+    public static double intakePos = 1;
+    public static double depositPos =.35;
+    public static double intakePos1 = 0.43;
+    public static double depositPos1 =.43;
+    public static double intakePusher = 0;
+
+    public static double depositSinglePusher = .1;
+
+    public static double depositDoublePusher = .2;
+
     int state = 0;
     boolean intake = false;
     DcMotorEx lb, lf, rb, rf;
+    Servo rl,rr,r,p;
     IMU imu;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -35,6 +46,10 @@ boolean stater = false;
         DcMotorEx intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         Servo s1 = hardwareMap.get(Servo.class, "s1");
         Servo s2 = hardwareMap.get(Servo.class, "s2");
+        Servo rl = hardwareMap.get(Servo.class, "depositLeft");
+        Servo rr = hardwareMap.get(Servo.class, "depositRight");
+        Servo r = hardwareMap.get(Servo.class, "depositRotation");
+        Servo p = hardwareMap.get(Servo.class, "depositPusher");
 s1.setDirection(Servo.Direction.REVERSE);
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -46,6 +61,7 @@ s1.setDirection(Servo.Direction.REVERSE);
 
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
+        rl.setDirection(Servo.Direction.REVERSE);
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -89,13 +105,29 @@ s1.setDirection(Servo.Direction.REVERSE);
 
 
             if(intake){
-                intakeMotor.setPower(1);
+                intakeMotor.setPower(-1);
             }
             else{
                 intakeMotor.setPower(0);
             }
+            if(gamepad1.x){
+                rl.setPosition(intakePos);
+                rr.setPosition(intakePos);
+                r.setPosition(intakePos1);
+                p.setPosition(intakePusher);
+            }
+            else if(gamepad1.y){
+                rl.setPosition(depositPos);
+                rr.setPosition(depositPos);
+                r.setPosition(depositPos1);
+            }
 
-
+            if(gamepad1.dpad_up){
+                p.setPosition(depositSinglePusher);
+            }
+            if(gamepad1.dpad_down){
+                p.setPosition(depositDoublePusher);
+            }
           if(state == 0){
               s1.setPosition(se0);
               s2.setPosition(se0);

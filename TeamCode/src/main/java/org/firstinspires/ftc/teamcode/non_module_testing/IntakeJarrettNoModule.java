@@ -28,15 +28,15 @@ public int liftPos = 0;
     public static double se2 = 0.09;
     public static double se1 = 0.06;
     public static double se0 = 0.03;
-    public static double intakePos = 1;
-    public static double depositPos =.35;
+    public static double intakePos = .95 ;
+    public static double depositPos =0;
     public static double intakePos1 = 0.43;
-    public static double depositPos1 =.43;
-    public static double intakePusher = 0;
+    public static double depositPos1 =0.15;
+    public static double intakePusher = 0.1;
 
-    public static double depositSinglePusher = .1;
+    public static double depositSinglePusher = 0.27;
 
-    public static double depositDoublePusher = .2;
+    public static double depositDoublePusher = 0.30;
 
     int state = 0;
     boolean intake = false;
@@ -48,6 +48,8 @@ public int liftPos = 0;
 
         DcMotor left = hardwareMap.get(DcMotor.class, "leftSlides");
         DcMotor right = hardwareMap.get(DcMotor.class, "rightSlides");
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setDirection(DcMotorSimple.Direction.REVERSE);
         left.setTargetPosition(liftPos);
         right.setTargetPosition(liftPos);
@@ -83,8 +85,8 @@ s1.setDirection(Servo.Direction.REVERSE);
         waitForStart();
 
         while (opModeIsActive()) {
-            double y = -gamepad1.left_stick_y/1.2;
-            double x = gamepad1.left_stick_x/1.2;
+            double x = -gamepad1.left_stick_y/1.2;
+            double y = -gamepad1.left_stick_x/1.2;
             double rx = gamepad1.right_stick_x/1.5;
 
             lf.setPower(y + x + rx);
@@ -133,23 +135,25 @@ s1.setDirection(Servo.Direction.REVERSE);
                 r.setPosition(depositPos1);
             }
 
-            if(gamepad1.dpad_up){
-                liftPos += 1;
+            if(gamepad1.left_bumper){
+
+                p.setPosition(depositSinglePusher);
             }
-            if(gamepad1.dpad_down){
-                liftPos -= 1;
+            if(gamepad1.right_bumper){
+                p.setPosition(depositDoublePusher);
+
             }
 
             left.setTargetPosition(liftPos);
             right.setTargetPosition(liftPos);
-            left.setPower(0.1);
-            right.setPower(0.1);
-/*            if(gamepad1.dpad_up){
-                p.setPosition(depositSinglePusher);
+            left.setPower(1);
+            right.setPower(1);
+            if(gamepad1.dpad_up&&liftPos<1400){
+                liftPos+=5;
             }
             if(gamepad1.dpad_down){
-                p.setPosition(depositDoublePusher);
-            }*/
+                liftPos=0;
+            }
           if(state == 0){
               s1.setPosition(se0);
               s2.setPosition(se0);

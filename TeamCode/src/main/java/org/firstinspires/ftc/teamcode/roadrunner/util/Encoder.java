@@ -66,7 +66,7 @@ public class Encoder {
         return direction;
     }
 
-    private int getMultiplier() {
+    public int getMultiplier() {
         return getDirection().getMultiplier() * (motor.getDirection() == DcMotorSimple.Direction.FORWARD ? 1 : -1);
     }
 

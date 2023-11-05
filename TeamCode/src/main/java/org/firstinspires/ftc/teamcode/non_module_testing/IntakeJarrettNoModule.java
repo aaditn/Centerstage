@@ -46,8 +46,8 @@ public int liftPos = 0;
     @Override
     public void runOpMode() throws InterruptedException {
 
-        DcMotor left = hardwareMap.get(DcMotor.class, "leftSlides");
-        DcMotor right = hardwareMap.get(DcMotor.class, "rightSlides");
+        DcMotor left = hardwareMap.get(DcMotor.class, "slides1");
+        DcMotor right = hardwareMap.get(DcMotor.class, "slides2");
         left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -56,7 +56,7 @@ public int liftPos = 0;
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 boolean stater = false;
-        DcMotorEx intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
+        DcMotorEx intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
         Servo s1 = hardwareMap.get(Servo.class, "s1");
         Servo s2 = hardwareMap.get(Servo.class, "s2");
         Servo rl = hardwareMap.get(Servo.class, "depositLeft");
@@ -67,10 +67,10 @@ s1.setDirection(Servo.Direction.REVERSE);
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
         TelemetryPacket packet = new TelemetryPacket();
-        lb = hardwareMap.get(DcMotorEx.class, "lb");
-        lf = hardwareMap.get(DcMotorEx.class, "lf");
-        rb = hardwareMap.get(DcMotorEx.class, "rb");
-        rf = hardwareMap.get(DcMotorEx.class, "rf");
+        lb = hardwareMap.get(DcMotorEx.class, "bl");
+        lf = hardwareMap.get(DcMotorEx.class, "fl");
+        rb = hardwareMap.get(DcMotorEx.class, "br");
+        rf = hardwareMap.get(DcMotorEx.class, "fr");
 
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);

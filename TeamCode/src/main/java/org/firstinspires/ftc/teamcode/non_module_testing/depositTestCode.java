@@ -11,9 +11,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class depositTestCode extends LinearOpMode {
     Servo pinion;
-    public static double reset = 0;
-    public static double first = .2;
-    public static double second = .4;
+    public static double reset = 0.1;
+    public static double first = .22;
+    public static double second = .26;
     public void runOpMode() {
         pinion = hardwareMap.get(Servo.class, "pinion");
 

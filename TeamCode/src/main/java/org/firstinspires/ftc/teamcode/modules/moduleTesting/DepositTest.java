@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.modules.moduleTesting;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-
+@TeleOp
 public class DepositTest extends EnhancedOpMode
 {
     Deposit d;
@@ -39,7 +41,7 @@ public class DepositTest extends EnhancedOpMode
         }
         if(gamepad1.y)
         {
-            d.setState(Deposit.PusherState.OUT);
+            d.setState(Deposit.PusherState.TWO);
         }
     }
 }

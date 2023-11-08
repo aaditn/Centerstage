@@ -15,10 +15,11 @@ import java.util.List;
 public class IntakeTest extends EnhancedOpMode
 {
     Intake intake;
+
+    Deposit deposit;
     TaskListBuilder builder;
     List<Task> testTaskList;
     TaskScheduler scheduler;
-    Robot r;
 
     @Override
     public void linearOpMode()
@@ -28,28 +29,30 @@ public class IntakeTest extends EnhancedOpMode
         ButtonReader A=new ButtonReader(primary, GamepadKeys.Button.A);
         scheduler=new TaskScheduler();
 
-        testTaskList=builder.createNew()
+        waitForStart();
+        while(opModeIsActive()){}
+        /*testTaskList=builder.createNew()
                 .await(()->opModeIsActive())
-                .moduleAction(intake, Intake.State.MOTOR_ON)
+                .moduleAction(intake, Intake.powerState.MOTOR_ON)
                 .await(()->!intake.isBusy())
                 .delay(1000)
-                .moduleAction(intake, Intake.State.MOTOR_OFF)
+                .moduleAction(intake, Intake.powerState.MOTOR_OFF)
                 .awaitButtonPress(B)
-                .moduleAction(intake, Intake.State.ANGLE_HIGH)
-                .moduleAction(intake, Intake.State.MOTOR_ON)
+                .moduleAction(intake, Intake.powerState.ANGLE_HIGH)
+                .moduleAction(intake, Intake.powerState.MOTOR_ON)
                 .awaitButtonPress(A)
-                .moduleAction(intake, Intake.State.ANGLE_HIGH)
-                .moduleAction(intake, Intake.State.ANGLE_HIGH)
+                .moduleAction(intake, Intake.powerState.ANGLE_HIGH)
+                .moduleAction(intake, Intake.powerState.ANGLE_HIGH)
                 .delay(1000)
-                .moduleAction(intake, Intake.State.ANGLE_LOW)
-                .moduleAction(intake, Intake.State.ANGLE_LOW)
+                .moduleAction(intake, Intake.powerState.ANGLE_LOW)
+                .moduleAction(intake, Intake.powerState.ANGLE_LOW)
                 .delay(100)
                 .executeCode(
                         ()->scheduler.scheduleTaskList(testTaskList)
                 )
                 .build();
 
-        scheduler.scheduleTaskList(testTaskList);
+        scheduler.scheduleTaskList(testTaskList);*/
     }
 
     @Override
@@ -57,13 +60,19 @@ public class IntakeTest extends EnhancedOpMode
     {
         this.setLoopTimes(10);
         builder=new TaskListBuilder(this);
-        r=new Robot(this);
+        deposit=new Deposit(hardwareMap);
+        intake=new Intake(hardwareMap);
+
+
     }
 
     @Override
     public void initLoop()
     {
-        r.initLoop();
+        intake.updateLoop();
+        deposit.updateLoop();
+        intake.writeLoop();
+        deposit.writeLoop();
     }
 
     public void onStart()
@@ -74,12 +83,48 @@ public class IntakeTest extends EnhancedOpMode
     @Override
     public void primaryLoop()
     {
-        r.primaryLoop();
+        intake.updateLoop();
+        deposit.updateLoop();
+        intake.writeLoop();
+        deposit.writeLoop();
+
+        if(gamepad1.a)
+        {
+            intake.setState(Intake.positionState.TELE);
+        }
+        else if(gamepad1.b)
+        {
+            intake.setState(Intake.positionState.HIGH);
+        }
+        else if(gamepad1.x)
+        {
+            intake.setState(Intake.powerState.INTAKE);
+        }
+        else if(gamepad1.y)
+        {
+            intake.setState(Intake.powerState.OFF);
+        }
+
+        if(gamepad2.a)
+        {
+            deposit.setState(Deposit.RotationState.DEPOSIT);
+        }
+        if(gamepad2.b)
+        {
+            deposit.setState(Deposit.RotationState.TRANSFER);
+        }
+        if(gamepad2.y)
+        {
+            deposit.setState(Deposit.PusherState.TWO);
+        }
+        if(gamepad2.x)
+        {
+            deposit.setState(Deposit.PusherState.IN);
+        }
     }
 
     @Override
     public void onEnd()
     {
-        r.onEnd();
     }
 }

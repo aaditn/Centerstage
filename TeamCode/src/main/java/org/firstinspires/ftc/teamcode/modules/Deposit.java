@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.modules;
 
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
@@ -10,7 +11,7 @@ public class Deposit extends Module
 {
     public enum RotationState implements ModuleState
     {
-        TRANSFER(0.0, 1.0), DEPOSIT(0.5, 0.5);
+        TRANSFER(0.83, 0.22), DEPOSIT(0.05, 1);
 
         double pos1, pos2;
         RotationState(double pos1, double pos2)
@@ -38,7 +39,7 @@ public class Deposit extends Module
 
     public enum PusherState implements  ModuleState
     {
-        IN(0.5), OUT(0.3);
+        IN(0.1), ONE(0.22), TWO(0.26);
 
         double position;
         PusherState(double position)
@@ -55,14 +56,14 @@ public class Deposit extends Module
     RotationState rstate;
     PusherState pstate;
 
-    ServoEx rotater1, rotater2, pusher;
+    Servo rotater1, rotater2, pusher;
 
     public Deposit(HardwareMap hardwareMap)
     {
         super(false);
-        rotater1=hardwareMap.get(ServoEx.class, "rotater1");
-        rotater2=hardwareMap.get(ServoEx.class, "rotater2");
-        pusher=hardwareMap.get(ServoEx.class, "pusher");
+        rotater1=hardwareMap.get(Servo.class, "rotater1");
+        rotater2=hardwareMap.get(Servo.class, "rotater2");
+        pusher=hardwareMap.get(Servo.class, "pinion");
     }
 
     @Override

@@ -1,20 +1,24 @@
 package org.firstinspires.ftc.teamcode.non_module_testing;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
-public class Deposit extends EnhancedOpMode
+@TeleOp
+@Config
+public class DepositNoModule extends EnhancedOpMode
 {
     Servo rl, rr, p;
 
-    public static double rotationRightInit=0;
-    public static double rotationLeftInit=0;
+    public static double rotationRightInit=0.22;
+    public static double rotationLeftInit=0.83;
     public static double pusherInit=0;
 
     public static double pusherExtended=0;
-    public static double rotationRightUp;
-    public static double rotationLeftUp;
+    public static double rotationRightUp=1;
+    public static double rotationLeftUp=0.05;
 
     @Override
     public void linearOpMode() {
@@ -24,9 +28,9 @@ public class Deposit extends EnhancedOpMode
 
     @Override
     public void initialize() {
-        rl = hardwareMap.get(Servo.class, "depositLeft");
-        rr = hardwareMap.get(Servo.class, "depositRight");
-        p = hardwareMap.get(Servo.class, "depositPusher");
+        rl = hardwareMap.get(Servo.class, "rotater1");
+        rr = hardwareMap.get(Servo.class, "rotater2");
+        p = hardwareMap.get(Servo.class, "pusher");
     }
 
     @Override

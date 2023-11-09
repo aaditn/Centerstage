@@ -16,64 +16,67 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 @Config
 public class IntakeJarrettNoModule extends LinearOpMode {
-// s1: 0.20, 0.6
-// s2: 0.34, 0.67
-public int liftPos = 0;
-
-
-    public static double se5 = 0.18;
-    public static double se4 = 0.16;
-    public static double se3 = 0.13;
-    public static double se2 = 0.09;
-    public static double se1 = 0.06;
-    public static double intake0 = 0.03;
+    public int liftPos = 0;
+    public static double rotationRightInit=0.22;
+    public static double rotationLeftInit=0.83;
+    //public static double rotationRightUp=1; //no usages
+    public static double rotationLeftUp=0.05;
+    public static double intakePos5 = 0.18;
+    public static double intakePos4 = 0.16;
+    public static double intakePos3 = 0.13;
+    public static double intakePos2 = 0.09;
+    public static double intakePos1 = 0.06;
+    public static double intakePos0 = 0.03;
+    //no usages
+    /*
     public static double intakePos = .95 ;
     public static double depositPos =0;
     public static double intakePos1 = 0.43;
     public static double depositPos1 =0.15;
+    */
     public static double intakePusher = 0.1;
-
-    public static double depositSinglePusher = 0.27;
-
-    public static double depositDoublePusher = 0.30;
-
+    public static double pinion0 = 0.22;
+    public static double pinion1 = 0.26;
     int state = 0;
-    boolean intake = false;
+    boolean intaking = false;
     DcMotorEx lb, lf, rb, rf;
-    Servo rl,rr,r,p;
     IMU imu;
     @Override
     public void runOpMode() throws InterruptedException {
 
-        DcMotor left = hardwareMap.get(DcMotor.class, "slides1");
-        DcMotor right = hardwareMap.get(DcMotor.class, "slides2");
-        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        left.setDirection(DcMotorSimple.Direction.REVERSE);
-        left.setTargetPosition(liftPos);
-        right.setTargetPosition(liftPos);
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-boolean stater = false;
-        DcMotorEx intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
-        Servo intake1 = hardwareMap.get(Servo.class, "intake1");
-        Servo intake2 = hardwareMap.get(Servo.class, "intake2");
-        Servo rl = hardwareMap.get(Servo.class, "depositLeft");
-        Servo rr = hardwareMap.get(Servo.class, "depositRight");
-        Servo r = hardwareMap.get(Servo.class, "depositRotation");
-        Servo p = hardwareMap.get(Servo.class, "depositPusher");
-intake1.setDirection(Servo.Direction.REVERSE);
-        FtcDashboard dashboard = FtcDashboard.getInstance();
+        DcMotor slide1 = hardwareMap.get(DcMotor.class, "slide1");
+        DcMotor slide2 = hardwareMap.get(DcMotor.class, "slide2");
+        slide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide2.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide1.setTargetPosition(liftPos);
+        slide2.setTargetPosition(liftPos);
+        slide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        boolean stater = false;
 
+        DcMotorEx intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
+        //LEFT & RIGHT NOT CHECKED
+        Servo intakeLeft = hardwareMap.get(Servo.class, "intakeLeft");
+        Servo intakeRight = hardwareMap.get(Servo.class, "intakeRight");
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeLeft.setDirection(Servo.Direction.REVERSE);
+
+        //LEFT & RIGHT NOT CHECKED
+        Servo rotaterLeft = hardwareMap.get(Servo.class, "rotaterLeft");
+        Servo rotaterRight = hardwareMap.get(Servo.class, "rotaterRight");
+        //rotaterLeft.setDirection(Servo.Direction.REVERSE);
+        Servo pinion = hardwareMap.get(Servo.class, "pinion");
+
+        FtcDashboard dashboard = FtcDashboard.getInstance();
         TelemetryPacket packet = new TelemetryPacket();
+
         lb = hardwareMap.get(DcMotorEx.class, "bl");
         lf = hardwareMap.get(DcMotorEx.class, "fl");
         rb = hardwareMap.get(DcMotorEx.class, "br");
         rf = hardwareMap.get(DcMotorEx.class, "fr");
-
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
-        rl.setDirection(Servo.Direction.REVERSE);
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -106,81 +109,79 @@ intake1.setDirection(Servo.Direction.REVERSE);
                 state--;
                 stater=true;
             }
-            else if(gamepad1.right_trigger>0&&intake){
-                intake=false;
+            else if(gamepad1.right_trigger>0&& intaking){
+                intaking =false;
                 stater=true;
             }
             else if(gamepad1.right_trigger>0.2){
-                intake=true;
+                intaking =true;
                 stater=true;
             }
 
 
-            if(intake){
+            if(intaking){
                 intakeMotor.setPower(-1);
             }
             else{
                 intakeMotor.setPower(0);
             }
             if(gamepad1.x){
-                rl.setPosition(intakePos);
-                rr.setPosition(intakePos);
-                r.setPosition(intakePos1);
-                p.setPosition(intakePusher);
+                rotaterLeft.setPosition(rotationLeftInit);
+                rotaterRight.setPosition(rotationRightInit);
+                pinion.setPosition(intakePusher);
             }
             else if(gamepad1.y){
-                rl.setPosition(depositPos);
-                rr.setPosition(depositPos);
-                r.setPosition(depositPos1);
+                rotaterLeft.setPosition(rotationLeftUp);
+                rotaterRight.setPosition(rotationRightInit);
             }
 
             if(gamepad1.left_bumper){
 
-                p.setPosition(depositSinglePusher);
+                pinion.setPosition(pinion0);
             }
             if(gamepad1.right_bumper){
-                p.setPosition(depositDoublePusher);
+                pinion.setPosition(pinion1);
 
             }
 
-            left.setTargetPosition(liftPos);
-            right.setTargetPosition(liftPos);
-            left.setPower(1);
-            right.setPower(1);
-            if(gamepad1.dpad_up&&liftPos<1400){
-                liftPos+=5;
+            slide1.setTargetPosition(liftPos);
+            slide2.setTargetPosition(liftPos);
+            slide1.setPower(1);
+            slide2.setPower(1);
+            if(gamepad1.dpad_up){
+                liftPos+=10;
             }
-            if(gamepad1.dpad_down){
-                liftPos=0;
+            if(gamepad1.dpad_down&&liftPos>0){
+                liftPos-=10;
             }
           if(state == 0){
-              intake1.setPosition(intake0);
-              intake2.setPosition(intake0);
+              intakeLeft.setPosition(intakePos0);
+              intakeRight.setPosition(intakePos0);
           }
           else if(state==1){
 
-              intake1.setPosition(se1);
-              intake2.setPosition(se1);
+              intakeLeft.setPosition(intakePos1);
+              intakeRight.setPosition(intakePos1);
           }
           else if(state==2){
 
-              intake1.setPosition(se2);
-              intake2.setPosition(se2);
+              intakeLeft.setPosition(intakePos2);
+              intakeRight.setPosition(intakePos2);
           }
           else if(state==3){
 
-              intake1.setPosition(se3);
-              intake2.setPosition(se3);
+              intakeLeft.setPosition(intakePos3);
+              intakeRight.setPosition(intakePos3);
           }
           else if(state==4){
 
-              intake1.setPosition(se4);
-              intake2.setPosition(se4);
+              intakeLeft.setPosition(intakePos4);
+              intakeRight.setPosition(intakePos4);
           }
           else if(state==5){
 
-              intake1.setPosition(se5);
-              intake2.setPosition(se5);
+              intakeLeft.setPosition(intakePos5);
+              intakeRight.setPosition(intakePos5);
           }
 telemetry.addData("state",state);
           telemetry.update();

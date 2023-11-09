@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 @Config
-public class depositTestCode extends LinearOpMode {
+public class pinionTestCode extends LinearOpMode {
     Servo pinion;
     public static double reset = 0.1;
     public static double first = .22;

@@ -5,6 +5,8 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 object Context
 {
     @JvmField var tel: MultipleTelemetry? = null
+    @JvmField var isTeamRed: Boolean = true
+
 
     @JvmStatic fun updateValues()
     {
@@ -14,5 +16,6 @@ object Context
     @JvmStatic fun resetValues()
     {
         tel=null;
+        isTeamRed=true;
     }
 }

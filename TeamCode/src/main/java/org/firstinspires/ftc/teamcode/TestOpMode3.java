@@ -24,7 +24,6 @@ public class TestOpMode3 extends EnhancedOpMode
     TaskListBuilder builder;
     List<Task> testTaskList;
 
-    MecanumDrive drive;
 
     TaskScheduler scheduler;
 
@@ -41,8 +40,8 @@ public class TestOpMode3 extends EnhancedOpMode
                 .moduleAction(test, ModuleTest.State.FWD, 1000)
                 //.executeCode(()->test.setState(ModuleTest.State.FWD, 1000))
                 //.await(()->!test.isBusy())
-                //.awaitPreviousModuleActionCompletion()
-                .await(()->!test.isBusy())
+                .awaitPreviousModuleActionCompletion()
+                //.await(()->!test.isBusy())
                 .moduleAction(test, ModuleTest.State.OFF)
                 .executeCode(()->help=true)
                 .build();

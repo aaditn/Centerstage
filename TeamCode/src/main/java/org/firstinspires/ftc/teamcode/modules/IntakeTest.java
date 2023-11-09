@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
@@ -29,6 +30,8 @@ public class IntakeTest extends EnhancedOpMode
 
     int slidesPos;
     DcMotor slideLeft, slideRight;
+
+    DcMotorEx lb, lf, rb, rf;
 
     @Override
     public void linearOpMode()
@@ -75,7 +78,19 @@ public class IntakeTest extends EnhancedOpMode
         intake=new Intake(hardwareMap);
         slideLeft=hardwareMap.get(DcMotor.class, "slide1");
         slideRight=hardwareMap.get(DcMotor.class, "slide2");
-        slideLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideLeft.setTargetPosition(slidesPos);
+        slideRight.setTargetPosition(slidesPos);
+        slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lb = hardwareMap.get(DcMotorEx.class, "bl");
+        lf = hardwareMap.get(DcMotorEx.class, "fl");
+        rb = hardwareMap.get(DcMotorEx.class, "br");
+        rf = hardwareMap.get(DcMotorEx.class, "fr");
+        lb.setDirection(DcMotorSimple.Direction.REVERSE);
+        lf.setDirection(DcMotorSimple.Direction.REVERSE);
         //slides=new Slides(hardwareMap);
         //slides.setManual(true);
     }
@@ -135,7 +150,7 @@ public class IntakeTest extends EnhancedOpMode
         {
             deposit.setState(Deposit.PusherState.TWO);
         }
-        if(gamepad2.x)
+        if(gamepad1.dpad_left)
         {
             deposit.setState(Deposit.PusherState.IN);
         }
@@ -151,6 +166,15 @@ public class IntakeTest extends EnhancedOpMode
         slideRight.setTargetPosition(slidesPos);
         slideLeft.setPower(1);
         slideLeft.setPower(1);
+
+        double x = -gamepad1.left_stick_y/1.2;
+        double y = -gamepad1.left_stick_x/1.2;
+        double rx = gamepad1.right_stick_x/1.5;
+
+        lf.setPower(y + x + rx);
+        lb.setPower(y - x + rx);
+        rf.setPower(y - x - rx);
+        rb.setPower(y + x - rx);
 
         /*telemetry.addData("Slides Pos", slides.targetPosition);
         telemetry.addData("Slides Power", slides.motorPower);

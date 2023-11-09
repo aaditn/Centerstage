@@ -13,30 +13,30 @@ public class slidesTest extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        DcMotor left = hardwareMap.get(DcMotor.class, "left");
-        DcMotor right = hardwareMap.get(DcMotor.class, "right");
-        //left.setDirection(DcMotorSimple.Direction.REVERSE);
+        DcMotor left = hardwareMap.get(DcMotor.class, "slide1");
+        DcMotor right = hardwareMap.get(DcMotor.class, "slide2");
+        left.setDirection(DcMotorSimple.Direction.REVERSE);
 
         left.setTargetPosition(liftPos);
         right.setTargetPosition(liftPos);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        liftPos = left.getCurrentPosition();
         waitForStart();
         while (opModeIsActive()){
-            liftPos = left.getCurrentPosition();
+
 
             if(gamepad1.a){
-                liftPos += 1;
+                liftPos += 5;
             }
             if(gamepad1.b){
-                liftPos -= 1;
+                liftPos -= 5;
             }
 
             left.setTargetPosition(liftPos);
             right.setTargetPosition(liftPos);
-            left.setPower(0.1);
-            right.setPower(0.1);
+            left.setPower(1);
+            right.setPower(1);
 
             telemetry.addData("liftPos", liftPos);
             telemetry.addData("currentPos", left.getCurrentPosition());

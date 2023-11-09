@@ -1,29 +1,40 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
+import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 import java.util.List;
-
+@TeleOp
 public class IntakeTest extends EnhancedOpMode
 {
     Intake intake;
 
     Deposit deposit;
+    //Slides slides;
     TaskListBuilder builder;
     List<Task> testTaskList;
     TaskScheduler scheduler;
 
+    int slidesPos;
+    DcMotor slideLeft, slideRight;
+
     @Override
     public void linearOpMode()
     {
+        Context.resetValues();
+        Context.tel=new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         GamepadEx primary=new GamepadEx(gamepad1);
         ButtonReader B=new ButtonReader(primary, GamepadKeys.Button.B);
         ButtonReader A=new ButtonReader(primary, GamepadKeys.Button.A);
@@ -62,8 +73,11 @@ public class IntakeTest extends EnhancedOpMode
         builder=new TaskListBuilder(this);
         deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
-
-
+        slideLeft=hardwareMap.get(DcMotor.class, "slide1");
+        slideRight=hardwareMap.get(DcMotor.class, "slide2");
+        slideLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        //slides=new Slides(hardwareMap);
+        //slides.setManual(true);
     }
 
     @Override
@@ -83,10 +97,14 @@ public class IntakeTest extends EnhancedOpMode
     @Override
     public void primaryLoop()
     {
+        //slides.setPositionManual(slidesPos);
+        //slides.updateLoop();
         intake.updateLoop();
         deposit.updateLoop();
+        //slides.writeLoop();
         intake.writeLoop();
         deposit.writeLoop();
+
 
         if(gamepad1.a)
         {
@@ -105,11 +123,11 @@ public class IntakeTest extends EnhancedOpMode
             intake.setState(Intake.powerState.OFF);
         }
 
-        if(gamepad2.a)
+        if(gamepad1.left_bumper)
         {
             deposit.setState(Deposit.RotationState.DEPOSIT);
         }
-        if(gamepad2.b)
+        if(gamepad1.right_bumper)
         {
             deposit.setState(Deposit.RotationState.TRANSFER);
         }
@@ -121,10 +139,32 @@ public class IntakeTest extends EnhancedOpMode
         {
             deposit.setState(Deposit.PusherState.IN);
         }
+        if(gamepad1.dpad_down)
+        {
+            slidesPos-=10;
+        }
+        if(gamepad1.dpad_up)
+        {
+            slidesPos+=10;
+        }
+        slideLeft.setTargetPosition(slidesPos);
+        slideRight.setTargetPosition(slidesPos);
+        slideLeft.setPower(1);
+        slideLeft.setPower(1);
+
+        /*telemetry.addData("Slides Pos", slides.targetPosition);
+        telemetry.addData("Slides Power", slides.motorPower);
+        telemetry.addData("Slides state", slides.opstate);
+        telemetry.update();*/
+        telemetry.addData("liftPos", slidesPos);
+        telemetry.addData("currentPos", slideLeft.getCurrentPosition());
+
+        telemetry.update();
     }
 
     @Override
     public void onEnd()
     {
+
     }
 }

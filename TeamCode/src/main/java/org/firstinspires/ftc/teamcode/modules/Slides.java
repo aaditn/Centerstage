@@ -7,15 +7,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.*;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.BPIDFController;
+import org.firstinspires.ftc.teamcode.util.Context;
 
-public class slides extends Module
+public class Slides extends Module
 {
-    DcMotorEx right;
-    DcMotorEx left;
+    DcMotorEx slide1;
+    DcMotorEx slide2;
 
     BPIDFController controller;
-    double targetPosition, motorPower;
-    public static double kp, ki, kd;
+    public double targetPosition, motorPower;
+    public static double kp=0.5, ki=0, kd=0;
     public enum SlideState implements ModuleState
     {
         GROUND(0), ROW1(0), ROW2(0), ROW3(0);
@@ -32,33 +33,58 @@ public class slides extends Module
         }
     }
 
+    public enum OperationState
+    {
+        MANUAL, SET
+    }
+
     SlideState state=SlideState.GROUND;
-    Telemetry tel;
-    public slides(HardwareMap hardwareMap, Telemetry tel)
+    OperationState opstate=OperationState.SET;
+    public Slides(HardwareMap hardwareMap)
     {
         super(true);
-        right=hardwareMap.get(DcMotorEx.class, "right");
-        left=hardwareMap.get(DcMotorEx.class, "left");
-        right.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide1 =hardwareMap.get(DcMotorEx.class, "slide1");
+        slide2 =hardwareMap.get(DcMotorEx.class, "slide2");
+        slide1.setDirection(DcMotorSimple.Direction.REVERSE);
         controller=new BPIDFController(new PIDCoefficients(kp, ki, kd));
-        this.tel=tel;
     }
 
     @Override
     public void write()
     {
-        right.setPower(motorPower);
-        left.setPower(motorPower);
+        slide1.setPower(motorPower);
+        slide2.setPower(motorPower);
         //actually write the powers to the motor
+    }
+
+    public void setManual(boolean bool)
+    {
+        if(bool)
+        {
+            opstate=OperationState.MANUAL;
+        }
+        else
+        {
+            opstate=OperationState.SET;
+        }
     }
 
     @Override
     public void internalUpdate()
     {
-        targetPosition=getState().getOutput();
-        motorPower=controller.update(right.getCurrentPosition(), targetPosition);
+        if(opstate==OperationState.SET)
+        {
+            targetPosition=getState().getOutput();
+        }
+        motorPower=controller.update(slide1.getCurrentPosition(), targetPosition);
         //update the internal powers and stuff
     }
+
+    public void setPositionManual(double position)
+    {
+        targetPosition=position;
+    }
+
 
     @Override
     protected void initInternalStates()
@@ -71,7 +97,7 @@ public class slides extends Module
     @Override
     protected void updateInternalStatus()
     {
-        if (Math.abs(targetPosition - right.getCurrentPosition())<10){
+        if (Math.abs(targetPosition - slide1.getCurrentPosition())<10){
             status=Status.IDLE;
         }
         else{
@@ -83,7 +109,7 @@ public class slides extends Module
     public void telemetryUpdate()
     {
         super.telemetryUpdate();
-        tel.addData("Target Position", targetPosition);
+        Context.tel.addData("Target Position", targetPosition);
     }
 
     //calls whenever state changes. DO NOT ADD ANY WRITE CALLS HERE. Only meant for changing some other values.

@@ -59,8 +59,9 @@ public class Intake extends Module {
     {
         super(false);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
-        angler1 = hardwareMap.get(Servo.class, "angler1");
-        angler2 = hardwareMap.get(Servo.class, "angler2");
+        angler1 = hardwareMap.get(Servo.class, "intake1");
+        angler2 = hardwareMap.get(Servo.class, "intake2");
+        angler2.setDirection(Servo.Direction.REVERSE);
     }
 
 

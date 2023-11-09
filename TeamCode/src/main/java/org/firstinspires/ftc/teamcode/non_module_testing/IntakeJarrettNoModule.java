@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 @Config
@@ -27,7 +26,7 @@ public int liftPos = 0;
     public static double se3 = 0.13;
     public static double se2 = 0.09;
     public static double se1 = 0.06;
-    public static double se0 = 0.03;
+    public static double intake0 = 0.03;
     public static double intakePos = .95 ;
     public static double depositPos =0;
     public static double intakePos1 = 0.43;
@@ -46,8 +45,8 @@ public int liftPos = 0;
     @Override
     public void runOpMode() throws InterruptedException {
 
-        DcMotor left = hardwareMap.get(DcMotor.class, "leftSlides");
-        DcMotor right = hardwareMap.get(DcMotor.class, "rightSlides");
+        DcMotor left = hardwareMap.get(DcMotor.class, "slides1");
+        DcMotor right = hardwareMap.get(DcMotor.class, "slides2");
         left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -56,21 +55,21 @@ public int liftPos = 0;
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 boolean stater = false;
-        DcMotorEx intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
-        Servo s1 = hardwareMap.get(Servo.class, "s1");
-        Servo s2 = hardwareMap.get(Servo.class, "s2");
+        DcMotorEx intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
+        Servo intake1 = hardwareMap.get(Servo.class, "intake1");
+        Servo intake2 = hardwareMap.get(Servo.class, "intake2");
         Servo rl = hardwareMap.get(Servo.class, "depositLeft");
         Servo rr = hardwareMap.get(Servo.class, "depositRight");
         Servo r = hardwareMap.get(Servo.class, "depositRotation");
         Servo p = hardwareMap.get(Servo.class, "depositPusher");
-s1.setDirection(Servo.Direction.REVERSE);
+intake1.setDirection(Servo.Direction.REVERSE);
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
         TelemetryPacket packet = new TelemetryPacket();
-        lb = hardwareMap.get(DcMotorEx.class, "lb");
-        lf = hardwareMap.get(DcMotorEx.class, "lf");
-        rb = hardwareMap.get(DcMotorEx.class, "rb");
-        rf = hardwareMap.get(DcMotorEx.class, "rf");
+        lb = hardwareMap.get(DcMotorEx.class, "bl");
+        lf = hardwareMap.get(DcMotorEx.class, "fl");
+        rb = hardwareMap.get(DcMotorEx.class, "br");
+        rf = hardwareMap.get(DcMotorEx.class, "fr");
 
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -155,33 +154,33 @@ s1.setDirection(Servo.Direction.REVERSE);
                 liftPos=0;
             }
           if(state == 0){
-              s1.setPosition(se0);
-              s2.setPosition(se0);
+              intake1.setPosition(intake0);
+              intake2.setPosition(intake0);
           }
           else if(state==1){
 
-              s1.setPosition(se1);
-              s2.setPosition(se1);
+              intake1.setPosition(se1);
+              intake2.setPosition(se1);
           }
           else if(state==2){
 
-              s1.setPosition(se2);
-              s2.setPosition(se2);
+              intake1.setPosition(se2);
+              intake2.setPosition(se2);
           }
           else if(state==3){
 
-              s1.setPosition(se3);
-              s2.setPosition(se3);
+              intake1.setPosition(se3);
+              intake2.setPosition(se3);
           }
           else if(state==4){
 
-              s1.setPosition(se4);
-              s2.setPosition(se4);
+              intake1.setPosition(se4);
+              intake2.setPosition(se4);
           }
           else if(state==5){
 
-              s1.setPosition(se5);
-              s2.setPosition(se5);
+              intake1.setPosition(se5);
+              intake2.setPosition(se5);
           }
 telemetry.addData("state",state);
           telemetry.update();

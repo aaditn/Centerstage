@@ -12,16 +12,14 @@ public class Intake extends Module {
     DcMotorEx intake;
     Servo angler1, angler2;
     double threshold = 0.02; // you might need one because power is inconsistent
-    public enum State implements ModuleState
+    public enum powerState implements ModuleState
     {
-        MOTOR_OFF(0), MOTOR_ON(0.7), ANGLE_LOW(0.2), ANGLE_HIGH(0.7);
+        INTAKE(0.9), EXTAKE(-0.9), OFF(0), LOW(-0.3);
 
         double power;
-        double position;
-        State(double position)
+        powerState(double power)
         {
             this.power=power;
-            this.position = position;
         }
 
         @Override
@@ -31,12 +29,33 @@ public class Intake extends Module {
         }
     }
 
+    public enum positionState implements ModuleState
+    {
+        TELE(0.03), HIGH(0.52), FIVE(0), FOUR(0), THREE(0), TWO(0), ONE(0);
+
+        double position;
+
+        positionState(double position)
+        {
+            this.position=position;
+        }
+
+        @Override
+        public double getOutput(int... index)
+        {
+            return position;
+        }
+    }
+
+
+
     double currentPower;
     double currentPosition;
 
-  State state;
+    powerState pwstate;
+    positionState poState;
 
-    public Intake(HardwareMap hardwareMap, Telemetry tel)
+    public Intake(HardwareMap hardwareMap)
     {
         super(false);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
@@ -56,23 +75,20 @@ public class Intake extends Module {
     @Override
     protected void internalUpdate()
     {
-        currentPower = state.power;
-        currentPosition = state.position;
+        currentPower=getState(powerState.class).getOutput();
+        currentPosition=getState(positionState.class).getOutput();
     }
 
     @Override
     protected void initInternalStates()
     {
-        setInternalStates(state);
+        poState=positionState.HIGH;
+        pwstate=powerState.OFF;
+        setInternalStates(poState, pwstate);
     }
 
     @Override
     protected void updateInternalStatus() {
-        if (intake.getPower() <= State.MOTOR_OFF.power + threshold || intake.getPower() >= State.MOTOR_ON.power - threshold) {
-            status = Status.IDLE;
-        } else {
-            status = Status.TRANSITIONING;
-        }
-
+        status=Status.IDLE;
     }
 }

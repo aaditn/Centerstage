@@ -11,11 +11,11 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 @Config
 public class Deposit extends Module
 {
-    public static double transfer1=0.23;
+    public static double transfer1=0.19;
     public static double transfer2=0.82;
 
-    public static double deposit1=0.9;//.83
-    public static double deposit2=0.15;//.22
+    public static double deposit1=1;//.83
+    public static double deposit2=0.05;//.22
 
     public static double pusherIn=0.1;
     public static double pusherPushed=0.18;

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -46,14 +47,22 @@ public class Slides extends Module
         slide1 =hardwareMap.get(DcMotorEx.class, "slide1");
         slide2 =hardwareMap.get(DcMotorEx.class, "slide2");
         slide1.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         controller=new BPIDFController(new PIDCoefficients(kp, ki, kd));
     }
 
     @Override
     public void write()
     {
-        slide1.setPower(motorPower);
-        slide2.setPower(motorPower);
+        if (slide1.getCurrentPosition() > 1125) {
+            slide1.setPower(0);
+            slide2.setPower(0);
+        } else {
+            slide1.setPower(motorPower);
+            slide2.setPower(motorPower);
+        }
+
         //actually write the powers to the motor
     }
 

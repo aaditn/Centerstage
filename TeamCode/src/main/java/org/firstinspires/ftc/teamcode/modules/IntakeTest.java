@@ -140,7 +140,7 @@ public class IntakeTest extends EnhancedOpMode
         //slides.writeLoop();
         intake.writeLoop();
         deposit.writeLoop();
-        if (slideLeft.getCurrentPosition() > 300) {
+        if (slideLeft.getCurrentPosition() > 100) {
             deposit.setState(Deposit.RotationState.DEPOSIT);
             deposit.setState(Deposit.RotationState.DEPOSIT);
         } else {
@@ -160,9 +160,13 @@ public class IntakeTest extends EnhancedOpMode
         {
             intake.setState(Intake.powerState.INTAKE);
         }
-        else if(gamepad2.right_stick_y > -0.5)
+        else if(gamepad2.right_stick_y > -0.5 && gamepad2.right_stick_y < 0.5)
         {
             intake.setState(Intake.powerState.OFF);
+        }
+        else if (gamepad2.right_stick_y > 0.5)
+        {
+            intake.setState(Intake.powerState.EXTAKE);
         }
 
 

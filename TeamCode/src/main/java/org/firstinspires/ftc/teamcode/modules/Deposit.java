@@ -11,11 +11,11 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 @Config
 public class Deposit extends Module
 {
-    public static double transfer1=0.25;
-    public static double transfer2=0.8;
+    public static double transfer1=0.23;
+    public static double transfer2=0.82;
 
-    public static double deposit1=0.83;
-    public static double deposit2=0.22;
+    public static double deposit1=0.9;//.83
+    public static double deposit2=0.15;//.22
 
     public static double pusherIn=0.1;
     public static double pusherPushed=0.18;
@@ -70,14 +70,14 @@ public class Deposit extends Module
     RotationState rstate;
     PusherState pstate;
 
-    Servo rotater1, rotater2, pusher;
+    Servo rotater1, rotater2;//, pusher;
 
     public Deposit(HardwareMap hardwareMap)
     {
         super(false);
         rotater1=hardwareMap.get(Servo.class, "rotater1");
         rotater2=hardwareMap.get(Servo.class, "rotater2");
-        pusher=hardwareMap.get(Servo.class, "pinion");
+        //pusher=hardwareMap.get(Servo.class, "pinion");
     }
 
     @Override
@@ -85,7 +85,7 @@ public class Deposit extends Module
     {
         rotater1.setPosition(rotater1Pos);
         rotater2.setPosition(rotater2Pos);
-        pusher.setPosition(pusherPos);
+        //pusher.setPosition(pusherPos);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class Deposit extends Module
     {
         rotater1Pos=getState(RotationState.class).getOutput(1);
         rotater2Pos=getState(RotationState.class).getOutput(2);
-        pusherPos=getState(PusherState.class).getOutput();
+        pusherPos=getState(PusherState.class).getOutput(1);
     }
 
     @Override

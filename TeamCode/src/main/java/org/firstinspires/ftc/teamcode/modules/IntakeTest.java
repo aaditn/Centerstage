@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
@@ -18,6 +20,7 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 import java.util.List;
 @TeleOp
+@Config
 public class IntakeTest extends EnhancedOpMode
 {
     Intake intake;
@@ -32,15 +35,29 @@ public class IntakeTest extends EnhancedOpMode
     DcMotor slideLeft, slideRight;
 
     DcMotorEx lb, lf, rb, rf;
+    Servo pusher;
 
+    public static double pusherIn=0.04;
+    //public static double pusherPushed=0.18;
+    public static double pusherOne=0.26;
+    public static double pusherTwo=0.31;
+
+    public static int pusherState = 0;
+    public static boolean isPusher = true;
+    double[] pusherArr = {pusherIn, pusherOne, pusherTwo};
     @Override
     public void linearOpMode()
     {
 
+        pusher=hardwareMap.get(Servo.class, "pinion");
         GamepadEx primary=new GamepadEx(gamepad1);
+        //GamepadEx secondary=new GamepadEx(gamepad2);
         ButtonReader B=new ButtonReader(primary, GamepadKeys.Button.B);
         ButtonReader A=new ButtonReader(primary, GamepadKeys.Button.A);
         scheduler=new TaskScheduler();
+
+        pusher.setPosition(pusherIn);
+
 
         waitForStart();
         while(opModeIsActive()){}
@@ -74,7 +91,7 @@ public class IntakeTest extends EnhancedOpMode
         Context.resetValues();
         Context.tel=new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
-        this.setLoopTimes(10);
+        this.setLoopTimes(0);
         builder=new TaskListBuilder(this);
         deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
@@ -91,7 +108,7 @@ public class IntakeTest extends EnhancedOpMode
         lf = hardwareMap.get(DcMotorEx.class, "fl");
         rb = hardwareMap.get(DcMotorEx.class, "br");
         rf = hardwareMap.get(DcMotorEx.class, "fr");
-        lb.setDirection(DcMotorSimple.Direction.REVERSE);
+        rf.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
         //slides=new Slides(hardwareMap);
         //slides.setManual(true);
@@ -123,59 +140,77 @@ public class IntakeTest extends EnhancedOpMode
         //slides.writeLoop();
         intake.writeLoop();
         deposit.writeLoop();
+        if (slideLeft.getCurrentPosition() > 300) {
+            deposit.setState(Deposit.RotationState.DEPOSIT);
+            deposit.setState(Deposit.RotationState.DEPOSIT);
+        } else {
+            deposit.setState(Deposit.RotationState.TRANSFER);
+            deposit.setState(Deposit.PusherState.IN);
+        }
 
-
-        if(gamepad1.a)
+        if(gamepad2.a)
         {
             intake.setState(Intake.positionState.TELE);
         }
-        else if(gamepad1.b)
+        else if(gamepad2.b)
         {
             intake.setState(Intake.positionState.HIGH);
         }
-        else if(gamepad1.x)
+        else if(gamepad2.right_stick_y < -0.5)
         {
             intake.setState(Intake.powerState.INTAKE);
         }
-        else if(gamepad1.y)
+        else if(gamepad2.right_stick_y > -0.5)
         {
             intake.setState(Intake.powerState.OFF);
         }
 
 
-        if(gamepad1.left_bumper)
+        if(gamepad2.left_bumper)
         {
             deposit.setState(Deposit.RotationState.DEPOSIT);
         }
-        if(gamepad1.right_bumper)
+        if(gamepad2.right_bumper)
         {
             deposit.setState(Deposit.RotationState.TRANSFER);
+            deposit.setState(Deposit.PusherState.IN);
         }
-        if(gamepad2.y)
+        if(gamepad2.x && isPusher)
         {
-            deposit.setState(Deposit.PusherState.TWO);
+            isPusher=false;
+            if (pusherState == 2) {
+                pusherState = 0;
+            } else {
+                pusherState++;
+            }
+
+            pusher.setPosition(pusherArr[pusherState]);
+            //deposit.setState(Deposit.PusherState.TWO);
+        } else if (!isPusher) {
+            isPusher=!gamepad2.x;
         }
-        if(gamepad1.dpad_down)
+
+        if(gamepad2.dpad_down&&slidesPos>0)
         {
             slidesPos-=10;
         }
-        if(gamepad1.dpad_up)
+        if(gamepad2.dpad_up&&slidesPos<1150)
         {
             slidesPos+=10;
         }
         slideLeft.setTargetPosition(slidesPos);
         slideRight.setTargetPosition(slidesPos);
         slideLeft.setPower(1);
-        slideLeft.setPower(1);
+        slideRight.setPower(1);
 
         double x = -gamepad1.left_stick_y/1.2;
-        double y = -gamepad1.left_stick_x/1.2;
-        double rx = gamepad1.right_stick_x/1.5;
+        double y = gamepad1.left_stick_x/1.2;
+        double rx = -gamepad1.right_stick_x/1.5;
 
-        lf.setPower(y + x + rx);
+        lf.setPower(y + x - rx);
         lb.setPower(y - x + rx);
         rf.setPower(y - x - rx);
-        rb.setPower(y + x - rx);
+        rb.setPower(y + x + rx);
 
         /*telemetry.addData("Slides Pos", slides.targetPosition);
         telemetry.addData("Slides Power", slides.motorPower);

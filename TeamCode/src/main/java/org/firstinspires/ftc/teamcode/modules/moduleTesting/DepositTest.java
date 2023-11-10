@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.modules.moduleTesting;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 @TeleOp
+@Config
 public class DepositTest extends EnhancedOpMode
 {
     Deposit d;

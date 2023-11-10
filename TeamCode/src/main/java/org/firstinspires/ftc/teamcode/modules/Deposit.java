@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -7,11 +8,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 
+@Config
 public class Deposit extends Module
 {
+    public static double transfer1=0.25;
+    public static double transfer2=0.8;
+
+    public static double deposit1=0.83;
+    public static double deposit2=0.22;
+
+    public static double pusherIn=0.1;
+    public static double pusherPushed=0.18;
+    public static double pusherOne=0.22;
+    public static double pusherTwo=0.26;
+
     public enum RotationState implements ModuleState
     {
-        TRANSFER(0.83, 0.22), DEPOSIT(0.05, 1);
+        TRANSFER(transfer1, transfer2), DEPOSIT(deposit1, deposit2);
 
         double pos1, pos2;
         RotationState(double pos1, double pos2)
@@ -37,9 +50,10 @@ public class Deposit extends Module
         }
     }
 
+
     public enum PusherState implements  ModuleState
     {
-        IN(0.1), ONE(0.22), TWO(0.26);
+        IN(pusherIn),EXTENDED(pusherPushed), ONE(pusherOne), TWO(pusherTwo);
 
         double position;
         PusherState(double position)

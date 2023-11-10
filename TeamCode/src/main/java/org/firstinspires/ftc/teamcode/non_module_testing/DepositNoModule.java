@@ -30,7 +30,7 @@ public class DepositNoModule extends EnhancedOpMode
     public void initialize() {
         rl = hardwareMap.get(Servo.class, "rotater1");
         rr = hardwareMap.get(Servo.class, "rotater2");
-        p = hardwareMap.get(Servo.class, "pusher");
+        p = hardwareMap.get(Servo.class, "pinion");
     }
 
     @Override

@@ -36,8 +36,7 @@ public class IntakeTest extends EnhancedOpMode
     @Override
     public void linearOpMode()
     {
-        Context.resetValues();
-        Context.tel=new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
+
         GamepadEx primary=new GamepadEx(gamepad1);
         ButtonReader B=new ButtonReader(primary, GamepadKeys.Button.B);
         ButtonReader A=new ButtonReader(primary, GamepadKeys.Button.A);
@@ -72,6 +71,9 @@ public class IntakeTest extends EnhancedOpMode
     @Override
     public void initialize()
     {
+        Context.resetValues();
+        Context.tel=new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
+
         this.setLoopTimes(10);
         builder=new TaskListBuilder(this);
         deposit=new Deposit(hardwareMap);
@@ -93,6 +95,8 @@ public class IntakeTest extends EnhancedOpMode
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
         //slides=new Slides(hardwareMap);
         //slides.setManual(true);
+        intake.init();
+        deposit.init();
     }
 
     @Override
@@ -138,6 +142,7 @@ public class IntakeTest extends EnhancedOpMode
             intake.setState(Intake.powerState.OFF);
         }
 
+
         if(gamepad1.left_bumper)
         {
             deposit.setState(Deposit.RotationState.DEPOSIT);
@@ -149,10 +154,6 @@ public class IntakeTest extends EnhancedOpMode
         if(gamepad2.y)
         {
             deposit.setState(Deposit.PusherState.TWO);
-        }
-        if(gamepad1.dpad_left)
-        {
-            deposit.setState(Deposit.PusherState.IN);
         }
         if(gamepad1.dpad_down)
         {
@@ -181,7 +182,12 @@ public class IntakeTest extends EnhancedOpMode
         telemetry.addData("Slides state", slides.opstate);
         telemetry.update();*/
         telemetry.addData("liftPos", slidesPos);
-        telemetry.addData("currentPos", slideLeft.getCurrentPosition());
+        telemetry.addData("currentPosLeft", slideLeft.getCurrentPosition());
+        telemetry.addData("currentPosRight", slideRight.getCurrentPosition());
+
+        telemetry.addData("tPosLeft", slideLeft.getTargetPosition());
+        telemetry.addData("tPosRight", slideRight.getTargetPosition());
+
 
         telemetry.update();
     }

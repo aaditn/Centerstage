@@ -134,6 +134,11 @@ public abstract class Module
         }
     }
 
+    public void init()
+    {
+        onStateChange();
+    }
+
     //implement your write function
     protected abstract void write();
 

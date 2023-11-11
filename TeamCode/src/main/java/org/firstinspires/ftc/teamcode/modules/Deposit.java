@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -11,13 +10,13 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 @Config
 public class Deposit extends Module
 {
-    public static double transfer1=0.19;
-    public static double transfer2=0.82;
+    public static double transfer1=0.25;
+    public static double transfer2=0.8;
 
     public static double deposit1High= 1;//0.91;//.83
     public static double deposit2High = 0.05;//0.14;//.22
-    public static double deposit1Mid = 1;//0.94;//.83
-    public static double deposit2Mid = 0.05;//0.11;//.22
+    public static double deposit1Mid = .75;//0.94;//.83
+    public static double deposit2Mid = 0.3;//0.11;//.22
 
     public static double deposit1Low= 1;//0.98;//.83
     public static double deposit2Low= 0.05;//0.07;//.22
@@ -73,33 +72,33 @@ public class Deposit extends Module
         }
     }
 
-    double rotater1Pos, rotater2Pos, pusherPos;
+    double leftRotatorPos, rightRotatorPos, pusherPos;
     RotationState rstate;
     PusherState pstate;
 
-    Servo rotater1, rotater2;//, pusher;
+    Servo leftRotator, rightRotator;//, pusher;
 
     public Deposit(HardwareMap hardwareMap)
     {
         super(false);
-        rotater1=hardwareMap.get(Servo.class, "rotater1");
-        rotater2=hardwareMap.get(Servo.class, "rotater2");
+        leftRotator =hardwareMap.get(Servo.class, "leftRotator");
+        rightRotator=hardwareMap.get(Servo.class, "rightRotator");
         //pusher=hardwareMap.get(Servo.class, "pinion");
     }
 
     @Override
     protected void write()
     {
-        rotater1.setPosition(rotater1Pos);
-        rotater2.setPosition(rotater2Pos);
+        leftRotator.setPosition(leftRotatorPos);
+        rightRotator.setPosition(rightRotatorPos);
         //pusher.setPosition(pusherPos);
     }
 
     @Override
     protected void internalUpdate()
     {
-        rotater1Pos=getState(RotationState.class).getOutput(1);
-        rotater2Pos=getState(RotationState.class).getOutput(2);
+        leftRotatorPos=getState(RotationState.class).getOutput(1);
+        rightRotatorPos=getState(RotationState.class).getOutput(2);
         pusherPos=getState(PusherState.class).getOutput(1);
     }
 

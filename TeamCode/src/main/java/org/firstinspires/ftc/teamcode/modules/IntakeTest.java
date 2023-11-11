@@ -20,12 +20,12 @@ import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 import java.util.List;
-@TeleOp
+@TeleOp(name = "A - DRIVER CONTROL (2 PLAYER)")
 @Config
 public class IntakeTest extends EnhancedOpMode
 {
     Intake intake;
-
+Boolean ok =false;
     Deposit deposit;
     //Slides slides;
     TaskListBuilder builder;
@@ -42,10 +42,11 @@ public class IntakeTest extends EnhancedOpMode
     boolean pusherBool = false;
 
     public static double pusherIn=0.04;
-    //public static double pusherPushed=0.18;
+    public static double pusherPushed=0.18;
     public static double pusherOne=0.26;
     public static double pusherTwo=0.31;
-
+public static double initwrist = .21;
+public static double depositwrist=0.05;
     public static int pusherState = 0;
     public static boolean isPusher = true;
     double[] pusherArr = {pusherIn, pusherOne, pusherTwo};
@@ -53,12 +54,12 @@ public class IntakeTest extends EnhancedOpMode
     boolean ninjaBool = true;
 
     boolean isPusherDone = true;
-
+Servo wrist;
     double ninja = 1;
     @Override
     public void linearOpMode()
     {
-
+wrist =hardwareMap.get(Servo.class,"wrist");
         pusher=hardwareMap.get(Servo.class, "pinion");
         GamepadEx primary=new GamepadEx(gamepad1);
         //GamepadEx secondary=new GamepadEx(gamepad2);
@@ -150,19 +151,17 @@ public class IntakeTest extends EnhancedOpMode
         //slides.writeLoop();
         intake.writeLoop();
         deposit.writeLoop();
-        if (slideLeft.getCurrentPosition() < 250) {
+        ElapsedTime matthew = new ElapsedTime();
+        if (slideLeft.getCurrentPosition() < 270) {
             deposit.setState(Deposit.RotationState.TRANSFER);
             deposit.setState(Deposit.PusherState.IN);
+            wrist.setPosition(initwrist);
         }
-        else if (slideLeft.getCurrentPosition() > 250 && slideLeft.getCurrentPosition() < 550) {
-            deposit.setState(Deposit.RotationState.DEPOSIT_LOW);
-            deposit.setState(Deposit.RotationState.DEPOSIT_LOW);
-        } else if (slideLeft.getCurrentPosition() < 850){
+        else if (slideLeft.getCurrentPosition() > 270) {
+            bool ok
             deposit.setState(Deposit.RotationState.DEPOSIT_MID);
             deposit.setState(Deposit.RotationState.DEPOSIT_MID);
-        } else {
-            deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
-            deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
+            wrist.setPosition(depositwrist);
 
     }
 
@@ -193,6 +192,7 @@ public class IntakeTest extends EnhancedOpMode
         {
             deposit.setState(Deposit.RotationState.TRANSFER);
             deposit.setState(Deposit.PusherState.IN);
+            wrist.setPosition(.02);
         }
         if(gamepad2.x && isPusher)
         {

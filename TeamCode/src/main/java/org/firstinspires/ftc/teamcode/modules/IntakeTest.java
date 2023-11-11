@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
@@ -37,6 +38,9 @@ public class IntakeTest extends EnhancedOpMode
     DcMotorEx lb, lf, rb, rf;
     Servo pusher;
 
+    ElapsedTime pusherTimer = new ElapsedTime();
+    boolean pusherBool = false;
+
     public static double pusherIn=0.04;
     //public static double pusherPushed=0.18;
     public static double pusherOne=0.26;
@@ -45,6 +49,12 @@ public class IntakeTest extends EnhancedOpMode
     public static int pusherState = 0;
     public static boolean isPusher = true;
     double[] pusherArr = {pusherIn, pusherOne, pusherTwo};
+    boolean isXClicked = true;
+    boolean ninjaBool = true;
+
+    boolean isPusherDone = true;
+
+    double ninja = 1;
     @Override
     public void linearOpMode()
     {
@@ -140,13 +150,21 @@ public class IntakeTest extends EnhancedOpMode
         //slides.writeLoop();
         intake.writeLoop();
         deposit.writeLoop();
-        if (slideLeft.getCurrentPosition() > 100) {
-            deposit.setState(Deposit.RotationState.DEPOSIT);
-            deposit.setState(Deposit.RotationState.DEPOSIT);
-        } else {
+        if (slideLeft.getCurrentPosition() < 250) {
             deposit.setState(Deposit.RotationState.TRANSFER);
             deposit.setState(Deposit.PusherState.IN);
         }
+        else if (slideLeft.getCurrentPosition() > 250 && slideLeft.getCurrentPosition() < 550) {
+            deposit.setState(Deposit.RotationState.DEPOSIT_LOW);
+            deposit.setState(Deposit.RotationState.DEPOSIT_LOW);
+        } else if (slideLeft.getCurrentPosition() < 850){
+            deposit.setState(Deposit.RotationState.DEPOSIT_MID);
+            deposit.setState(Deposit.RotationState.DEPOSIT_MID);
+        } else {
+            deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
+            deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
+
+    }
 
         if(gamepad2.a)
         {
@@ -170,10 +188,7 @@ public class IntakeTest extends EnhancedOpMode
         }
 
 
-        if(gamepad2.left_bumper)
-        {
-            deposit.setState(Deposit.RotationState.DEPOSIT);
-        }
+
         if(gamepad2.right_bumper)
         {
             deposit.setState(Deposit.RotationState.TRANSFER);
@@ -194,22 +209,50 @@ public class IntakeTest extends EnhancedOpMode
             isPusher=!gamepad2.x;
         }
 
-        if(gamepad2.dpad_down&&slidesPos>0)
-        {
-            slidesPos-=10;
-        }
-        if(gamepad2.dpad_up&&slidesPos<1150)
+
+
+        if(gamepad2.left_stick_y < -0.3 && slidesPos<1150)
         {
             slidesPos+=10;
+        }
+        if(gamepad2.left_stick_y > 0.3 &&slidesPos>50)
+        {
+            slidesPos-=50;
+        } else if (gamepad2.left_stick_y > 0.3 && slidesPos > 0) {
+            slidesPos -= 10;
+        }
+
+        if (slidesPos < 250) {
+            pusherState = 0;
+            pusher.setPosition(pusherArr[pusherState]);
+        }
+
+        /*if (gamepad1.x && isXClicked) {
+            isXClicked = false;
+            if (ninjaBool) {
+                ninja = 1;
+            } else {
+                ninja = 0.5;
+            }
+
+        } else if (!isXClicked) {
+            isXClicked = !gamepad1.x;
+        }
+        */
+
+        if (gamepad1.left_trigger > 0.3) {
+            ninja = 0.5;
+        } else {
+            ninja = 1;
         }
         slideLeft.setTargetPosition(slidesPos);
         slideRight.setTargetPosition(slidesPos);
         slideLeft.setPower(1);
         slideRight.setPower(1);
 
-        double x = -gamepad1.left_stick_y/1.2;
-        double y = gamepad1.left_stick_x/1.2;
-        double rx = -gamepad1.right_stick_x/1.5;
+        double x = -gamepad1.left_stick_y * ninja;
+        double y = gamepad1.left_stick_x * ninja;
+        double rx = -gamepad1.right_stick_x * ninja;
 
         lf.setPower(y + x - rx);
         lb.setPower(y - x + rx);

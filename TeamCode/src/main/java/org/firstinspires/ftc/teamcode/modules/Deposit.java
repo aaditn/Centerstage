@@ -14,17 +14,24 @@ public class Deposit extends Module
     public static double transfer1=0.19;
     public static double transfer2=0.82;
 
-    public static double deposit1=1;//.83
-    public static double deposit2=0.05;//.22
+    public static double deposit1High= 1;//0.91;//.83
+    public static double deposit2High = 0.05;//0.14;//.22
+    public static double deposit1Mid = 1;//0.94;//.83
+    public static double deposit2Mid = 0.05;//0.11;//.22
+
+    public static double deposit1Low= 1;//0.98;//.83
+    public static double deposit2Low= 0.05;//0.07;//.22
+
+
 
     public static double pusherIn=0.1;
     public static double pusherPushed=0.18;
-    public static double pusherOne=0.22;
-    public static double pusherTwo=0.26;
+    public static double pusherOne=0.23;
+    public static double pusherTwo=0.3;
 
     public enum RotationState implements ModuleState
     {
-        TRANSFER(transfer1, transfer2), DEPOSIT(deposit1, deposit2);
+        TRANSFER(transfer1, transfer2), DEPOSIT_LOW(deposit1Low, deposit2Low), DEPOSIT_MID(deposit1Mid, deposit2Mid), DEPOSIT_HIGH(deposit1High, deposit2High);
 
         double pos1, pos2;
         RotationState(double pos1, double pos2)

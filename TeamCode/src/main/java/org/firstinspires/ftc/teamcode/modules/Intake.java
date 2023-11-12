@@ -29,6 +29,10 @@ public class Intake extends Module {
         }
     }
 
+    public enum OperationState
+    {
+        MANUAL, SET
+    }
     public enum positionState implements ModuleState
     {
         TELE(0.03), HIGH(0.52), FIVE(0), FOUR(0), THREE(0), TWO(0), ONE(0);
@@ -54,6 +58,7 @@ public class Intake extends Module {
 
     powerState pwstate;
     positionState poState;
+    OperationState opstate;
 
     public Intake(HardwareMap hardwareMap)
     {
@@ -62,6 +67,24 @@ public class Intake extends Module {
         angler1 = hardwareMap.get(Servo.class, "intake1");
         angler2 = hardwareMap.get(Servo.class, "intake2");
         angler2.setDirection(Servo.Direction.REVERSE);
+    }
+
+    public void setManual(boolean bool)
+    {
+        if(bool)
+        {
+            opstate= OperationState.MANUAL;
+        }
+        else
+        {
+            opstate= OperationState.SET;
+        }
+    }
+
+    public void setPowerManual(double power)
+    {
+        currentPower=power;
+        intake.setPower(currentPower);
     }
 
 
@@ -76,7 +99,10 @@ public class Intake extends Module {
     @Override
     protected void internalUpdate()
     {
-        currentPower=getState(powerState.class).getOutput();
+        if(opstate!=OperationState.MANUAL)
+        {
+            currentPower=getState(powerState.class).getOutput();
+        }
         currentPosition=getState(positionState.class).getOutput();
     }
 
@@ -85,6 +111,7 @@ public class Intake extends Module {
     {
         poState=positionState.HIGH;
         pwstate=powerState.OFF;
+        opstate=OperationState.SET;
         setInternalStates(poState, pwstate);
     }
 

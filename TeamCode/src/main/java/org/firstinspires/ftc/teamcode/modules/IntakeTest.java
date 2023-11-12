@@ -25,6 +25,7 @@ import java.util.List;
 public class IntakeTest extends EnhancedOpMode
 {
     Intake intake;
+    ElapsedTime matthew = new ElapsedTime();
 Boolean ok =false;
     Deposit deposit;
     //Slides slides;
@@ -46,13 +47,13 @@ Boolean ok =false;
     public static double pusherOne=0.26;
     public static double pusherTwo=0.31;
 public static double initwrist = .21;
-public static double depositwrist=0.05;
+public static double depositwrist=0.0;
     public static int pusherState = 0;
     public static boolean isPusher = true;
     double[] pusherArr = {pusherIn, pusherOne, pusherTwo};
     boolean isXClicked = true;
     boolean ninjaBool = true;
-
+boolean ok2 = false;
     boolean isPusherDone = true;
 Servo wrist;
     double ninja = 1;
@@ -125,6 +126,7 @@ wrist =hardwareMap.get(Servo.class,"wrist");
         //slides.setManual(true);
         intake.init();
         deposit.init();
+        intake.setManual(true);
     }
 
     @Override
@@ -151,19 +153,33 @@ wrist =hardwareMap.get(Servo.class,"wrist");
         //slides.writeLoop();
         intake.writeLoop();
         deposit.writeLoop();
-        ElapsedTime matthew = new ElapsedTime();
         if (slideLeft.getCurrentPosition() < 270) {
             deposit.setState(Deposit.RotationState.TRANSFER);
             deposit.setState(Deposit.PusherState.IN);
             wrist.setPosition(initwrist);
+            ok2=true;
+            ok=false;
         }
-        else if (slideLeft.getCurrentPosition() > 270) {
-            bool ok
-            deposit.setState(Deposit.RotationState.DEPOSIT_MID);
-            deposit.setState(Deposit.RotationState.DEPOSIT_MID);
+        else if (slideLeft.getCurrentPosition() > 270 ) {
+            if(ok2 == true){
+
+                deposit.setState(Deposit.RotationState.DEPOSIT_MID);
+                deposit.setState(Deposit.RotationState.DEPOSIT_MID);
+                ok =true;
+                ok2 = false;
+                matthew.reset();
+            }
             wrist.setPosition(depositwrist);
 
     }
+        telemetry.addData("ok",ok);
+        telemetry.addData("ok2",ok2);
+        telemetry.addData("matthewmiliseconds",matthew.milliseconds());
+        if(ok==true&&matthew.milliseconds()>1000){
+
+            deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
+            deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
+        }
 
         if(gamepad2.a)
         {
@@ -173,18 +189,7 @@ wrist =hardwareMap.get(Servo.class,"wrist");
         {
             intake.setState(Intake.positionState.HIGH);
         }
-        else if(gamepad2.right_stick_y < -0.5)
-        {
-            intake.setState(Intake.powerState.INTAKE);
-        }
-        else if(gamepad2.right_stick_y > -0.5 && gamepad2.right_stick_y < 0.5)
-        {
-            intake.setState(Intake.powerState.OFF);
-        }
-        else if (gamepad2.right_stick_y > 0.5)
-        {
-            intake.setState(Intake.powerState.EXTAKE);
-        }
+        intake.setPowerManual(-gamepad2.right_stick_y);
 
 
 

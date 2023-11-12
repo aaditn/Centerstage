@@ -248,6 +248,8 @@ telemetry.addData("hangPos",hang.getCurrentPosition());
 
         /*if (gamepad1.x && isXClicked) {
             isXClicked = false;
+
+            ninjaBool = !ninjaBool;
             if (ninjaBool) {
                 ninja = 1;
             } else {

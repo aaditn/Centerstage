@@ -25,8 +25,9 @@ import java.util.List;
 public class IntakeTest extends EnhancedOpMode
 {
     Intake intake;
-    ElapsedTime matthew = new ElapsedTime();
-Boolean ok =false;
+    ElapsedTime timer = new ElapsedTime();
+    Boolean threshold1 =false;
+    boolean threshold2 = false;
     Deposit deposit;
     //Slides slides;
     TaskListBuilder builder;
@@ -35,25 +36,21 @@ Boolean ok =false;
 
     int slidesPos;
     DcMotor slideLeft, slideRight;
-
-    DcMotorEx lb, lf, rb, rf;
+    DcMotorEx lb, lf, rb, rf,hang;
     Servo pusher;
-
     ElapsedTime pusherTimer = new ElapsedTime();
-    boolean pusherBool = false;
-
+    boolean pusherBool = false;//what is this for
     public static double pusherIn=0.04;
-    public static double pusherPushed=0.18;
+    public static double pusherPushed=0.18;//what is this for
     public static double pusherOne=0.26;
     public static double pusherTwo=0.31;
-public static double initwrist = .21;
+    public static double initwrist = .19;
 public static double depositwrist=0.0;
     public static int pusherState = 0;
     public static boolean isPusher = true;
     double[] pusherArr = {pusherIn, pusherOne, pusherTwo};
     boolean isXClicked = true;
     boolean ninjaBool = true;
-boolean ok2 = false;
     boolean isPusherDone = true;
 Servo wrist;
     double ninja = 1;
@@ -62,6 +59,7 @@ Servo wrist;
     {
 wrist =hardwareMap.get(Servo.class,"wrist");
         pusher=hardwareMap.get(Servo.class, "pinion");
+        hang=hardwareMap.get(DcMotorEx.class, "hang");
         GamepadEx primary=new GamepadEx(gamepad1);
         //GamepadEx secondary=new GamepadEx(gamepad2);
         ButtonReader B=new ButtonReader(primary, GamepadKeys.Button.B);
@@ -157,25 +155,31 @@ wrist =hardwareMap.get(Servo.class,"wrist");
             deposit.setState(Deposit.RotationState.TRANSFER);
             deposit.setState(Deposit.PusherState.IN);
             wrist.setPosition(initwrist);
-            ok2=true;
-            ok=false;
+            threshold2 =true;
+            threshold1 =false;
+        }
+        else if( threshold2 ==false && gamepad2.left_stick_y>.7){
+            deposit.setState(Deposit.RotationState.TRANSFER);
+            deposit.setState(Deposit.PusherState.IN);
+            wrist.setPosition(initwrist);
+            threshold1=false;
         }
         else if (slideLeft.getCurrentPosition() > 270 ) {
-            if(ok2 == true){
+            if(threshold2 == true){
 
                 deposit.setState(Deposit.RotationState.DEPOSIT_MID);
                 deposit.setState(Deposit.RotationState.DEPOSIT_MID);
-                ok =true;
-                ok2 = false;
-                matthew.reset();
+                threshold1 =true;
+                threshold2 = false;
+                timer.reset();
             }
             wrist.setPosition(depositwrist);
 
     }
-        telemetry.addData("ok",ok);
-        telemetry.addData("ok2",ok2);
-        telemetry.addData("matthewmiliseconds",matthew.milliseconds());
-        if(ok==true&&matthew.milliseconds()>1000){
+        telemetry.addData("ok", threshold1);
+        telemetry.addData("ok2", threshold2);
+        telemetry.addData("matthewmiliseconds", timer.milliseconds());
+        if(threshold1 ==true&& timer.milliseconds()>1500){
 
             deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
             deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
@@ -231,6 +235,16 @@ wrist =hardwareMap.get(Servo.class,"wrist");
             pusherState = 0;
             pusher.setPosition(pusherArr[pusherState]);
         }
+if(gamepad2.dpad_up){
+    hang.setPower(1);
+}
+else if(gamepad2.dpad_down){
+    hang.setPower(-1);
+}
+else{
+    hang.setPower(0);
+}
+telemetry.addData("hangPos",hang.getCurrentPosition());
 
         /*if (gamepad1.x && isXClicked) {
             isXClicked = false;

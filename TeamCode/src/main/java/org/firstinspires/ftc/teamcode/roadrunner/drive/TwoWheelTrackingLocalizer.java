@@ -34,15 +34,18 @@ import java.util.List;
  *
  */
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
-    public static double TICKS_PER_REV = 8192;
-    public static double WHEEL_RADIUS = 0.6889764; // in
+    public static double TICKS_PER_REV_GOBILDA = 2000;
+
+    public static double TICKS_PER_REV_THROUGHBORE = 8192;
+    public static double WHEEL_RADIUS_GOBILDA = 0.944882; // in
+    public static double WHEEL_RADIUS_THROUGHBORE = 0.6889764; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_X = 0; // X is the up and down direction
-    public static double PARALLEL_Y = 0; // Y is the strafe direction
+    public static double PARALLEL_X = -0.73543307; // X is the up and down direction
+    public static double PARALLEL_Y = -6.4515748; // Y is the strafe direction
 
-    public static double PERPENDICULAR_X = 0;
-    public static double PERPENDICULAR_Y = 0;
+    public static double PERPENDICULAR_X = -5.98188976;
+    public static double PERPENDICULAR_Y = 0.78582677;
     public static double ParM = 1;
     public static double PerpM = 1;
 
@@ -67,11 +70,19 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }
 
-    public static double encoderTicksToInches(double ticks) {
-        return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
+    public static double encoderTicksToInches(double ticks, boolean isGobilda) {
+        if (isGobilda) {
+            return WHEEL_RADIUS_GOBILDA * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV_GOBILDA;
+        } else {
+            return WHEEL_RADIUS_THROUGHBORE * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV_THROUGHBORE;
+        }
     }
-    public static double encoderInchesToTicks(double inches) {
-        return inches * TICKS_PER_REV / WHEEL_RADIUS / 2 / Math.PI / GEAR_RATIO;
+    public static double encoderInchesToTicks(double inches, boolean isGobilda) {
+        if (isGobilda) {
+            return inches * TICKS_PER_REV_GOBILDA / WHEEL_RADIUS_GOBILDA / 2 / Math.PI / GEAR_RATIO;
+        } else {
+            return inches * TICKS_PER_REV_THROUGHBORE / WHEEL_RADIUS_THROUGHBORE / 2 / Math.PI / GEAR_RATIO;
+        }
     }
 
     @Override
@@ -88,8 +99,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     @Override
     public List<Double> getWheelPositions() {
         return Arrays.asList(
-                encoderTicksToInches(parallelEncoder.getCurrentPosition() * ParM),
-                encoderTicksToInches(perpendicularEncoder.getCurrentPosition() * PerpM)
+                encoderTicksToInches(parallelEncoder.getCurrentPosition() * ParM, false),
+                encoderTicksToInches(perpendicularEncoder.getCurrentPosition() * PerpM, true)
         );
     }
 
@@ -101,8 +112,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         //  compensation method
 
         return Arrays.asList(
-                encoderTicksToInches(parallelEncoder.getCorrectedVelocity() * ParM),
-                encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity() * PerpM)
+                encoderTicksToInches(parallelEncoder.getCorrectedVelocity() * ParM, false),
+                encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity() * PerpM, true)
         );
     }
 }

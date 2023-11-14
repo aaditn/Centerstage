@@ -44,7 +44,7 @@ public class IntakeTest extends EnhancedOpMode
     public static double pusherPushed=0.18;//what is this for
     public static double pusherOne=0.26;
     public static double pusherTwo=0.31;
-    public static double initwrist = .19;
+    public static double initwrist =0.23;
 public static double depositwrist=0.0;
     public static int pusherState = 0;
     public static boolean isPusher = true;

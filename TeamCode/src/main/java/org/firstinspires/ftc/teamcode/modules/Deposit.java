@@ -76,14 +76,14 @@ public class Deposit extends Module
     RotationState rstate;
     PusherState pstate;
 
-    Servo leftRotator, rightRotator;//, pusher;
+    Servo leftRotator, rightRotator, pusher;
 
     public Deposit(HardwareMap hardwareMap)
     {
         super(false);
         leftRotator =hardwareMap.get(Servo.class, "leftRotator");
         rightRotator=hardwareMap.get(Servo.class, "rightRotator");
-        //pusher=hardwareMap.get(Servo.class, "pinion");
+        pusher=hardwareMap.get(Servo.class, "pinion");
     }
 
     @Override

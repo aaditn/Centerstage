@@ -42,7 +42,7 @@ public class IntakeTest extends EnhancedOpMode
     boolean pusherBool = false;//what is this for
     public static double pusherIn=0.04;
     public static double pusherPushed=0.18;//what is this for
-    public static double pusherOne=0.26;
+    public static double pusherOne=0.265;
     public static double pusherTwo=0.31;
     public static double initwrist =0.23;
 public static double depositwrist=0.0;
@@ -57,8 +57,8 @@ Servo wrist;
     @Override
     public void linearOpMode()
     {
-wrist =hardwareMap.get(Servo.class,"wrist");
-        pusher=hardwareMap.get(Servo.class, "pinion");
+        wrist =hardwareMap.get(Servo.class,"wrist");
+        pusher=hardwareMap.get(Servo.class, "pusher");
         hang=hardwareMap.get(DcMotorEx.class, "hang");
         GamepadEx primary=new GamepadEx(gamepad1);
         //GamepadEx secondary=new GamepadEx(gamepad2);
@@ -118,6 +118,10 @@ wrist =hardwareMap.get(Servo.class,"wrist");
         lf = hardwareMap.get(DcMotorEx.class, "fl");
         rb = hardwareMap.get(DcMotorEx.class, "br");
         rf = hardwareMap.get(DcMotorEx.class, "fr");
+        lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
         //slides=new Slides(hardwareMap);
@@ -271,8 +275,8 @@ telemetry.addData("hangPos",hang.getCurrentPosition());
         slideLeft.setPower(1);
         slideRight.setPower(1);
 
-        double x = -gamepad1.left_stick_y * ninja;
-        double y = gamepad1.left_stick_x * ninja;
+        double x = gamepad1.left_stick_y * ninja;
+        double y = -gamepad1.left_stick_x * ninja;
         double rx = -gamepad1.right_stick_x * ninja;
 
         lf.setPower(y + x - rx);

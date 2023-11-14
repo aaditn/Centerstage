@@ -83,7 +83,7 @@ public class Deposit extends Module
         super(false);
         leftRotator =hardwareMap.get(Servo.class, "leftRotator");
         rightRotator=hardwareMap.get(Servo.class, "rightRotator");
-        pusher=hardwareMap.get(Servo.class, "pinion");
+        pusher=hardwareMap.get(Servo.class, "pusher");
     }
 
     @Override

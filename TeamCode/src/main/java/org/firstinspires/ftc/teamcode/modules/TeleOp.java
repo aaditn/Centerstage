@@ -42,9 +42,9 @@ public class TeleOp extends EnhancedOpMode
     public static double pusherIn=0.04;
     public static double pusherPushed=0.18;//what is this for
     public static double pusherOne=0.265;
-    public static double pusherTwo=0.33;
-    public static double initwrist =0.5;
-public static double depositwrist=0.0;
+    public static double pusherTwo=0.4;
+    public static double initwrist =.5;
+    public static double depositwrist=0.3;
     public static int pusherState = 0;
     public static boolean isPusher = true;
     double[] pusherArr = {pusherIn, pusherOne, pusherTwo};
@@ -238,16 +238,16 @@ Servo wrist;
             pusherState = 0;
             pusher.setPosition(pusherArr[pusherState]);
         }
-if(gamepad2.dpad_up){
-    hang.setPower(1);
-}
-else if(gamepad2.dpad_down){
-    hang.setPower(-1);
-}
-else{
-    hang.setPower(0);
-}
-telemetry.addData("hangPos",hang.getCurrentPosition());
+        if(gamepad2.dpad_up){
+            hang.setPower(1);
+        }
+        else if(gamepad2.dpad_down){
+            hang.setPower(-1);
+        }
+        else{
+            hang.setPower(0);
+        }
+        telemetry.addData("hangPos",hang.getCurrentPosition());
 
         /*if (gamepad1.x && isXClicked) {
             isXClicked = false;

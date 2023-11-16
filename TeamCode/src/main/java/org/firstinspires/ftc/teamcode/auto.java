@@ -31,9 +31,9 @@ public class auto extends LinearOpMode {
 
     public static double pusherPrep=0.12;
     public static double pusherOne=0.265;
-    public static double pusherTwo=0.4;
+    public static double pusherTwo=0.35;
     public static double initwrist =.5;
-    public static double depositwrist=0.3;
+    public static double depositwrist=0.2;
 
     Intake intake;
     Deposit deposit;
@@ -51,11 +51,38 @@ public class auto extends LinearOpMode {
         wrist =hardwareMap.get(Servo.class,"wrist");
         Trajectory placePixel2 = m.trajectoryBuilder(startPos)
                 .lineToConstantHeading(new Vector2d(16,29))
+
+                .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
+                .build();
+        Trajectory placePixel1 = m.trajectoryBuilder(startPos)
+                .splineToConstantHeading(new Vector2d(30.5, 37), Math.toRadians(-90),
+                        m.getVelocityConstraint(30, 1, 15.06),
+                        m.getAccelerationConstraint(40))
+                .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
+                .build();
+        Trajectory placePixel3 = m.trajectoryBuilder(startPos)
+                .splineTo(new Vector2d(11, 34), Math.toRadians(-135),
+                        m.getVelocityConstraint(30, 1, 15.06),
+                        m.getAccelerationConstraint(40))
+                .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
                 .build();
         Trajectory dropPixel2 = m.trajectoryBuilder(placePixel2.end())
-                .lineToLinearHeading(new Pose2d(57,31,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(57.5,31,Math.toRadians(180)),
                         m.getVelocityConstraint(47.5, 1.65, 15.06),
                         m.getAccelerationConstraint(45))
+                .build();
+
+        Trajectory dropPixel1 = m.trajectoryBuilder(placePixel2.end())
+                .lineToLinearHeading(new Pose2d(57.5,37.5,Math.toRadians(180)),
+                        m.getVelocityConstraint(47.5, 1.65, 15.06),
+                        m.getAccelerationConstraint(45))
+                .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
+                .build();
+        Trajectory dropPixel3 = m.trajectoryBuilder(placePixel2.end())
+                .lineToLinearHeading(new Pose2d(57.5  ,28,Math.toRadians(180)),
+                        m.getVelocityConstraint(47.5, 1.65, 15.06),
+                        m.getAccelerationConstraint(45))
+                .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
                 .build();
         pusher=hardwareMap.get(Servo.class, "pusher");
         deposit=new Deposit(hardwareMap);
@@ -74,21 +101,24 @@ public class auto extends LinearOpMode {
         slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         intake.init();
         deposit.init();
+        intake.setState(Intake.positionState.HIGH);
         waitForStart();
         wrist.setPosition(initwrist);
         pusher.setPosition(pusherPrep);
         waitForStart();
-        m.followTrajectory(placePixel2);
-        intake.setState(Intake.powerState.LOW);
+        m.followTrajectory(placePixel1);
+
+        intake.setState(Intake.positionState.PURP);
 
         intake.writeLoop();
         intake.updateLoop();
-        waitT(2500);
+        waitT(3500);
         intake.setState(Intake.powerState.OFF);
+        intake.setState(Intake.positionState.HIGH);
         intake.writeLoop();
         intake.updateLoop();
         intake.setManual(true);
-        m.followTrajectory(dropPixel2);
+        m.followTrajectory(dropPixel1);
 
         slidesPos=50;
         slideLeft.setTargetPosition(slidesPos);
@@ -129,6 +159,10 @@ public class auto extends LinearOpMode {
             slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
+
+        sleep(1000);
+        pusher.setPosition(pusherIn);
+        sleep(1000);
 
 
 

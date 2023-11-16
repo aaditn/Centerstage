@@ -14,7 +14,7 @@ public class Intake extends Module {
     double threshold = 0.02; // you might need one because power is inconsistent
     public enum powerState implements ModuleState
     {
-        INTAKE(0.9), EXTAKE(-0.9), OFF(0), LOW(-0.5);
+        INTAKE(0.9), EXTAKE(-0.9), OFF(0), LOW(-0.3);
         double power;
         powerState(double power)
         {
@@ -34,7 +34,7 @@ public class Intake extends Module {
     }
     public enum positionState implements ModuleState
     {
-        TELE(0.03), HIGH(0.52), FIVE(0), FOUR(0), THREE(0), TWO(0), ONE(0);
+        TELE(0.03), HIGH(0.52), FIVE(0), FOUR(0), THREE(0), TWO(0), ONE(0), PURP (0.0675);
 
         double position;
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -10,12 +10,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.Intake;
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.Context;
 
@@ -79,15 +79,15 @@ public class auto extends LinearOpMode {
         pusher.setPosition(pusherPrep);
         waitForStart();
         m.followTrajectory(placePixel2);
-        intake.setState(Intake.powerState.LOW);
+        intake.setState(Intake.PowerState.LOW);
 
         intake.writeLoop();
         intake.updateLoop();
         waitT(2500);
-        intake.setState(Intake.powerState.OFF);
+        intake.setState(Intake.PowerState.OFF);
         intake.writeLoop();
         intake.updateLoop();
-        intake.setManual(true);
+        intake.setOperationState(Module.OperationState.MANUAL);
         m.followTrajectory(dropPixel2);
 
         slidesPos=50;

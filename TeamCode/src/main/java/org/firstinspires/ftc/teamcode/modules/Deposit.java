@@ -28,7 +28,7 @@ public class Deposit extends Module
     public static double pusherOne=0.23;
     public static double pusherTwo=0.32;
 
-    public enum RotationState implements ModuleState
+    public static enum RotationState implements ModuleState
     {
         TRANSFER(transfer1, transfer2), DEPOSIT_LOW(deposit1Low, deposit2Low), DEPOSIT_MID(deposit1Mid, deposit2Mid), DEPOSIT_HIGH(deposit1High, deposit2High);
 
@@ -57,7 +57,7 @@ public class Deposit extends Module
     }
 
 
-    public enum PusherState implements  ModuleState
+    public static enum PusherState implements  ModuleState
     {
         IN(pusherIn),EXTENDED(pusherPushed), ONE(pusherOne), TWO(pusherTwo);
 
@@ -91,7 +91,7 @@ public class Deposit extends Module
     {
         leftRotator.setPosition(leftRotatorPos);
         rightRotator.setPosition(rightRotatorPos);
-        //pusher.setPosition(pusherPos);
+        pusher.setPosition(pusherPos);
     }
 
     @Override

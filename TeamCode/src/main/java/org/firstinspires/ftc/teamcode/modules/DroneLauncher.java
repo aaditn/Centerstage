@@ -10,7 +10,7 @@ public class DroneLauncher extends Module
 {
     Servo lock;
 
-    public enum State implements ModuleState
+    public static enum State implements ModuleState
     {
         RELEASED(0.2), LOCKED(0.5);
 

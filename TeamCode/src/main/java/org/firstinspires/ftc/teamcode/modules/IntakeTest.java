@@ -3,22 +3,9 @@ package org.firstinspires.ftc.teamcode.modules;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.gamepad.ButtonReader;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.task_scheduler.Task;
-import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
-import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-
-import java.util.List;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 @Config
@@ -89,11 +76,11 @@ public class IntakeTest extends EnhancedOpMode
 
         if(gamepad2.a)
         {
-            intake.setState(Intake.positionState.TELE);
+            intake.setState(Intake.PositionState.TELE);
         }
         else if(gamepad2.b)
         {
-            intake.setState(Intake.positionState.HIGH);
+            intake.setState(Intake.PositionState.HIGH);
         }
         intake.setPowerManual(-gamepad2.right_stick_y);
 

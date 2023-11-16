@@ -21,7 +21,13 @@ public abstract class Module
         TRANSITIONING, IDLE
     }
 
+    public enum OperationState
+    {
+        PRESET, MANUAL
+    }
+
     protected Status status=Status.IDLE;
+    protected OperationState opstate=OperationState.PRESET;
 
     //constructor. gives module all information to do tasks. constantUpdate is used for modules with PID
     // or some other controller that needs constant updating
@@ -71,6 +77,11 @@ public abstract class Module
         onStateChange();
     }
 
+    public void setOperationState(OperationState s)
+    {
+        opstate=s;
+    }
+
     //gets the specific state you want
     public ModuleState getState(Class e)
     {
@@ -94,34 +105,26 @@ public abstract class Module
     private void onStateChange()
     {
         timer.reset();
-        updateInternalStatus();
-        stateChanged();
-        readUpdate();
         stateChanged=true;
-    }
+        stateChanged();
 
-    //runs once on state change and permanently if constantUpdate is enabled
-    private void readUpdate()
-    {
-        telemetryUpdate();
         updateInternalStatus();
-        internalUpdate();
+        telemetryUpdate();
     }
-
 
     //way to call update loop from opMode
     public void updateLoop()
     {
-        if(constantUpdate)
+        if(opstate==OperationState.PRESET&&(constantUpdate||stateChanged))
         {
-            readUpdate();
+            internalUpdate();
         }
-        //updateInternalStatus always running to account for timeout conditions and telemetry for fun
-        else
+        else if(opstate==OperationState.MANUAL&&(constantUpdate||stateChanged))
         {
-            updateInternalStatus();
-            telemetryUpdate();
+            internalUpdateManual();
         }
+        updateInternalStatus();
+        telemetryUpdate();
     }
 
     //way to call writes from opMode. Separate from update to make write calls all at the same time.
@@ -164,10 +167,18 @@ public abstract class Module
         }
     }
 
+    public void manualChange(double value)
+    {
+        timer.reset();
+        stateChanged=true;
+    }
+
 
 
     //write implementation for updating internally(setting powers to something)
     protected abstract void internalUpdate();
+    protected void internalUpdateManual() {}
+
 
     //need implementation to set the states so this module can access all states
     protected abstract void initInternalStates();

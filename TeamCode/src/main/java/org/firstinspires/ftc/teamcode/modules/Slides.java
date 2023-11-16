@@ -18,7 +18,7 @@ public class Slides extends Module
     BPIDFController controller;
     public double targetPosition, motorPower;
     public static double kp=0.5, ki=0, kd=0;
-    public enum SlideState implements ModuleState
+    public static enum SlideState implements ModuleState
     {
         GROUND(0), ROW1(0), ROW2(0), ROW3(0);
 
@@ -34,13 +34,9 @@ public class Slides extends Module
         }
     }
 
-    public enum OperationState
-    {
-        MANUAL, SET
-    }
 
-    SlideState state=SlideState.GROUND;
-    OperationState opstate=OperationState.SET;
+    SlideState state;
+
     public Slides(HardwareMap hardwareMap)
     {
         super(true);
@@ -53,7 +49,7 @@ public class Slides extends Module
     }
 
     @Override
-    public void write()
+    protected void write()
     {
         if (slide1.getCurrentPosition() > 1125) {
             slide1.setPower(0);
@@ -66,39 +62,32 @@ public class Slides extends Module
         //actually write the powers to the motor
     }
 
-    public void setManual(boolean bool)
-    {
-        if(bool)
-        {
-            opstate=OperationState.MANUAL;
-        }
-        else
-        {
-            opstate=OperationState.SET;
-        }
-    }
 
     @Override
     public void internalUpdate()
     {
-        if(opstate==OperationState.SET)
-        {
-            targetPosition=getState().getOutput();
-        }
+        targetPosition=getState().getOutput();
         motorPower=controller.update(slide1.getCurrentPosition(), targetPosition);
         //update the internal powers and stuff
     }
 
-    public void setPositionManual(double position)
+    @Override
+    public void internalUpdateManual()
     {
+        motorPower=controller.update(slide1.getCurrentPosition(), targetPosition);
+    }
+    @Override
+    public void manualChange(double position)
+    {
+        super.manualChange(position);
         targetPosition=position;
     }
-
 
     @Override
     protected void initInternalStates()
     {
         //SET THE INTERNAL STATES
+        state=SlideState.GROUND;
         setInternalStates(state);
     }
 
@@ -119,11 +108,5 @@ public class Slides extends Module
     {
         super.telemetryUpdate();
         Context.tel.addData("Target Position", targetPosition);
-    }
-
-    //calls whenever state changes. DO NOT ADD ANY WRITE CALLS HERE. Only meant for changing some other values.
-    public void stateChanged()
-    {
-
     }
 }

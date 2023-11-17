@@ -95,7 +95,7 @@ public class Robot extends MecanumDrive
     LinearOpMode l;
     HardwareMap hardwareMap;
     MultipleTelemetry tel;
-    //public Slides slides;
+    public Slides slides;
     public Deposit deposit;
     public Intake intake;
 
@@ -114,7 +114,7 @@ public class Robot extends MecanumDrive
         dtInit();
         
 
-        //slides=new Slides(hardwareMap);
+        slides=new Slides(hardwareMap);
         deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
 
@@ -199,14 +199,14 @@ public class Robot extends MecanumDrive
 
     public void read()
     {
-        //slides.updateLoop();
+        slides.updateLoop();
         deposit.updateLoop();
         intake.updateLoop();
     }
 
     public void write()
     {
-        //slides.writeLoop();
+        slides.writeLoop();
         deposit.writeLoop();
         intake.writeLoop();
     }

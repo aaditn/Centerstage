@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
@@ -51,7 +52,7 @@ public class IntakeTest extends EnhancedOpMode
 
         intake=new Intake(hardwareMap);
         intake.init();
-        intake.setManual(true);
+        intake.setOperationState(Module.OperationState.MANUAL);
     }
 
     @Override
@@ -82,7 +83,7 @@ public class IntakeTest extends EnhancedOpMode
         {
             intake.setState(Intake.PositionState.HIGH);
         }
-        intake.setPowerManual(-gamepad2.right_stick_y);
+        intake.manualChange(-gamepad2.right_stick_y);
 
     }
 

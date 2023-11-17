@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
+import org.firstinspires.ftc.teamcode.util.Context;
 
 @Config
 public class Deposit extends Module
@@ -24,10 +25,11 @@ public class Deposit extends Module
     public static double initwrist =.5;
     public static double depositwrist=0.3;
 
-    public static double pusherIn=0.1;
+    public static double pusherIn=0.04;
     public static double pusherPushed=0.18;
-    public static double pusherOne=0.23;
-    public static double pusherTwo=0.32;
+    public static double pusherOne=0.265;
+    public static double pusherTwo=0.4;
+    int debugCounter=0;
 
     public static enum RotationState implements ModuleState
     {
@@ -103,8 +105,17 @@ public class Deposit extends Module
     }
 
     @Override
+    protected void telemetryUpdate()
+    {
+        super.telemetryUpdate();
+        Context.tel.addData("Wrist position", wristPos);
+        Context.tel.addData("internal update called counter", debugCounter);
+    }
+
+    @Override
     protected void internalUpdate()
     {
+        debugCounter++;
         leftRotatorPos=getState(RotationState.class).getOutput(1);
         rightRotatorPos=getState(RotationState.class).getOutput(2);
         wristPos=getState(RotationState.class).getOutput(3);

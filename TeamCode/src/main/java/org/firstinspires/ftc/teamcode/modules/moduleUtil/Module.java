@@ -10,6 +10,7 @@ public abstract class Module
     private ModuleState[] states;
     boolean constantUpdate;
     boolean stateChanged;
+    boolean readUpdateChecker;
 
     public String telIdentifier;
 
@@ -54,13 +55,15 @@ public abstract class Module
         {
             if(state.getClass()==states[i].getClass())
             {
-                states[i]=state;
+                if(state!=states[i])
+                {
+                    states[i]=state;
+                    onStateChange();
+                }
             }
         }
         //resets timeout to 0 if none specified
         currentTimeout=0;
-        //triggers a sequence that occurs once when state is changed(this is how powers change for stuff with constantUpdate off)
-        onStateChange();
     }
 
     //same code but with timeout
@@ -70,11 +73,14 @@ public abstract class Module
         {
             if(state.getClass()==states[i].getClass())
             {
-                states[i]=state;
+                if(state!=states[i])
+                {
+                    states[i]=state;
+                    onStateChange();
+                }
             }
         }
         currentTimeout=timeout;
-        onStateChange();
     }
 
     public void setOperationState(OperationState s)
@@ -105,6 +111,7 @@ public abstract class Module
     private void onStateChange()
     {
         timer.reset();
+        readUpdateChecker=false;
         stateChanged=true;
         stateChanged();
 
@@ -115,13 +122,17 @@ public abstract class Module
     //way to call update loop from opMode
     public void updateLoop()
     {
-        if(opstate==OperationState.PRESET&&(constantUpdate||stateChanged))
+        if(constantUpdate||stateChanged)
         {
-            internalUpdate();
-        }
-        else if(opstate==OperationState.MANUAL&&(constantUpdate||stateChanged))
-        {
-            internalUpdateManual();
+            if(opstate==OperationState.PRESET)
+            {
+                internalUpdate();
+            }
+            else if(opstate==OperationState.MANUAL)
+            {
+                internalUpdateManual();
+            }
+            readUpdateChecker=true;
         }
         updateInternalStatus();
         telemetryUpdate();
@@ -133,7 +144,10 @@ public abstract class Module
         if(constantUpdate||stateChanged)
         {
             write();
-            stateChanged=false;
+            if(readUpdateChecker)
+            {
+                stateChanged=false;
+            }
         }
     }
 
@@ -146,9 +160,9 @@ public abstract class Module
     protected abstract void write();
 
     //way to get state times from outside class/in opMode
-    public double timeSpentInState()
+    public int timeSpentInState()
     {
-        return timer.milliseconds();
+        return (int) timer.milliseconds();
     }
 
     //called once on stateChange(useful for things that only need to be called once when state changes

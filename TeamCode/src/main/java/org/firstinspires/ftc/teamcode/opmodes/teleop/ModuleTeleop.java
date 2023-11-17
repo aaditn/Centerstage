@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
@@ -17,6 +19,9 @@ import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 import java.util.List;
+
+@Config
+@TeleOp
 
 public class ModuleTeleop extends EnhancedOpMode
 {
@@ -61,7 +66,7 @@ public class ModuleTeleop extends EnhancedOpMode
             {
                 deposit.setState(Deposit.PusherState.TWO);
             }
-
+            intake.manualChange(-gamepad1.left_stick_y);
         }
     }
 
@@ -76,7 +81,7 @@ public class ModuleTeleop extends EnhancedOpMode
 
         deposit=robot.deposit;
         intake=robot.intake;
-        //slides=robot.slides;
+        slides=robot.slides;
         droneLauncher=robot.droneLauncher;
 
         intake.init();

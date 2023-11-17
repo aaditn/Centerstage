@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Slides;
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
@@ -36,6 +37,30 @@ public class ModuleTeleop extends EnhancedOpMode
 
         while(opModeIsActive())
         {
+            if(gamepad1.a)
+            {
+                deposit.setState(Deposit.RotationState.TRANSFER);
+            }
+            else if(gamepad1.b)
+            {
+                deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
+            }
+            else if(gamepad1.x)
+            {
+                intake.setState(Intake.PositionState.HIGH);
+            }
+            else if(gamepad1.y)
+            {
+                intake.setState(Intake.PositionState.TELE);
+            }
+            else if(gamepad1.right_bumper)
+            {
+                deposit.setState(Deposit.PusherState.IN);
+            }
+            else if(gamepad1.left_bumper)
+            {
+                deposit.setState(Deposit.PusherState.TWO);
+            }
 
         }
     }
@@ -51,11 +76,12 @@ public class ModuleTeleop extends EnhancedOpMode
 
         deposit=robot.deposit;
         intake=robot.intake;
-        slides=robot.slides;
+        //slides=robot.slides;
         droneLauncher=robot.droneLauncher;
 
         intake.init();
         deposit.init();
+        intake.setOperationState(Module.OperationState.MANUAL);
     }
 
     @Override

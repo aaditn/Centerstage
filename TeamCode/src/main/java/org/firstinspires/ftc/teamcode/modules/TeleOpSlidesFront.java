@@ -235,7 +235,7 @@ Servo wrist;
             slidesPos -= 10;
         }
 
-        if (slidesPos < 250) {
+        if (slidesPos < 50) {
             pusherState = 0;
             pusher.setPosition(pusherArr[pusherState]);
         }

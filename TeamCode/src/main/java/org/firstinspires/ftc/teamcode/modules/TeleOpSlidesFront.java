@@ -20,9 +20,9 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 import java.util.List;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "A - DRIVER CONTROL (2 PLAYER)")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "B - DRIVER CONTROL (2 PLAYER)")
 @Config
-public class TeleOp extends EnhancedOpMode
+public class TeleOpSlidesFront extends EnhancedOpMode
 {
     Intake intake;
     ElapsedTime timer = new ElapsedTime();
@@ -52,7 +52,7 @@ public class TeleOp extends EnhancedOpMode
     boolean isXClicked = true;
     boolean ninjaBool = true;
     boolean isPusherDone = true;
-    Servo wrist;
+Servo wrist;
     double ninja = 1;
     @Override
     public void linearOpMode()
@@ -179,7 +179,7 @@ public class TeleOp extends EnhancedOpMode
             }
             wrist.setPosition(depositwrist);
 
-        }
+    }
         telemetry.addData("ok", threshold1);
         telemetry.addData("ok2", threshold2);
         telemetry.addData("matthewmiliseconds", timer.milliseconds());
@@ -275,8 +275,8 @@ public class TeleOp extends EnhancedOpMode
         slideLeft.setPower(1);
         slideRight.setPower(1);
 
-        double x =-gamepad1.left_stick_y * ninja;
-        double y = gamepad1.left_stick_x * ninja;
+        double x =gamepad1.left_stick_y * ninja;
+        double y = -gamepad1.left_stick_x * ninja;
         double rx = -gamepad1.right_stick_x * ninja;
 
         lf.setPower(y + x - rx);

@@ -146,15 +146,13 @@ public class teamElementDetection extends OpenCvPipeline{
                 m = Imgproc.moments(Contours.get(contourIndex));
                 if(m.m00!=0)
                 {
-                    centerY =m.m01/m.m00; //use centerX to locate the team element position?
-                    //tel.addData("centerX", centerY);
-                    //tel.update();
+                    centerY =m.m01/m.m00;
                 }
                 else
                 {
                     centerY =-1;
                 }
-                largestArea=contourArea; //finds contour with largest area
+                largestArea=contourArea;
             }
             else{
                 mat=input;

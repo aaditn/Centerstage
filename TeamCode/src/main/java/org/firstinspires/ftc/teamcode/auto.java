@@ -25,13 +25,13 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous(name= "goofy wonkwonk close blue yeyeaha")
+@Autonomous(name= "close blue")
 public class auto extends LinearOpMode {
 
     DcMotor slideLeft,slideRight;
     int slidesPos;
-    Servo wrist, pusher
-            ;    public static double pusherIn=0.04;
+    Servo wrist, pusher;
+    public static double pusherIn=0.04;
     public static double pusherPushed=0.18;//what is this for
 
     public static double pusherPrep=0.12;
@@ -54,24 +54,26 @@ public class auto extends LinearOpMode {
         Context.tel=new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         m= new SampleMecanumDrive(hardwareMap);
         m.setPoseEstimate(startPos);
-        wrist =hardwareMap.get(Servo.class,"wrist");
+
         Trajectory placePixel2 = m.trajectoryBuilder(startPos)
                 .lineToConstantHeading(new Vector2d(16,29))
-
                 .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
                 .build();
+
         Trajectory placePixel1 = m.trajectoryBuilder(startPos)
                 .splineToConstantHeading(new Vector2d(30.5, 37), Math.toRadians(-90),
                         m.getVelocityConstraint(30, 1, 15.06),
                         m.getAccelerationConstraint(40))
                 .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
                 .build();
+
         Trajectory placePixel3 = m.trajectoryBuilder(startPos)
                 .splineTo(new Vector2d(11, 34), Math.toRadians(-135),
                         m.getVelocityConstraint(30, 1, 15.06),
                         m.getAccelerationConstraint(40))
                 .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
                 .build();
+
         Trajectory dropPixel2 = m.trajectoryBuilder(placePixel2.end())
                 .lineToLinearHeading(new Pose2d(57.5,31,Math.toRadians(180)),
                         m.getVelocityConstraint(47.5, 1.65, 15.06),
@@ -84,12 +86,15 @@ public class auto extends LinearOpMode {
                         m.getAccelerationConstraint(45))
                 .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
                 .build();
+
         Trajectory dropPixel3 = m.trajectoryBuilder(placePixel2.end())
                 .lineToLinearHeading(new Pose2d(57.5  ,28,Math.toRadians(180)),
                         m.getVelocityConstraint(47.5, 1.65, 15.06),
                         m.getAccelerationConstraint(45))
                 .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
                 .build();
+
+        wrist =hardwareMap.get(Servo.class,"wrist");
         pusher=hardwareMap.get(Servo.class, "pusher");
         deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
@@ -108,6 +113,7 @@ public class auto extends LinearOpMode {
         intake.init();
         deposit.init();
         intake.setState(Intake.positionState.HIGH);
+
         int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvWebcam test = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
         teamElementDetection TeamElementDetection =new teamElementDetection(telemetry);
@@ -129,16 +135,16 @@ public class auto extends LinearOpMode {
         int elementPos=0;
         while(!opModeIsActive()){
             if(TeamElementDetection.centerY < 0) {
-                elementPos = 0;
+                elementPos = 3;
             } else if(TeamElementDetection.centerY < 107){
                 elementPos = 1;
             } else if (TeamElementDetection.centerY < 214) {
                 elementPos = 2;
             } else {
-                elementPos = 3;
+                elementPos = -1;
             }
             telemetry.addData("element Pos", elementPos);
-            telemetry.addData("centerX",TeamElementDetection.centerY);
+            telemetry.addData("centerY",TeamElementDetection.centerY);
             telemetry.addData("largest area", TeamElementDetection.getLargestArea());
             telemetry.update();
         }

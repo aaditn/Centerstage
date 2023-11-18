@@ -71,8 +71,8 @@ public class teamElement extends EnhancedOpMode {
 
     public void initLoop()
     {
-//        tel.addData("centerX", TeamElementDetection.centerX);
-//        tel.addData("elementPos", elementPos);
-//        tel.update();
+        tel.addData("centerX", TeamElementDetection.centerX);
+        tel.addData("elementPos", elementPos);
+       tel.update();
     }
 }

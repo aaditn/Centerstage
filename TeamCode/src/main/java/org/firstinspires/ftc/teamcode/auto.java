@@ -14,13 +14,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.vision.teamElementDetection;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous
+@Autonomous(name= "goofy wonkwonk close blue yeyeaha")
 public class auto extends LinearOpMode {
 
     DcMotor slideLeft,slideRight;
@@ -38,13 +44,14 @@ public class auto extends LinearOpMode {
     Intake intake;
     Deposit deposit;
     SampleMecanumDrive m;
-    Pose2d startPos = new Pose2d(16,56,Math.toRadians(270));
+    Pose2d startPos = new Pose2d(20,56,Math.toRadians(270));
 
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         Context.resetValues();
+        Context.isTeamRed = false;
         Context.tel=new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         m= new SampleMecanumDrive(hardwareMap);
         m.setPoseEstimate(startPos);
@@ -102,13 +109,52 @@ public class auto extends LinearOpMode {
         intake.init();
         deposit.init();
         intake.setState(Intake.positionState.HIGH);
+        int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        OpenCvWebcam test = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
+        teamElementDetection TeamElementDetection =new teamElementDetection(telemetry);
+        test.setPipeline(TeamElementDetection);
+
+        test.setMillisecondsPermissionTimeout(5000);
+        test.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened()
+            {
+                test.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
+        int elementPos=0;
+        while(!opModeIsActive()){
+            if(TeamElementDetection.centerX < 0) {
+                elementPos = 0;
+            } else if(TeamElementDetection.centerX < 107){
+                elementPos = 1;
+            } else if (TeamElementDetection.centerX < 214) {
+                elementPos = 2;
+            } else {
+                elementPos = 3;
+            }
+            telemetry.addData("element Pos", elementPos);
+            telemetry.addData("centerX",TeamElementDetection.centerX);
+            telemetry.update();
+        }
         waitForStart();
         wrist.setPosition(initwrist);
         pusher.setPosition(pusherPrep);
         waitForStart();
-        m.followTrajectory(placePixel1);
+        if(elementPos==1) {
+            m.followTrajectory(placePixel1);
+        }else if (elementPos==2){
+            m.followTrajectory(placePixel2);
+        } else{
+            m.followTrajectory(placePixel3);
+        }
 
-        intake.setState(Intake.positionState.PURP);
+
 
         intake.writeLoop();
         intake.updateLoop();
@@ -118,7 +164,14 @@ public class auto extends LinearOpMode {
         intake.writeLoop();
         intake.updateLoop();
         intake.setManual(true);
-        m.followTrajectory(dropPixel1);
+
+        if(elementPos==1) {
+            m.followTrajectory(dropPixel1);
+        }else if (elementPos==2){
+            m.followTrajectory(dropPixel2);
+        } else{
+            m.followTrajectory(dropPixel3);
+        }
 
         slidesPos=50;
         slideLeft.setTargetPosition(slidesPos);
@@ -140,21 +193,21 @@ public class auto extends LinearOpMode {
         deposit.updateLoop();
         deposit.writeLoop();
         waitT(2500);
-        slidesPos = 0;
+        slidesPos = 200;
         slideLeft.setTargetPosition(slidesPos);
         slideRight.setTargetPosition(slidesPos);
 
         slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        waitT(2500);
+        slidesPos = 0;
         while(Math.abs(slideLeft.getCurrentPosition()-slideLeft.getTargetPosition() )>20){
-            if(Math.abs(slideLeft.getCurrentPosition()-slideLeft.getTargetPosition() ) >200) {
                 deposit.setState(Deposit.RotationState.TRANSFER);
                 wrist.setPosition(initwrist);
                 pusher.setPosition(pusherIn);
 
                 deposit.updateLoop();
                 deposit.writeLoop();
-            }
 
             slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);

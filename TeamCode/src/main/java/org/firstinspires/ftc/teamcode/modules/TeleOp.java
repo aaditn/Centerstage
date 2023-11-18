@@ -12,11 +12,18 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.vision.teamElementDetection;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvTracker;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.List;
 
@@ -45,7 +52,7 @@ public class TeleOp extends EnhancedOpMode
     public static double pusherOne=0.265;
     public static double pusherTwo=0.38;
     public static double initwrist =0.56;
-    public static double depositwrist=0.25;
+    public static double depositwrist=0.23;
     public static int pusherState = 0;
     public static boolean isPusher = true;
     double[] pusherArr = {pusherIn, pusherOne, pusherTwo};

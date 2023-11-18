@@ -127,7 +127,7 @@ public class teamElementDetection extends OpenCvPipeline{
             //tel.addData("Contour count", Contours.size());
             //tel.update();
 
-            int contourIndex=0;
+            int contourIndex=-1;
             double contourArea=-1;
 
             for (int i = 0; i < Contours.size(); i++){
@@ -140,7 +140,7 @@ public class teamElementDetection extends OpenCvPipeline{
                 }
 
             }
-            if (Contours.size() > 0){
+            if (Contours.size() > 0&& contourIndex>=0){
                 mat = input.clone();//empty- all black
                 Imgproc.drawContours(mat, Contours, contourIndex, new Scalar(255, 255, 255), -1);
                 m = Imgproc.moments(Contours.get(contourIndex));

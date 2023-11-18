@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -129,22 +128,24 @@ public class auto extends LinearOpMode {
         });
         int elementPos=0;
         while(!opModeIsActive()){
-            if(TeamElementDetection.centerX < 0) {
+            if(TeamElementDetection.centerY < 0) {
                 elementPos = 0;
-            } else if(TeamElementDetection.centerX < 107){
+            } else if(TeamElementDetection.centerY < 107){
                 elementPos = 1;
-            } else if (TeamElementDetection.centerX < 214) {
+            } else if (TeamElementDetection.centerY < 214) {
                 elementPos = 2;
             } else {
                 elementPos = 3;
             }
             telemetry.addData("element Pos", elementPos);
-            telemetry.addData("centerX",TeamElementDetection.centerX);
+            telemetry.addData("centerX",TeamElementDetection.centerY);
+            telemetry.addData("largest area", TeamElementDetection.getLargestArea());
             telemetry.update();
         }
         waitForStart();
         wrist.setPosition(initwrist);
         pusher.setPosition(pusherPrep);
+        intake.setState(Intake.positionState.PURP);
         waitForStart();
         if(elementPos==1) {
             m.followTrajectory(placePixel1);

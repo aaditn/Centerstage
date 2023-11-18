@@ -14,7 +14,6 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -56,9 +55,9 @@ public class teamElementDetection extends OpenCvPipeline{
     public static int bSHigh = 255;
     public static int bVHigh = 255;
 
-    public int threshold = 500;//change if needed
-    public double centerX = -1;
-    public double largestArea = 0;
+    public int threshold = 1000;//change if needed
+    public double centerY = -1;
+    public double largestArea = -1;
     List<MatOfPoint> Contours=new ArrayList<MatOfPoint>();
     Mat HSV = new Mat();
     Mat kernel = new Mat();
@@ -125,11 +124,11 @@ public class teamElementDetection extends OpenCvPipeline{
             Imgproc.morphologyEx(morphed, morphed2, MORPH_CLOSE, kernel2);
             Imgproc.findContours(morphed2, Contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
-            tel.addData("Contour count", Contours.size());
-            tel.update();
+            //tel.addData("Contour count", Contours.size());
+            //tel.update();
 
             int contourIndex=0;
-            double contourArea=0;
+            double contourArea=-1;
 
             for (int i = 0; i < Contours.size(); i++){
 
@@ -147,19 +146,19 @@ public class teamElementDetection extends OpenCvPipeline{
                 m = Imgproc.moments(Contours.get(contourIndex));
                 if(m.m00!=0)
                 {
-                    centerX=m.m10/m.m00; //use centerX to locate the team element position?
-                    tel.addData("centerX", centerX);
+                    centerY =m.m01/m.m00; //use centerX to locate the team element position?
+                    //tel.addData("centerX", centerY);
                     //tel.update();
                 }
                 else
                 {
-                    centerX=-1;
+                    centerY =-1;
                 }
                 largestArea=contourArea; //finds contour with largest area
             }
             else{
                 mat=input;
-                centerX=-1;
+                centerY =-1;
             }
 
             return mat;
@@ -168,6 +167,10 @@ public class teamElementDetection extends OpenCvPipeline{
         //return input;
     }
 
+    public double getLargestArea()
+    {
+        return largestArea;
+    }
 
 
 }

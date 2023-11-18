@@ -47,11 +47,11 @@ public class teamElement extends EnhancedOpMode {
         });
         FtcDashboard.getInstance().startCameraStream(test, 10);
 
-        if(TeamElementDetection.centerX < 0) {
+        if(TeamElementDetection.centerY < 0) {
             elementPos = 0;
-        } else if(TeamElementDetection.centerX < 107){
+        } else if(TeamElementDetection.centerY < 107){
             elementPos = 1;
-        } else if (TeamElementDetection.centerX < 214) {
+        } else if (TeamElementDetection.centerY < 214) {
             elementPos = 2;
         } else {
             elementPos = 3;
@@ -71,7 +71,7 @@ public class teamElement extends EnhancedOpMode {
 
     public void initLoop()
     {
-        tel.addData("centerX", TeamElementDetection.centerX);
+        tel.addData("centerX", TeamElementDetection.centerY);
         tel.addData("elementPos", elementPos);
        tel.update();
     }

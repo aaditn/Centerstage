@@ -12,22 +12,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-import org.firstinspires.ftc.teamcode.vision.teamElementDetection;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvTracker;
-import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.List;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "A - DRIVER CONTROL (2 PLAYER)")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "1 - DRIVER CONTROL (2 PLAYER)")
 @Config
 public class TeleOp extends EnhancedOpMode
 {
@@ -49,10 +42,11 @@ public class TeleOp extends EnhancedOpMode
     boolean pusherBool = false;//what is this for
     public static double pusherIn=0.04;
     public static double pusherPushed=0.18;//what is this for
-    public static double pusherOne=0.265;
-    public static double pusherTwo=0.38;
-    public static double initwrist =0.56;
-    public static double depositwrist=0.23;
+    public static double pusherOne=0.27;//.26
+    public static double pusherTwo=0.35;
+    public static double initwrist =0.65;
+    public static double halfwrist =0.4;
+    public static double depositwrist=0.30;
     public static int pusherState = 0;
     public static boolean isPusher = true;
     double[] pusherArr = {pusherIn, pusherOne, pusherTwo};
@@ -162,20 +156,14 @@ public class TeleOp extends EnhancedOpMode
         //slides.writeLoop();
         intake.writeLoop();
         deposit.writeLoop();
-        if (slideLeft.getCurrentPosition() < 50) {
+        if (slideLeft.getCurrentPosition() < 100) {
             deposit.setState(Deposit.RotationState.TRANSFER);
             deposit.setState(Deposit.PusherState.IN);
             wrist.setPosition(initwrist);
             threshold2 =true;
             threshold1 =false;
         }
-        else if( threshold2 ==false && gamepad2.left_stick_y>.7){
-            deposit.setState(Deposit.RotationState.TRANSFER);
-            deposit.setState(Deposit.PusherState.IN);
-            wrist.setPosition(initwrist);
-            threshold1=false;
-        }
-        else if (slideLeft.getCurrentPosition() > 50 ) {
+        else if (slideLeft.getCurrentPosition() > 100 ) {
             if(threshold2 == true){
 
                 deposit.setState(Deposit.RotationState.DEPOSIT_MID);
@@ -184,16 +172,16 @@ public class TeleOp extends EnhancedOpMode
                 threshold2 = false;
                 timer.reset();
             }
-            wrist.setPosition(depositwrist);
 
         }
         telemetry.addData("ok", threshold1);
         telemetry.addData("ok2", threshold2);
         telemetry.addData("matthewmiliseconds", timer.milliseconds());
-        if(threshold1 ==true&& timer.milliseconds()>800){
+        if(threshold1 ==true&& timer.milliseconds()>600){
 
             deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
             deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
+            wrist.setPosition(depositwrist);
         }
 
         if(gamepad2.a)
@@ -242,7 +230,7 @@ public class TeleOp extends EnhancedOpMode
             slidesPos -= 10;
         }
 
-        if (slidesPos < 250) {
+        if (slidesPos < 50) {
             pusherState = 0;
             pusher.setPosition(pusherArr[pusherState]);
         }
@@ -282,8 +270,8 @@ public class TeleOp extends EnhancedOpMode
         slideLeft.setPower(1);
         slideRight.setPower(1);
 
-        double x =-gamepad1.left_stick_y * ninja;
-        double y = gamepad1.left_stick_x * ninja;
+        double x =gamepad1.left_stick_y * ninja;
+        double y = -gamepad1.left_stick_x * ninja;
         double rx = -gamepad1.right_stick_x * ninja;
 
         lf.setPower(y + x - rx);

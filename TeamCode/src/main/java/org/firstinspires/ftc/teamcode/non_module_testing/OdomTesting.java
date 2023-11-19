@@ -24,17 +24,17 @@ public class OdomTesting extends EnhancedOpMode
         frontRightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fr"));
         backLeftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "bl"));
         backRightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "br"));
-        frontLeftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fr"));
+        frontLeftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fl"));
 
     }
 
     @Override
     public void primaryLoop()
     {
-        telemetry.addData("front right", frontRightEncoder.getCurrentPosition());
-        telemetry.addData("front left", frontLeftEncoder.getCurrentPosition());
-        telemetry.addData("back right", backRightEncoder.getCurrentPosition());
-        telemetry.addData("back left", backLeftEncoder.getCurrentPosition());
+        telemetry.addData("perpendicular encoder", frontRightEncoder.getCurrentPosition());
+        //telemetry.addData("front left", frontLeftEncoder.getCurrentPosition());
+        //telemetry.addData("back right", backRightEncoder.getCurrentPosition());
+        telemetry.addData("parallel encoder", backLeftEncoder.getCurrentPosition());
         telemetry.update();
     }
 }

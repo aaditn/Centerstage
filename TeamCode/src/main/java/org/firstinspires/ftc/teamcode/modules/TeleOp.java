@@ -42,7 +42,7 @@ public class TeleOp extends EnhancedOpMode
     boolean pusherBool = false;//what is this for
     public static double pusherIn=0.04;
     public static double pusherPushed=0.18;//what is this for
-    public static double pusherOne=0.27;//.26
+    public static double pusherOne=0.23;
     public static double pusherTwo=0.35;
     public static double initwrist =0.65;
     public static double halfwrist =0.4;

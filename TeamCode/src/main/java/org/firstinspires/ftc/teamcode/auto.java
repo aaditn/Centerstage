@@ -38,7 +38,7 @@ public class auto extends LinearOpMode {
     public static double pusherOne=0.265;
     public static double pusherTwo=0.35;
     public static double initwrist =.5;
-    public static double depositwrist=0.2;
+    public static double depositwrist=0.3;
 
     Intake intake;
     Deposit deposit;
@@ -55,40 +55,42 @@ public class auto extends LinearOpMode {
         m= new SampleMecanumDrive(hardwareMap);
         m.setPoseEstimate(startPos);
 
-        Trajectory placePixel2 = m.trajectoryBuilder(startPos)
+        Trajectory purplePixel1 = m.trajectoryBuilder(startPos)
+                .splineToConstantHeading(new Vector2d(31.5, 37), Math.toRadians(-90),
+                        m.getVelocityConstraint(30, 1, 15.06),
+                        m.getAccelerationConstraint(40))
+                .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
+                .build();
+
+        Trajectory purplePixel2 = m.trajectoryBuilder(startPos)
                 .lineToConstantHeading(new Vector2d(16,29))
-                .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
+                //.addTemporalMarker(.1, () -> {intake.setState(Intake.positionState.PURP); intake.updateLoop(); intake.writeLoop();})
                 .build();
 
-        Trajectory placePixel1 = m.trajectoryBuilder(startPos)
-                .splineToConstantHeading(new Vector2d(30.5, 37), Math.toRadians(-90),
+        Trajectory purplePixel3 = m.trajectoryBuilder(startPos)
+                .forward(7)
+                .splineTo(new Vector2d(14, 32), Math.toRadians(-120),
                         m.getVelocityConstraint(30, 1, 15.06),
                         m.getAccelerationConstraint(40))
                 .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
                 .build();
 
-        Trajectory placePixel3 = m.trajectoryBuilder(startPos)
-                .splineTo(new Vector2d(11, 34), Math.toRadians(-135),
-                        m.getVelocityConstraint(30, 1, 15.06),
-                        m.getAccelerationConstraint(40))
-                .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
-                .build();
 
-        Trajectory dropPixel2 = m.trajectoryBuilder(placePixel2.end())
-                .lineToLinearHeading(new Pose2d(57.5,31,Math.toRadians(180)),
-                        m.getVelocityConstraint(47.5, 1.65, 15.06),
-                        m.getAccelerationConstraint(45))
-                .build();
-
-        Trajectory dropPixel1 = m.trajectoryBuilder(placePixel2.end())
-                .lineToLinearHeading(new Pose2d(57.5,37.5,Math.toRadians(180)),
+        Trajectory yellowPixel1 = m.trajectoryBuilder(purplePixel1.end())
+                .lineToLinearHeading(new Pose2d(62,37.5,Math.toRadians(180)),
                         m.getVelocityConstraint(47.5, 1.65, 15.06),
                         m.getAccelerationConstraint(45))
                 .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
                 .build();
 
-        Trajectory dropPixel3 = m.trajectoryBuilder(placePixel2.end())
-                .lineToLinearHeading(new Pose2d(57.5  ,28,Math.toRadians(180)),
+        Trajectory yellowPixel2 = m.trajectoryBuilder(purplePixel2.end())
+                .lineToLinearHeading(new Pose2d(61.5,31,Math.toRadians(180)),//x=57.5
+                        m.getVelocityConstraint(47.5, 1.65, 15.06),
+                        m.getAccelerationConstraint(45))
+                .build();
+
+        Trajectory yellowPixel3 = m.trajectoryBuilder(purplePixel3.end())
+                .lineToLinearHeading(new Pose2d(61.5  ,24,Math.toRadians(180)),
                         m.getVelocityConstraint(47.5, 1.65, 15.06),
                         m.getAccelerationConstraint(45))
                 .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
@@ -112,7 +114,7 @@ public class auto extends LinearOpMode {
         slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         intake.init();
         deposit.init();
-        intake.setState(Intake.positionState.HIGH);
+        //intake.setState(Intake.positionState.HIGH);
 
         int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvWebcam test = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
@@ -133,7 +135,7 @@ public class auto extends LinearOpMode {
             }
         });
         int elementPos=0;
-        while(!opModeIsActive()){
+        while(!opModeIsActive()&&!isStopRequested()){
             if(TeamElementDetection.centerY < 0) {
                 elementPos = 3;
             } else if(TeamElementDetection.centerY < 107){
@@ -148,24 +150,26 @@ public class auto extends LinearOpMode {
             telemetry.addData("largest area", TeamElementDetection.getLargestArea());
             telemetry.update();
         }
-        waitForStart();
+
         wrist.setPosition(initwrist);
         pusher.setPosition(pusherPrep);
         intake.setState(Intake.positionState.PURP);
-        waitForStart();
-        if(elementPos==1) {
-            m.followTrajectory(placePixel1);
-        }else if (elementPos==2){
-            m.followTrajectory(placePixel2);
-        } else{
-            m.followTrajectory(placePixel3);
-        }
+        intake.updateLoop();
+        intake.writeLoop();
+        waitT(1000);
 
+        if(elementPos==1) {
+            m.followTrajectory(purplePixel1);
+        }else if (elementPos==2){
+            m.followTrajectory(purplePixel2);
+        } else{
+            m.followTrajectory(purplePixel3);
+        }
 
 
         intake.writeLoop();
         intake.updateLoop();
-        waitT(3500);
+        waitT(1000);
         intake.setState(Intake.powerState.OFF);
         intake.setState(Intake.positionState.HIGH);
         intake.writeLoop();
@@ -173,41 +177,31 @@ public class auto extends LinearOpMode {
         intake.setManual(true);
 
         if(elementPos==1) {
-            m.followTrajectory(dropPixel1);
-        }else if (elementPos==2){
-            m.followTrajectory(dropPixel2);
+            m.followTrajectory(yellowPixel1);
+        } else if (elementPos==2){
+            m.followTrajectory(yellowPixel2);
         } else{
-            m.followTrajectory(dropPixel3);
+            m.followTrajectory(yellowPixel3);
         }
 
-        slidesPos=50;
-        slideLeft.setTargetPosition(slidesPos);
-        slideRight.setTargetPosition(slidesPos);
-        slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slidesPos=100;
+        waitT(1000);
+
+        wrist.setPosition(depositwrist);
+        waitT(250);
+
         deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
         deposit.updateLoop();
         deposit.writeLoop();
-        wrist.setPosition(depositwrist);
-        while(slideLeft.getCurrentPosition()-slideLeft.getTargetPosition() >20){
+        waitT(1500);
 
-            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        waitT(2500);
         pusher.setPosition(pusherTwo);
-
         deposit.updateLoop();
         deposit.writeLoop();
-        waitT(2500);
-        slidesPos = 200;
-        slideLeft.setTargetPosition(slidesPos);
-        slideRight.setTargetPosition(slidesPos);
+        waitT(1000);
 
-        slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        waitT(2500);
         slidesPos = 0;
+
         while(Math.abs(slideLeft.getCurrentPosition()-slideLeft.getTargetPosition() )>20){
                 deposit.setState(Deposit.RotationState.TRANSFER);
                 wrist.setPosition(initwrist);
@@ -220,10 +214,9 @@ public class auto extends LinearOpMode {
             slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
-        sleep(1000);
+        sleep(500);
         pusher.setPosition(pusherIn);
-        sleep(1000);
-
+        sleep(500);
 
 
     }

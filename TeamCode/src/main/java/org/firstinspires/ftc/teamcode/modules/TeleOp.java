@@ -42,13 +42,14 @@ public class TeleOp extends EnhancedOpMode
     boolean pusherBool = false;//what is this for
     public static double pusherIn=0.04;
     public static double pusherPushed=0.18;//what is this for
-    public static double pusherOne=0.23;
-    public static double pusherTwo=0.35;
+    public static double pusherOne=0.24;
+    public static double pusherTwo=0.33;
     public static double initwrist =0.65;
-    public static double halfwrist =0.4;
     public static double depositwrist=0.30;
+    public static double intakeHeight=0;
     public static int pusherState = 0;
     public static boolean isPusher = true;
+    public static boolean isIntake = false;
     double[] pusherArr = {pusherIn, pusherOne, pusherTwo};
     boolean isXClicked = true;
     boolean ninjaBool = true;
@@ -149,6 +150,7 @@ public class TeleOp extends EnhancedOpMode
     @Override
     public void primaryLoop()
     {
+        telemetry.addData("Intake Pos", intakeHeight);
         //slides.setPositionManual(slidesPos);
         //slides.updateLoop();
         intake.updateLoop();
@@ -194,14 +196,29 @@ public class TeleOp extends EnhancedOpMode
         }
         intake.setPowerManual(-gamepad2.right_stick_y);
 
-
-
-        if(gamepad2.right_bumper)
+        if(isIntake==false&&gamepad2.right_bumper)
         {
-            deposit.setState(Deposit.RotationState.TRANSFER);
-            deposit.setState(Deposit.PusherState.IN);
-            wrist.setPosition(.02);
+            isIntake=true;
+            intakeHeight=(intakeHeight+1)%5;
+        }else if(isIntake==false&&gamepad2.left_bumper)
+        {
+            isIntake=true;
+            intakeHeight=(intakeHeight+4)%5;
+        }else if(!gamepad2.left_bumper&&!gamepad2.right_bumper){
+            isIntake=false;
         }
+        if(intakeHeight==0){
+            intake.setState(Intake.positionState.TELE);
+        }else if(intakeHeight==1){
+            intake.setState(Intake.positionState.TWO);
+        }else if(intakeHeight==2){
+            intake.setState(Intake.positionState.THREE);
+        }else if(intakeHeight==3){
+            intake.setState(Intake.positionState.FOUR);
+        }else if(intakeHeight==4){
+            intake.setState(Intake.positionState.FIVE);
+        }
+
         if(gamepad2.x && isPusher)
         {
             isPusher=false;

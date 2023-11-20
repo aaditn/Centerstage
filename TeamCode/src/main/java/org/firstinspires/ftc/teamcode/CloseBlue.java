@@ -25,8 +25,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous(name= "close blue")
-public class auto extends LinearOpMode {
+@Autonomous(name= "Close Blue")
+public class CloseBlue extends LinearOpMode {
 
     DcMotor slideLeft,slideRight;
     int slidesPos;

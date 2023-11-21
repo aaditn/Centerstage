@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.BPIDFController;
 import org.firstinspires.ftc.teamcode.util.Context;
 
+@Config
 public class Slides extends Module
 {
     DcMotorEx slide1;
@@ -17,11 +19,12 @@ public class Slides extends Module
 
     BPIDFController controller;
     public double targetPosition, motorPower;
+    public double debugValue=0;
     public static double slideCap=1100;
-    public static double kp=0.005, ki=0, kd=0;
+    public static double kp=0.01, ki=0, kd=0.0001;
     public static enum SlideState implements ModuleState
     {
-        GROUND(0), ROW1(0), ROW2(0), ROW3(0);
+        GROUND(0), RAISED(200), ROW1(0), ROW2(0), ROW3(0);
 
         double position;
         SlideState(double position)
@@ -71,7 +74,9 @@ public class Slides extends Module
             targetPosition=slideCap;
         }
         targetPosition=getState().getOutput();
-        motorPower=controller.update(slide1.getCurrentPosition(), targetPosition);
+        controller.setTargetPosition(targetPosition);
+        motorPower=controller.update(slide1.getCurrentPosition());
+
         //update the internal powers and stuff
     }
 
@@ -82,13 +87,19 @@ public class Slides extends Module
         {
             targetPosition=slideCap;
         }
-        motorPower=controller.update(slide1.getCurrentPosition(), targetPosition);
+        controller.setTargetPosition(targetPosition);
+        motorPower=controller.update(slide1.getCurrentPosition());
     }
     @Override
     public void manualChange(double position)
     {
         super.manualChange(position);
         targetPosition=position;
+    }
+
+    public double currentPosition()
+    {
+        return slide1.getCurrentPosition();
     }
 
     @Override
@@ -110,6 +121,10 @@ public class Slides extends Module
             status=Status.TRANSITIONING;
         }
     }
+    public Status getStatus()
+    {
+        return status;
+    }
 
     public double getTargetPosition()
     {
@@ -121,5 +136,7 @@ public class Slides extends Module
     {
         super.telemetryUpdate();
         Context.tel.addData("Target Position", targetPosition);
+        Context.tel.addData("Attempted power", motorPower);
+        Context.tel.addData("Slide 1", slide1.getCurrentPosition());
     }
 }

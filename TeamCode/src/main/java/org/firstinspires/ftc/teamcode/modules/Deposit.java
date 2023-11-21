@@ -11,24 +11,24 @@ import org.firstinspires.ftc.teamcode.util.Context;
 @Config
 public class Deposit extends Module
 {
-    public static double transfer1=.11;
-    public static double transfer2=.9;
+    public static double transfer1=1;
+    public static double transfer2=.12;
 
-    public static double deposit1High= 0.9;//0.91;//.83
-    public static double deposit2High = 0.17;//0.14;//.22
-    public static double deposit1Mid = (.9+.11)/2;//0.94;//.83
-    public static double deposit2Mid = (.17+.9)/2;//0.11;//.22
+    public static double deposit1High= 0.05;//0.91;//.83
+    public static double deposit2High = 1;//0.14;//.22
+    public static double deposit1Mid = (1+0.5)/2;//0.94;//.83
+    public static double deposit2Mid = (.12+1)/2;//0.11;//.22
 
     public static double deposit1Low= 1;//0.98;//.83
     public static double deposit2Low= 0.05;//0.07;//.22
 
-    public static double initwrist =.5;
+    public static double initwrist =.65;
     public static double depositwrist=0.3;
 
     public static double pusherIn=0.04;
     public static double pusherPushed=0.18;
-    public static double pusherOne=0.265;
-    public static double pusherTwo=0.4;
+    public static double pusherOne=0.24;
+    public static double pusherTwo=0.33;
     int debugCounter=0;
 
     public static enum RotationState implements ModuleState

@@ -8,7 +8,7 @@ public abstract class Module
 {
     //Is an array for the modules that have multiple states to them
     private ModuleState[] states;
-    boolean constantUpdate;
+    public boolean constantUpdate;
     boolean stateChanged;
     boolean readUpdateChecker;
 
@@ -86,6 +86,11 @@ public abstract class Module
     public void setOperationState(OperationState s)
     {
         opstate=s;
+    }
+
+    public OperationState getOpstate()
+    {
+        return opstate;
     }
 
     //gets the specific state you want

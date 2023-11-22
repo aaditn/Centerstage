@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -52,11 +53,11 @@ public class TeleOp extends EnhancedOpMode
     public static boolean isPusher = true;
     public static boolean isIntake = false;
     double[] pusherArr = {pusherIn, pusherOne, pusherTwo};
-    boolean isXClicked = true;
     boolean ninjaBool = true;
     boolean isPusherDone = true;
     Servo wrist;
     double ninja = 1;
+    Gamepad.RumbleEffect customRumbleEffect0;    // Use to build a custom rumble sequence.
     @Override
     public void linearOpMode()
     {
@@ -70,7 +71,10 @@ public class TeleOp extends EnhancedOpMode
         scheduler=new TaskScheduler();
 
         pusher.setPosition(pusherIn);
-
+        customRumbleEffect0 = new Gamepad.RumbleEffect.Builder()
+                .addStep(1.0, 1.0, 200)
+                .addStep(0.0, 0.0, 1000) //  Rumble right motor 100% for 500 mSec
+                .build();
 
         waitForStart();
         while(opModeIsActive()){}
@@ -156,6 +160,7 @@ public class TeleOp extends EnhancedOpMode
     public void primaryLoop()
     {
         telemetry.addData("Intake Pos", intakeHeight);
+        telemetry.addData("Drone", droneLauncher.getState());
         //slides.setPositionManual(slidesPos);
         //slides.updateLoop();
         intake.updateLoop();
@@ -164,7 +169,7 @@ public class TeleOp extends EnhancedOpMode
         //slides.writeLoop();
         intake.writeLoop();
         deposit.writeLoop();
-        droneLauncher.updateLoop();
+        droneLauncher.writeLoop();
         if (slideLeft.getCurrentPosition() < 100) {
             deposit.setState(Deposit.RotationState.TRANSFER);
             deposit.setState(Deposit.PusherState.IN);
@@ -232,7 +237,7 @@ public class TeleOp extends EnhancedOpMode
             intake.setState(Intake.positionState.FIVE);
         }
 
-        if(gamepad2.x && isPusher)
+        if((gamepad1.right_bumper||gamepad2.x) && isPusher)
         {
             isPusher=false;
             if (pusherState == 2) {
@@ -240,11 +245,13 @@ public class TeleOp extends EnhancedOpMode
             } else {
                 pusherState++;
             }
+            gamepad1.runRumbleEffect(customRumbleEffect0);
+            gamepad2.runRumbleEffect(customRumbleEffect0);
 
             pusher.setPosition(pusherArr[pusherState]);
             //deposit.setState(Deposit.PusherState.TWO);
         } else if (!isPusher) {
-            isPusher=!gamepad2.x;
+            isPusher=!(gamepad2.x||gamepad1.right_bumper);
         }
 
 

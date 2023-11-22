@@ -17,6 +17,7 @@ public class HangExample extends Module
         OUT(1), IN(-1), OFF(0);
 
         double power;
+
         State(double power)
         {
             this.power=power;

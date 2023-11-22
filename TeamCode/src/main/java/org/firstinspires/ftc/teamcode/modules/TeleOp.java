@@ -25,6 +25,7 @@ import java.util.List;
 public class TeleOp extends EnhancedOpMode
 {
     Intake intake;
+    DroneLauncher droneLauncher;
     ElapsedTime timer = new ElapsedTime();
     Boolean threshold1 =false;
     boolean threshold2 = false;
@@ -107,6 +108,7 @@ public class TeleOp extends EnhancedOpMode
         builder=new TaskListBuilder(this);
         deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
+        droneLauncher=new DroneLauncher(hardwareMap);
         slideLeft=hardwareMap.get(DcMotor.class, "slide1");
         slideRight=hardwareMap.get(DcMotor.class, "slide2");
         slideRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -130,6 +132,7 @@ public class TeleOp extends EnhancedOpMode
         //slides.setManual(true);
         intake.init();
         deposit.init();
+        droneLauncher.init();
         intake.setManual(true);
     }
 
@@ -138,8 +141,10 @@ public class TeleOp extends EnhancedOpMode
     {
         intake.updateLoop();
         deposit.updateLoop();
+        droneLauncher.updateLoop();
         intake.writeLoop();
         deposit.writeLoop();
+        droneLauncher.writeLoop();
     }
 
     public void onStart()
@@ -155,9 +160,11 @@ public class TeleOp extends EnhancedOpMode
         //slides.updateLoop();
         intake.updateLoop();
         deposit.updateLoop();
+        droneLauncher.updateLoop();
         //slides.writeLoop();
         intake.writeLoop();
         deposit.writeLoop();
+        droneLauncher.updateLoop();
         if (slideLeft.getCurrentPosition() < 100) {
             deposit.setState(Deposit.RotationState.TRANSFER);
             deposit.setState(Deposit.PusherState.IN);
@@ -170,6 +177,7 @@ public class TeleOp extends EnhancedOpMode
 
                 deposit.setState(Deposit.RotationState.DEPOSIT_MID);
                 deposit.setState(Deposit.RotationState.DEPOSIT_MID);
+                pusher.setPosition(pusherPushed);
                 threshold1 =true;
                 threshold2 = false;
                 timer.reset();
@@ -184,6 +192,11 @@ public class TeleOp extends EnhancedOpMode
             deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
             deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
             wrist.setPosition(depositwrist);
+
+        }
+
+        if(gamepad2.y){
+            droneLauncher.setState(DroneLauncher.State.RELEASED);
         }
 
         if(gamepad2.a)

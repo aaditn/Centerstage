@@ -33,14 +33,13 @@ public class Deposit extends Module
 
     public static enum RotationState implements ModuleState
     {
-        TRANSFER(transfer1, transfer2, initwrist), DEPOSIT_LOW(deposit1Low, deposit2Low, depositwrist), DEPOSIT_MID(deposit1Mid, deposit2Mid, depositwrist), DEPOSIT_HIGH(deposit1High, deposit2High, depositwrist);
+        TRANSFER(transfer1, transfer2), DEPOSIT_LOW(deposit1Low, deposit2Low), DEPOSIT_MID(deposit1Mid, deposit2Mid), DEPOSIT_HIGH(deposit1High, deposit2High);
 
-        double pos1, pos2, pos3;
-        RotationState(double pos1, double pos2, double pos3)
+        double pos1, pos2;
+        RotationState(double pos1, double pos2)
         {
             this.pos1=pos1;
             this.pos2=pos2;
-            this.pos3=pos3;
         }
 
         @Override
@@ -53,14 +52,26 @@ public class Deposit extends Module
             {
                 return pos2;
             }
-            else if(index[0]==3)
-            {
-                return pos3;
-            }
             else
             {
                 return 0;
             }
+        }
+    }
+
+    public enum WristState implements ModuleState
+    {
+        TRANSFER(initwrist), CRADLE(0.8), DEPOSIT(depositwrist);
+
+        double pos1;
+        WristState(double pos1)
+        {
+            this.pos1=pos1;
+        }
+
+        @Override
+        public double getOutput(int... index) {
+            return pos1;
         }
     }
 
@@ -83,13 +94,14 @@ public class Deposit extends Module
     double leftRotatorPos, rightRotatorPos, pusherPos, wristPos;
     RotationState rstate;
     PusherState pstate;
+    WristState wstate;
 
     Servo leftRotator, rightRotator, pusher, wrist;
 
     public Deposit(HardwareMap hardwareMap)
     {
         super(false);
-        leftRotator =hardwareMap.get(Servo.class, "leftRotator");
+        leftRotator=hardwareMap.get(Servo.class, "leftRotator");
         rightRotator=hardwareMap.get(Servo.class, "rightRotator");
         pusher=hardwareMap.get(Servo.class, "pusher");
         wrist =hardwareMap.get(Servo.class,"wrist");
@@ -118,8 +130,8 @@ public class Deposit extends Module
         debugCounter++;
         leftRotatorPos=getState(RotationState.class).getOutput(1);
         rightRotatorPos=getState(RotationState.class).getOutput(2);
-        wristPos=getState(RotationState.class).getOutput(3);
-        pusherPos=getState(PusherState.class).getOutput(1);
+        wristPos=getState(WristState.class).getOutput();
+        pusherPos=getState(PusherState.class).getOutput();
     }
 
     @Override
@@ -127,7 +139,8 @@ public class Deposit extends Module
     {
         pstate=PusherState.IN;
         rstate=RotationState.TRANSFER;
-        setInternalStates(pstate, rstate);
+        wstate=WristState.TRANSFER;
+        setInternalStates(pstate, rstate, wstate);
     }
 
     @Override

@@ -170,14 +170,14 @@ public class TeleOp extends EnhancedOpMode
         intake.writeLoop();
         deposit.writeLoop();
         droneLauncher.writeLoop();
-        if (slideLeft.getCurrentPosition() < 100) {
+        if (slideLeft.getCurrentPosition() < 250) {
             deposit.setState(Deposit.RotationState.TRANSFER);
             deposit.setState(Deposit.PusherState.IN);
             wrist.setPosition(initwrist);
             threshold2 =true;
             threshold1 =false;
         }
-        else if (slideLeft.getCurrentPosition() > 100 ) {
+        else if (slideLeft.getCurrentPosition() > 250) {
             if(threshold2 == true){
 
                 deposit.setState(Deposit.RotationState.DEPOSIT_MID);

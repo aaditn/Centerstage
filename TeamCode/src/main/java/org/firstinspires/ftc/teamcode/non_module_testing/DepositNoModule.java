@@ -17,11 +17,11 @@ public class DepositNoModule extends EnhancedOpMode
     public static double pusherInit=0;
 
     public static double pusherExtended=0;
-    public static double transfer1=0.2;
-    public static double transfer2=0.8;
+    public static double transfer1=1;
+    public static double transfer2=0.12;
 
-    public static double deposit1High= 1;//0.91;//.83
-    public static double deposit2High = 0;//0.14;//.22
+    public static double deposit1High= 0.2;//0.91;//.83
+    public static double deposit2High = 0.85;//0.14;//.22
 
     public static double wristInit = 0;
     public static double wristDeposit = 0.3;

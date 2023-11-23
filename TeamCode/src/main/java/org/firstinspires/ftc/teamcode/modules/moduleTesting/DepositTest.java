@@ -35,7 +35,7 @@ public class DepositTest extends EnhancedOpMode
         }
         if (gamepad1.b)
         {
-            d.setState(Deposit.RotationState.DEPOSIT_LOW);
+            d.setState(Deposit.RotationState.DEPOSIT_HIGH);
         }
         if(gamepad1.x)
         {

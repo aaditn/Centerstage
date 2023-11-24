@@ -47,6 +47,8 @@ public class TeleOp extends EnhancedOpMode
     public static double pusherOne=0.24;
     public static double pusherTwo=0.33;
     public static double initwrist =0.65;
+
+    public static double cradleWrist = 0.8;
     public static double depositwrist=0.30;
     public static double intakeHeight=0;
     public static int pusherState = 0;
@@ -170,19 +172,19 @@ public class TeleOp extends EnhancedOpMode
         intake.writeLoop();
         deposit.writeLoop();
         droneLauncher.writeLoop();
-        if (slideLeft.getCurrentPosition() < 250) {
+        if (slideLeft.getCurrentPosition() < 100) {
             deposit.setState(Deposit.RotationState.TRANSFER);
             deposit.setState(Deposit.PusherState.IN);
             wrist.setPosition(initwrist);
             threshold2 =true;
             threshold1 =false;
         }
-        else if (slideLeft.getCurrentPosition() > 250) {
+        else if (slideLeft.getCurrentPosition() > 100) {
             if(threshold2 == true){
 
                 deposit.setState(Deposit.RotationState.DEPOSIT_MID);
                 deposit.setState(Deposit.RotationState.DEPOSIT_MID);
-                pusher.setPosition(pusherPushed);
+                wrist.setPosition(cradleWrist);
                 threshold1 =true;
                 threshold2 = false;
                 timer.reset();
@@ -192,12 +194,19 @@ public class TeleOp extends EnhancedOpMode
         telemetry.addData("ok", threshold1);
         telemetry.addData("ok2", threshold2);
         telemetry.addData("matthewmiliseconds", timer.milliseconds());
-        if(threshold1 ==true&& timer.milliseconds()>600){
 
-            deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
+        if(threshold1 ==true&& timer.milliseconds()>1300){
             deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
             wrist.setPosition(depositwrist);
 
+        } else if (threshold1 && timer.milliseconds() > 300) {
+            wrist.setPosition(depositwrist);
+        } else if (threshold1 && timer.milliseconds() > 600) {
+            deposit.setState(Deposit.RotationState.DEPOSIT_MID2);
+            wrist.setPosition(depositwrist);
+        } else if (threshold1 && timer.milliseconds() > 950) {
+            deposit.setState(Deposit.RotationState.DEPOSIT_MID3);
+            wrist.setPosition(depositwrist);
         }
 
         if(gamepad2.y){
@@ -267,7 +276,7 @@ public class TeleOp extends EnhancedOpMode
             slidesPos -= 10;
         }
 
-        if (slidesPos < 50) {
+        if (slidesPos < 150) {
             pusherState = 0;
             pusher.setPosition(pusherArr[pusherState]);
         }

@@ -10,12 +10,20 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 @Config
 public class Deposit extends Module
 {
-    public static double transfer1=0.9;
-    public static double transfer2=0.23;
-    public static double deposit1High= 0.17;//0.91;//.83
-    public static double deposit2High = 0.88;//0.14;//.22
-    public static double deposit1Mid = (1+.05)/2;//0.94;//.83
-    public static double deposit2Mid = (.12+1)/2;//0.11;//.22
+    public static double transfer1=0.93;
+    public static double transfer2=0.20;
+    public static double deposit1High= 0.11;//0.91;//.83
+    public static double deposit2High = 0.94;//0.14;//.22
+    public static double deposit1Mid = 0.5;
+    public static double deposit2Mid = 0.55;
+
+    public static double deposit1Mid2 = 0.30;
+    public static double deposit2Mid2 = 0.;
+    public static double deposit1Mid3 = 0.21;
+    public static double deposit2Mid3 = 0.84;
+
+
+
 
 
     public static double deposit1Low= 1;//0.98;//.83
@@ -32,7 +40,7 @@ public class Deposit extends Module
 
     public enum RotationState implements ModuleState
     {
-        TRANSFER(transfer1, transfer2), DEPOSIT_MID(deposit1Mid, deposit2Mid), DEPOSIT_HIGH(deposit1High, deposit2High);
+        TRANSFER(transfer1, transfer2), DEPOSIT_MID(deposit1Mid, deposit2Mid), DEPOSIT_MID2(deposit1Mid2, deposit2Mid2), DEPOSIT_MID3(deposit1Mid3, deposit2Mid3), DEPOSIT_HIGH(deposit1High, deposit2High);
 
         double pos1, pos2;
         RotationState(double pos1, double pos2)

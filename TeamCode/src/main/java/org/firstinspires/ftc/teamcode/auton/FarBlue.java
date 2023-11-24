@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.auton;
 
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.Trajectories.blueFarStart;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -13,10 +15,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.roadrunner.drive.Trajectories;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.vision.teamElementDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -25,7 +30,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous(name= "Far Blue")
+@Autonomous(name= "Farr Blue")
 public class FarBlue extends LinearOpMode {
 
     DcMotor slideLeft,slideRight;
@@ -43,61 +48,50 @@ public class FarBlue extends LinearOpMode {
     Intake intake;
     Deposit deposit;
     SampleMecanumDrive m;
-    Pose2d startPos = new Pose2d(-20,56,Math.toRadians(270));
+   // Pose2d startPos = new Pose2d(20,56,Math.toRadians(270));
 
 
     @Override
     public void runOpMode() throws InterruptedException {
 
+
+
+
         Context.resetValues();
         Context.isTeamRed = false;
         Context.tel=new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         m= new SampleMecanumDrive(hardwareMap);
-        m.setPoseEstimate(startPos);
-/*
-PATHS:
--
-*/
-        Trajectory purplePixel1 = m.trajectoryBuilder(startPos)
-                .splineToConstantHeading(new Vector2d(-14, 32), Math.toRadians(-90),
-                        m.getVelocityConstraint(30, 1, 15.06),
-                        m.getAccelerationConstraint(40))
-                .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
+        m.setPoseEstimate(blueFarStart);
+
+
+        TrajectorySequence placePurple1 = m.trajectorySequenceBuilder(blueFarStart)
+                .splineTo(new Vector2d(-34, 35), Math.toRadians(-90))
+                .splineTo(new Vector2d(-36, 23), Math.toRadians(140))
+                .addTemporalMarker(2, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
                 .build();
-
-        Trajectory purplePixel2 = m.trajectoryBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(-16,29))
-                //.addTemporalMarker(.1, () -> {intake.setState(Intake.positionState.PURP); intake.updateLoop(); intake.writeLoop();})
+        TrajectorySequence firstCycle1 = m.trajectorySequenceBuilder(placePurple1.end())
+                .addTemporalMarker(0.3, () -> {intake.setState(Intake.positionState.FIVE); intake.updateLoop(); intake.writeLoop();})
+                .lineToConstantHeading(new Vector2d(-41, 18))
+                .splineToSplineHeading(new Pose2d(-59, 14,Math.toRadians(180)), Math.toRadians(180))
                 .build();
-
-        Trajectory purplePixel3 = m.trajectoryBuilder(startPos)
-                .forward(7)
-                .splineTo(new Vector2d(-31.5, 37), Math.toRadians(-  120),
-                        m.getVelocityConstraint(30, 1, 15.06),
-                        m.getAccelerationConstraint(40))
-                .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
-                .build();
-
-
-        Trajectory yellowPixel1 = m.trajectoryBuilder(purplePixel1.end())
-                .lineToLinearHeading(new Pose2d(62,37.5,Math.toRadians(180)),
-                        m.getVelocityConstraint(47.5, 1.65, 15.06),
-                        m.getAccelerationConstraint(45))
+        TrajectorySequence placeYellow1 = m.trajectorySequenceBuilder(firstCycle1.end())
+                .addTemporalMarker(0.3, () -> {intake.setState(Intake.powerState.OFF); intake.updateLoop(); intake.writeLoop();})
+                .lineTo(new Vector2d(8, 12))
+                .splineToConstantHeading(new Vector2d(54, 28), Math.toRadians(0))
                 .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
                 .build();
-
-        Trajectory yellowPixel2 = m.trajectoryBuilder(purplePixel2.end())
-                .lineToLinearHeading(new Pose2d(61.5,31,Math.toRadians(180)),//x=57.5
-                        m.getVelocityConstraint(47.5, 1.65, 15.06),
-                        m.getAccelerationConstraint(45))
+        TrajectorySequence pickAllianceYellow1 = m.trajectorySequenceBuilder(placeYellow1.end())
+                .addTemporalMarker(1, () -> {intake.setState(Intake.powerState.INTAKE); intake.updateLoop(); intake.writeLoop();})
+                .addTemporalMarker(1, () -> {intake.setState(Intake.positionState.TELE); intake.updateLoop(); intake.writeLoop();})
+                .splineToConstantHeading(new Vector2d(30, 61), Math.toRadians(180))
+                .build();
+        TrajectorySequence placeAllianceYellow1 = m.trajectorySequenceBuilder(pickAllianceYellow1.end())
+                .addTemporalMarker(0.3, () -> {intake.setState(Intake.powerState.OFF); intake.updateLoop(); intake.writeLoop();})
+                .addTemporalMarker(0.1, () -> {intake.setState(Intake.positionState.HIGH); intake.updateLoop(); intake.writeLoop();})
+                .lineToConstantHeading(new Vector2d(31, 61))
+                .splineToConstantHeading(new Vector2d(54, 28), Math.toRadians(0))
                 .build();
 
-        Trajectory yellowPixel3 = m.trajectoryBuilder(purplePixel3.end())
-                .lineToLinearHeading(new Pose2d(61.5  ,24,Math.toRadians(180)),
-                        m.getVelocityConstraint(47.5, 1.65, 15.06),
-                        m.getAccelerationConstraint(45))
-                .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
-                .build();
 
         wrist =hardwareMap.get(Servo.class,"wrist");
         pusher=hardwareMap.get(Servo.class, "pusher");
@@ -117,6 +111,7 @@ PATHS:
         slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         intake.init();
         deposit.init();
+        //intake.setState(Intake.positionState.HIGH);
 
         int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvWebcam test = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
@@ -137,8 +132,6 @@ PATHS:
             }
         });
         int elementPos=0;
-
-//doubles as waitForStart()
         while(!opModeIsActive()&&!isStopRequested()){
             if(TeamElementDetection.centerY < 0) {
                 elementPos = 3;
@@ -162,14 +155,7 @@ PATHS:
         intake.writeLoop();
         waitT(1000);
 
-        if(elementPos==1) {
-            m.followTrajectory(purplePixel1);
-        }else if (elementPos==2){
-            m.followTrajectory(purplePixel2);
-        } else{
-            m.followTrajectory(purplePixel3);
-        }
-
+        m.followTrajectorySequence(placePurple1);
 
         intake.writeLoop();
         intake.updateLoop();
@@ -178,15 +164,17 @@ PATHS:
         intake.setState(Intake.positionState.HIGH);
         intake.writeLoop();
         intake.updateLoop();
-        intake.setManual(true);
 
-        if(elementPos==1) {
-            m.followTrajectory(yellowPixel1);
-        } else if (elementPos==2){
-            m.followTrajectory(yellowPixel2);
-        } else{
-            m.followTrajectory(yellowPixel3);
-        }
+        waitT(1000);
+
+        m.followTrajectorySequence(firstCycle1);
+
+        intake.setState(Intake.powerState.INTAKE);
+        intake.writeLoop();
+        intake.updateLoop();
+        waitT(1000);
+
+        m.followTrajectorySequence(placeYellow1);
 
         slidesPos=100;
         waitT(1000);
@@ -220,8 +208,105 @@ PATHS:
 
         sleep(500);
         pusher.setPosition(pusherIn);
+
+        m.followTrajectorySequence(pickAllianceYellow1);
+
+        m.followTrajectorySequence(placeAllianceYellow1);
+
+        slidesPos=100;
+        waitT(1000);
+
+        wrist.setPosition(depositwrist);
+        waitT(250);
+
+        deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
+        deposit.updateLoop();
+        deposit.writeLoop();
+        waitT(1500);
+
+        pusher.setPosition(pusherTwo);
+        deposit.updateLoop();
+        deposit.writeLoop();
+        waitT(1000);
+
+        slidesPos = 0;
+
+        while(Math.abs(slideLeft.getCurrentPosition()-slideLeft.getTargetPosition() )>20){
+            deposit.setState(Deposit.RotationState.TRANSFER);
+            wrist.setPosition(initwrist);
+            pusher.setPosition(pusherIn);
+
+            deposit.updateLoop();
+            deposit.writeLoop();
+
+            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+        /*if(elementPos==1) {
+            m.followTrajectorySequence(sequence[0]);
+        }else if (elementPos==2){
+            m.followTrajectorySequence(sequence[0]);
+        } else{
+
+        }
+
+
+
+
+        intake.writeLoop();
+        intake.updateLoop();
+        waitT(1000);
+        intake.setState(Intake.powerState.OFF);
+        intake.setState(Intake.positionState.HIGH);
+        intake.writeLoop();
+        intake.updateLoop();
+        intake.setManual(true);
+
+        if(elementPos==1) {
+            m.followTrajectory(s);
+        } else if (elementPos==2){
+            m.followTrajectory(yellowPixel2);
+        } else{
+            m.followTrajectory(yellowPixel3);
+        }
+
+        slidesPos=100;
+        waitT(1000);
+
+        wrist.setPosition(depositwrist);
+        waitT(250);
+
+        deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
+        deposit.updateLoop();
+        deposit.writeLoop();
+        waitT(1500);
+
+        pusher.setPosition(pusherTwo);
+        deposit.updateLoop();
+        deposit.writeLoop();
+        waitT(1000);
+
+        slidesPos = 0;
+
+        while(Math.abs(slideLeft.getCurrentPosition()-slideLeft.getTargetPosition() )>20){
+                deposit.setState(Deposit.RotationState.TRANSFER);
+                wrist.setPosition(initwrist);
+                pusher.setPosition(pusherIn);
+
+                deposit.updateLoop();
+                deposit.writeLoop();
+
+            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+        sleep(500);
+        pusher.setPosition(pusherIn);
         sleep(500);
 
+
+         */
 
     }
     public void waitT(int ticks){

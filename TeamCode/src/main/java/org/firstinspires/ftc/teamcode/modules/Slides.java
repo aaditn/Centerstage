@@ -26,7 +26,7 @@ public class Slides extends Module
     PIDCoefficients standardcoeff, closecoeff, downcoeff;
     public static enum SlideState implements ModuleState
     {
-        GROUND(0), RAISED(200), ROW1(500), ROW2(800), ROW3(0);
+        GROUND(0), RAISED(300), ROW1(600), ROW2(900), ROW3(0);
 
         double position;
         SlideState(double position)
@@ -75,6 +75,8 @@ public class Slides extends Module
         //slide2.setPower(motorPower);
         slide1.setTargetPosition((int) targetPosition);
         slide2.setTargetPosition((int) targetPosition);
+        slide1.setPower(1);
+        slide2.setPower(1);
         //actually write the powers to the motor
     }
 

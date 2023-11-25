@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
@@ -52,6 +53,7 @@ public class ModuleTeleop extends EnhancedOpMode
     Intake.PositionState[] intakepositions;
 
     DcMotor hang;
+    ElapsedTime slidestimer;
 
 
     @Override
@@ -115,6 +117,7 @@ public class ModuleTeleop extends EnhancedOpMode
             //slides macro
             if(slideUpBase.wasJustPressed()&&slides.getState()==Slides.SlideState.GROUND&&!slidesMoving)
             {
+                //deposit.funnimode=true;
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slideupbase);
@@ -145,6 +148,7 @@ public class ModuleTeleop extends EnhancedOpMode
             }
             else if(slideDown.wasJustPressed()&&slides.getState()!=Slides.SlideState.GROUND&&!slidesMoving)
             {
+                //deposit.funnimode=false;
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slidedown);
@@ -156,12 +160,18 @@ public class ModuleTeleop extends EnhancedOpMode
             if(slides.getState()!=Slides.SlideState.GROUND&&!slidesMoving&&Math.abs(gamepad2.left_stick_y)>0.3)
             {
                 slides.setOperationState(Module.OperationState.MANUAL);
-                double newTarget=slides.currentPosition() + (30*Math.signum(gamepad2.left_stick_y)*-1);
-                if(newTarget<200)
+
+                if(slidestimer.milliseconds()>300)
                 {
-                    newTarget=200;
+                    double newTarget=slides.getTargetPosition() + (30*Math.signum(gamepad2.left_stick_y)*-1);
+                    if(newTarget<300)
+                    {
+                        newTarget=300;
+                    }
+                    slides.manualChange(newTarget);
+
+                    slidestimer.reset();
                 }
-                slides.manualChange(newTarget);
             }
 
             //intake power
@@ -188,7 +198,7 @@ public class ModuleTeleop extends EnhancedOpMode
             }
 
             //dt strafing
-            if(strafeLeft.wasJustPressed()&&!robot.isBusy())
+            /*if(strafeLeft.wasJustPressed()&&!robot.isBusy())
             {
                 Trajectory strafeLeft=robot.trajectoryBuilder(robot.getPoseEstimate())
                         .strafeLeft(1.5)
@@ -203,7 +213,7 @@ public class ModuleTeleop extends EnhancedOpMode
                         .build();
 
                 robot.followTrajectoryAsync(strafeRight);
-            }
+            }*/
 
             //cancel strafe in case borken
             if(gamepad1.x)
@@ -274,21 +284,23 @@ public class ModuleTeleop extends EnhancedOpMode
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
                 .delay(200)
                 .moduleAction(slides, Slides.SlideState.RAISED)
-                .await(()->slides.currentPosition()>100)
+                .await(()->slides.currentPosition()>200)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
-                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
-                .moduleAction(deposit, Deposit.PusherState.EXTENDED)
+                .delay(400)
+                //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
+                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .delay(100)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
                 .build();
 
         slideup1=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
-                .delay(200)
+                .delay(400)
                 .moduleAction(slides, Slides.SlideState.ROW1)
-                .await(()->slides.currentPosition()>100)
+                .await(()->slides.currentPosition()>200)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .moduleAction(deposit, Deposit.PusherState.EXTENDED)
@@ -302,7 +314,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
                 .delay(200)
                 .moduleAction(slides, Slides.SlideState.ROW2)
-                .await(()->slides.currentPosition()>100)
+                .await(()->slides.currentPosition()>200)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .moduleAction(deposit, Deposit.PusherState.EXTENDED)
@@ -326,7 +338,7 @@ public class ModuleTeleop extends EnhancedOpMode
         slidedown=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
-                .delay(300)
+                .delay(1000)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .moduleAction(deposit, Deposit.PusherState.IN)
                 .await(()->slides.currentPosition()<100)
@@ -347,6 +359,7 @@ public class ModuleTeleop extends EnhancedOpMode
     public void primaryLoop()
     {
         Context.tel.addData("SLide Moving", slidesMoving);
+        //Context.tel.addData("Robot Current", robot.getCurrent());
 
         robot.primaryLoop();
         robot.update();

@@ -17,11 +17,11 @@ public class DepositNoModule extends EnhancedOpMode
     public static double pusherInit=0;
 
     public static double pusherExtended=0;
-    public static double transfer1=0.2;
-    public static double transfer2=0.8;
+    public static double transfer1=0.93;
+    public static double transfer2=0.20;
 
-    public static double deposit1High= 1;//0.91;//.83
-    public static double deposit2High = 0;//0.14;//.22
+    public static double deposit1High= 0.09;//0.91;//.83
+    public static double deposit2High = 0.96;//0.14;//.22
 
     public static double wristInit = 0;
     public static double wristDeposit = 0.3;
@@ -46,15 +46,11 @@ public class DepositNoModule extends EnhancedOpMode
         {
             rr.setPosition(deposit1High);
             rl.setPosition(deposit2High);
-            wrist.setPosition(wristDeposit);
-
         }
         else if(gamepad1.b)
         {
             rr.setPosition(transfer1);
             rl.setPosition(transfer2);
-            p.setPosition(pusherInit);
-            wrist.setPosition(wristInit);
         }
         else if(gamepad1.x)
         {

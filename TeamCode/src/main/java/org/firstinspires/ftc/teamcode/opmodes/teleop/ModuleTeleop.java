@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -63,6 +64,8 @@ public class ModuleTeleop extends EnhancedOpMode
 
         while(opModeIsActive())
         {
+            telemetry.addData("HangPow", hang.getPower());
+            telemetry.addData("HangPos", hang.getCurrentPosition());
             for (KeyReader reader : keyReaders)
             {
                 reader.readValue();
@@ -71,13 +74,17 @@ public class ModuleTeleop extends EnhancedOpMode
             //pusher buttons
             if(pusher1.wasJustPressed()||pusher2.wasJustPressed())
             {
-                if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.EXTENDED)
+                if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.IN)
                 {
                     deposit.setState(Deposit.PusherState.ONE);
                 }
                 else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.ONE)
                 {
                     deposit.setState(Deposit.PusherState.TWO);
+                }
+                else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.TWO)
+                {
+                    deposit.setState(Deposit.PusherState.IN);
                 }
             }
 
@@ -191,7 +198,7 @@ public class ModuleTeleop extends EnhancedOpMode
             if(!robot.isBusy())
             {
                 double x = gamepad1.left_stick_y * ninja;
-                double y = -gamepad1.left_stick_x * ninja;
+                double y = gamepad1.left_stick_x * ninja;
                 double rx = -gamepad1.right_stick_x * ninja;
 
                 robot.setDrivePower(new Pose2d(x, y, rx));

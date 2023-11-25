@@ -71,7 +71,7 @@ public class Deposit extends Module
 
     public enum WristState implements ModuleState
     {
-        TRANSFER(initwrist), CRADLE(0.9), DEPOSIT(depositwrist);
+        TRANSFER(initwrist), CRADLE(0.7), DEPOSIT(depositwrist);
 
         double pos1;
         WristState(double pos1)
@@ -114,8 +114,8 @@ public class Deposit extends Module
         super(true);
         leftRotator=hardwareMap.get(Servo.class, "leftRotator");
         rightRotator=hardwareMap.get(Servo.class, "rightRotator");
-        leftRotator.setDirection(Servo.Direction.REVERSE);
-        rightRotator.setDirection(Servo.Direction.REVERSE);
+        //leftRotator.setDirection(Servo.Direction.REVERSE);
+        //rightRotator.setDirection(Servo.Direction.REVERSE);
         pusher=hardwareMap.get(Servo.class, "pusher");
         wrist =hardwareMap.get(Servo.class,"wrist");
     }

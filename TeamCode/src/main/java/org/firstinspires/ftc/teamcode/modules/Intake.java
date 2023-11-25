@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 
 public class Intake extends Module {
-    DcMotorEx intake;
+    public static DcMotorEx intake;
     Servo angler1, angler2;
     double threshold = 0.02; // you might need one because power is inconsistent
     public static enum PowerState implements ModuleState

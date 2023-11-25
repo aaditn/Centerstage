@@ -265,6 +265,7 @@ public class ModuleTeleop extends EnhancedOpMode
         intake.setOperationState(Module.OperationState.MANUAL);
 
         slidesMoving=false;
+        slidestimer=new ElapsedTime();
 
         g1=new GamepadEx(gamepad1);
         g2=new GamepadEx(gamepad2);
@@ -354,6 +355,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
                 .build();
+
     }
 
     @Override

@@ -13,11 +13,11 @@ import org.firstinspires.ftc.teamcode.util.Context;
 @Config
 public class Deposit extends Module
 {
-    public static double transfer1=0.93;
-    public static double transfer2=0.20;
+    public static double transfer1=0.99;
+    public static double transfer2=0.01;
 
-    public static double deposit1High= 0.09;//0.91;//.83
-    public static double deposit2High = 0.96;//0.14;//.22
+    public static double deposit1High= 0.01;//0.91;//.83
+    public static double deposit2High = 0.99;//0.14;//.22
 
     public static double deposit1Quarter1=(transfer1+deposit1High)/4;
     public static double deposit2Quarter1=(transfer2+deposit2High)/4;
@@ -106,13 +106,16 @@ public class Deposit extends Module
     PusherState pstate;
     WristState wstate;
 
-    Servo leftRotator, rightRotator, pusher, wrist;
+    Servo leftRotator, rightRotator;
+    Servo pusher, wrist;
 
     public Deposit(HardwareMap hardwareMap)
     {
         super(true);
         leftRotator=hardwareMap.get(Servo.class, "leftRotator");
         rightRotator=hardwareMap.get(Servo.class, "rightRotator");
+        leftRotator.setDirection(Servo.Direction.REVERSE);
+        rightRotator.setDirection(Servo.Direction.REVERSE);
         pusher=hardwareMap.get(Servo.class, "pusher");
         wrist =hardwareMap.get(Servo.class,"wrist");
     }
@@ -121,7 +124,7 @@ public class Deposit extends Module
     @Override
     protected void write()
     {
-
+        /*
             if(Math.abs(leftRotator.getPosition()-leftRotatorPos)>=0.01)
             {
                 if(leftRotator.getPosition()<leftRotatorPos){
@@ -140,7 +143,9 @@ public class Deposit extends Module
                     rightRotator.setPosition(rightRotator.getPosition() - 0.01);
                 }
             }
-
+        */
+        rightRotator.setPosition(rightRotatorPos);
+        leftRotator.setPosition(leftRotatorPos);
 
         wrist.setPosition(wristPos);
         pusher.setPosition(pusherPos);

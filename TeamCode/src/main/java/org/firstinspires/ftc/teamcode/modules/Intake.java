@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -57,6 +58,7 @@ public class Intake extends Module {
     {
         super(false);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
         angler1 = hardwareMap.get(Servo.class, "intake1");
         angler2 = hardwareMap.get(Servo.class, "intake2");
         angler2.setDirection(Servo.Direction.REVERSE);

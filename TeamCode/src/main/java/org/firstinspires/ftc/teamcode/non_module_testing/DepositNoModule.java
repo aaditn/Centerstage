@@ -17,11 +17,11 @@ public class DepositNoModule extends EnhancedOpMode
     public static double pusherInit=0;
 
     public static double pusherExtended=0;
-    public static double transfer1=0.93;
-    public static double transfer2=0.20;
+    public static double transfer1=0.99;
+    public static double transfer2=0.01;
 
-    public static double deposit1High= 0.09;//0.91;//.83
-    public static double deposit2High = 0.96;//0.14;//.22
+    public static double deposit1High= 0.01;//0.91;//.83
+    public static double deposit2High = 0.99;//0.14;//.22
 
     public static double wristInit = 0;
     public static double wristDeposit = 0.3;
@@ -36,6 +36,8 @@ public class DepositNoModule extends EnhancedOpMode
     public void initialize() {
         rl = hardwareMap.get(Servo.class, "leftRotator");
         rr = hardwareMap.get(Servo.class, "rightRotator");
+        rr.setDirection(Servo.Direction.REVERSE);
+        rl.setDirection(Servo.Direction.REVERSE);
         p = hardwareMap.get(Servo.class, "pusher");
         wrist = hardwareMap.get(Servo.class, "wrist");
     }

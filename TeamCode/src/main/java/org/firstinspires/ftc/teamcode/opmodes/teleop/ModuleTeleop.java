@@ -168,9 +168,9 @@ public class ModuleTeleop extends EnhancedOpMode
             {
                 slides.setOperationState(Module.OperationState.MANUAL);
 
-                if(slidestimer.milliseconds()>300)
+                if(slidestimer.milliseconds()>150)
                 {
-                    double newTarget=slides.getTargetPosition() + (30*Math.signum(gamepad2.left_stick_y)*-1);
+                    double newTarget=slides.getTargetPosition() + (40*Math.signum(gamepad2.left_stick_y)*-1);
                     if(newTarget<300)
                     {
                         newTarget=300;
@@ -290,11 +290,11 @@ public class ModuleTeleop extends EnhancedOpMode
         slideupbase=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
-                .delay(200)
+                .delay(100)
                 .moduleAction(slides, Slides.SlideState.RAISED)
                 .await(()->slides.currentPosition()>200)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
-                .delay(400)
+                .delay(200)
                 //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
@@ -346,7 +346,7 @@ public class ModuleTeleop extends EnhancedOpMode
         slidedown=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
-                .delay(1000)
+                .delay(300)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .moduleAction(deposit, Deposit.PusherState.IN)
                 .await(()->slides.currentPosition()<100)

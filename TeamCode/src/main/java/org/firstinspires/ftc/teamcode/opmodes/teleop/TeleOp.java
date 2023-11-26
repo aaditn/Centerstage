@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.modules;
+package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -13,6 +13,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.modules.Deposit;
+import org.firstinspires.ftc.teamcode.modules.Intake;
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
@@ -138,8 +141,7 @@ public class TeleOp extends EnhancedOpMode
         //slides.setManual(true);
         intake.init();
         deposit.init();
-        droneLauncher.init();
-        intake.setManual(true);
+        intake.setOperationState(Module.OperationState.MANUAL);
     }
 
     @Override
@@ -213,13 +215,13 @@ public class TeleOp extends EnhancedOpMode
 
         if(gamepad2.a)
         {
-            intake.setState(Intake.positionState.TELE);
+            intake.setState(Intake.PositionState.TELE);
         }
         else if(gamepad2.b)
         {
-            intake.setState(Intake.positionState.HIGH);
+            intake.setState(Intake.PositionState.HIGH);
         }
-        intake.setPowerManual(-gamepad2.right_stick_y);
+        intake.manualChange(-gamepad2.right_stick_y);
 
         if(isIntake==false&&gamepad2.right_bumper)
         {

@@ -8,8 +8,9 @@ public abstract class Module
 {
     //Is an array for the modules that have multiple states to them
     private ModuleState[] states;
-    boolean constantUpdate;
+    public boolean constantUpdate;
     boolean stateChanged;
+    boolean readUpdateChecker;
 
     public String telIdentifier;
 
@@ -21,7 +22,13 @@ public abstract class Module
         TRANSITIONING, IDLE
     }
 
+    public enum OperationState
+    {
+        PRESET, MANUAL
+    }
+
     protected Status status=Status.IDLE;
+    protected OperationState opstate=OperationState.PRESET;
 
     //constructor. gives module all information to do tasks. constantUpdate is used for modules with PID
     // or some other controller that needs constant updating
@@ -48,13 +55,15 @@ public abstract class Module
         {
             if(state.getClass()==states[i].getClass())
             {
-                states[i]=state;
+                if(state!=states[i])
+                {
+                    states[i]=state;
+                    onStateChange();
+                }
             }
         }
         //resets timeout to 0 if none specified
         currentTimeout=0;
-        //triggers a sequence that occurs once when state is changed(this is how powers change for stuff with constantUpdate off)
-        onStateChange();
     }
 
     //same code but with timeout
@@ -64,11 +73,24 @@ public abstract class Module
         {
             if(state.getClass()==states[i].getClass())
             {
-                states[i]=state;
+                if(state!=states[i])
+                {
+                    states[i]=state;
+                    onStateChange();
+                }
             }
         }
         currentTimeout=timeout;
-        onStateChange();
+    }
+
+    public void setOperationState(OperationState s)
+    {
+        opstate=s;
+    }
+
+    public OperationState getOpstate()
+    {
+        return opstate;
     }
 
     //gets the specific state you want
@@ -94,34 +116,31 @@ public abstract class Module
     private void onStateChange()
     {
         timer.reset();
-        updateInternalStatus();
-        stateChanged();
-        readUpdate();
+        readUpdateChecker=false;
         stateChanged=true;
-    }
+        stateChanged();
 
-    //runs once on state change and permanently if constantUpdate is enabled
-    private void readUpdate()
-    {
-        telemetryUpdate();
         updateInternalStatus();
-        internalUpdate();
+        telemetryUpdate();
     }
-
 
     //way to call update loop from opMode
     public void updateLoop()
     {
-        if(constantUpdate)
+        if(constantUpdate||stateChanged)
         {
-            readUpdate();
+            if(opstate==OperationState.PRESET)
+            {
+                internalUpdate();
+            }
+            else if(opstate==OperationState.MANUAL)
+            {
+                internalUpdateManual();
+            }
+            readUpdateChecker=true;
         }
-        //updateInternalStatus always running to account for timeout conditions and telemetry for fun
-        else
-        {
-            updateInternalStatus();
-            telemetryUpdate();
-        }
+        updateInternalStatus();
+        telemetryUpdate();
     }
 
     //way to call writes from opMode. Separate from update to make write calls all at the same time.
@@ -130,7 +149,10 @@ public abstract class Module
         if(constantUpdate||stateChanged)
         {
             write();
-            stateChanged=false;
+            if(readUpdateChecker)
+            {
+                stateChanged=false;
+            }
         }
     }
 
@@ -143,9 +165,9 @@ public abstract class Module
     protected abstract void write();
 
     //way to get state times from outside class/in opMode
-    public double timeSpentInState()
+    public int timeSpentInState()
     {
-        return timer.milliseconds();
+        return (int) timer.milliseconds();
     }
 
     //called once on stateChange(useful for things that only need to be called once when state changes
@@ -164,10 +186,18 @@ public abstract class Module
         }
     }
 
+    public void manualChange(double value)
+    {
+        timer.reset();
+        stateChanged=true;
+    }
+
 
 
     //write implementation for updating internally(setting powers to something)
     protected abstract void internalUpdate();
+    protected void internalUpdateManual() {}
+
 
     //need implementation to set the states so this module can access all states
     protected abstract void initInternalStates();

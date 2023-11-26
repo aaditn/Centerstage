@@ -7,7 +7,6 @@ object Context
     @JvmField var tel: MultipleTelemetry? = null
     @JvmField var isTeamRed: Boolean = true
 
-
     @JvmStatic fun updateValues()
     {
 

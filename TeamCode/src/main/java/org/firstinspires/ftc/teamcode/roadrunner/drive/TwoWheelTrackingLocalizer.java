@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 
 import java.util.Arrays;
@@ -65,6 +66,21 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         this.drive = drive;
 
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fl"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fr")); //perp needs to be changed, back perp odom broken
+
+        // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
+        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
+    }
+
+    public TwoWheelTrackingLocalizer(HardwareMap hardwareMap, Robot drive) {
+        super(Arrays.asList(
+                new Pose2d(PARALLEL_X, PARALLEL_Y, 0),
+                new Pose2d(PERPENDICULAR_X, PERPENDICULAR_Y, Math.toRadians(90))
+        ));
+
+        //this.drive = (SampleMecanumDrive) drive;
+
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "bl"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fr")); //perp needs to be changed, back perp odom broken
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)

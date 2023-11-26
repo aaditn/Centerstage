@@ -5,19 +5,18 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 
 public class Intake extends Module {
-    DcMotorEx intake;
+    public static DcMotorEx intake;
     Servo angler1, angler2;
     double threshold = 0.02; // you might need one because power is inconsistent
-    public enum powerState implements ModuleState
+    public static enum PowerState implements ModuleState
     {
         INTAKE(0.9), EXTAKE(-0.9), OFF(0), LOW(-0.3);
         double power;
-        powerState(double power)
+        PowerState(double power)
         {
             this.power=power;
         }
@@ -29,17 +28,13 @@ public class Intake extends Module {
         }
     }
 
-    public enum OperationState
+    public static enum PositionState implements ModuleState
     {
-        MANUAL, SET
-    }
-    public enum positionState implements ModuleState
-    {
-        TELE(0.03), HIGH(0.52), FIVE(0.19), FOUR(0.16), THREE(0.13), TWO(0.08), ONE(0.03), PURP (0.03);
+        TELE(0.03), HIGH(0.52), FIVE(0.19), FOUR(0.16), THREE(0.13), TWO(0.08), ONE(0.03), PURP(0.03);
 
         double position;
 
-        positionState(double position)
+        PositionState(double position)
         {
             this.position=position;
         }
@@ -56,9 +51,8 @@ public class Intake extends Module {
     double currentPower;
     double currentPosition;
 
-    powerState pwstate;
-    positionState poState;
-    OperationState opstate;
+    PowerState pwstate;
+    PositionState poState;
 
     public Intake(HardwareMap hardwareMap)
     {
@@ -70,24 +64,12 @@ public class Intake extends Module {
         angler2.setDirection(Servo.Direction.REVERSE);
     }
 
-    public void setManual(boolean bool)
+    @Override
+    public void manualChange(double power)
     {
-        if(bool)
-        {
-            opstate= OperationState.MANUAL;
-        }
-        else
-        {
-            opstate= OperationState.SET;
-        }
-    }
-
-    public void setPowerManual(double power)
-    {
+        super.manualChange(power);
         currentPower=power;
-        intake.setPower(currentPower);
     }
-
 
     @Override
     protected void write()
@@ -100,19 +82,22 @@ public class Intake extends Module {
     @Override
     protected void internalUpdate()
     {
-        if(opstate!=OperationState.MANUAL)
-        {
-            currentPower=getState(powerState.class).getOutput();
-        }
-        currentPosition=getState(positionState.class).getOutput();
+        currentPower=getState(PowerState.class).getOutput();
+        currentPosition=getState(PositionState.class).getOutput();
     }
+
+    @Override
+    protected void internalUpdateManual()
+    {
+        currentPosition=getState(PositionState.class).getOutput();
+    }
+
 
     @Override
     protected void initInternalStates()
     {
-        poState=positionState.HIGH;
-        pwstate=powerState.OFF;
-        opstate=OperationState.SET;
+        poState= PositionState.HIGH;
+        pwstate= PowerState.OFF;
         setInternalStates(poState, pwstate);
     }
 

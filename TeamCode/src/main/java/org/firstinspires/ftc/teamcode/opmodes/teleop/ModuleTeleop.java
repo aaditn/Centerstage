@@ -209,7 +209,7 @@ public class ModuleTeleop extends EnhancedOpMode
             }
 
             //dt strafing
-            /*if(strafeLeft.wasJustPressed()&&!robot.isBusy())
+            if(strafeLeft.wasJustPressed()&&!robot.isBusy())
             {
                 Trajectory strafeLeft=robot.trajectoryBuilder(robot.getPoseEstimate())
                         .strafeLeft(1.5)
@@ -224,7 +224,7 @@ public class ModuleTeleop extends EnhancedOpMode
                         .build();
 
                 robot.followTrajectoryAsync(strafeRight);
-            }*/
+            }
 
             //cancel strafe in case borken
             if(gamepad1.x)
@@ -281,7 +281,9 @@ public class ModuleTeleop extends EnhancedOpMode
                 pusher1=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
                 pusher2=new ToggleButtonReader(g2, GamepadKeys.Button.X),
                 intake1=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
-                intake2=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER)
+                intake2=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
+                strafeLeft=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT),
+                strafeRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_RIGHT)
         };
 
         intakepositions=new Intake.PositionState[]

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auton;
+package org.firstinspires.ftc.teamcode.opmodes.auton;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -78,7 +78,7 @@ public class CloseBlue extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(60,36.5,Math.toRadians(180)),
                         m.getVelocityConstraint(47.5, 1.65, 15.06),
                         m.getAccelerationConstraint(45))
-                .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
+                .addTemporalMarker(0.3, () -> intake.setState(Intake.PositionState.HIGH))
                 .build();
 
         Trajectory yellowPixel2 = m.trajectoryBuilder(purplePixel2.end())
@@ -91,7 +91,7 @@ public class CloseBlue extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(60.5  ,21.5,Math.toRadians(180)),
                         m.getVelocityConstraint(47.5, 1.65, 15.06),
                         m.getAccelerationConstraint(45))
-                .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
+                .addTemporalMarker(0.3, () -> intake.setState(Intake.PositionState.HIGH))
                 .build();
 
         Trajectory park1 = m.trajectoryBuilder(yellowPixel2.end())

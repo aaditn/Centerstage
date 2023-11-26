@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auton;
+package org.firstinspires.ftc.teamcode.opmodes.auton;
 
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.Trajectories.blueFarStart;
 

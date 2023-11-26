@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import java.util.List;
 
 @Config
-@TeleOp
+@TeleOp(name="A - ModuleTeleop")
 
 public class ModuleTeleop extends EnhancedOpMode
 {
@@ -79,6 +79,10 @@ public class ModuleTeleop extends EnhancedOpMode
                     deposit.setState(Deposit.PusherState.ONE);
                 }
                 else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.ONE)
+                {
+                    deposit.setState(Deposit.PusherState.HALF);
+                }
+                else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.HALF)
                 {
                     deposit.setState(Deposit.PusherState.TWO);
                 }
@@ -170,7 +174,7 @@ public class ModuleTeleop extends EnhancedOpMode
 
                 if(slidestimer.milliseconds()>150)
                 {
-                    double newTarget=slides.getTargetPosition() + (40*Math.signum(gamepad2.left_stick_y)*-1);
+                    double newTarget=slides.getTargetPosition() + (30*Math.signum(gamepad2.left_stick_y)*-1);
                     if(newTarget<300)
                     {
                         newTarget=300;
@@ -311,7 +315,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 .await(()->slides.currentPosition()>200)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
-                .moduleAction(deposit, Deposit.PusherState.EXTENDED)
+                //.moduleAction(deposit, Deposit.PusherState.EXTENDED)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
@@ -325,7 +329,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 .await(()->slides.currentPosition()>200)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
-                .moduleAction(deposit, Deposit.PusherState.EXTENDED)
+                //.moduleAction(deposit, Deposit.PusherState.EXTENDED)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)

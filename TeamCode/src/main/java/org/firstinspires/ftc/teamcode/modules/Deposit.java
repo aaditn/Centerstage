@@ -29,13 +29,14 @@ public class Deposit extends Module
     public static double deposit1Low= 1;//0.98;//.83
     public static double deposit2Low= 0.05;//0.07;//.22
 
-    public static double initwrist =.65;
+    public static double initwrist =.55;//.65
     public static double depositwrist=0.3;
 
     public static double pusherIn=0.04;
     public static double pusherPushed=0.14;
     public static double pusherOne=0.24;
     public static double pusherTwo=0.33;
+    public static double pusherHalf=(pusherOne+pusherTwo)/3;
     int debugCounter=0;
 
     public boolean funnimode=true;
@@ -88,7 +89,7 @@ public class Deposit extends Module
 
     public static enum PusherState implements  ModuleState
     {
-        IN(pusherIn),EXTENDED(pusherPushed), ONE(pusherOne), TWO(pusherTwo);
+        IN(pusherIn),EXTENDED(pusherPushed), ONE(pusherOne), TWO(pusherTwo), HALF(pusherHalf);
 
         double position;
         PusherState(double position)

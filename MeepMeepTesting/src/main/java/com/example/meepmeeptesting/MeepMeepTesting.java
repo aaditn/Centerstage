@@ -35,20 +35,28 @@ public class MeepMeepTesting {
                                 .waitSeconds(1)
                                 .splineToConstantHeading(new Vector2d(30, -61), Math.toRadians(180))
                                 .waitSeconds(1)
-                                .lineToConstantHeading(new Vector2d(31, -61))
+                                .lineTo(new Vector2d(31, -61))
+                                .splineToConstantHeading(new Vector2d(50, -28), Math.toRadians(0))
                                 .waitSeconds(1)
-
-                                .splineToConstantHeading(new Vector2d(50, -28), Math.toRadians(90))
-                                .waitSeconds(1)
-                                .splineToConstantHeading(new Vector2d(22, -12), Math.toRadians(180))
+                                .splineToConstantHeading(new Vector2d(8, -12), Math.toRadians(180))
                                 .lineToConstantHeading(new Vector2d(-58, -12))
                                 .waitSeconds(1)
-
-                                .splineTo(new Vector2d(50, -28), Math.toRadians(0))
-                                .waitSeconds(1)
-
-                                .lineTo(new Vector2d(50, -26))
+                                .lineToConstantHeading(new Vector2d(8, -12))
                                 .splineToConstantHeading(new Vector2d(58, -12), Math.toRadians(0))
+                                .waitSeconds(1)
+//                                .lineToConstantHeading(new Vector2d(31, -61))
+//                                .waitSeconds(1)
+////                                .splineToConstantHeading(new Vector2d(50, -28), Math.toRadians(90))
+////                                .waitSeconds(1)
+////                                .splineToConstantHeading(new Vector2d(22, -12), Math.toRadians(180))
+////                                .lineToConstantHeading(new Vector2d(-58, -12))
+////                                .waitSeconds(1)
+//
+//                                .splineTo(new Vector2d(50, -28), Math.toRadians(0))
+//                                .waitSeconds(1)
+//
+//                                .lineTo(new Vector2d(50, -26))
+//                                .splineToConstantHeading(new Vector2d(58, -12), Math.toRadians(0))
 
 
                                 .build()

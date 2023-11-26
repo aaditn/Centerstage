@@ -195,18 +195,16 @@ public class TeleOp extends EnhancedOpMode
         telemetry.addData("ok2", threshold2);
         telemetry.addData("matthewmiliseconds", timer.milliseconds());
 
-        if(threshold1 ==true&& timer.milliseconds()>1300){
+        if(threshold1 ==true&& timer.milliseconds()>2000){
             deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
             wrist.setPosition(depositwrist);
-
-        } else if (threshold1 && timer.milliseconds() > 300) {
-            wrist.setPosition(depositwrist);
-        } else if (threshold1 && timer.milliseconds() > 600) {
-            deposit.setState(Deposit.RotationState.DEPOSIT_MID2);
-            wrist.setPosition(depositwrist);
-        } else if (threshold1 && timer.milliseconds() > 950) {
+        } else if (threshold1 && timer.milliseconds() > 1400) {
             deposit.setState(Deposit.RotationState.DEPOSIT_MID3);
             wrist.setPosition(depositwrist);
+        } else if (threshold1 && timer.milliseconds() > 800) {
+            deposit.setState(Deposit.RotationState.DEPOSIT_MID2);
+        } else if (threshold1 && timer.milliseconds() > 500) {
+            deposit.setState(Deposit.RotationState.DEPOSIT_MID);
         }
 
         if(gamepad2.y){

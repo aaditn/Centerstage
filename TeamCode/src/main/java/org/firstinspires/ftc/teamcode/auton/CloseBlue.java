@@ -38,7 +38,7 @@ public class CloseBlue extends LinearOpMode {
     public static double pusherOne=0.265;
     public static double pusherTwo=0.35;
     public static double initwrist =.5;
-    public static double depositwrist=0.3;
+    public static double depositwrist=0.4;
 
     Intake intake;
     Deposit deposit;
@@ -56,14 +56,13 @@ public class CloseBlue extends LinearOpMode {
         m.setPoseEstimate(startPos);
 
         Trajectory purplePixel1 = m.trajectoryBuilder(startPos)
-                .splineToConstantHeading(new Vector2d(31.5, 37), Math.toRadians(-90),
+                .splineToConstantHeading(new Vector2d(31.5, 31), Math.toRadians(-90),
                         m.getVelocityConstraint(30, 1, 15.06),
                         m.getAccelerationConstraint(40))
-                .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
                 .build();
 
         Trajectory purplePixel2 = m.trajectoryBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(16,29))
+                .lineToConstantHeading(new Vector2d(16,26))
                 //.addTemporalMarker(.1, () -> {intake.setState(Intake.positionState.PURP); intake.updateLoop(); intake.writeLoop();})
                 .build();
 
@@ -72,29 +71,41 @@ public class CloseBlue extends LinearOpMode {
                 .splineTo(new Vector2d(14, 32), Math.toRadians(-120),
                         m.getVelocityConstraint(30, 1, 15.06),
                         m.getAccelerationConstraint(40))
-                .addTemporalMarker(1.3, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
                 .build();
 
 
         Trajectory yellowPixel1 = m.trajectoryBuilder(purplePixel1.end())
-                .lineToLinearHeading(new Pose2d(62,37.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(62,35.5,Math.toRadians(180)),
                         m.getVelocityConstraint(47.5, 1.65, 15.06),
                         m.getAccelerationConstraint(45))
                 .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
                 .build();
 
         Trajectory yellowPixel2 = m.trajectoryBuilder(purplePixel2.end())
-                .lineToLinearHeading(new Pose2d(61.5,31,Math.toRadians(180)),//x=57.5
+                .lineToLinearHeading(new Pose2d(59.5,30.5,Math.toRadians(180)),
                         m.getVelocityConstraint(47.5, 1.65, 15.06),
                         m.getAccelerationConstraint(45))
                 .build();
 
         Trajectory yellowPixel3 = m.trajectoryBuilder(purplePixel3.end())
-                .lineToLinearHeading(new Pose2d(61.5  ,24,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(60.5  ,21.5,Math.toRadians(180)),
                         m.getVelocityConstraint(47.5, 1.65, 15.06),
                         m.getAccelerationConstraint(45))
                 .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
                 .build();
+
+        Trajectory park1 = m.trajectoryBuilder(yellowPixel2.end())
+                .strafeRight(24)
+                .build();
+
+        Trajectory park2 = m.trajectoryBuilder(yellowPixel2.end())
+                .strafeRight(24)
+                .build();
+
+        Trajectory park3 = m.trajectoryBuilder(yellowPixel2.end())
+                .strafeRight(28)
+                .build();
+
 
         wrist =hardwareMap.get(Servo.class,"wrist");
         pusher=hardwareMap.get(Servo.class, "pusher");
@@ -169,7 +180,7 @@ public class CloseBlue extends LinearOpMode {
 
         intake.writeLoop();
         intake.updateLoop();
-        waitT(1000);
+        waitT(200);
         intake.setState(Intake.powerState.OFF);
         intake.setState(Intake.positionState.HIGH);
         intake.writeLoop();
@@ -184,16 +195,22 @@ public class CloseBlue extends LinearOpMode {
             m.followTrajectory(yellowPixel3);
         }
 
-        slidesPos=100;
-        waitT(1000);
+        slidesPos=70;
 
-        wrist.setPosition(depositwrist);
-        waitT(250);
+        slideLeft.setTargetPosition(slidesPos);
+        slideRight.setTargetPosition(slidesPos);
+
+        waitT(750);
 
         deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
         deposit.updateLoop();
         deposit.writeLoop();
-        waitT(1500);
+        waitT(700);
+
+        wrist.setPosition(depositwrist);
+        telemetry.addData("Wrist Pos",wrist.getPosition());
+        telemetry.update();
+        waitT(250);
 
         pusher.setPosition(pusherTwo);
         deposit.updateLoop();
@@ -201,6 +218,9 @@ public class CloseBlue extends LinearOpMode {
         waitT(1000);
 
         slidesPos = 0;
+
+        slideLeft.setTargetPosition(slidesPos);
+        slideRight.setTargetPosition(slidesPos);
 
         while(Math.abs(slideLeft.getCurrentPosition()-slideLeft.getTargetPosition() )>20){
                 deposit.setState(Deposit.RotationState.TRANSFER);
@@ -217,6 +237,14 @@ public class CloseBlue extends LinearOpMode {
         sleep(500);
         pusher.setPosition(pusherIn);
         sleep(500);
+
+        if(elementPos==1) {
+            m.followTrajectory(park1);
+        } else if (elementPos==2){
+            m.followTrajectory(park2);
+        } else{
+            m.followTrajectory(park3);
+        }
 
 
     }

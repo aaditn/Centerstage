@@ -30,7 +30,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous(name= "Farr Blue")
+@Autonomous(name= "Far Blue")
 public class FarBlue extends LinearOpMode {
 
     DcMotor slideLeft,slideRight;

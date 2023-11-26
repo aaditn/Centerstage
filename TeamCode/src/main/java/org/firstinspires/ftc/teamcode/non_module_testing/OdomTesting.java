@@ -34,7 +34,7 @@ public class OdomTesting extends EnhancedOpMode
         telemetry.addData("perpendicular encoder", frontRightEncoder.getCurrentPosition());
         //telemetry.addData("front left", frontLeftEncoder.getCurrentPosition());
         //telemetry.addData("back right", backRightEncoder.getCurrentPosition());
-        telemetry.addData("parallel encoder", backLeftEncoder.getCurrentPosition());
+        telemetry.addData("parallel encoder", frontLeftEncoder.getCurrentPosition());
         telemetry.update();
     }
 }

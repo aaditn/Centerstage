@@ -75,7 +75,7 @@ public class DriveConstants {
     public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR =
             RevHubOrientationOnRobot.LogoFacingDirection.FORWARD;
     public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR =
-            RevHubOrientationOnRobot.UsbFacingDirection.DOWN;
+            RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
 
     public static double encoderTicksToInches(double ticks) {

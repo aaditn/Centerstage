@@ -12,8 +12,8 @@ public class Deposit extends Module
 {
     public static double transfer1=0.93;
     public static double transfer2=0.20;
-    public static double deposit1High= 0.11;//0.91;//.83
-    public static double deposit2High = 0.94;//0.14;//.22
+    public static double deposit1High= 0.05;
+    public static double deposit2High = 1;
     public static double deposit1Mid = 0.5;
     public static double deposit2Mid = 0.55;
 

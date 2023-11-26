@@ -27,7 +27,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -40,14 +39,13 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Slides;
-import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
@@ -55,12 +53,15 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.roadrunner.util.LynxModuleUtil;
 import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.annotation.concurrent.GuardedBy;
 
 public class Robot extends MecanumDrive
 {
@@ -100,6 +101,8 @@ public class Robot extends MecanumDrive
     public Intake intake;
 
     public DroneLauncher droneLauncher;
+    OpenCvWebcam camera;
+    public TeamElementDetection teamElementDetector;
 
 
     public Robot(LinearOpMode l)
@@ -110,6 +113,8 @@ public class Robot extends MecanumDrive
         Context.resetValues();
         Context.tel=tel;
         hardwareMap=l.hardwareMap;
+
+        cameraInit();
 
         dtInit();
         
@@ -123,6 +128,27 @@ public class Robot extends MecanumDrive
     }
 
 
+    public void cameraInit()
+    {
+        int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
+        teamElementDetector =new TeamElementDetection(l.telemetry);
+        camera.setPipeline(teamElementDetector);
+
+        camera.setMillisecondsPermissionTimeout(5000);
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened()
+            {
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
+    }
 
     public void dtInit()
     {
@@ -194,6 +220,7 @@ public class Robot extends MecanumDrive
         tel.update();
         read();
         write();
+        update();
         //loop whatever else u want
     }
 

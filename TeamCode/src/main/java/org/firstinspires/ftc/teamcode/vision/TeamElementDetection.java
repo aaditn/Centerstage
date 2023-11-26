@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-public class teamElementDetection extends OpenCvPipeline{
+public class TeamElementDetection extends OpenCvPipeline{
 
     Telemetry tel;
     Scalar rLowHSV;
@@ -72,7 +72,7 @@ public class teamElementDetection extends OpenCvPipeline{
     Mat maskTemplate = new Mat();
     Moments m;
 
-    public teamElementDetection(Telemetry tel){
+    public TeamElementDetection(Telemetry tel){
         this.tel=tel;
     }
 

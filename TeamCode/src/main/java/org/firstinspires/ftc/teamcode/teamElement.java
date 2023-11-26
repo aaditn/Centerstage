@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-import org.firstinspires.ftc.teamcode.vision.teamElementDetection;
+import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -15,7 +15,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @TeleOp(name = "teamElement")
 public class teamElement extends EnhancedOpMode {
     OpenCvWebcam test;
-    teamElementDetection TeamElementDetection;
+    org.firstinspires.ftc.teamcode.vision.TeamElementDetection TeamElementDetection;
 
     MultipleTelemetry tel;
     public int elementPos;
@@ -29,7 +29,7 @@ public class teamElement extends EnhancedOpMode {
 
         int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         test= OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
-        TeamElementDetection =new teamElementDetection(tel);
+        TeamElementDetection =new TeamElementDetection(tel);
         test.setPipeline(TeamElementDetection);
 
         test.setMillisecondsPermissionTimeout(5000);

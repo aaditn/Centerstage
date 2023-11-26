@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.Context;
-import org.firstinspires.ftc.teamcode.vision.teamElementDetection;
+import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -129,7 +129,7 @@ public class CloseRed extends LinearOpMode {
 
         int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvWebcam test = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
-        teamElementDetection TeamElementDetection =new teamElementDetection(telemetry);
+        TeamElementDetection TeamElementDetection =new TeamElementDetection(telemetry);
         test.setPipeline(TeamElementDetection);
 
         test.setMillisecondsPermissionTimeout(5000);

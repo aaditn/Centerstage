@@ -5,7 +5,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -196,7 +195,7 @@ public class CloseBlue extends EnhancedOpMode {
                 .executeCode(()->macroRunning=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
                 .delay(100)
-                .moduleAction(slides, Slides.SlideState.AUTO_LOW)
+                .moduleAction(slides, Slides.SlideState.SLIDE_UP)
                 //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .awaitPreviousModuleActionCompletion()
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)

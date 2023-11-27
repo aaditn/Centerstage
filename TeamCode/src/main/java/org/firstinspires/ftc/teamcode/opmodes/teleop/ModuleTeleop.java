@@ -10,7 +10,6 @@ import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -317,7 +316,7 @@ public class ModuleTeleop extends EnhancedOpMode
 
         slideuphalf=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
-                .moduleAction(slides, Slides.SlideState.AUTO_LOW)
+                .moduleAction(slides, Slides.SlideState.SLIDE_UP)
                 .await(()->slides.currentPosition()>200)
                 .build();
 
@@ -329,7 +328,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 .await(()->slides.currentPosition()>200)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
-                //.moduleAction(deposit, Deposit.PusherState.EXTENDED)
+                //.moduleAction(deposit, Deposit.PusherState.EXTENDED) //pusher state isn't allowed to change even after deposit reaches the position
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)

@@ -1,32 +1,21 @@
 package org.firstinspires.ftc.teamcode.opmodes.auton;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
-import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.List;
 
@@ -48,16 +37,6 @@ public class FarBlue extends EnhancedOpMode {
     List<Task> slidedown;
     boolean macroRunning=false;
 
-
-
-    public void waitT(int ticks)
-    {
-        ElapsedTime  x= new ElapsedTime();
-        while(x.milliseconds()<ticks)
-        {
-
-        }
-    }
     public void waitOnDT()
     {
         while(robot.isBusy()&&opModeIsActive())
@@ -65,12 +44,19 @@ public class FarBlue extends EnhancedOpMode {
             //stall
         }
     }
-
     public void waitOnMacro()
     {
         while(macroRunning&&opModeIsActive())
         {
             //stall
+        }
+    }
+    public void waitT(int ticks)
+    {
+        ElapsedTime x= new ElapsedTime();
+        while(x.milliseconds()<ticks)
+        {
+
         }
     }
 
@@ -80,53 +66,87 @@ public class FarBlue extends EnhancedOpMode {
         Trajectory placePurple1 = robot.trajectoryBuilder(startPos)
                 //CHANGE
                 .lineToLinearHeading(new Pose2d(-40, 23, Math.toRadians(140)))
-                .addTemporalMarker(2, () -> { intake.updateLoop(); intake.writeLoop();})
                 .build();
         Trajectory placePurple2 = robot.trajectoryBuilder(startPos)
                 //CHANGE
                 .lineToLinearHeading(new Pose2d(-40, 23, Math.toRadians(140)))
-                .addTemporalMarker(2, () -> { intake.updateLoop(); intake.writeLoop();})
                 .build();
         Trajectory placePurple3 = robot.trajectoryBuilder(startPos)
                 .lineToLinearHeading(new Pose2d(-40, 23, Math.toRadians(140)))
-                .addTemporalMarker(2, () -> { intake.updateLoop(); intake.writeLoop();})
                 .build();
 
-        Trajectory firstCycle3 = robot.trajectoryBuilder(placePurple3.end())
+        Trajectory intakeWhite1 = robot.trajectoryBuilder(placePurple3.end())
+                //CHANGE
+                .lineToConstantHeading(new Vector2d(-40, 8))
+                .lineToLinearHeading(new Pose2d(-59, 8,Math.toRadians(180)))
+                .build();
+        Trajectory intakeWhite2 = robot.trajectoryBuilder(placePurple3.end())
+                //CHANGE
+                .lineToConstantHeading(new Vector2d(-40, 8))
+                .lineToLinearHeading(new Pose2d(-59, 8,Math.toRadians(180)))
+                .build();
+        Trajectory intakeWhite3 = robot.trajectoryBuilder(placePurple3.end())
                 .lineToConstantHeading(new Vector2d(-40, 8))
                 .lineToLinearHeading(new Pose2d(-59, 8,Math.toRadians(180)))
                 .build();
 
-        Trajectory placeYellow3 = robot.trajectoryBuilder(firstCycle3.end())
-                .addTemporalMarker(2, () -> {intake.setState(Intake.PowerState.OFF);intake.updateLoop(); intake.writeLoop();})
+        Trajectory placeWhite1 = robot.trajectoryBuilder(intakeWhite3.end())
+                //CHANGE
                 .lineTo(new Vector2d(8, 12))
                 .splineToConstantHeading(new Vector2d(52, 28), Math.toRadians(0))
-                .addTemporalMarker(0.3, () -> intake.setState(Intake.PositionState.HIGH))
                 .build();
-        Trajectory strafeWhite3 = robot.trajectoryBuilder(placeYellow3.end())
+        Trajectory placeWhite2 = robot.trajectoryBuilder(intakeWhite3.end())
+                //CHANGE
+                .lineTo(new Vector2d(8, 12))
+                .splineToConstantHeading(new Vector2d(52, 28), Math.toRadians(0))
+                .build();
+        Trajectory placeWhite3 = robot.trajectoryBuilder(intakeWhite3.end())
+                .lineTo(new Vector2d(8, 12))
+                .splineToConstantHeading(new Vector2d(52, 28), Math.toRadians(0))
+                .build();
+
+        Trajectory strafeYellow1 = robot.trajectoryBuilder(placeWhite3.end())
+                //CHANGE
+                .strafeRight(1)
+                .build();
+        Trajectory strafeYellow2 = robot.trajectoryBuilder(placeWhite3.end())
+                //CHANGE
+                .strafeRight(1)
+                .build();
+        Trajectory strafeYellow3 = robot.trajectoryBuilder(placeWhite3.end())
                 .strafeRight(1)
                 .build();
 
-        Trajectory intakeAllianceYellow3 = robot.trajectoryBuilder(placeYellow3.end())
-                .addTemporalMarker(1, () -> {intake.setState(Intake.PowerState.INTAKE); intake.updateLoop(); intake.writeLoop();})
-                .addTemporalMarker(1, () -> {intake.setState(Intake.PositionState.TELE); intake.updateLoop(); intake.writeLoop();})
+        Trajectory intakeAllianceYellow1 = robot.trajectoryBuilder(placeWhite3.end())
                 .splineToConstantHeading(new Vector2d(30, 61), Math.toRadians(180))
                 .build();
+        Trajectory intakeAllianceYellow2 = robot.trajectoryBuilder(placeWhite3.end())
+                .splineToConstantHeading(new Vector2d(30, 61), Math.toRadians(180))
+                .build();
+        Trajectory intakeAllianceYellow3 = robot.trajectoryBuilder(placeWhite3.end())
+                .splineToConstantHeading(new Vector2d(30, 61), Math.toRadians(180))
+                .build();
+
+        Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
+                .lineToConstantHeading(new Vector2d(31, 61))
+                .splineToConstantHeading(new Vector2d(54, 28), Math.toRadians(0))
+                .build();
+        Trajectory placeAllianceYellow2 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
+                .lineToConstantHeading(new Vector2d(31, 61))
+                .splineToConstantHeading(new Vector2d(54, 28), Math.toRadians(0))
+                .build();
         Trajectory placeAllianceYellow3 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
-                .addTemporalMarker(0.3, () -> {intake.setState(Intake.PowerState.OFF); intake.updateLoop(); intake.writeLoop();})
-                .addTemporalMarker(0.1, () -> {intake.setState(Intake.PositionState.HIGH); intake.updateLoop(); intake.writeLoop();})
                 .lineToConstantHeading(new Vector2d(31, 61))
                 .splineToConstantHeading(new Vector2d(54, 28), Math.toRadians(0))
                 .build();
 
         waitForStart();
 
-        //deposit.setState(Deposit.RotationState.TRANSFER);
+        deposit.setState(Deposit.RotationState.TRANSFER);
         deposit.setState(Deposit.WristState.TRANSFER);
         deposit.setState(Deposit.PusherState.EXTENDED);
         intake.setState(Intake.PositionState.PURP);
-        waitT(1000);
-
+        waitOnMacro();
         if(elementPos==1) {
             robot.followTrajectoryAsync(placePurple1);
         }else if (elementPos==2){
@@ -134,119 +154,76 @@ public class FarBlue extends EnhancedOpMode {
         } else{
             robot.followTrajectoryAsync(placePurple3);
         }
-/*
-        intake.writeLoop();
-        intake.updateLoop();
-        waitT(1000);
-        intake.setState(Intake.powerState.OFF);
+        waitOnDT();
         intake.setState(Intake.PositionState.HIGH);
-        intake.writeLoop();
-        intake.updateLoop();
+        waitOnMacro();
 
-        waitT(1000);
+        //intake white
+        if (elementPos==1){
+            robot.followTrajectory(intakeWhite1);
+        } else if (elementPos==2){
+            robot.followTrajectory(intakeWhite2);
+        } else {
+            robot.followTrajectory(intakeWhite3);
+        }
+        waitOnDT();
+        intake.setState(Intake.PositionState.FIVE);
+        intake.setState(Intake.PowerState.INTAKE);
 
-        robot.followTrajectory(firstCycle3);
-        intake.setState(Intake.PositionState.FIVE); intake.updateLoop(); intake.writeLoop();
-        intake.setState(Intake.powerState.INTAKE);
-        intake.writeLoop();
-        intake.updateLoop();
-        waitT(1000);
+        //deposit white pixel
+        if(elementPos==1) {
+            robot.followTrajectoryAsync(placeWhite1);
+        }else if (elementPos==2){
+            robot.followTrajectoryAsync(placeWhite2);
+        } else{
+            robot.followTrajectoryAsync(placeWhite3);
+        }
+        scheduler.scheduleTaskList(slideupbase);
+        waitOnMacro();
+        deposit.setState(Deposit.PusherState.TWO);
 
-        robot.followTrajectory(placeYellow3);
+        //strafe and deposit yellow
+        if(elementPos==1) {
+            robot.followTrajectoryAsync(strafeYellow1);
+        }else if (elementPos==2){
+            robot.followTrajectoryAsync(strafeYellow2);
+        } else{
+            robot.followTrajectoryAsync(strafeYellow3);
+        }
+        waitOnDT();
+        deposit.setState(Deposit.PusherState.TWO);
+        waitOnMacro();
+        scheduler.scheduleTaskList(slidedown);
+        waitOnMacro();
 
-
-
-        slidesPos=100;
-        waitT(1000);
-
-        wrist.setPosition(depositwrist);
-        waitT(250);
-
-        deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
-        deposit.updateLoop();
-        deposit.writeLoop();
-        waitT(1500);
-
-        pusher.setPosition(pusherOne);
-        deposit.updateLoop();
-        deposit.writeLoop();
-
-        sleep(300);
-
-        robot.followTrajectory(strafeWhite3);
-        pusher.setPosition(pusherTwo);
-
-        waitT(1000);
-
-        slidesPos = 200;
-        slideLeft.setTargetPosition(slidesPos);
-        slideRight.setTargetPosition(slidesPos);
-        waitT(500);
-        slidesPos = 0;
-        slideLeft.setTargetPosition(slidesPos);
-        slideRight.setTargetPosition(slidesPos);
-
-        wrist.setPosition(initwrist);
-        waitT(50);
-        deposit.setState(Deposit.RotationState.TRANSFER);
-
-        pusher.setPosition(pusherIn);
+        //get alliance yellow
         intake.setState(Intake.PositionState.TWO);
-        intake.updateLoop();
-        intake.writeLoop();
+        if(elementPos==1) {
+            robot.followTrajectoryAsync(intakeAllianceYellow1);
+        }else if (elementPos==2){
+            robot.followTrajectoryAsync(intakeAllianceYellow2);
+        } else{
+            robot.followTrajectoryAsync(intakeAllianceYellow3);
+        }
+        waitOnDT();
+        intake.setState(Intake.PowerState.INTAKE);
+        waitT(2500);
+        intake.setState(Intake.PowerState.OFF);
 
-        slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
+        //deposit alliance yellow
+        if(elementPos==1) {
+            robot.followTrajectoryAsync(placeAllianceYellow1);
+        }else if (elementPos==2){
+            robot.followTrajectoryAsync(placeAllianceYellow2);
+        } else{
+            robot.followTrajectoryAsync(placeAllianceYellow3);
+        }
+        waitOnDT();
+        scheduler.scheduleTaskList(slideupbase);
+        waitOnMacro();
+        deposit.setState(Deposit.PusherState.TWO);
         waitT(500);
-        pusher.setPosition(pusherIn);
-
-        robot.followTrajectory(intakeAllianceYellow3);
-
-        intake.setState(Intake.PositionState.ONE);
-        intake.updateLoop();
-        intake.writeLoop();
-        robot.followTrajectory(placeAllianceYellow3);
-
-
-        slidesPos=100;
-        waitT(1000);
-
-        wrist.setPosition(depositwrist);
-        waitT(250);
-
-        deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
-        deposit.updateLoop();
-        deposit.writeLoop();
-        waitT(1500);
-
-        pusher.setPosition(pusherTwo);
-        deposit.updateLoop();
-        deposit.writeLoop();
-        waitT(1000);
-
-        slidesPos = 200;
-        slideLeft.setTargetPosition(slidesPos);
-        slideRight.setTargetPosition(slidesPos);
-        waitT(500);
-        slidesPos = 0;
-        slideLeft.setTargetPosition(slidesPos);
-        slideRight.setTargetPosition(slidesPos);
-        deposit.setState(Deposit.RotationState.TRANSFER);
-        deposit.updateLoop();
-        deposit.writeLoop();
-        wrist.setPosition(initwrist);
-        pusher.setPosition(pusherIn);
-
-        deposit.updateLoop();
-        deposit.writeLoop();
-
-        slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        waitT(500);
-
- */
+        scheduler.scheduleTaskList(slidedown);
 
     }
 
@@ -269,7 +246,7 @@ public class FarBlue extends EnhancedOpMode {
                 .executeCode(()->macroRunning=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
                 .delay(100)
-                .moduleAction(slides, Slides.SlideState.AUTO_LOW)
+                .moduleAction(slides, Slides.SlideState.SLIDE_UP)
                 //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .awaitPreviousModuleActionCompletion()
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)

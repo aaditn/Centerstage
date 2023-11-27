@@ -125,26 +125,26 @@ public class ModuleTeleop extends EnhancedOpMode
 
 
             //slides macro
-            if(slideUpBase.wasJustPressed()&&slides.getState()==Slides.SlideState.GROUND&&!slidesMoving)
+            if(slideUpBase.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.AUTO_LOW)&&!slidesMoving)
             {
                 //deposit.funnimode=true;
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slideupbase);
             }
-            else if(gamepad1.b&&slides.getState()==Slides.SlideState.GROUND&&!slidesMoving)
+            else if(gamepad1.b&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.AUTO_LOW)&&!slidesMoving)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slideuphalf);
             }
-            else if(slideUpRow1.wasJustPressed()&&slides.getState()==Slides.SlideState.GROUND&&!slidesMoving)
+            else if(slideUpRow1.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.AUTO_LOW)&&!slidesMoving)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slideup1);
             }
-            else if(slideUpRow2.wasJustPressed()&&slides.getState()==Slides.SlideState.GROUND&&!slidesMoving)
+            else if(slideUpRow2.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.AUTO_LOW)&&!slidesMoving)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;

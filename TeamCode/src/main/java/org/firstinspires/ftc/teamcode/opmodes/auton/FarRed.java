@@ -1,332 +1,272 @@
 package org.firstinspires.ftc.teamcode.opmodes.auton;
 
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.Trajectories.blueFarStart;
-
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.Intake;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.modules.Slides;
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
+import org.firstinspires.ftc.teamcode.task_scheduler.Task;
+import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
+import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
-import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvWebcam;
+import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+
+import java.util.List;
 
 @Config
 @Autonomous(name= "Far Red")
-public class FarRed extends LinearOpMode {
+public class FarRed extends EnhancedOpMode {
 
-    DcMotor slideLeft,slideRight;
-    int slidesPos;
-    Servo wrist, pusher;
-    public static double pusherIn=0.04;
-    public static double pusherPushed=0.18;//what is this for
-
-    public static double pusherPrep=0.12;
-    public static double pusherOne=0.265;
-    public static double pusherTwo=0.35;
-    public static double initwrist =.5;
-    public static double depositwrist=0.3;
+    Robot robot;
 
     Intake intake;
     Deposit deposit;
-    SampleMecanumDrive m;
-    // Pose2d startPos = new Pose2d(20,56,Math.toRadians(270));
+    Slides slides;
+    Pose2d startPos = new Pose2d(20,56,Math.toRadians(270));
+    TaskScheduler scheduler;
+    TaskListBuilder builder;
+    int elementPos;
 
+    List<Task> slideupbase;
+    List<Task> slidedown;
+    boolean macroRunning=false;
+
+
+
+    public void waitT(int ticks)
+    {
+        ElapsedTime  x= new ElapsedTime();
+        while(x.milliseconds()<ticks)
+        {
+
+        }
+    }
+    public void waitOnDT()
+    {
+        while(robot.isBusy()&&opModeIsActive())
+        {
+            //stall
+        }
+    }
+
+    public void waitOnMacro()
+    {
+        while(macroRunning&&opModeIsActive())
+        {
+            //stall
+        }
+    }
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void linearOpMode()
+    {
 
 
-
-
-        Context.resetValues();
-        Context.isTeamRed = false;
-        Context.tel=new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
-        m= new SampleMecanumDrive(hardwareMap);
-        m.setPoseEstimate(blueFarStart);
-
-
-        TrajectorySequence placePurple1 = m.trajectorySequenceBuilder(blueFarStart)
+        Trajectory purplePixel1 = robot.trajectoryBuilder(startPos)
                 .splineTo(new Vector2d(-35, -40), Math.toRadians(90))
                 .splineTo(new Vector2d(-38, -34), Math.toRadians(180))
-                .addTemporalMarker(2, () -> {intake.setState(Intake.powerState.LOW); intake.updateLoop(); intake.writeLoop();})
                 .build();
-        TrajectorySequence firstCycle1 = m.trajectorySequenceBuilder(placePurple1.end())
-                .addTemporalMarker(0.3, () -> {intake.setState(Intake.positionState.FIVE); intake.updateLoop(); intake.writeLoop();})
+        Trajectory firstCycle1 = robot.trajectoryBuilder(purplePixel1.end())
                 .lineToConstantHeading(new Vector2d(-41, -20))
                 .splineToConstantHeading(new Vector2d(-58, -12), Math.toRadians(180))
                 .build();
-        TrajectorySequence placeYellow1 = m.trajectorySequenceBuilder(firstCycle1.end())
-                .addTemporalMarker(0.3, () -> {intake.setState(Intake.powerState.OFF); intake.updateLoop(); intake.writeLoop();})
-                .lineTo(new Vector2d(8, -12))
+        Trajectory yellowPixel1 = robot.trajectoryBuilder(firstCycle1.end())
+                .lineToConstantHeading(new Vector2d(8, -12))
                 .splineToConstantHeading(new Vector2d(50, -28), Math.toRadians(0))
-                .addTemporalMarker(0.3, () -> intake.setState(Intake.positionState.HIGH))
                 .build();
-        TrajectorySequence pickAllianceYellow1 = m.trajectorySequenceBuilder(placeYellow1.end())
-                .addTemporalMarker(1, () -> {intake.setState(Intake.powerState.INTAKE); intake.updateLoop(); intake.writeLoop();})
-                .addTemporalMarker(1, () -> {intake.setState(Intake.positionState.TELE); intake.updateLoop(); intake.writeLoop();})
+        Trajectory pickAllianceYellow1 = robot.trajectoryBuilder(yellowPixel1.end())
                 .splineToConstantHeading(new Vector2d(30, -61), Math.toRadians(180))
                 .build();
-        TrajectorySequence placeAllianceYellow1 = m.trajectorySequenceBuilder(pickAllianceYellow1.end())
-                .addTemporalMarker(0.3, () -> {intake.setState(Intake.powerState.OFF); intake.updateLoop(); intake.writeLoop();})
-                .addTemporalMarker(0.1, () -> {intake.setState(Intake.positionState.HIGH); intake.updateLoop(); intake.writeLoop();})
+
+        Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(pickAllianceYellow1.end())
                 .lineTo(new Vector2d(31, -61))
                 .splineToConstantHeading(new Vector2d(50, -28), Math.toRadians(0))
                 .build();
 
-        TrajectorySequence secondCycle1 = m.trajectorySequenceBuilder(placeAllianceYellow1.end())
+        Trajectory secondCycle1 = robot.trajectoryBuilder(placeAllianceYellow1.end())
                 .splineToConstantHeading(new Vector2d(8, -12), Math.toRadians(180))
                 .lineToConstantHeading(new Vector2d(-58, -12))
                 .build();
-        TrajectorySequence park = m.trajectorySequenceBuilder(secondCycle1.end())
+        Trajectory park = robot.trajectoryBuilder(secondCycle1.end())
                 .lineToConstantHeading(new Vector2d(8, -12))
                 .splineToConstantHeading(new Vector2d(58, -12), Math.toRadians(0))
                 .build();
+        waitForStart();
 
 
 
-        wrist =hardwareMap.get(Servo.class,"wrist");
-        pusher=hardwareMap.get(Servo.class, "pusher");
-        deposit=new Deposit(hardwareMap);
-        intake=new Intake(hardwareMap);
-
-        slideLeft=hardwareMap.get(DcMotor.class, "slide1");
-        slideRight=hardwareMap.get(DcMotor.class, "slide2");
-        slideRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        slideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slideLeft.setTargetPosition(slidesPos);
-        slideRight.setTargetPosition(slidesPos);
-        slideLeft.setPower(1);
-        slideRight.setPower(1);
-        slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intake.init();
-        deposit.init();
-        //intake.setState(Intake.positionState.HIGH);
-
-        int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        OpenCvWebcam test = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
-        TeamElementDetection TeamElementDetection =new TeamElementDetection(telemetry);
-        test.setPipeline(TeamElementDetection);
-
-        test.setMillisecondsPermissionTimeout(5000);
-        test.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened()
-            {
-                test.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-
-            }
-        });
-        int elementPos=0;
-        while(!opModeIsActive()&&!isStopRequested()){
-            if(TeamElementDetection.centerY < 0) {
-                elementPos = 3;
-            } else if(TeamElementDetection.centerY < 107){
-                elementPos = 1;
-            } else if (TeamElementDetection.centerY < 214) {
-                elementPos = 2;
-            } else {
-                elementPos = -1;
-            }
-            telemetry.addData("element Pos", elementPos);
-            telemetry.addData("centerY",TeamElementDetection.centerY);
-            telemetry.addData("largest area", TeamElementDetection.getLargestArea());
-            telemetry.update();
-        }
-
-        wrist.setPosition(initwrist);
-        pusher.setPosition(pusherPrep);
-        intake.setState(Intake.positionState.PURP);
-        intake.updateLoop();
-        intake.writeLoop();
-        waitT(1000);
-
-        m.followTrajectorySequence(placePurple1);
-
-        intake.writeLoop();
-        intake.updateLoop();
-        waitT(1000);
-        intake.setState(Intake.powerState.OFF);
-        intake.setState(Intake.positionState.HIGH);
-        intake.writeLoop();
-        intake.updateLoop();
+        deposit.setState(Deposit.WristState.TRANSFER);
+        deposit.setState(Deposit.PusherState.EXTENDED);
+        intake.setState(Intake.PositionState.PURP);
 
         waitT(1000);
-
-        m.followTrajectorySequence(firstCycle1);
-
-        intake.setState(Intake.powerState.INTAKE);
-        intake.writeLoop();
-        intake.updateLoop();
-        waitT(1000);
-
-        m.followTrajectorySequence(placeYellow1);
-
-        slidesPos=100;
-        waitT(1000);
-
-        wrist.setPosition(depositwrist);
-        waitT(250);
-
-        deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
-        deposit.updateLoop();
-        deposit.writeLoop();
-        waitT(1500);
-
-        pusher.setPosition(pusherTwo);
-        deposit.updateLoop();
-        deposit.writeLoop();
-        waitT(1000);
-
-        slidesPos = 0;
-
-        while(Math.abs(slideLeft.getCurrentPosition()-slideLeft.getTargetPosition() )>20){
-            deposit.setState(Deposit.RotationState.TRANSFER);
-            wrist.setPosition(initwrist);
-            pusher.setPosition(pusherIn);
-
-            deposit.updateLoop();
-            deposit.writeLoop();
-
-            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-
-        sleep(500);
-        pusher.setPosition(pusherIn);
-
-        m.followTrajectorySequence(pickAllianceYellow1);
-
-        m.followTrajectorySequence(placeAllianceYellow1);
-
-        slidesPos=100;
-        waitT(1000);
-
-        wrist.setPosition(depositwrist);
-        waitT(250);
-
-        deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
-        deposit.updateLoop();
-        deposit.writeLoop();
-        waitT(1500);
-
-        pusher.setPosition(pusherTwo);
-        deposit.updateLoop();
-        deposit.writeLoop();
-        waitT(1000);
-
-        slidesPos = 0;
-
-        while(Math.abs(slideLeft.getCurrentPosition()-slideLeft.getTargetPosition() )>20){
-            deposit.setState(Deposit.RotationState.TRANSFER);
-            wrist.setPosition(initwrist);
-            pusher.setPosition(pusherIn);
-
-            deposit.updateLoop();
-            deposit.writeLoop();
-
-            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-
-        m.followTrajectorySequence(secondCycle1);
-        m.followTrajectorySequence(park);
-
-        /*if(elementPos==1) {
-            m.followTrajectorySequence(sequence[0]);
-        }else if (elementPos==2){
-            m.followTrajectorySequence(sequence[0]);
-        } else{
-
-        }
-
-
-
-
-        intake.writeLoop();
-        intake.updateLoop();
-        waitT(1000);
-        intake.setState(Intake.powerState.OFF);
-        intake.setState(Intake.positionState.HIGH);
-        intake.writeLoop();
-        intake.updateLoop();
-        intake.setManual(true);
 
         if(elementPos==1) {
-            m.followTrajectory(s);
-        } else if (elementPos==2){
-            m.followTrajectory(yellowPixel2);
+            robot.followTrajectoryAsync(purplePixel1);
+        }/*else if (elementPos==2){
+            robot.followTrajectoryAsync(purplePixel2);
         } else{
-            m.followTrajectory(yellowPixel3);
-        }
+            robot.followTrajectoryAsync(purplePixel3);
+        }*/
 
-        slidesPos=100;
+        waitOnDT();
+
+        waitT(200);
+
+        intake.setState(Intake.PowerState.OFF);
+        intake.setState(Intake.PositionState.FIVE);
         waitT(1000);
 
-        wrist.setPosition(depositwrist);
-        waitT(250);
-
-        deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
-        deposit.updateLoop();
-        deposit.writeLoop();
-        waitT(1500);
-
-        pusher.setPosition(pusherTwo);
-        deposit.updateLoop();
-        deposit.writeLoop();
+        robot.followTrajectory(firstCycle1);
+        intake.setState(Intake.PowerState.INTAKE);
         waitT(1000);
 
-        slidesPos = 0;
+        intake.setState(Intake.PowerState.OFF);
+        intake.setState(Intake.PositionState.HIGH);
+        if(elementPos==1) {
+            robot.followTrajectoryAsync(yellowPixel1);
+        }/* else if (elementPos==2){
+            robot.followTrajectoryAsync(yellowPixel2);
+        } else{
+            robot.followTrajectoryAsync(yellowPixel3);
+        }*/
+        scheduler.scheduleTaskList(slideupbase);
 
-        while(Math.abs(slideLeft.getCurrentPosition()-slideLeft.getTargetPosition() )>20){
-                deposit.setState(Deposit.RotationState.TRANSFER);
-                wrist.setPosition(initwrist);
-                pusher.setPosition(pusherIn);
+        waitOnMacro();
+        waitOnDT();
 
-                deposit.updateLoop();
-                deposit.writeLoop();
+        deposit.setState(Deposit.PusherState.TWO);
 
-            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
+        waitT(1000);
 
-        sleep(500);
-        pusher.setPosition(pusherIn);
-        sleep(500);
+        scheduler.scheduleTaskList(slidedown);
 
+        waitOnMacro();
 
-         */
+        intake.setState(Intake.PositionState.TELE);
+        intake.setState(Intake.PowerState.INTAKE);
+        robot.followTrajectory(pickAllianceYellow1);
+        waitT(1000);
 
+        intake.setState(Intake.PositionState.TELE);
+        intake.setState(Intake.PowerState.OFF);
+        robot.followTrajectory(placeAllianceYellow1);
+
+        scheduler.scheduleTaskList(slideupbase);
+
+        waitOnMacro();
+        waitOnDT();
+
+        deposit.setState(Deposit.PusherState.TWO);
+
+        waitT(1000);
+
+        scheduler.scheduleTaskList(slidedown);
+
+        waitOnMacro();
+
+        intake.setState(Intake.PositionState.FOUR);
+        waitT(1000);
+
+        robot.followTrajectory(firstCycle1);
+        intake.setState(Intake.PowerState.INTAKE);
+        waitT(1000);
+        intake.setState(Intake.PositionState.THREE);
+        waitT(1000);
+
+        intake.setState(Intake.PowerState.OFF);
+        intake.setState(Intake.PositionState.HIGH);
+        robot.followTrajectory(secondCycle1);
+
+        scheduler.scheduleTaskList(slideupbase);
+
+        waitOnMacro();
+        waitOnDT();
+
+        deposit.setState(Deposit.PusherState.TWO);
+
+        waitT(1000);
+
+        scheduler.scheduleTaskList(slidedown);
+
+        waitOnMacro();
+
+        robot.followTrajectoryAsync(park);
+
+        waitOnDT();
     }
-    public void waitT(int ticks){
-        ElapsedTime  x= new ElapsedTime();
-        while(x.milliseconds()<ticks){
-            m.update();
 
-            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
+    @Override
+    public void initialize()
+    {
+        this.setLoopTimes(10);
+
+        robot=new Robot(this);
+        builder=new TaskListBuilder(this);
+        scheduler=new TaskScheduler();
+
+        deposit=robot.deposit;
+        intake=robot.intake;
+        slides=robot.slides;
+
+        intake.init();
+        deposit.init();
+
+        slideupbase=builder.createNew()
+                .executeCode(()->macroRunning=true)
+                .moduleAction(deposit, Deposit.WristState.CRADLE)
+                .delay(100)
+                .moduleAction(slides, Slides.SlideState.AUTO_LOW)
+                //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .awaitPreviousModuleActionCompletion()
+                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
+                .delay(100)
+                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .executeCode(()->macroRunning=false)
+                .build();
+
+        slidedown=builder.createNew()
+                .executeCode(()->macroRunning=true)
+                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
+                .delay(300)
+                .moduleAction(slides, Slides.SlideState.GROUND)
+                .moduleAction(deposit, Deposit.PusherState.IN)
+                .await(()->slides.currentPosition()<100)
+                .moduleAction(deposit, Deposit.RotationState.TRANSFER)
+                .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                .await(()->slides.getStatus()==Module.Status.IDLE)
+                .executeCode(()->macroRunning=false)
+                .build();
     }
-    public void slidesRaise(){
+
+    public void initLoop()
+    {
+        if(robot.teamElementDetector.centerY < 0) {
+            elementPos = 3;
+        } else if(robot.teamElementDetector.centerY < 107){
+            elementPos = 1;
+        } else if (robot.teamElementDetector.centerY < 214) {
+            elementPos = 2;
+        } else {
+            elementPos = -1;
+        }
+        Context.tel.addData("element Pos", elementPos);
+        Context.tel.addData("centerY", robot.teamElementDetector);
+        Context.tel.addData("largest area", robot.teamElementDetector.getLargestArea());
+        //Context.tel.update();
+        robot.initLoop();
+    }
+    @Override
+    public void primaryLoop()
+    {
+        robot.primaryLoop();
     }
 }

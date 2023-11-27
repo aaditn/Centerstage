@@ -48,7 +48,7 @@ public class ModuleTeleop extends EnhancedOpMode
     GamepadEx g1, g2;
     ButtonReader slideUpBase, slideUpRow1, slideUpRow2, slideDown, pusher1, pusher2,
             strafeLeft, strafeRight, intake1, intake2;
-    List<Task> slideupbase, slideup1, slideup2, slidedown, slideup1raised, slideup2raised;
+    List<Task> slideupbase, slideup1, slideup2, slidedown, slideup1raised, slideup2raised, slideuphalf;
     int intakeposition;
     double ninja;
     Intake.PositionState[] intakepositions;
@@ -132,6 +132,12 @@ public class ModuleTeleop extends EnhancedOpMode
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slideupbase);
+            }
+            else if(gamepad1.b&&slides.getState()==Slides.SlideState.GROUND&&!slidesMoving)
+            {
+                slides.setOperationState(Module.OperationState.PRESET);
+                slidesMoving=true;
+                scheduler.scheduleTaskList(slideuphalf);
             }
             else if(slideUpRow1.wasJustPressed()&&slides.getState()==Slides.SlideState.GROUND&&!slidesMoving)
             {
@@ -307,6 +313,12 @@ public class ModuleTeleop extends EnhancedOpMode
                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .delay(100)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
+                .build();
+
+        slideuphalf=builder.createNew()
+                //.executeCode(()->slidesMoving=true)
+                .moduleAction(slides, Slides.SlideState.AUTO_LOW)
+                .await(()->slides.currentPosition()>200)
                 .build();
 
         slideup1=builder.createNew()

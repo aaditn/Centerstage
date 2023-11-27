@@ -85,21 +85,21 @@ public class IntakeTest extends EnhancedOpMode
         }*/
         if(gamepad2.a)
         {
-            intake.setState(Intake.positionState.FIVE);
+            intake.setState(Intake.PositionState.FIVE);
         }
         else if(gamepad2.b)
         {
-            intake.setState(Intake.positionState.FOUR);
+            intake.setState(Intake.PositionState.FOUR);
         }
         else if(gamepad2.x)
         {
-            intake.setState(Intake.positionState.THREE);
+            intake.setState(Intake.PositionState.THREE);
         }
         else if(gamepad2.y)
         {
-            intake.setState(Intake.positionState.TWO);
+            intake.setState(Intake.PositionState.TWO);
         }
-        intake.setPowerManual(gamepad2.right_stick_y);
+        //intake.setPowerManual(gamepad2.right_stick_y);
 
     }
 

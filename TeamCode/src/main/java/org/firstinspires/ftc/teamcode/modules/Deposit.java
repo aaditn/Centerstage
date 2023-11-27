@@ -72,7 +72,7 @@ public class Deposit extends Module
 
     public enum WristState implements ModuleState
     {
-        TRANSFER(initwrist), CRADLE(0.7), DEPOSIT(depositwrist);
+        TRANSFER(initwrist), CRADLE(0.73), DEPOSIT(depositwrist);
 
         double pos1;
         WristState(double pos1)

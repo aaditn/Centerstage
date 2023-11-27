@@ -29,7 +29,7 @@ import java.util.List;
 public class TeleOp extends EnhancedOpMode
 {
     Intake intake;
-    DroneLauncher droneLauncher;
+    //DroneLauncher droneLauncher;
     ElapsedTime timer = new ElapsedTime();
     Boolean threshold1 =false;
     boolean threshold2 = false;
@@ -117,7 +117,7 @@ public class TeleOp extends EnhancedOpMode
         builder=new TaskListBuilder(this);
         deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
-        droneLauncher=new DroneLauncher(hardwareMap);
+        //droneLauncher=new DroneLauncher(hardwareMap);
         slideLeft=hardwareMap.get(DcMotor.class, "slide1");
         slideRight=hardwareMap.get(DcMotor.class, "slide2");
         slideRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -149,10 +149,10 @@ public class TeleOp extends EnhancedOpMode
     {
         intake.updateLoop();
         deposit.updateLoop();
-        droneLauncher.updateLoop();
+        //droneLauncher.updateLoop();
         intake.writeLoop();
         deposit.writeLoop();
-        droneLauncher.writeLoop();
+        //droneLauncher.writeLoop();
     }
 
     public void onStart()
@@ -164,16 +164,16 @@ public class TeleOp extends EnhancedOpMode
     public void primaryLoop()
     {
         telemetry.addData("Intake Pos", intakeHeight);
-        telemetry.addData("Drone", droneLauncher.getState());
+       // telemetry.addData("Drone", droneLauncher.getState());
         //slides.setPositionManual(slidesPos);
         //slides.updateLoop();
         intake.updateLoop();
         deposit.updateLoop();
-        droneLauncher.updateLoop();
+        //droneLauncher.updateLoop();
         //slides.writeLoop();
         intake.writeLoop();
         deposit.writeLoop();
-        droneLauncher.writeLoop();
+       // droneLauncher.writeLoop();
         if (slideLeft.getCurrentPosition() < 100) {
             deposit.setState(Deposit.RotationState.TRANSFER);
             deposit.setState(Deposit.PusherState.IN);
@@ -197,7 +197,7 @@ public class TeleOp extends EnhancedOpMode
         telemetry.addData("ok2", threshold2);
         telemetry.addData("matthewmiliseconds", timer.milliseconds());
 
-        if(threshold1 ==true&& timer.milliseconds()>2000){
+        /*if(threshold1 ==true&& timer.milliseconds()>2000){
             deposit.setState(Deposit.RotationState.DEPOSIT_HIGH);
             wrist.setPosition(depositwrist);
         } else if (threshold1 && timer.milliseconds() > 1400) {
@@ -211,7 +211,7 @@ public class TeleOp extends EnhancedOpMode
 
         if(gamepad2.y){
             droneLauncher.setState(DroneLauncher.State.RELEASED);
-        }
+        }*/
 
         if(gamepad2.a)
         {
@@ -234,7 +234,7 @@ public class TeleOp extends EnhancedOpMode
         }else if(!gamepad2.left_bumper&&!gamepad2.right_bumper){
             isIntake=false;
         }
-        if(intakeHeight==0){
+      /*  if(intakeHeight==0){
             intake.setState(Intake.positionState.TELE);
         }else if(intakeHeight==1){
             intake.setState(Intake.positionState.TWO);
@@ -244,7 +244,7 @@ public class TeleOp extends EnhancedOpMode
             intake.setState(Intake.positionState.FOUR);
         }else if(intakeHeight==4){
             intake.setState(Intake.positionState.FIVE);
-        }
+        }*/
 
         if((gamepad1.right_bumper||gamepad2.x) && isPusher)
         {

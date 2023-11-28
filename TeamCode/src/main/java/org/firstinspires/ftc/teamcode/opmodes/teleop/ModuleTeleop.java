@@ -199,7 +199,11 @@ public class ModuleTeleop extends EnhancedOpMode
             //intake power
             intake.manualChange(-gamepad2.right_stick_y);
 
-            //if(deposit.firstPixel.)
+            if(deposit.firstPixel.alpha()>10&&deposit.secondPixel.alpha()>10)
+            {
+                gamepad1.runRumbleEffect(customRumbleEffect1);
+                gamepad2.runRumbleEffect(customRumbleEffect1);
+            }
 
             //ninja mode
             if (gamepad1.left_trigger > 0.3)
@@ -289,6 +293,13 @@ public class ModuleTeleop extends EnhancedOpMode
         customRumbleEffect0 = new Gamepad.RumbleEffect.Builder()
                 .addStep(1.0, 1.0, 200)
                 .addStep(0.0, 0.0, 1000) //  Rumble right motor 100% for 500 mSec
+                .build();
+
+        customRumbleEffect1 = new Gamepad.RumbleEffect.Builder()
+                .addStep(1.0, 1.0, 200)
+                .addStep(0.0, 0.0, 1000)
+                .addStep(1.0, 1.0, 200)
+                .addStep(0.0, 0.0, 1000)//  Rumble right motor 100% for 500 mSec
                 .build();
 
         keyReaders= new KeyReader[]{

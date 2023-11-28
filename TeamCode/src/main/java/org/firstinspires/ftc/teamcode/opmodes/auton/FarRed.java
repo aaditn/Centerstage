@@ -99,7 +99,7 @@ public class FarRed extends EnhancedOpMode {
                 .splineToConstantHeading(new Vector2d(58, -12), Math.toRadians(0))
                 .build();
         waitForStart();
-
+        robot.setPoseEstimate(startPos);
 
 
         deposit.setState(Deposit.WristState.TRANSFER);

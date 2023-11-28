@@ -9,6 +9,8 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
 import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
+import java.util.Vector;
+
 public class MeepMeepTesting {
 
     public static void main(String[] args) {
@@ -24,8 +26,9 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-40, 23, Math.toRadians(140)))
-                                .splineToConstantHeading(new Vector2d(-41,  18), Math.toRadians(180))
-                                .splineToSplineHeading(new Pose2d(-59, 8,Math.toRadians(180)), Math.toRadians(0))
+                                .lineToConstantHeading(new Vector2d(-40,  22))
+                                .splineToConstantHeading(new Vector2d(-46, 13), Math.toRadians(180))
+                                .splineToSplineHeading(new Pose2d(-59, 12,Math.toRadians(180)), Math.toRadians(180))
 
                                 .build()
                 );

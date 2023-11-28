@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -55,6 +56,8 @@ public class ModuleTeleop extends EnhancedOpMode
     DcMotor hang;
     ElapsedTime slidestimer;
 
+    Gamepad.RumbleEffect customRumbleEffect0;
+    Gamepad.RumbleEffect customRumbleEffect1;
 
     @Override
     public void linearOpMode()
@@ -171,6 +174,9 @@ public class ModuleTeleop extends EnhancedOpMode
             }
 
 
+            gamepad1.runRumbleEffect(customRumbleEffect0);
+            gamepad2.runRumbleEffect(customRumbleEffect0);
+
 
             //slides manual
             if(slides.getState()!=Slides.SlideState.GROUND&&!slidesMoving&&Math.abs(gamepad2.left_stick_y)>0.3)
@@ -193,6 +199,7 @@ public class ModuleTeleop extends EnhancedOpMode
             //intake power
             intake.manualChange(-gamepad2.right_stick_y);
 
+            //if(deposit.firstPixel.)
 
             //ninja mode
             if (gamepad1.left_trigger > 0.3)
@@ -217,7 +224,7 @@ public class ModuleTeleop extends EnhancedOpMode
             if(strafeLeft.wasJustPressed()&&!robot.isBusy())
             {
                 Trajectory strafeLeft=robot.trajectoryBuilder(robot.getPoseEstimate())
-                        .strafeLeft(1.5)
+                        .strafeLeft(3)
                         .build();
 
                 robot.followTrajectoryAsync(strafeLeft);
@@ -225,7 +232,7 @@ public class ModuleTeleop extends EnhancedOpMode
             else if(strafeRight.wasJustPressed()&&!robot.isBusy())
             {
                 Trajectory strafeRight=robot.trajectoryBuilder(robot.getPoseEstimate())
-                        .strafeRight(1.5)
+                        .strafeRight(3)
                         .build();
 
                 robot.followTrajectoryAsync(strafeRight);
@@ -278,6 +285,12 @@ public class ModuleTeleop extends EnhancedOpMode
 
         g1=new GamepadEx(gamepad1);
         g2=new GamepadEx(gamepad2);
+
+        customRumbleEffect0 = new Gamepad.RumbleEffect.Builder()
+                .addStep(1.0, 1.0, 200)
+                .addStep(0.0, 0.0, 1000) //  Rumble right motor 100% for 500 mSec
+                .build();
+
         keyReaders= new KeyReader[]{
                 slideUpBase = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_LEFT),
                 slideUpRow1= new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_UP),

@@ -80,7 +80,7 @@ public class CloseBlue extends EnhancedOpMode {
                 .build();
 
         Trajectory purplePixel3 = robot.trajectoryBuilder(startPos)
-                .forward(7)
+                .forward(8)
                 .splineTo(new Vector2d(14, 32), Math.toRadians(-120),
                         robot.getVelocityConstraint(30, 1, 15.06),
                         robot.getAccelerationConstraint(40))
@@ -88,7 +88,7 @@ public class CloseBlue extends EnhancedOpMode {
 
 
         Trajectory yellowPixel1 = robot.trajectoryBuilder(purplePixel1.end())
-                .lineToLinearHeading(new Pose2d(60,36.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(60,35.75,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();
@@ -119,7 +119,7 @@ public class CloseBlue extends EnhancedOpMode {
 
         waitForStart();
 
-
+        robot.setPoseEstimate(startPos);
 
         deposit.setState(Deposit.WristState.TRANSFER);
         deposit.setState(Deposit.PusherState.EXTENDED);
@@ -142,7 +142,7 @@ public class CloseBlue extends EnhancedOpMode {
 
         waitOnDT();
 
-        /*checkpoint++;
+        checkpoint++;
 
         waitT(200);
 
@@ -179,7 +179,7 @@ public class CloseBlue extends EnhancedOpMode {
             robot.followTrajectoryAsync(park3);
         }
 
-        waitOnDT();*/
+        waitOnDT();
     }
 
     @Override
@@ -188,6 +188,7 @@ public class CloseBlue extends EnhancedOpMode {
         this.setLoopTimes(10);
 
         robot=new Robot(this);
+        Context.isTeamRed=false;
         builder=new TaskListBuilder(this);
         scheduler=new TaskScheduler();
 
@@ -236,6 +237,7 @@ public class CloseBlue extends EnhancedOpMode {
         } else {
             elementPos = -1;
         }
+        Context.tel.addData("Team red?", Context.isTeamRed);
         Context.tel.addData("element Pos", elementPos);
         Context.tel.addData("centerY", robot.teamElementDetector.centerY);
         Context.tel.addData("largest area", robot.teamElementDetector.getLargestArea());

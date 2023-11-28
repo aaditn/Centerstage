@@ -29,7 +29,7 @@ public class CloseRed extends EnhancedOpMode {
     Intake intake;
     Deposit deposit;
     Slides slides;
-    Pose2d startPos = new Pose2d(20,56,Math.toRadians(270));
+    Pose2d startPos = new Pose2d(20,-56,Math.toRadians(90));
     TaskScheduler scheduler;
     TaskListBuilder builder;
     int elementPos;
@@ -68,6 +68,7 @@ public class CloseRed extends EnhancedOpMode {
     public void linearOpMode()
     {
         Trajectory purplePixel1 = robot.trajectoryBuilder(startPos)
+                .lineToConstantHeading(new Vector2d(20, -52))
                 .splineTo(new Vector2d(14, -32), Math.toRadians(120),
                         robot.getVelocityConstraint(30, 1, 15.06),
                         robot.getAccelerationConstraint(40))
@@ -80,26 +81,26 @@ public class CloseRed extends EnhancedOpMode {
 
         Trajectory purplePixel3 = robot.trajectoryBuilder(startPos)
                 .forward(7)
-                .splineToConstantHeading(new Vector2d(31.5, -31), Math.toRadians(90),
+                .splineToConstantHeading(new Vector2d(32.5, -31), Math.toRadians(90),
                         robot.getVelocityConstraint(30, 1, 15.06),
                         robot.getAccelerationConstraint(40))
                 .build();
 
 
         Trajectory yellowPixel1 = robot.trajectoryBuilder(purplePixel1.end())
-                .lineToLinearHeading(new Pose2d(60,-19.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(60.5,-21.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();
 
         Trajectory yellowPixel2 = robot.trajectoryBuilder(purplePixel2.end())
-                .lineToLinearHeading(new Pose2d(59.5,-29.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(60.5,-29.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();
 
         Trajectory yellowPixel3 = robot.trajectoryBuilder(purplePixel3.end())
-                .lineToLinearHeading(new Pose2d(60.5  ,-33.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(60.5  ,-34.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();
@@ -118,7 +119,7 @@ public class CloseRed extends EnhancedOpMode {
 
         waitForStart();
 
-
+        robot.setPoseEstimate(startPos);
 
         deposit.setState(Deposit.WristState.TRANSFER);
         deposit.setState(Deposit.PusherState.EXTENDED);
@@ -223,7 +224,7 @@ public class CloseRed extends EnhancedOpMode {
             elementPos = 3;
         } else if(robot.teamElementDetector.centerY < 107){
             elementPos = 1;
-        } else if (robot.teamElementDetector.centerY < 214) {
+        } else if (robot.teamElementDetector.centerY < 230) {
             elementPos = 2;
         } else {
             elementPos = -1;

@@ -114,8 +114,8 @@ public class Robot extends MecanumDrive
         Context.tel=tel;
         hardwareMap=l.hardwareMap;
 
-        //cameraInit();
-        teamElementDetector=new TeamElementDetection(l.telemetry);
+        cameraInit();
+        //teamElementDetector=new TeamElementDetection(l.telemetry);
 
         dtInit();
         
@@ -133,7 +133,7 @@ public class Robot extends MecanumDrive
     {
         int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
-        teamElementDetector =new TeamElementDetection(l.telemetry);
+        teamElementDetector=new TeamElementDetection(l.telemetry);
         camera.setPipeline(teamElementDetector);
 
         camera.setMillisecondsPermissionTimeout(5000);

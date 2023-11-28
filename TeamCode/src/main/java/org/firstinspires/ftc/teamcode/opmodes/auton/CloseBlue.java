@@ -37,13 +37,13 @@ public class CloseBlue extends EnhancedOpMode {
     List<Task> slideupbase;
     List<Task> slidedown;
     boolean macroRunning=false;
-
+    int checkpoint;
 
 
     public void waitT(int ticks)
     {
-        ElapsedTime  x= new ElapsedTime();
-        while(x.milliseconds()<ticks)
+        ElapsedTime x= new ElapsedTime();
+        while(x.milliseconds()<ticks&&opModeIsActive())
         {
 
         }
@@ -125,7 +125,10 @@ public class CloseBlue extends EnhancedOpMode {
         deposit.setState(Deposit.PusherState.EXTENDED);
         intake.setState(Intake.PositionState.PURP);
 
+
         waitT(1000);
+
+        checkpoint++;
 
         if(elementPos==1) {
             robot.followTrajectoryAsync(purplePixel1);
@@ -135,7 +138,11 @@ public class CloseBlue extends EnhancedOpMode {
             robot.followTrajectoryAsync(purplePixel3);
         }
 
+        checkpoint++;
+
         waitOnDT();
+
+        /*checkpoint++;
 
         waitT(200);
 
@@ -172,7 +179,7 @@ public class CloseBlue extends EnhancedOpMode {
             robot.followTrajectoryAsync(park3);
         }
 
-        waitOnDT();
+        waitOnDT();*/
     }
 
     @Override
@@ -230,7 +237,7 @@ public class CloseBlue extends EnhancedOpMode {
             elementPos = -1;
         }
         Context.tel.addData("element Pos", elementPos);
-        Context.tel.addData("centerY", robot.teamElementDetector);
+        Context.tel.addData("centerY", robot.teamElementDetector.centerY);
         Context.tel.addData("largest area", robot.teamElementDetector.getLargestArea());
         //Context.tel.update();
         robot.initLoop();
@@ -238,6 +245,8 @@ public class CloseBlue extends EnhancedOpMode {
     @Override
     public void primaryLoop()
     {
+        Context.tel.addData("checkpoint", checkpoint);
+        Context.tel.addData("Debug", Context.debug);
         robot.primaryLoop();
     }
 }

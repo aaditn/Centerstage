@@ -6,6 +6,7 @@ object Context
 {
     @JvmField var tel: MultipleTelemetry? = null
     @JvmField var isTeamRed: Boolean = true
+    @JvmField var debug: Int = 0
 
     @JvmStatic fun updateValues()
     {
@@ -16,5 +17,6 @@ object Context
     {
         tel=null;
         isTeamRed=true;
+        debug=0;
     }
 }

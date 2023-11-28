@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.roadrunner.drive;
 
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_ANG_ACCEL;
@@ -12,6 +12,7 @@ import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.enc
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
@@ -39,33 +40,23 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.modules.Deposit;
-import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
-import org.firstinspires.ftc.teamcode.modules.Intake;
-import org.firstinspires.ftc.teamcode.modules.Slides;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.roadrunner.util.LynxModuleUtil;
 import org.firstinspires.ftc.teamcode.util.Context;
-import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Robot extends MecanumDrive
-{
-
+/*
+ * Simple mecanum drive hardware implementation for REV hardware.
+ */
+@Config
+public class SampleMecanumDrive2 extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7.5, 0, 1);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 1);
 
@@ -91,68 +82,18 @@ public class Robot extends MecanumDrive
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
 
-    List<LynxModule> modules;
-
+    MultipleTelemetry tel;
     LinearOpMode l;
     HardwareMap hardwareMap;
-    MultipleTelemetry tel;
-    public Slides slides;
-    public Deposit deposit;
-    public Intake intake;
 
-    public DroneLauncher droneLauncher;
-    OpenCvWebcam camera;
-    public TeamElementDetection teamElementDetector;
-
-
-    public Robot(LinearOpMode l)
-    {
+    public SampleMecanumDrive2(LinearOpMode l) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
+
         this.l=l;
         tel = new MultipleTelemetry(l.telemetry, FtcDashboard.getInstance().getTelemetry());
         Context.resetValues();
         Context.tel=tel;
         hardwareMap=l.hardwareMap;
-
-        //cameraInit();
-        teamElementDetector=new TeamElementDetection(l.telemetry);
-
-        dtInit();
-        
-
-        slides=new Slides(hardwareMap);
-        deposit=new Deposit(hardwareMap);
-        intake=new Intake(hardwareMap);
-
-        intake.init();
-        deposit.init();
-    }
-
-
-    public void cameraInit()
-    {
-        int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
-        teamElementDetector =new TeamElementDetection(l.telemetry);
-        camera.setPipeline(teamElementDetector);
-
-        camera.setMillisecondsPermissionTimeout(5000);
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened()
-            {
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-
-            }
-        });
-    }
-
-    public void dtInit()
-    {
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
@@ -203,71 +144,12 @@ public class Robot extends MecanumDrive
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
         // TODO: if desired, use setLocalizer() to change the localization method
-        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
+        //setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
                 lastEncPositions, lastEncVels, lastTrackingEncPositions, lastTrackingEncVels
         );
-    }
-
-    public void initLoop()
-    {
-        tel.update();
-        read();
-        write();
-        //loop whatever else u want
-    }
-    public void primaryLoop()
-    {
-        tel.update();
-        read();
-        write();
-        update();
-        //loop whatever else u want
-    }
-
-    public void read()
-    {
-        slides.updateLoop();
-        deposit.updateLoop();
-        intake.updateLoop();
-    }
-
-    public void write()
-    {
-        slides.writeLoop();
-        deposit.writeLoop();
-        intake.writeLoop();
-    }
-
-    public void onEnd()
-    {
-        Context.resetValues();
-    }
-
-    public double getBatteryVoltage()
-    {
-        double result = Double.POSITIVE_INFINITY;
-        for (VoltageSensor sensor : hardwareMap.voltageSensor)
-        {
-            double voltage = sensor.getVoltage();
-            if (voltage > 0)
-            {
-                result = Math.min(result, voltage);
-            }
-        }
-        return result;
-    }
-
-    public double getCurrent()
-    {
-        double current=0;
-        for(LynxModule l: modules)
-        {
-            current+=l.getCurrent(CurrentUnit.AMPS);
-        }
-        return current;
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
@@ -333,7 +215,6 @@ public class Robot extends MecanumDrive
         updatePoseEstimate();
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         if (signal != null) setDriveSignal(signal);
-        Context.debug++;
     }
 
     public void waitForIdle() {

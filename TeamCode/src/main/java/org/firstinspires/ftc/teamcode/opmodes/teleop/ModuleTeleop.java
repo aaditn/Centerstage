@@ -277,7 +277,7 @@ public class ModuleTeleop extends EnhancedOpMode
     @Override
     public void initialize()
     {
-        this.setLoopTimes(0);
+        this.setLoopTimes(10);
 
         hang=hardwareMap.get(DcMotor.class, "hang");
 

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -73,7 +74,7 @@ public class Deposit extends Module
 
     public enum WristState implements ModuleState
     {
-        TRANSFER(initwrist), CRADLE(0.73), DEPOSIT(depositwrist);
+        TRANSFER(initwrist), CRADLE(0.8), DEPOSIT(depositwrist);
 
         double pos1;
         WristState(double pos1)
@@ -109,7 +110,7 @@ public class Deposit extends Module
     WristState wstate;
 
     Servo leftRotator, rightRotator;
-    public ColorSensor firstPixel, secondPixel;
+    public ColorRangeSensor firstPixel, secondPixel;
     Servo pusher, wrist;
 
     public Deposit(HardwareMap hardwareMap)
@@ -121,8 +122,8 @@ public class Deposit extends Module
         //rightRotator.setDirection(Servo.Direction.REVERSE);
         pusher=hardwareMap.get(Servo.class, "pusher");
         wrist =hardwareMap.get(Servo.class,"wrist");
-        firstPixel = hardwareMap.get(ColorSensor.class, "firstCS");
-        secondPixel = hardwareMap.get(ColorSensor.class, "secondCS");
+        firstPixel = hardwareMap.get(ColorRangeSensor.class, "firstCS");
+        secondPixel = hardwareMap.get(ColorRangeSensor.class, "secondCS");
     }
 
 

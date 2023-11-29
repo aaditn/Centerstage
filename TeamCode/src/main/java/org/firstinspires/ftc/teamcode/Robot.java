@@ -123,9 +123,11 @@ public class Robot extends MecanumDrive
         slides=new Slides(hardwareMap);
         deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
+        droneLauncher = new DroneLauncher(hardwareMap);
 
         intake.init();
         deposit.init();
+        droneLauncher.init();
     }
 
 
@@ -232,6 +234,7 @@ public class Robot extends MecanumDrive
         slides.updateLoop();
         deposit.updateLoop();
         intake.updateLoop();
+        droneLauncher.updateLoop();
     }
 
     public void write()
@@ -239,6 +242,7 @@ public class Robot extends MecanumDrive
         slides.writeLoop();
         deposit.writeLoop();
         intake.writeLoop();
+        droneLauncher.writeLoop();
     }
 
     public void onEnd()

@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
@@ -92,6 +93,10 @@ public class ModuleTeleop extends EnhancedOpMode
                 {
                     deposit.setState(Deposit.PusherState.IN);
                 }
+
+                gamepad1.runRumbleEffect(customRumbleEffect0);
+                gamepad2.runRumbleEffect(customRumbleEffect0);
+
             }
 
             //cycle through intake positions
@@ -114,40 +119,47 @@ public class ModuleTeleop extends EnhancedOpMode
                 intake.setState(intakepositions[intakeposition]);
             }
 
+
+
             //set intake to high or low
-            if(gamepad2.b)
-            {
-                intakeposition=6;
-                intake.setState(intakepositions[intakeposition]);
+            if(gamepad2.a) {
+                if (intakeposition != 0) {
+                    intakeposition = 0;
+                } else if (intakeposition != 6) {
+                    intakeposition = 6;
+                }
             }
-            else if(gamepad2.a)
-            {
-                intakeposition=0;
-                intake.setState(intakepositions[intakeposition]);
+
+            if (gamepad2.y) {
+                if(droneLauncher.getState()==DroneLauncher.State.LOCKED) {
+                    droneLauncher.setState(DroneLauncher.State.RELEASED);
+                }else{
+                    droneLauncher.setState(DroneLauncher.State.LOCKED);
+                }
             }
 
 
             //slides macro
-            if(slideUpBase.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.AUTO_LOW)&&!slidesMoving)
+            if(slideUpBase.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.SLIDE_UP)&&!slidesMoving)
             {
                 //deposit.funnimode=true;
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slideupbase);
             }
-            else if(gamepad1.b&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.AUTO_LOW)&&!slidesMoving)
+            else if(gamepad1.b&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.SLIDE_UP)&&!slidesMoving)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slideuphalf);
             }
-            else if(slideUpRow1.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.AUTO_LOW)&&!slidesMoving)
+            else if(slideUpRow1.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.SLIDE_UP)&&!slidesMoving)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slideup1);
             }
-            else if(slideUpRow2.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.AUTO_LOW)&&!slidesMoving)
+            else if(slideUpRow2.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.SLIDE_UP)&&!slidesMoving)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
@@ -174,10 +186,6 @@ public class ModuleTeleop extends EnhancedOpMode
             }
 
 
-            gamepad1.runRumbleEffect(customRumbleEffect0);
-            gamepad2.runRumbleEffect(customRumbleEffect0);
-
-
             //slides manual
             if(slides.getState()!=Slides.SlideState.GROUND&&!slidesMoving&&Math.abs(gamepad2.left_stick_y)>0.3)
             {
@@ -199,11 +207,13 @@ public class ModuleTeleop extends EnhancedOpMode
             //intake power
             intake.manualChange(-gamepad2.right_stick_y);
 
-            if(deposit.firstPixel.alpha()>10&&deposit.secondPixel.alpha()>10)
+            if(deposit.firstPixel.getDistance(DistanceUnit.MM)<10&&deposit.secondPixel.getDistance(DistanceUnit.MM)<10)
             {
-                gamepad1.runRumbleEffect(customRumbleEffect1);
-                gamepad2.runRumbleEffect(customRumbleEffect1);
+//                gamepad1.runRumbleEffect(customRumbleEffect1);
+//                gamepad2.runRumbleEffect(customRumbleEffect1);
             }
+            telemetry.addData("1st pixel distance", deposit.firstPixel.getDistance(DistanceUnit.MM));
+            telemetry.addData("2nd pixel distance", deposit.secondPixel.getDistance(DistanceUnit.MM));
 
             //ninja mode
             if (gamepad1.left_trigger > 0.3)
@@ -282,6 +292,7 @@ public class ModuleTeleop extends EnhancedOpMode
 
         intake.init();
         deposit.init();
+        droneLauncher.init();
         intake.setOperationState(Module.OperationState.MANUAL);
 
         slidesMoving=false;
@@ -311,8 +322,8 @@ public class ModuleTeleop extends EnhancedOpMode
                 pusher2=new ToggleButtonReader(g2, GamepadKeys.Button.X),
                 intake1=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
                 intake2=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
-                strafeLeft=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT),
-                strafeRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_RIGHT)
+                strafeLeft=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_RIGHT),
+                strafeRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT)
         };
 
         intakepositions=new Intake.PositionState[]
@@ -324,10 +335,9 @@ public class ModuleTeleop extends EnhancedOpMode
 
         slideupbase=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
-                .moduleAction(deposit, Deposit.WristState.CRADLE)
-                .delay(100)
                 .moduleAction(slides, Slides.SlideState.RAISED)
                 .await(()->slides.currentPosition()>200)
+                .moduleAction(deposit, Deposit.WristState.CRADLE)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
                 .delay(200)
                 //.moduleAction(deposit, Deposit.WristState.DEPOSIT)

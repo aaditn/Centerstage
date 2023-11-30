@@ -64,6 +64,11 @@ public class FarRed extends EnhancedOpMode {
         }
     }
 
+    public void onStart()
+    {
+        robot.closeCameras();
+    }
+
     @Override
     public void linearOpMode()
     {

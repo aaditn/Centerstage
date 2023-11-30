@@ -61,6 +61,10 @@ public class FarBlue extends EnhancedOpMode {
         }
     }
 
+    public void onStart()
+    {
+        robot.closeCameras();
+    }
     @Override
     public void linearOpMode() {
 

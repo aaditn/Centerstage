@@ -182,6 +182,11 @@ public class CloseBlue extends EnhancedOpMode {
         waitOnDT();
     }
 
+    public void onStart()
+    {
+        robot.closeCameras();
+    }
+
     @Override
     public void initialize()
     {

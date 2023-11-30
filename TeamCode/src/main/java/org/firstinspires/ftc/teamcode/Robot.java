@@ -158,6 +158,11 @@ public class Robot extends MecanumDrive
         });
     }
 
+    public void closeCameras()
+    {
+        camera.stopStreaming();
+    }
+
     public void dtInit()
     {
 

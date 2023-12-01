@@ -103,13 +103,14 @@ public class ModuleTeleop extends EnhancedOpMode
 
             }
 
-            //cycle through intake positions
             if(intake1.wasJustPressed())
             {
-                intakeposition--;
-                if(intakeposition<0)
+                if(intakeposition==0)
                 {
-                    intakeposition=6;
+                    intakeposition=1;
+                }
+                else {
+                    intakeposition=0;
                 }
                 intake.setState(intakepositions[intakeposition]);
             }
@@ -345,12 +346,12 @@ public class ModuleTeleop extends EnhancedOpMode
 
         slideupbase=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
-                .moduleAction(slides, Slides.SlideState.RAISED)
-                .await(()->slides.currentPosition()>200)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
                 .delay(200)
-                //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
+//                .moduleAction(deposit, Deposit.PusherState.EXTENDED)
+                .delay(250)
+                .moduleAction(slides, Slides.SlideState.RAISED)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
@@ -367,14 +368,15 @@ public class ModuleTeleop extends EnhancedOpMode
         slideup1=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
-                .delay(400)
-                .moduleAction(slides, Slides.SlideState.ROW1)
-                .await(()->slides.currentPosition()>200)
+                .delay(200)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
-                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
-                //.moduleAction(deposit, Deposit.PusherState.EXTENDED) //pusher state isn't allowed to change even after deposit reaches the position
+//                .moduleAction(deposit, Deposit.PusherState.EXTENDED)
+                .delay(250)
+                .moduleAction(slides, Slides.SlideState.ROW1)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
+                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .delay(100)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
                 .build();
 
@@ -382,13 +384,14 @@ public class ModuleTeleop extends EnhancedOpMode
                 //.executeCode(()->slidesMoving=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
                 .delay(200)
-                .moduleAction(slides, Slides.SlideState.ROW2)
-                .await(()->slides.currentPosition()>200)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
-                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
-                //.moduleAction(deposit, Deposit.PusherState.EXTENDED)
+//                .moduleAction(deposit, Deposit.PusherState.EXTENDED)
+                .delay(250)
+                .moduleAction(slides, Slides.SlideState.ROW2)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
+                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .delay(100)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
                 .build();
 

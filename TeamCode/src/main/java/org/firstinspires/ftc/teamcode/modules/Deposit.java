@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 import org.firstinspires.ftc.teamcode.util.Context;
@@ -23,19 +20,20 @@ public class Deposit extends Module
 
     public static double deposit1Quarter1=(transfer1+deposit1High)/4;
     public static double deposit2Quarter1=(transfer2+deposit2High)/4;
-    public static double deposit1Mid = (transfer1+deposit1High)/2;//0.94;//.83
-    public static double deposit2Mid = (transfer2+deposit2High)/2;//0.11;//.22
+    public static double deposit1Mid = (transfer1+deposit1High)*3/8;//0.94;//.83
+    public static double deposit2Mid = (transfer2+deposit2High)*3/8;//0.11;//.22
 
     public static double deposit1Quarter3=(transfer1+deposit1High)*3/4;
     public static double deposit2Quarter3=(transfer2+deposit2High)*3/4;
     public static double deposit1Low= 1;//0.98;//.83
     public static double deposit2Low= 0.05;//0.07;//.22
 
-    public static double initwrist =.9;//.65
-    public static double depositwrist=0.55;
+    public static double initwrist =.73;//.93
+    public static double cradle = .92;//.99
+    public static double depositwrist=0.34;//.55
 
     public static double pusherIn=0.04;
-    public static double pusherPushed=0.14;
+    public static double pusherExtended =0.16;
     public static double pusherOne=0.24;
     public static double pusherTwo=0.33;
     public static double pusherHalf=(pusherOne+pusherTwo)/3;
@@ -74,7 +72,7 @@ public class Deposit extends Module
 
     public enum WristState implements ModuleState
     {
-        TRANSFER(initwrist), CRADLE(0.8), DEPOSIT(depositwrist);
+        TRANSFER(initwrist), CRADLE(cradle), DEPOSIT(depositwrist);
 
         double pos1;
         WristState(double pos1)
@@ -91,7 +89,7 @@ public class Deposit extends Module
 
     public static enum PusherState implements  ModuleState
     {
-        IN(pusherIn),EXTENDED(pusherPushed), ONE(pusherOne), TWO(pusherTwo), HALF(pusherHalf);
+        IN(pusherIn),EXTENDED(pusherExtended), ONE(pusherOne), TWO(pusherTwo), HALF(pusherHalf);
 
         double position;
         PusherState(double position)

@@ -29,7 +29,7 @@ public class FarRed extends EnhancedOpMode {
     Intake intake;
     Deposit deposit;
     Slides slides;
-    Pose2d startPos = new Pose2d(20,56,Math.toRadians(270));
+    Pose2d startPos = new Pose2d(-36,-61,Math.toRadians(90));
     TaskScheduler scheduler;
     TaskListBuilder builder;
     int elementPos;
@@ -38,177 +38,248 @@ public class FarRed extends EnhancedOpMode {
     List<Task> slidedown;
     boolean macroRunning=false;
 
-
-
+    public void waitOnDT()
+    {
+        while(robot.isBusy()&&opModeIsActive() && !isStopRequested())
+        {
+            //stall
+        }
+    }
+    public void waitOnMacro()
+    {
+        while(macroRunning&&opModeIsActive() && !isStopRequested())
+        {
+            //stall
+        }
+    }
     public void waitT(int ticks)
     {
-        ElapsedTime  x= new ElapsedTime();
+        ElapsedTime x= new ElapsedTime();
         while(x.milliseconds()<ticks)
         {
 
         }
     }
-    public void waitOnDT()
-    {
-        while(robot.isBusy()&&opModeIsActive())
-        {
-            //stall
-        }
-    }
-
-    public void waitOnMacro()
-    {
-        while(macroRunning&&opModeIsActive())
-        {
-            //stall
-        }
-    }
 
     @Override
-    public void linearOpMode()
-    {
+    public void linearOpMode() {
+
+        Trajectory placePurple1Init = robot.trajectoryBuilder(startPos)
+                .lineToConstantHeading(new Vector2d(-36, -50))
+                .build();
+
+        Trajectory placePurple1 = robot.trajectoryBuilder(placePurple1Init.end())
+                //CHANGE
+                .lineToLinearHeading(new Pose2d(-33.5, -28, Math.toRadians(0)))
+                .build();
+        Trajectory placePurple2 = robot.trajectoryBuilder(startPos)
+                //CHANGE
+                .lineToLinearHeading(new Pose2d(-37.5, -13, Math.toRadians(-90)))//90
+                .build();
+        Trajectory placePurple3 = robot.trajectoryBuilder(startPos)
+                .lineToLinearHeading(new Pose2d(-37.5, -23, Math.toRadians(180)))
+                .build();
+
+//        Trajectory intakeWhite1 = robot.trajectoryBuilder(placePurple3.end())
+//                //CHANGE
+////                .lineToConstantHeading(new Vector2d(-40, 8))
+////                .lineToLinearHeading(new Pose2d(-59, 8,Math.toRadians(180)))
+//                .build();
+//        Trajectory intakeWhite2 = robot.trajectoryBuilder(placePurple3.end())
+//                //CHANGE
+////                .lineToConstantHeading(new Vector2d(-40, 8))
+////                .lineToLinearHeading(new Pose2d(-59, 8,Math.toRadians(180)))
+//                .build();
+//        Trajectory intakeWhite3 = robot.trajectoryBuilder(placePurple3.end())
+//                .lineToConstantHeading(new Vector2d(-40,  22))
+//                .splineToConstantHeading(new Vector2d(-46, 13), Math.toRadians(180))
+//                .splineToSplineHeading(new Pose2d(-65, 6,Math.toRadians(180)), Math.toRadians(180))
+//                .build();
+        Trajectory avoid1 = robot.trajectoryBuilder(placePurple1.end())
+                .lineToLinearHeading(new Pose2d(-40,  -4,Math.toRadians(179.99)))
+                .build();
+        Trajectory avoid2 = robot.trajectoryBuilder(placePurple2.end())
+                .lineToLinearHeading(new Pose2d(-36,  -4,Math.toRadians(179.99)))
+                .build();
+        Trajectory avoid3 = robot.trajectoryBuilder(placePurple3.end())
+                .lineToLinearHeading(new Pose2d(-36,  -4,Math.toRadians(179.99)))
+                .build();
+
+        Trajectory placeWhite1 = robot.trajectoryBuilder(avoid1.end())
+                //CHANGE
+
+                .lineToLinearHeading(new Pose2d(31, -12,Math.toRadians(180)))
 
 
-        Trajectory purplePixel1 = robot.trajectoryBuilder(startPos)
-                .splineTo(new Vector2d(-35, -40), Math.toRadians(90))
-                .splineTo(new Vector2d(-38, -34), Math.toRadians(180))
                 .build();
-        Trajectory firstCycle1 = robot.trajectoryBuilder(purplePixel1.end())
-                .lineToConstantHeading(new Vector2d(-41, -20))
-                .splineToConstantHeading(new Vector2d(-58, -12), Math.toRadians(180))
+        Trajectory placeWhite2 = robot.trajectoryBuilder(avoid2.end())
+                //CHANGE
+
+                .lineToLinearHeading(new Pose2d(32, -12,Math.toRadians(180)))
                 .build();
-        Trajectory yellowPixel1 = robot.trajectoryBuilder(firstCycle1.end())
-                .lineToConstantHeading(new Vector2d(8, -12))
-                .splineToConstantHeading(new Vector2d(50, -28), Math.toRadians(0))
+        Trajectory placeWhite3 = robot.trajectoryBuilder(avoid3.end())
+
+                .lineToLinearHeading(new Pose2d(31, -12,Math.toRadians(180)))
                 .build();
-        Trajectory pickAllianceYellow1 = robot.trajectoryBuilder(yellowPixel1.end())
+
+        Trajectory strafeYellow1 = robot.trajectoryBuilder(placeWhite3.end())
+                //CHANGE
+                .lineToLinearHeading(new Pose2d(51, -42,Math.toRadians(180)),
+                        robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
+                .build();
+        Trajectory strafeYellow2 = robot.trajectoryBuilder(placeWhite3.end())
+                //CHANGE
+                .lineToLinearHeading(new Pose2d(51, -36,Math.toRadians(180)),
+                        robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
+                .build();
+        Trajectory strafeYellow3 = robot.trajectoryBuilder(placeWhite3.end())
+                .lineToLinearHeading(new Pose2d(53.5, -30,Math.toRadians(180)),
+                        robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
+                .build();
+
+        Trajectory intakeAllianceYellow1 = robot.trajectoryBuilder(placeWhite3.end())
+                .splineToConstantHeading(new Vector2d(30, -61), Math.toRadians(180))
+                .build();
+        Trajectory intakeAllianceYellow2 = robot.trajectoryBuilder(placeWhite3.end())
+                .splineToConstantHeading(new Vector2d(30, -61), Math.toRadians(180))
+                .build();
+        Trajectory intakeAllianceYellow3 = robot.trajectoryBuilder(placeWhite3.end())
                 .splineToConstantHeading(new Vector2d(30, -61), Math.toRadians(180))
                 .build();
 
-        Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(pickAllianceYellow1.end())
-                .lineTo(new Vector2d(31, -61))
-                .splineToConstantHeading(new Vector2d(50, -28), Math.toRadians(0))
+        Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
+                .lineToConstantHeading(new Vector2d(31, -61))
+                .splineToConstantHeading(new Vector2d(54, -28), Math.toRadians(0))
+                .build();
+        Trajectory placeAllianceYellow2 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
+                .lineToConstantHeading(new Vector2d(31, -61))
+                .splineToConstantHeading(new Vector2d(54, -28), Math.toRadians(0))
+                .build();
+        Trajectory placeAllianceYellow3 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
+                .lineToConstantHeading(new Vector2d(31, -61))
+                .splineToConstantHeading(new Vector2d(54, -28), Math.toRadians(0))
                 .build();
 
-        Trajectory secondCycle1 = robot.trajectoryBuilder(placeAllianceYellow1.end())
-                .splineToConstantHeading(new Vector2d(8, -12), Math.toRadians(180))
-                .lineToConstantHeading(new Vector2d(-58, -12))
-                .build();
-        Trajectory park = robot.trajectoryBuilder(secondCycle1.end())
-                .lineToConstantHeading(new Vector2d(8, -12))
-                .splineToConstantHeading(new Vector2d(58, -12), Math.toRadians(0))
-                .build();
         waitForStart();
         robot.setPoseEstimate(startPos);
 
-
+        deposit.setState(Deposit.RotationState.TRANSFER);
         deposit.setState(Deposit.WristState.TRANSFER);
         deposit.setState(Deposit.PusherState.EXTENDED);
         intake.setState(Intake.PositionState.PURP);
+        waitOnMacro();
+        if(elementPos==1) {
+            robot.followTrajectoryAsync(placePurple1Init);
+        }else if (elementPos==2){
+            robot.followTrajectoryAsync(placePurple2);
+        } else{
+            robot.followTrajectoryAsync(placePurple3);
+        }
+        waitOnDT();
 
-        waitT(1000);
+
+
+        if (elementPos==1) {
+            robot.followTrajectoryAsync(placePurple1);
+        }
+        waitOnDT();
+
+        intake.setState(Intake.PositionState.HIGH);
+        waitOnMacro();
+
+        //intake white
+//        if (elementPos==1){
+//            robot.followTrajectory(intakeWhite1);
+//        } else if (elementPos==2){
+//            robot.followTrajectory(intakeWhite2);
+//        } else {
+//            robot.followTrajectory(intakeWhite3);
+////        }
+//        waitOnDT();
+//        intake.setState(Intake.PositionState.FIVE);
+//        intake.setState(Intake.PowerState.INTAKE);
+//
+//        waitT(1000);
 
         if(elementPos==1) {
-            robot.followTrajectoryAsync(purplePixel1);
-        }/*else if (elementPos==2){
-            robot.followTrajectoryAsync(purplePixel2);
+            robot.followTrajectoryAsync(avoid1);
+        }else if (elementPos==2){
+            robot.followTrajectoryAsync(avoid2);
         } else{
-            robot.followTrajectoryAsync(purplePixel3);
-        }*/
+            robot.followTrajectoryAsync(avoid3);
 
+        }
         waitOnDT();
 
-        waitT(200);
 
-        intake.setState(Intake.PowerState.OFF);
-        intake.setState(Intake.PositionState.FIVE);
-        waitT(1000);
-
-        robot.followTrajectory(firstCycle1);
-        intake.setState(Intake.PowerState.INTAKE);
-        waitT(1000);
-
-        intake.setState(Intake.PowerState.OFF);
-        intake.setState(Intake.PositionState.HIGH);
+        //deposit white pixel
         if(elementPos==1) {
-            robot.followTrajectoryAsync(yellowPixel1);
-        }/* else if (elementPos==2){
-            robot.followTrajectoryAsync(yellowPixel2);
+            robot.followTrajectoryAsync(placeWhite1);
+        }else if (elementPos==2){
+            robot.followTrajectoryAsync(placeWhite2);
         } else{
-            robot.followTrajectoryAsync(yellowPixel3);
-        }*/
-        scheduler.scheduleTaskList(slideupbase);
-
-        waitOnMacro();
+            robot.followTrajectoryAsync(placeWhite3);
+        }
         waitOnDT();
-
-        deposit.setState(Deposit.PusherState.TWO);
-
-        waitT(1000);
-
-        scheduler.scheduleTaskList(slidedown);
-
-        waitOnMacro();
-
-        intake.setState(Intake.PositionState.TELE);
-        intake.setState(Intake.PowerState.INTAKE);
-        robot.followTrajectory(pickAllianceYellow1);
-        waitT(1000);
-
-        intake.setState(Intake.PositionState.TELE);
-        intake.setState(Intake.PowerState.OFF);
-        robot.followTrajectory(placeAllianceYellow1);
 
         scheduler.scheduleTaskList(slideupbase);
-
         waitOnMacro();
-        waitOnDT();
 
+        //strafe and deposit yellow
+        if(elementPos==1) {
+            robot.followTrajectoryAsync(strafeYellow1);
+        }else if (elementPos==2){
+            robot.followTrajectoryAsync(strafeYellow2);
+        } else{
+            robot.followTrajectoryAsync(strafeYellow3);
+        }
+        waitOnDT();
         deposit.setState(Deposit.PusherState.TWO);
-
-        waitT(1000);
-
+        waitT(2000);
+        waitOnMacro();
         scheduler.scheduleTaskList(slidedown);
-
         waitOnMacro();
+//
+//        //get alliance yellow
+//        intake.setState(Intake.PositionState.TWO);
+//        if(elementPos==1) {
+//            robot.followTrajectoryAsync(intakeAllianceYellow1);
+//        }else if (elementPos==2){
+//            robot.followTrajectoryAsync(intakeAllianceYellow2);
+//        } else{
+//            robot.followTrajectoryAsync(intakeAllianceYellow3);
+//        }
+//        waitOnDT();
+//        intake.setState(Intake.PowerState.INTAKE);
+//        waitT(2500);
+//        intake.setState(Intake.PowerState.OFF);
+//
+//        //deposit alliance yellow
+//        if(elementPos==1) {
+//            robot.followTrajectoryAsync(placeAllianceYellow1);
+//        }else if (elementPos==2){
+//            robot.followTrajectoryAsync(placeAllianceYellow2);
+//        } else{
+//            robot.followTrajectoryAsync(placeAllianceYellow3);
+//        }
+//        waitOnDT();
+//        scheduler.scheduleTaskList(slideupbase);
+//        waitOnMacro();
+//        deposit.setState(Deposit.PusherState.TWO);
+//        waitT(500);
+//        scheduler.scheduleTaskList(slidedown);
 
-        intake.setState(Intake.PositionState.FOUR);
-        waitT(1000);
-
-        robot.followTrajectory(firstCycle1);
-        intake.setState(Intake.PowerState.INTAKE);
-        waitT(1000);
-        intake.setState(Intake.PositionState.THREE);
-        waitT(1000);
-
-        intake.setState(Intake.PowerState.OFF);
-        intake.setState(Intake.PositionState.HIGH);
-        robot.followTrajectory(secondCycle1);
-
-        scheduler.scheduleTaskList(slideupbase);
-
-        waitOnMacro();
-        waitOnDT();
-
-        deposit.setState(Deposit.PusherState.TWO);
-
-        waitT(1000);
-
-        scheduler.scheduleTaskList(slidedown);
-
-        waitOnMacro();
-
-        robot.followTrajectoryAsync(park);
-
-        waitOnDT();
     }
 
     @Override
-    public void initialize()
-    {
+    public void initialize() {
         this.setLoopTimes(10);
 
         robot=new Robot(this);
+        Context.isTeamRed=true;
         builder=new TaskListBuilder(this);
         scheduler=new TaskScheduler();
 
@@ -223,8 +294,7 @@ public class FarRed extends EnhancedOpMode {
                 .executeCode(()->macroRunning=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
                 .delay(100)
-                .moduleAction(slides, Slides.SlideState.SLIDE_UP)
-                //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .moduleAction(slides, Slides.SlideState.AUTO_LOW)
                 .awaitPreviousModuleActionCompletion()
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
                 .delay(100)
@@ -241,7 +311,7 @@ public class FarRed extends EnhancedOpMode {
                 .await(()->slides.currentPosition()<100)
                 .moduleAction(deposit, Deposit.RotationState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.TRANSFER)
-                .await(()->slides.getStatus()==Module.Status.IDLE)
+                .await(()->slides.getStatus()== Module.Status.IDLE)
                 .executeCode(()->macroRunning=false)
                 .build();
     }
@@ -255,17 +325,15 @@ public class FarRed extends EnhancedOpMode {
         } else if (robot.teamElementDetector.centerY < 214) {
             elementPos = 2;
         } else {
-            elementPos = -1;
+            elementPos = 3;
         }
-        Context.tel.addData("element Pos", elementPos);
-        Context.tel.addData("centerY", robot.teamElementDetector);
-        Context.tel.addData("largest area", robot.teamElementDetector.getLargestArea());
-        //Context.tel.update();
+        telemetry.addData("element Pos", elementPos);
+        telemetry.addData("centerY",robot.teamElementDetector.centerY);
+        telemetry.addData("largest area", robot.teamElementDetector.getLargestArea());
         robot.initLoop();
     }
     @Override
-    public void primaryLoop()
-    {
+    public void primaryLoop() {
         robot.primaryLoop();
     }
 }

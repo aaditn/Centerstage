@@ -26,7 +26,7 @@ public class Slides extends Module
     PIDCoefficients standardcoeff, closecoeff, downcoeff;
     public static enum SlideState implements ModuleState
     {
-        GROUND(0), SLIDE_UP(25), AUTO_LOW(100),RAISED(300), ROW1(600), ROW2(900), ROW3(0);
+        GROUND(0), SLIDE_UP(25), AUTO_LOW(125),RAISED(300), ROW1(600), ROW2(900), ROW3(0);
 
         double position;
         SlideState(double position)

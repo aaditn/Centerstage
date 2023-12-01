@@ -77,7 +77,11 @@ public class ModuleTeleop extends EnhancedOpMode
             //pusher buttons
             if(pusher1.wasJustPressed()||pusher2.wasJustPressed())
             {
-                if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.IN)
+                if (deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.EXTENDED)
+                {
+                    deposit.setState(Deposit.PusherState.ONE);
+                }
+                else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.IN)
                 {
                     deposit.setState(Deposit.PusherState.ONE);
                 }
@@ -121,7 +125,7 @@ public class ModuleTeleop extends EnhancedOpMode
 
 
 
-            //set intake to high or low
+            /*//set intake to high or low
             if(gamepad2.a) {
                 if (intakeposition != 0) {
                     intakeposition = 0;
@@ -130,12 +134,17 @@ public class ModuleTeleop extends EnhancedOpMode
                 }
             }
 
+             */
+
             if (gamepad2.y) {
                 if(droneLauncher.getState()==DroneLauncher.State.LOCKED) {
                     droneLauncher.setState(DroneLauncher.State.RELEASED);
-                }else{
+                }
+                /*else{
                     droneLauncher.setState(DroneLauncher.State.LOCKED);
                 }
+
+                 */
             }
 
 
@@ -320,12 +329,13 @@ public class ModuleTeleop extends EnhancedOpMode
                 slideDown = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_DOWN),
                 pusher1=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
                 pusher2=new ToggleButtonReader(g2, GamepadKeys.Button.X),
-                intake1=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
+                intake1=new ToggleButtonReader(g2, GamepadKeys.Button.A),
                 intake2=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
                 strafeLeft=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_RIGHT),
                 strafeRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT)
         };
 
+     //   intake.setState(intakepositions[0]);
         intakepositions=new Intake.PositionState[]
                 {
                         Intake.PositionState.TELE, Intake.PositionState.ONE, Intake.PositionState.TWO,
@@ -406,6 +416,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
                 .build();
+
 
     }
 

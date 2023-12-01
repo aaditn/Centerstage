@@ -22,7 +22,7 @@ import java.util.List;
 
 @Config
 @Autonomous(name= "Far Blue")
-public class FarBlue extends EnhancedOpMode {
+public class  FarBlue extends EnhancedOpMode {
 
     Robot robot;
 
@@ -40,14 +40,14 @@ public class FarBlue extends EnhancedOpMode {
 
     public void waitOnDT()
     {
-        while(robot.isBusy()&&opModeIsActive())
+        while(robot.isBusy()&&opModeIsActive() && !isStopRequested())
         {
             //stall
         }
     }
     public void waitOnMacro()
     {
-        while(macroRunning&&opModeIsActive())
+        while(macroRunning&&opModeIsActive() && !isStopRequested())
         {
             //stall
         }
@@ -64,13 +64,17 @@ public class FarBlue extends EnhancedOpMode {
     @Override
     public void linearOpMode() {
 
-        Trajectory placePurple1 = robot.trajectoryBuilder(startPos)
+        Trajectory placePurple1Init = robot.trajectoryBuilder(startPos)
+                .lineToConstantHeading(new Vector2d(-36, 50))
+                .build();
+
+        Trajectory placePurple1 = robot.trajectoryBuilder(placePurple1Init.end())
                 //CHANGE
-                .lineToLinearHeading(new Pose2d(-40, 23, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-33, 28, Math.toRadians(0)))
                 .build();
         Trajectory placePurple2 = robot.trajectoryBuilder(startPos)
                 //CHANGE
-                .lineToLinearHeading(new Pose2d(-37, 13, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-37, 13, Math.toRadians(90)))//90
                 .build();
         Trajectory placePurple3 = robot.trajectoryBuilder(startPos)
                 .lineToLinearHeading(new Pose2d(-37, 23, Math.toRadians(180)))
@@ -86,29 +90,29 @@ public class FarBlue extends EnhancedOpMode {
 ////                .lineToConstantHeading(new Vector2d(-40, 8))
 ////                .lineToLinearHeading(new Pose2d(-59, 8,Math.toRadians(180)))
 //                .build();
-        Trajectory intakeWhite3 = robot.trajectoryBuilder(placePurple3.end())
-                .lineToConstantHeading(new Vector2d(-40,  22))
+//        Trajectory intakeWhite3 = robot.trajectoryBuilder(placePurple3.end())
+//                .lineToConstantHeading(new Vector2d(-40,  22))
 //                .splineToConstantHeading(new Vector2d(-46, 13), Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(-65, 6,Math.toRadians(180)), Math.toRadians(180))
-                .build();
+//                .splineToSplineHeading(new Pose2d(-65, 6,Math.toRadians(180)), Math.toRadians(180))
+//                .build();
         Trajectory avoid1 = robot.trajectoryBuilder(placePurple1.end())
-                .lineToLinearHeading(new Pose2d(-36,  8,Math.toRadians(180)))
-
-                .build();
-        Trajectory avoid3 = robot.trajectoryBuilder(placePurple3.end())
-                .lineToLinearHeading(new Pose2d(-36,  8,Math.toRadians(180)))
-
+                .lineToLinearHeading(new Pose2d(-40,  4,Math.toRadians(180)))
                 .build();
         Trajectory avoid2 = robot.trajectoryBuilder(placePurple2.end())
-                .lineToLinearHeading(new Pose2d(-36,  8,Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-36,  4,Math.toRadians(180)))
                 .build();
-        Trajectory placeWhite1 = robot.trajectoryBuilder(intakeWhite3.end())
+        Trajectory avoid3 = robot.trajectoryBuilder(placePurple3.end())
+                .lineToLinearHeading(new Pose2d(-36,  4,Math.toRadians(180)))
+                .build();
+
+        Trajectory placeWhite1 = robot.trajectoryBuilder(avoid1.end())
                 //CHANGE
 
                 .lineToLinearHeading(new Pose2d(31, 12,Math.toRadians(180)))
 
+
                 .build();
-        Trajectory placeWhite2 = robot.trajectoryBuilder(intakeWhite3.end())
+        Trajectory placeWhite2 = robot.trajectoryBuilder(avoid2.end())
                 //CHANGE
 
                 .lineToLinearHeading(new Pose2d(31, 12,Math.toRadians(180)))
@@ -120,14 +124,20 @@ public class FarBlue extends EnhancedOpMode {
 
         Trajectory strafeYellow1 = robot.trajectoryBuilder(placeWhite3.end())
                 //CHANGE
-                .splineToLinearHeading(new Pose2d(51, 34,Math.toRadians(180)), Math.toRadians(180))
+                .lineToLinearHeading(new Pose2d(48, 42,Math.toRadians(180)),
+                    robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
                 .build();
         Trajectory strafeYellow2 = robot.trajectoryBuilder(placeWhite3.end())
                 //CHANGE
-                .splineToLinearHeading(new Pose2d(51, 30,Math.toRadians(180)), Math.toRadians(180))
+                .lineToLinearHeading(new Pose2d(48, 36,Math.toRadians(180)),
+                        robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
                 .build();
         Trajectory strafeYellow3 = robot.trajectoryBuilder(placeWhite3.end())
-                .splineToLinearHeading(new Pose2d(51, 26,Math.toRadians(180)), Math.toRadians(180))
+                .lineToLinearHeading(new Pose2d(52, 30,Math.toRadians(180)),
+                        robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
                 .build();
 
         Trajectory intakeAllianceYellow1 = robot.trajectoryBuilder(placeWhite3.end())
@@ -162,13 +172,21 @@ public class FarBlue extends EnhancedOpMode {
         intake.setState(Intake.PositionState.PURP);
         waitOnMacro();
         if(elementPos==1) {
-            robot.followTrajectoryAsync(placePurple1);
+            robot.followTrajectoryAsync(placePurple1Init);
         }else if (elementPos==2){
             robot.followTrajectoryAsync(placePurple2);
         } else{
             robot.followTrajectoryAsync(placePurple3);
         }
         waitOnDT();
+
+
+
+        if (elementPos==1) {
+            robot.followTrajectoryAsync(placePurple1);
+        }
+        waitOnDT();
+
         intake.setState(Intake.PositionState.HIGH);
         waitOnMacro();
 
@@ -187,14 +205,15 @@ public class FarBlue extends EnhancedOpMode {
 //        waitT(1000);
 
         if(elementPos==1) {
-            robot.followTrajectory(avoid1);
+            robot.followTrajectoryAsync(avoid1);
         }else if (elementPos==2){
-            robot.followTrajectory(avoid2);
-            robot.turn(90);
+            robot.followTrajectoryAsync(avoid2);
         } else{
-            robot.followTrajectory(avoid3);
+            robot.followTrajectoryAsync(avoid3);
 
         }
+        waitOnDT();
+
 
         //deposit white pixel
         if(elementPos==1) {
@@ -275,8 +294,7 @@ public class FarBlue extends EnhancedOpMode {
                 .executeCode(()->macroRunning=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
                 .delay(100)
-                .moduleAction(slides, Slides.SlideState.SLIDE_UP)
-                //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .moduleAction(slides, Slides.SlideState.AUTO_LOW)
                 .awaitPreviousModuleActionCompletion()
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
                 .delay(100)

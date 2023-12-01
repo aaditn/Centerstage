@@ -241,7 +241,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 double y = gamepad1.left_stick_x * ninja;
                 double rx = -gamepad1.right_stick_x * ninja;
 
-                robot.setDrivePower(new Pose2d(x, y, rx));
+                robot.setLocalDrivePowers(new Pose2d(x, y, rx));
             }
 
             //dt strafing

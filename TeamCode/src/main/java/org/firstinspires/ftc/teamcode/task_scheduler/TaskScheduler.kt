@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class TaskScheduler
 {
@@ -20,6 +21,22 @@ class TaskScheduler
     {
         val taskList: List<Task> = t
         GlobalScope.launch(Dispatchers.Default)
+        {
+            for(task in taskList)
+            {
+                val job = async(Dispatchers.Default){task.execute()}
+                if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java)
+                {
+                    job.join()
+                }
+            }
+        }
+    }
+
+    fun scheduleTaskListBlocking(t: List<Task>): Unit
+    {
+        val taskList: List<Task> = t
+        runBlocking()
         {
             for(task in taskList)
             {

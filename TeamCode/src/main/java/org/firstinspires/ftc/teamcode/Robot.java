@@ -103,6 +103,7 @@ public class Robot extends MecanumDrive
     public DroneLauncher droneLauncher;
     OpenCvWebcam camera;
     public TeamElementDetection teamElementDetector;
+    Pose2d localDrivePowers;
 
 
     public Robot(LinearOpMode l)
@@ -156,6 +157,16 @@ public class Robot extends MecanumDrive
 
             }
         });
+    }
+
+    public void setLocalDrivePowers(Pose2d localDrivePowers)
+    {
+        this.localDrivePowers=localDrivePowers;
+    }
+
+    public void updateDrivePowers()
+    {
+        setDrivePower(localDrivePowers);
     }
 
     public void closeCameras()
@@ -235,7 +246,15 @@ public class Robot extends MecanumDrive
         tel.update();
         read();
         write();
-        update();
+
+        if(isBusy()||!Context.isTele)
+        {
+            update();
+        }
+        else
+        {
+            updateDrivePowers();
+        }
         //loop whatever else u want
     }
 

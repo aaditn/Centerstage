@@ -64,6 +64,11 @@ public class CloseRed extends EnhancedOpMode {
         }
     }
 
+    public void onStart()
+    {
+        robot.closeCameras();
+    }
+
     @Override
     public void linearOpMode()
     {

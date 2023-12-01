@@ -244,6 +244,9 @@ public class  FarBlue extends EnhancedOpMode {
         deposit.setState(Deposit.PusherState.TWO);
         waitT(2000);
         waitOnMacro();
+        deposit.setState(Deposit.PusherState.IN);
+        waitOnMacro();
+        waitT(500);
         scheduler.scheduleTaskList(slidedown);
         waitOnMacro();
 //

@@ -18,8 +18,8 @@ public class Deposit extends Module
     public static double transfer1=0.99;
     public static double transfer2=0.01;
 
-    public static double deposit1High= 0.01;//0.91;//.83
-    public static double deposit2High = 0.99;//0.14;//.22
+    public static double deposit1High= 0;//0.91;//.83
+    public static double deposit2High = 1;//0.14;//.22
 
     public static double deposit1Quarter1=(transfer1+deposit1High)/4;
     public static double deposit2Quarter1=(transfer2+deposit2High)/4;
@@ -32,7 +32,7 @@ public class Deposit extends Module
     public static double deposit2Low= 0.05;//0.07;//.22
 
     public static double initwrist =.9;//.65
-    public static double depositwrist=0.45;
+    public static double depositwrist=0.55;
 
     public static double pusherIn=0.04;
     public static double pusherPushed=0.14;

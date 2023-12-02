@@ -156,15 +156,15 @@ public class  FarBlue extends EnhancedOpMode {
 
         Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(46, 42), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48, 38), Math.toRadians(0))
                 .build();
         Trajectory placeAllianceYellow2 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(46, 36), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48, 33), Math.toRadians(0))
                 .build();
         Trajectory placeAllianceYellow3 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(46, 30), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48, 28), Math.toRadians(0))
                 .build();
 
         waitForStart();

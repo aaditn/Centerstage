@@ -11,6 +11,7 @@ object Context
     @JvmField var debug: Int = 0
     @JvmField var opmode: LinearOpMode? = null;
     @JvmField var isTele: Boolean = true
+    @JvmField var statusError: String ="Functioning Normally"
 
     @JvmStatic fun updateValues()
     {
@@ -26,5 +27,6 @@ object Context
         isTeamRed=true;
         isTele=true;
         debug=0;
+        statusError="Functioning Normally"
     }
 }

@@ -62,6 +62,9 @@ public class TeleOp extends EnhancedOpMode
     boolean isPusherDone = true;
     Servo wrist;
     double ninja = 1;
+
+    double loopCount;
+    ElapsedTime opmodetimer;
     Gamepad.RumbleEffect customRumbleEffect0;    // Use to build a custom rumble sequence.
     @Override
     public void linearOpMode()
@@ -142,6 +145,8 @@ public class TeleOp extends EnhancedOpMode
         intake.init();
         deposit.init();
         intake.setOperationState(Module.OperationState.MANUAL);
+
+        opmodetimer=new ElapsedTime();
     }
 
     @Override
@@ -158,6 +163,7 @@ public class TeleOp extends EnhancedOpMode
     public void onStart()
     {
         //do something idk(maybe take signal sleeve snapshot or wtv)
+        opmodetimer.reset();
     }
 
     @Override
@@ -329,13 +335,14 @@ public class TeleOp extends EnhancedOpMode
         telemetry.addData("Slides Power", slides.motorPower);
         telemetry.addData("Slides state", slides.opstate);
         telemetry.update();*/
+        loopCount++;
         telemetry.addData("liftPos", slidesPos);
         telemetry.addData("currentPosLeft", slideLeft.getCurrentPosition());
         telemetry.addData("currentPosRight", slideRight.getCurrentPosition());
 
         telemetry.addData("tPosLeft", slideLeft.getTargetPosition());
         telemetry.addData("tPosRight", slideRight.getTargetPosition());
-
+        telemetry.addData("Loop Times", opmodetimer.milliseconds()/loopCount);
 
         telemetry.update();
     }

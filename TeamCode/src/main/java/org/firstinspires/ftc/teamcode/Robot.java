@@ -263,7 +263,7 @@ public class Robot extends MecanumDrive
 
         if(timer.milliseconds()>500)
         {
-            Log.d(null, "Status: Functioning Normally");
+            Log.d(null, "Status: " + Context.statusError);
             timer.reset();
         }
         //loop whatever else u want

@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
@@ -60,6 +59,10 @@ public class ModuleTeleop extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
 
+    double driverLoopCount = 0;
+    double hardwareLoopCount=0;
+    ElapsedTime opmodetimer;
+
     @Override
     public void linearOpMode()
     {
@@ -67,8 +70,8 @@ public class ModuleTeleop extends EnhancedOpMode
 
         while(opModeIsActive())
         {
-            telemetry.addData("HangPow", hang.getPower());
-            telemetry.addData("HangPos", hang.getCurrentPosition());
+            //telemetry.addData("HangPow", hang.getPower());
+            //telemetry.addData("HangPos", hang.getCurrentPosition());
             for (KeyReader reader : keyReaders)
             {
                 reader.readValue();
@@ -276,6 +279,11 @@ public class ModuleTeleop extends EnhancedOpMode
                 //robot cancel trajectory function(oop I forgor)
             }
 
+            if(gamepad1.y)
+            {
+                Context.statusError="Broken";
+            }
+
             //hang manual
             if(gamepad2.left_trigger>0.5)
             {
@@ -289,13 +297,22 @@ public class ModuleTeleop extends EnhancedOpMode
             {
                 hang.setPower(0);
             }
+
+            driverLoopCount++;
         }
+    }
+
+    public void onStart()
+    {
+        driverLoopCount=0;
+        hardwareLoopCount=0;
+        opmodetimer.reset();
     }
 
     @Override
     public void initialize()
     {
-        this.setLoopTimes(10);
+        this.setLoopTimes(1);
 
         hang=hardwareMap.get(DcMotor.class, "hang");
 
@@ -315,6 +332,8 @@ public class ModuleTeleop extends EnhancedOpMode
 
         slidesMoving=false;
         slidestimer=new ElapsedTime();
+
+        opmodetimer=new ElapsedTime();
 
         g1=new GamepadEx(gamepad1);
         g2=new GamepadEx(gamepad2);
@@ -441,10 +460,17 @@ public class ModuleTeleop extends EnhancedOpMode
     @Override
     public void primaryLoop()
     {
-        Context.tel.addData("Slide Moving", slidesMoving);
-        //Context.tel.addData("Robot Current", robot.getCurrent());
+        hardwareLoopCount++;
 
         robot.primaryLoop();
         robot.update();
+
+        Context.tel.addData("Slide Moving", slidesMoving);
+        Context.tel.addData("Driver Loop Times", opmodetimer.milliseconds()/driverLoopCount);
+        Context.tel.addData("Hardware Loop Times", opmodetimer.milliseconds()/hardwareLoopCount);
+        Context.tel.addData("HangPow", hang.getPower());
+        Context.tel.addData("HangPos", hang.getCurrentPosition());
+        //Context.tel.addData("Robot Current", robot.getCurrent());
     }
+
 }

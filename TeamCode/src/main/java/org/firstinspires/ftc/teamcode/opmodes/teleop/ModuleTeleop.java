@@ -48,7 +48,7 @@ public class ModuleTeleop extends EnhancedOpMode
     KeyReader[] keyReaders;
     GamepadEx g1, g2;
     ButtonReader slideUpBase, slideUpRow1, slideUpRow2, slideDown, pusher1, pusher2,
-            strafeLeft, strafeRight, intake1, intake2;
+            strafeLeft, strafeRight, intake1, intake2, intake3;
     List<Task> slideupbase, slideup1, slideup2, slidedown, slideup1raised, slideup2raised, slideuphalf;
     int intakeposition;
     double ninja;
@@ -59,8 +59,6 @@ public class ModuleTeleop extends EnhancedOpMode
 
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
-    ElapsedTime opmodeTimer;
-    int loopCount;
 
     @Override
     public void linearOpMode()
@@ -122,6 +120,14 @@ public class ModuleTeleop extends EnhancedOpMode
                 if(intakeposition>6)
                 {
                     intakeposition=0;
+                }
+                intake.setState(intakepositions[intakeposition]);
+            } else if(intake3.wasJustPressed())
+            {
+                intakeposition--;
+                if(intakeposition<0)
+                {
+                    intakeposition=6;
                 }
                 intake.setState(intakepositions[intakeposition]);
             }
@@ -219,13 +225,13 @@ public class ModuleTeleop extends EnhancedOpMode
             //intake power
             intake.manualChange(-gamepad2.right_stick_y);
 
-            /*if(deposit.firstPixel.getDistance(DistanceUnit.MM)<10&&deposit.secondPixel.getDistance(DistanceUnit.MM)<10)
-            {
-//                gamepad1.runRumbleEffect(customRumbleEffect1);
-//                gamepad2.runRumbleEffect(customRumbleEffect1);
-            }*/
-            //telemetry.addData("1st pixel distance", deposit.firstPixel.getDistance(DistanceUnit.MM));
-            //telemetry.addData("2nd pixel distance", deposit.secondPixel.getDistance(DistanceUnit.MM));
+//            if(deposit.firstPixel.getDistance(DistanceUnit.MM)<10&&deposit.secondPixel.getDistance(DistanceUnit.MM)<10)
+//            {
+////                gamepad1.runRumbleEffect(customRumbleEffect1);
+////                gamepad2.runRumbleEffect(customRumbleEffect1);
+//            }
+//            telemetry.addData("1st pixel distance", deposit.firstPixel.getDistance(DistanceUnit.MM));
+//            telemetry.addData("2nd pixel distance", deposit.secondPixel.getDistance(DistanceUnit.MM));
 
             //ninja mode
             if (gamepad1.left_trigger > 0.3)
@@ -283,8 +289,6 @@ public class ModuleTeleop extends EnhancedOpMode
             {
                 hang.setPower(0);
             }
-
-            loopCount++;
         }
     }
 
@@ -312,8 +316,6 @@ public class ModuleTeleop extends EnhancedOpMode
         slidesMoving=false;
         slidestimer=new ElapsedTime();
 
-        opmodeTimer=new ElapsedTime();
-
         g1=new GamepadEx(gamepad1);
         g2=new GamepadEx(gamepad2);
 
@@ -338,6 +340,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 pusher2=new ToggleButtonReader(g2, GamepadKeys.Button.X),
                 intake1=new ToggleButtonReader(g2, GamepadKeys.Button.A),
                 intake2=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
+                intake3=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
                 strafeLeft=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_RIGHT),
                 strafeRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT)
         };
@@ -429,12 +432,6 @@ public class ModuleTeleop extends EnhancedOpMode
 
     }
 
-    public void onStart()
-    {
-        opmodeTimer.reset();
-        loopCount=0;
-    }
-
     @Override
     public void initLoop()
     {
@@ -444,8 +441,7 @@ public class ModuleTeleop extends EnhancedOpMode
     @Override
     public void primaryLoop()
     {
-        Context.tel.addData("SLide Moving", slidesMoving);
-        Context.tel.addData("Driver input loop times", opmodeTimer.milliseconds()/loopCount);
+        Context.tel.addData("Slide Moving", slidesMoving);
         //Context.tel.addData("Robot Current", robot.getCurrent());
 
         robot.primaryLoop();

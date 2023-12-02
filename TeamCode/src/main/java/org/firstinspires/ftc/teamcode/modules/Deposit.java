@@ -34,9 +34,9 @@ public class Deposit extends Module
 
     public static double pusherIn=0.04;
     public static double pusherExtended =0.16;
-    public static double pusherOne=0.24;
+    public static double pusherOne=0.26;
     public static double pusherTwo=0.33;
-    public static double pusherHalf=(pusherOne+pusherTwo)/3;
+    public static double pusherHalf= 0.29;
     int debugCounter=0;
 
     public boolean funnimode=true;

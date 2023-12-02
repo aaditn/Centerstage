@@ -105,7 +105,7 @@ public class TeamElementDetection extends OpenCvPipeline{
         Contours.clear();
     }
     public Mat processFrame(Mat input){
-        //release();
+        release();
         Contours.clear();
         hierarchy.release();
         //if(input.rows()>0&&input.get(0, 0)[0]>0)

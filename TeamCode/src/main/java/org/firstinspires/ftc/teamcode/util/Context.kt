@@ -24,6 +24,7 @@ object Context
     {
         tel=null;
         isTeamRed=true;
+        isTele=true;
         debug=0;
     }
 }

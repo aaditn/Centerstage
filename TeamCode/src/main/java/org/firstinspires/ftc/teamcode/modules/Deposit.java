@@ -120,8 +120,8 @@ public class Deposit extends Module
         //rightRotator.setDirection(Servo.Direction.REVERSE);
         pusher=hardwareMap.get(Servo.class, "pusher");
         wrist =hardwareMap.get(Servo.class,"wrist");
-        firstPixel = hardwareMap.get(ColorRangeSensor.class, "firstCS");
-        secondPixel = hardwareMap.get(ColorRangeSensor.class, "secondCS");
+        //firstPixel = hardwareMap.get(ColorRangeSensor.class, "firstCS");
+        //secondPixel = hardwareMap.get(ColorRangeSensor.class, "secondCS");
     }
 
 

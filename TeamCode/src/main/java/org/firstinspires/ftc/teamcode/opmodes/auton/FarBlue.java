@@ -156,15 +156,15 @@ public class  FarBlue extends EnhancedOpMode {
 
         Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(54, 28), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(49, 42), Math.toRadians(0))
                 .build();
         Trajectory placeAllianceYellow2 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(54, 28), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(49, 36), Math.toRadians(0))
                 .build();
         Trajectory placeAllianceYellow3 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(54, 28), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(49, 30), Math.toRadians(0))
                 .build();
 
         waitForStart();
@@ -248,8 +248,40 @@ public class  FarBlue extends EnhancedOpMode {
         waitOnMacro();
         waitT(500);
         scheduler.scheduleTaskList(slidedown);
+        intake.setState(Intake.PositionState.FIVE);
         waitOnMacro();
-//
+        if(elementPos==1) {
+            robot.followTrajectoryAsync(intakeAllianceYellow1);
+        }else if (elementPos==2){
+            robot.followTrajectoryAsync(intakeAllianceYellow2);
+        } else{
+            robot.followTrajectoryAsync(intakeAllianceYellow3);
+        }
+        waitOnDT();
+        intake.setState(Intake.PositionState.TELE);
+        waitOnMacro();
+        intake.setState(Intake.PowerState.INTAKE);
+        waitOnMacro();
+        waitT(2500);
+        scheduler.scheduleTaskList(slideupbase);
+        intake.setState(Intake.PowerState.OFF );
+        waitOnMacro();
+        if(elementPos==1) {
+            robot.followTrajectoryAsync(placeAllianceYellow1);
+        }else if (elementPos==2){
+            robot.followTrajectoryAsync(placeAllianceYellow2);
+        } else{
+            robot.followTrajectoryAsync(placeAllianceYellow3);
+        }
+        waitOnDT();
+        deposit.setState(Deposit.PusherState.TWO);
+        waitT(2000);
+        waitOnMacro();
+        deposit.setState(Deposit.PusherState.IN);
+        waitOnMacro();
+        waitT(500);
+        scheduler.scheduleTaskList(slidedown);
+
 //        //get alliance yellow
 //        intake.setState(Intake.PositionState.TWO);
 //        if(elementPos==1) {

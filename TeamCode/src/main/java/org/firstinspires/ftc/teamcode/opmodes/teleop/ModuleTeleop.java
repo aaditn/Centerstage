@@ -107,7 +107,7 @@ public class ModuleTeleop extends EnhancedOpMode
             {
                 if(intakeposition==0)
                 {
-                    intakeposition=1;
+                    intakeposition=6;
                 }
                 else {
                     intakeposition=0;
@@ -368,7 +368,7 @@ public class ModuleTeleop extends EnhancedOpMode
         slideup1=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
-                .delay(200)
+                .delay(300)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
 //                .moduleAction(deposit, Deposit.PusherState.EXTENDED)
                 .delay(250)
@@ -383,7 +383,7 @@ public class ModuleTeleop extends EnhancedOpMode
         slideup2=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
-                .delay(200)
+                .delay(300)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
 //                .moduleAction(deposit, Deposit.PusherState.EXTENDED)
                 .delay(250)

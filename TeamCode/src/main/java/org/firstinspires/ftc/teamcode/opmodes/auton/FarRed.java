@@ -146,13 +146,13 @@ public class FarRed extends EnhancedOpMode {
                 .build();
 
         Trajectory intakeAllianceYellow1 = robot.trajectoryBuilder(strafeYellow1.end())
-                .splineToConstantHeading(new Vector2d(30, -61), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(31, -59), Math.toRadians(180))
                 .build();
         Trajectory intakeAllianceYellow2 = robot.trajectoryBuilder(strafeYellow2.end())
-                .splineToConstantHeading(new Vector2d(30, -61), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(31, -59), Math.toRadians(180))
                 .build();
         Trajectory intakeAllianceYellow3 = robot.trajectoryBuilder(strafeYellow3.end())
-                .splineToConstantHeading(new Vector2d(30, -61), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(31, -59), Math.toRadians(180))
                 .build();
 
         Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(intakeAllianceYellow3.end())

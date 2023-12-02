@@ -128,18 +128,18 @@ public class  FarBlue extends EnhancedOpMode {
 
         Trajectory strafeYellow1 = robot.trajectoryBuilder(placeWhite3.end())
                 //CHANGE
-                .lineToLinearHeading(new Pose2d(48, 42,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(48, 41,Math.toRadians(180)),
                     robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(30))
                 .build();
         Trajectory strafeYellow2 = robot.trajectoryBuilder(placeWhite3.end())
                 //CHANGE
-                .lineToLinearHeading(new Pose2d(48, 36,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(48, 35,Math.toRadians(180)),
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(30))
                 .build();
         Trajectory strafeYellow3 = robot.trajectoryBuilder(placeWhite3.end())
-                .lineToLinearHeading(new Pose2d(52, 30,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(52, 29,Math.toRadians(180)),
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(30))
                 .build();
@@ -156,15 +156,15 @@ public class  FarBlue extends EnhancedOpMode {
 
         Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(48, 38), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(49, 36.5), Math.toRadians(0))
                 .build();
         Trajectory placeAllianceYellow2 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(48, 33), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(49, 31.5), Math.toRadians(0))
                 .build();
         Trajectory placeAllianceYellow3 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(48, 28), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(49, 26.5), Math.toRadians(0))
                 .build();
 
         waitForStart();

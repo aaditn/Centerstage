@@ -9,6 +9,8 @@ import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.RUN
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.TRACK_WIDTH;
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.encoderTicksToInches;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -38,6 +40,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -104,6 +107,7 @@ public class Robot extends MecanumDrive
     OpenCvWebcam camera;
     public TeamElementDetection teamElementDetector;
     Pose2d localDrivePowers;
+    ElapsedTime timer;
 
 
     public Robot(LinearOpMode l)
@@ -116,6 +120,7 @@ public class Robot extends MecanumDrive
         Context.tel=tel;
         Context.updateValues();
         hardwareMap=l.hardwareMap;
+        timer=new ElapsedTime();
 
         if(!Context.isTele)
         {
@@ -254,6 +259,12 @@ public class Robot extends MecanumDrive
         else
         {
             updateDrivePowers();
+        }
+
+        if(timer.milliseconds()>500)
+        {
+            Log.i("Status", "Functioning Normally");
+            timer.reset();
         }
         //loop whatever else u want
     }

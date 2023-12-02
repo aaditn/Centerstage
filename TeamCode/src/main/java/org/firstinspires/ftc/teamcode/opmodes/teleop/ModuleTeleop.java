@@ -59,6 +59,8 @@ public class ModuleTeleop extends EnhancedOpMode
 
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
+    ElapsedTime opmodeTimer;
+    int loopCount;
 
     @Override
     public void linearOpMode()
@@ -281,6 +283,8 @@ public class ModuleTeleop extends EnhancedOpMode
             {
                 hang.setPower(0);
             }
+
+            loopCount++;
         }
     }
 
@@ -307,6 +311,8 @@ public class ModuleTeleop extends EnhancedOpMode
 
         slidesMoving=false;
         slidestimer=new ElapsedTime();
+
+        opmodeTimer=new ElapsedTime();
 
         g1=new GamepadEx(gamepad1);
         g2=new GamepadEx(gamepad2);
@@ -423,6 +429,12 @@ public class ModuleTeleop extends EnhancedOpMode
 
     }
 
+    public void onStart()
+    {
+        opmodeTimer.reset();
+        loopCount=0;
+    }
+
     @Override
     public void initLoop()
     {
@@ -433,6 +445,7 @@ public class ModuleTeleop extends EnhancedOpMode
     public void primaryLoop()
     {
         Context.tel.addData("SLide Moving", slidesMoving);
+        Context.tel.addData("Driver input loop times", opmodeTimer.milliseconds()/loopCount);
         //Context.tel.addData("Robot Current", robot.getCurrent());
 
         robot.primaryLoop();

@@ -89,7 +89,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 }
                 else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.ONE)
                 {
-                    deposit.setState(Deposit.PusherState.HALF);
+                    deposit.setState(Deposit.PusherState.TWO);
                 }
                 else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.HALF)
                 {
@@ -219,13 +219,13 @@ public class ModuleTeleop extends EnhancedOpMode
             //intake power
             intake.manualChange(-gamepad2.right_stick_y);
 
-            if(deposit.firstPixel.getDistance(DistanceUnit.MM)<10&&deposit.secondPixel.getDistance(DistanceUnit.MM)<10)
+            /*if(deposit.firstPixel.getDistance(DistanceUnit.MM)<10&&deposit.secondPixel.getDistance(DistanceUnit.MM)<10)
             {
 //                gamepad1.runRumbleEffect(customRumbleEffect1);
 //                gamepad2.runRumbleEffect(customRumbleEffect1);
-            }
-            telemetry.addData("1st pixel distance", deposit.firstPixel.getDistance(DistanceUnit.MM));
-            telemetry.addData("2nd pixel distance", deposit.secondPixel.getDistance(DistanceUnit.MM));
+            }*/
+            //telemetry.addData("1st pixel distance", deposit.firstPixel.getDistance(DistanceUnit.MM));
+            //telemetry.addData("2nd pixel distance", deposit.secondPixel.getDistance(DistanceUnit.MM));
 
             //ninja mode
             if (gamepad1.left_trigger > 0.3)

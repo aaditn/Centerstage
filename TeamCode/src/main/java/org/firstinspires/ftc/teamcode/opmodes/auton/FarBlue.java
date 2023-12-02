@@ -128,7 +128,7 @@ public class  FarBlue extends EnhancedOpMode {
 
         Trajectory strafeYellow1 = robot.trajectoryBuilder(placeWhite3.end())
                 //CHANGE
-                .lineToLinearHeading(new Pose2d(48, 41,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(48, 44,Math.toRadians(180)),
                     robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(30))
                 .build();
@@ -139,7 +139,7 @@ public class  FarBlue extends EnhancedOpMode {
                         robot.getAccelerationConstraint(30))
                 .build();
         Trajectory strafeYellow3 = robot.trajectoryBuilder(placeWhite3.end())
-                .lineToLinearHeading(new Pose2d(52, 29,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(52, 27,Math.toRadians(180)),
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(30))
                 .build();
@@ -156,15 +156,15 @@ public class  FarBlue extends EnhancedOpMode {
 
         Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(49, 36.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(49, 38.5), Math.toRadians(0))
                 .build();
         Trajectory placeAllianceYellow2 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(49, 31.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(49, 33), Math.toRadians(0))
                 .build();
         Trajectory placeAllianceYellow3 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(49, 26.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(49, 23), Math.toRadians(0))
                 .build();
 
         waitForStart();
@@ -248,7 +248,8 @@ public class  FarBlue extends EnhancedOpMode {
         waitOnMacro();
         waitT(500);
         scheduler.scheduleTaskList(slidedown);
-        intake.setState(Intake.PositionState.FIVE);
+        intake.setState(Intake.PositionState.TELE);
+        intake.setState(Intake.PowerState.INTAKE);
         waitOnMacro();
         if(elementPos==1) {
             robot.followTrajectoryAsync(intakeAllianceYellow1);
@@ -259,8 +260,6 @@ public class  FarBlue extends EnhancedOpMode {
         }
         waitOnDT();
         intake.setState(Intake.PositionState.TELE);
-        waitOnMacro();
-        intake.setState(Intake.PowerState.INTAKE);
         waitOnMacro();
         waitT(2500);
         scheduler.scheduleTaskList(slideupbase);

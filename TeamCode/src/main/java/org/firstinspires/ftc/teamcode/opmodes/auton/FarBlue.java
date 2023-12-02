@@ -144,27 +144,27 @@ public class  FarBlue extends EnhancedOpMode {
                         robot.getAccelerationConstraint(30))
                 .build();
 
-        Trajectory intakeAllianceYellow1 = robot.trajectoryBuilder(placeWhite3.end())
+        Trajectory intakeAllianceYellow1 = robot.trajectoryBuilder(strafeYellow1.end())
                 .splineToConstantHeading(new Vector2d(30, 61), Math.toRadians(180))
                 .build();
-        Trajectory intakeAllianceYellow2 = robot.trajectoryBuilder(placeWhite3.end())
+        Trajectory intakeAllianceYellow2 = robot.trajectoryBuilder(strafeYellow2.end())
                 .splineToConstantHeading(new Vector2d(30, 61), Math.toRadians(180))
                 .build();
-        Trajectory intakeAllianceYellow3 = robot.trajectoryBuilder(placeWhite3.end())
+        Trajectory intakeAllianceYellow3 = robot.trajectoryBuilder(strafeYellow3.end())
                 .splineToConstantHeading(new Vector2d(30, 61), Math.toRadians(180))
                 .build();
 
         Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(49, 42), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(46, 42), Math.toRadians(0))
                 .build();
         Trajectory placeAllianceYellow2 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(49, 36), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(46, 36), Math.toRadians(0))
                 .build();
         Trajectory placeAllianceYellow3 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
                 .lineToConstantHeading(new Vector2d(31, 61))
-                .splineToConstantHeading(new Vector2d(49, 30), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(46, 30), Math.toRadians(0))
                 .build();
 
         waitForStart();

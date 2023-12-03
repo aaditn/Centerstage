@@ -362,11 +362,9 @@ public class FarRed extends EnhancedOpMode {
         if(robot.teamElementDetector.centerY < 0) {
             elementPos = 1;
         } else if(robot.teamElementDetector.centerY < 107){
-            elementPos = 3;
-        } else if (robot.teamElementDetector.centerY < 214) {
-            elementPos = 2;
+            elementPos = 3;//??
         } else {
-            elementPos = 1;
+            elementPos = 2;
         }
         telemetry.addData("element Pos", elementPos);
         telemetry.addData("centerY",robot.teamElementDetector.centerY);

@@ -229,10 +229,8 @@ public class CloseRed extends EnhancedOpMode {
             elementPos = 3;
         } else if(robot.teamElementDetector.centerY < 107){
             elementPos = 1;
-        } else if (robot.teamElementDetector.centerY < 230) {
-            elementPos = 2;
         } else {
-            elementPos = -1;
+            elementPos = 2;
         }
         Context.tel.addData("element Pos", elementPos);
         Context.tel.addData("centerY", robot.teamElementDetector);

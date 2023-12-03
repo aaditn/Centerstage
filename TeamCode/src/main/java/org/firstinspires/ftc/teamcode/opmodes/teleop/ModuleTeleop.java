@@ -47,7 +47,7 @@ public class ModuleTeleop extends EnhancedOpMode
     KeyReader[] keyReaders;
     GamepadEx g1, g2;
     ButtonReader slideUpBase, slideUpRow1, slideUpRow2, slideDown, pusher1, pusher2,
-            strafeLeft, strafeRight, intake1, intake2, intake3;
+            strafeLeft, strafeRight, intake1, intake2, intake3, droneButton;
     List<Task> slideupbase, slideup1, slideup2, slidedown, slideup1raised, slideup2raised, slideuphalf;
     int intakeposition;
     double ninja;
@@ -148,15 +148,14 @@ public class ModuleTeleop extends EnhancedOpMode
 
              */
 
-            if (gamepad2.y) {
+            if (droneButton.wasJustPressed()) {
                 if(droneLauncher.getState()==DroneLauncher.State.LOCKED) {
                     droneLauncher.setState(DroneLauncher.State.RELEASED);
                 }
-                /*else{
+                else if(droneLauncher.getState()==DroneLauncher.State.RELEASED)
+                {
                     droneLauncher.setState(DroneLauncher.State.LOCKED);
                 }
-
-                 */
             }
 
 
@@ -361,7 +360,8 @@ public class ModuleTeleop extends EnhancedOpMode
                 intake2=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
                 intake3=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
                 strafeLeft=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_RIGHT),
-                strafeRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT)
+                strafeRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT),
+                droneButton=new ToggleButtonReader(g2, GamepadKeys.Button.Y)
         };
 
      //   intake.setState(intakepositions[0]);
@@ -470,6 +470,7 @@ public class ModuleTeleop extends EnhancedOpMode
         Context.tel.addData("Hardware Loop Times", opmodetimer.milliseconds()/hardwareLoopCount);
         Context.tel.addData("HangPow", hang.getPower());
         Context.tel.addData("HangPos", hang.getCurrentPosition());
+        Context.tel.addData("Drone pos", droneLauncher.getCurrentPosition());
         //Context.tel.addData("Robot Current", robot.getCurrent());
     }
 

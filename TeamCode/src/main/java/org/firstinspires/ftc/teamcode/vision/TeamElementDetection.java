@@ -91,7 +91,7 @@ public class TeamElementDetection extends OpenCvPipeline{
         kernel2 = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(15, 15));
     }
     public void release(){
-        HSV.release();
+        //HSV.release();
         //kernel.release();
         //kernel2.release();
         inRange.release();
@@ -105,7 +105,6 @@ public class TeamElementDetection extends OpenCvPipeline{
         Contours.clear();
     }
     public Mat processFrame(Mat input){
-        release();
         Contours.clear();
         hierarchy.release();
         //if(input.rows()>0&&input.get(0, 0)[0]>0)
@@ -158,7 +157,6 @@ public class TeamElementDetection extends OpenCvPipeline{
                 mat=input;
                 centerY =-1;
             }
-
             return mat;
         //}
         //Imgproc.rectangle(maskTemplate, new Rect(0, 100, 50, 100), rLowHSV);

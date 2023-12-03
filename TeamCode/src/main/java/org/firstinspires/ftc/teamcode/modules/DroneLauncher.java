@@ -12,7 +12,7 @@ public class DroneLauncher extends Module
 
     public static enum State implements ModuleState
     {
-        RELEASED(0.2), LOCKED(0.55);
+        RELEASED(0.1), LOCKED(0.55);
 
         double position;
         State(double position)
@@ -37,6 +37,10 @@ public class DroneLauncher extends Module
         lock=hardwareMap.get(Servo.class, "droneLock");
     }
 
+    public double getCurrentPosition()
+    {
+        return lock.getPosition();
+    }
 
     @Override
     protected void write()

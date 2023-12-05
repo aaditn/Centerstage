@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
@@ -70,13 +71,11 @@ public class ModuleTeleop extends EnhancedOpMode
 
         while(opModeIsActive())
         {
-            //telemetry.addData("HangPow", hang.getPower());
-            //telemetry.addData("HangPos", hang.getCurrentPosition());
             for (KeyReader reader : keyReaders)
             {
                 reader.readValue();
             }
-
+            telemetry.addData("CS1",deposit.firstPixel.getDistance(DistanceUnit.MM));
             //pusher buttons
             if(pusher1.wasJustPressed()||pusher2.wasJustPressed())
             {
@@ -90,7 +89,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 }
                 else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.ONE)
                 {
-                    deposit.setState(Deposit.PusherState.TWO);
+                    deposit.setState(Deposit.PusherState.HALF);
                 }
                 else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.HALF)
                 {
@@ -110,7 +109,7 @@ public class ModuleTeleop extends EnhancedOpMode
             {
                 if(intakeposition==0)
                 {
-                    intakeposition=6;
+                    intakeposition=intakepositions.length-1;
                 }
                 else {
                     intakeposition=0;
@@ -120,7 +119,7 @@ public class ModuleTeleop extends EnhancedOpMode
             else if(intake2.wasJustPressed())
             {
                 intakeposition++;
-                if(intakeposition>6)
+                if(intakeposition>intakepositions.length-1)
                 {
                     intakeposition=0;
                 }
@@ -130,7 +129,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 intakeposition--;
                 if(intakeposition<0)
                 {
-                    intakeposition=6;
+                    intakeposition=intakepositions.length-1;
                 }
                 intake.setState(intakepositions[intakeposition]);
             }
@@ -167,12 +166,13 @@ public class ModuleTeleop extends EnhancedOpMode
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slideupbase);
             }
-            else if(gamepad1.b&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.SLIDE_UP)&&!slidesMoving)
-            {
-                slides.setOperationState(Module.OperationState.PRESET);
-                slidesMoving=true;
-                scheduler.scheduleTaskList(slideuphalf);
-            }
+//drivers say its unnecessary
+//            else if(gamepad1.b&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.SLIDE_UP)&&!slidesMoving)
+//            {
+//                slides.setOperationState(Module.OperationState.PRESET);
+//                slidesMoving=true;
+//                scheduler.scheduleTaskList(slideuphalf);
+//            }
             else if(slideUpRow1.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.SLIDE_UP)&&!slidesMoving)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
@@ -361,13 +361,13 @@ public class ModuleTeleop extends EnhancedOpMode
                 intake3=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
                 strafeLeft=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_RIGHT),
                 strafeRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT),
-                droneButton=new ToggleButtonReader(g2, GamepadKeys.Button.Y)
+                droneButton=new ToggleButtonReader(g1, GamepadKeys.Button.Y)
         };
 
      //   intake.setState(intakepositions[0]);
         intakepositions=new Intake.PositionState[]
                 {
-                        Intake.PositionState.TELE, Intake.PositionState.ONE, Intake.PositionState.TWO,
+                        Intake.PositionState.TELE, Intake.PositionState.TWO,
                         Intake.PositionState.THREE, Intake.PositionState.FOUR, Intake.PositionState.FIVE,
                         Intake.PositionState.HIGH
                 };

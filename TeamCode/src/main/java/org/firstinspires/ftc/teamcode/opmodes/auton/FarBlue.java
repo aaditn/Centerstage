@@ -171,6 +171,35 @@ public class  FarBlue extends EnhancedOpMode {
 //                .splineToConstantHeading(new Vector2d(52, 26), Math.toRadians(0),robot.getVelocityConstraint(30, 1.65, 15.06),
 //                        robot.getAccelerationConstraint(30))
 //                .build();
+        Trajectory intakeAllianceYellow1 = robot.trajectoryBuilder(strafeYellow1.end())
+                .splineToConstantHeading(new Vector2d(31.5, 61), Math.toRadians(180),robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
+                .build();
+        Trajectory intakeAllianceYellow2 = robot.trajectoryBuilder(strafeYellow2.end())
+                .lineTo(new Vector2d(48, 35))
+                .splineToConstantHeading(new Vector2d(31.5, 61), Math.toRadians(180), robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
+                .build();
+        Trajectory intakeAllianceYellow3 = robot.trajectoryBuilder(strafeYellow3.end())
+                .splineToConstantHeading(new Vector2d(32.5, 61), Math.toRadians(180),robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
+                .build();
+
+        Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
+                .lineToConstantHeading(new Vector2d(33, 61))
+                .splineToConstantHeading(new Vector2d(49, 38.5), Math.toRadians(0),robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
+                .build();
+        Trajectory placeAllianceYellow2 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
+                .lineToConstantHeading(new Vector2d(33, 61))
+                .splineToConstantHeading(new Vector2d(49, 30.25), Math.toRadians(0),robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
+                .build();
+        Trajectory placeAllianceYellow3 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
+                .lineToConstantHeading(new Vector2d(33, 61))
+                .splineToConstantHeading(new Vector2d(52, 27.5), Math.toRadians(0),robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
+                .build();
 
         waitForStart();
         robot.setPoseEstimate(startPos);
@@ -390,10 +419,8 @@ public class  FarBlue extends EnhancedOpMode {
             elementPos = 3;
         } else if(robot.teamElementDetector.centerY < 107){
             elementPos = 1;
-        } else if (robot.teamElementDetector.centerY < 214) {
-            elementPos = 2;
         } else {
-            elementPos = -1;
+            elementPos = 2;
         }
         telemetry.addData("element Pos", elementPos);
         telemetry.addData("centerY",robot.teamElementDetector.centerY);

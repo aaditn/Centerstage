@@ -237,10 +237,8 @@ public class CloseBlue extends EnhancedOpMode {
             elementPos = 3;
         } else if(robot.teamElementDetector.centerY < 107){
             elementPos = 1;
-        } else if (robot.teamElementDetector.centerY < 214) {
-            elementPos = 2;
         } else {
-            elementPos = -1;
+            elementPos = 2;
         }
         Context.tel.addData("Team red?", Context.isTeamRed);
         Context.tel.addData("element Pos", elementPos);

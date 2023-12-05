@@ -70,7 +70,6 @@ public class  FarBlue extends EnhancedOpMode {
     public void linearOpMode() {
 
 
-
         Trajectory placePurple1Init = robot.trajectoryBuilder(startPos)
                 //CHANGE
                 .lineToConstantHeading(new Vector2d(-36, 50))
@@ -81,102 +80,97 @@ public class  FarBlue extends EnhancedOpMode {
                 .build();
 
         Trajectory placePurple2 = robot.trajectoryBuilder(startPos)
-                //CHANGE
                 .lineToLinearHeading(new Pose2d(-37, 12.25, Math.toRadians(90)))//90
                 .build();
         Trajectory placePurple3 = robot.trajectoryBuilder(startPos)
                 .lineToLinearHeading(new Pose2d(-37, 23, Math.toRadians(180)))
                 .build();
 
-//        Trajectory intakeWhite1 = robot.trajectoryBuilder(placePurple3.end())
-//                //CHANGE
-////                .lineToConstantHeading(new Vector2d(-40, 8))
-////                .lineToLinearHeading(new Pose2d(-59, 8,Math.toRadians(180)))
-//                .build();
-//        Trajectory intakeWhite2 = robot.trajectoryBuilder(placePurple3.end())
-//                //CHANGE
-////                .lineToConstantHeading(new Vector2d(-40, 8))
-////                .lineToLinearHeading(new Pose2d(-59, 8,Math.toRadians(180)))
-//                .build();
-//        Trajectory intakeWhite3 = robot.trajectoryBuilder(placePurple3.end())
-//                .lineToConstantHeading(new Vector2d(-40,  22))
-//                .splineToConstantHeading(new Vector2d(-46, 13), Math.toRadians(180))
-//                .splineToSplineHeading(new Pose2d(-65, 6,Math.toRadians(180)), Math.toRadians(180))
-//                .build();
         Trajectory avoid1 = robot.trajectoryBuilder(placePurple1.end())
-                .lineToLinearHeading(new Pose2d(-40,  6.5,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-40, 5, Math.toRadians(180)))
                 .build();
         Trajectory avoid2 = robot.trajectoryBuilder(placePurple2.end())
-                .lineToLinearHeading(new Pose2d(-36,  5,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-36, 5, Math.toRadians(180)))
                 .build();
         Trajectory avoid3 = robot.trajectoryBuilder(placePurple3.end())
-                .lineToLinearHeading(new Pose2d(-36,  4,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-36, 5, Math.toRadians(180)))
                 .build();
 
-        Trajectory placeWhite1 = robot.trajectoryBuilder(avoid1.end())
-                //CHANGE
-
-                .lineToLinearHeading(new Pose2d(31, 12,Math.toRadians(180)))
-
-
+        Trajectory intakeWhite1 = robot.trajectoryBuilder(avoid1.end())
+                .lineToConstantHeading(new Vector2d(-68.5, 11))
                 .build();
-        Trajectory placeWhite2 = robot.trajectoryBuilder(avoid2.end())
-                //CHANGE
-
-                .lineToLinearHeading(new Pose2d(31, 12,Math.toRadians(180)))
+        Trajectory intakeWhite2 = robot.trajectoryBuilder(avoid2.end())
+                .lineToConstantHeading(new Vector2d(-68.5, 11))
                 .build();
-        Trajectory placeWhite3 = robot.trajectoryBuilder(avoid3.end())
+        Trajectory intakeWhite3 = robot.trajectoryBuilder(avoid3.end())
+                .lineToConstantHeading(new Vector2d(-68.5, 11))
+                .build();
 
-                .lineToLinearHeading(new Pose2d(31, 12,Math.toRadians(180)))
+        Trajectory prepWhite1 = robot.trajectoryBuilder(intakeWhite1.end())
+                .lineToLinearHeading(new Pose2d(31, 12, Math.toRadians(180)))
+                .build();
+        Trajectory prepWhite2 = robot.trajectoryBuilder(intakeWhite2.end())
+                .lineToLinearHeading(new Pose2d(31, 12, Math.toRadians(180)))
+                .build();
+        Trajectory prepWhite3 = robot.trajectoryBuilder(intakeWhite3.end())
+                .lineToLinearHeading(new Pose2d(31, 15, Math.toRadians(180)))
+                .build();
+
+        Trajectory placeWhite1 = robot.trajectoryBuilder(prepWhite1.end())
+                .lineToLinearHeading(new Pose2d(42, 43.5,Math.toRadians(180)),
+                        robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
+                .build();
+        Trajectory placeWhite2 = robot.trajectoryBuilder(prepWhite2.end())
+                .lineToLinearHeading(new Pose2d(42, 38,Math.toRadians(180)),
+                        robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(30))
+                .build();
+        Trajectory placeWhite3 = robot.trajectoryBuilder(prepWhite3.end())
+                .lineToLinearHeading(new Pose2d(42, 35,Math.toRadians(180)),
+                        robot.getVelocityConstraint(30, 1.65, 15.06),
+                        robot.getAccelerationConstraint(33))
                 .build();
 
         Trajectory strafeYellow1 = robot.trajectoryBuilder(placeWhite3.end())
-                //CHANGE
-                .lineToLinearHeading(new Pose2d(48, 43.5,Math.toRadians(180)),
-                    robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
+                .lineToConstantHeading(new Vector2d(42, 43.5))
                 .build();
         Trajectory strafeYellow2 = robot.trajectoryBuilder(placeWhite3.end())
-                //CHANGE
-                .lineToLinearHeading(new Pose2d(48, 33.5,Math.toRadians(180)),
-                        robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
+                .lineToConstantHeading(new Vector2d(42, 43.5))
                 .build();
         Trajectory strafeYellow3 = robot.trajectoryBuilder(placeWhite3.end())
-                .lineToLinearHeading(new Pose2d(51.5, 30,Math.toRadians(180)),
-                        robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
+                .lineToConstantHeading(new Vector2d(42, 26))
                 .build();
 
-        Trajectory intakeAllianceYellow1 = robot.trajectoryBuilder(strafeYellow1.end())
-                .splineToConstantHeading(new Vector2d(31.5, 61), Math.toRadians(180),robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
-                .build();
-        Trajectory intakeAllianceYellow2 = robot.trajectoryBuilder(strafeYellow2.end())
-                .lineTo(new Vector2d(48, 35))
-                .splineToConstantHeading(new Vector2d(31.5, 61), Math.toRadians(180), robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
-                .build();
-        Trajectory intakeAllianceYellow3 = robot.trajectoryBuilder(strafeYellow3.end())
-                .splineToConstantHeading(new Vector2d(31.5, 61), Math.toRadians(180),robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
-                .build();
-
-        Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
-                .lineToConstantHeading(new Vector2d(33, 61))
-                .splineToConstantHeading(new Vector2d(49, 38.5), Math.toRadians(0),robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
-                .build();
-        Trajectory placeAllianceYellow2 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
-                .lineToConstantHeading(new Vector2d(33, 61))
-                .splineToConstantHeading(new Vector2d(49, 30.25), Math.toRadians(0),robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
-                .build();
-        Trajectory placeAllianceYellow3 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
-                .lineToConstantHeading(new Vector2d(33, 61))
-                .splineToConstantHeading(new Vector2d(52, 26), Math.toRadians(0),robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
-                .build();
+//        Trajectory intakeAllianceYellow1 = robot.trajectoryBuilder(strafeYellow1.end())
+//                .splineToConstantHeading(new Vector2d(31.5, 61), Math.toRadians(180),robot.getVelocityConstraint(30, 1.65, 15.06),
+//                        robot.getAccelerationConstraint(30))
+//                .build();
+//        Trajectory intakeAllianceYellow2 = robot.trajectoryBuilder(strafeYellow2.end())
+//                .lineTo(new Vector2d(48, 35))
+//                .splineToConstantHeading(new Vector2d(31.5, 61), Math.toRadians(180), robot.getVelocityConstraint(30, 1.65, 15.06),
+//                        robot.getAccelerationConstraint(30))
+//                .build();
+//        Trajectory intakeAllianceYellow3 = robot.trajectoryBuilder(strafeYellow3.end())
+//                .splineToConstantHeading(new Vector2d(31.5, 61), Math.toRadians(180),robot.getVelocityConstraint(30, 1.65, 15.06),
+//                        robot.getAccelerationConstraint(30))
+//                .build();
+//
+//        Trajectory placeAllianceYellow1 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
+//                .lineToConstantHeading(new Vector2d(33, 61))
+//                .splineToConstantHeading(new Vector2d(49, 38.5), Math.toRadians(0),robot.getVelocityConstraint(30, 1.65, 15.06),
+//                        robot.getAccelerationConstraint(30))
+//                .build();
+//        Trajectory placeAllianceYellow2 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
+//                .lineToConstantHeading(new Vector2d(33, 61))
+//                .splineToConstantHeading(new Vector2d(49, 30.25), Math.toRadians(0),robot.getVelocityConstraint(30, 1.65, 15.06),
+//                        robot.getAccelerationConstraint(30))
+//                .build();
+//        Trajectory placeAllianceYellow3 = robot.trajectoryBuilder(intakeAllianceYellow3.end())
+//                .lineToConstantHeading(new Vector2d(33, 61))
+//                .splineToConstantHeading(new Vector2d(52, 26), Math.toRadians(0),robot.getVelocityConstraint(30, 1.65, 15.06),
+//                        robot.getAccelerationConstraint(30))
+//                .build();
 
         waitForStart();
         robot.setPoseEstimate(startPos);
@@ -186,11 +180,11 @@ public class  FarBlue extends EnhancedOpMode {
         deposit.setState(Deposit.PusherState.IN);
         intake.setState(Intake.PositionState.PURP);
         waitT(300);
-        if(elementPos==1) {
+        if (elementPos == 1) {
             robot.followTrajectoryAsync(placePurple1Init);
-        }else if (elementPos==2){
+        } else if (elementPos == 2) {
             robot.followTrajectoryAsync(placePurple2);
-        } else{
+        } else {
             robot.followTrajectoryAsync(placePurple3);
         }
         waitOnDT();
@@ -204,94 +198,98 @@ public class  FarBlue extends EnhancedOpMode {
         waitOnMacro();
 
         waitT(1000);
-        //intake white
-//        if (elementPos==1){
-//            robot.followTrajectory(intakeWhite1);
-//        } else if (elementPos==2){
-//            robot.followTrajectory(intakeWhite2);
-//        } else {
-//            robot.followTrajectory(intakeWhite3);
-////        }
-//        waitOnDT();
-//        intake.setState(Intake.PositionState.FIVE);
-//        intake.setState(Intake.PowerState.INTAKE);
-//
-//        waitT(1000);
 
-        if(elementPos==1) {
+        if (elementPos == 1) {
             robot.followTrajectoryAsync(avoid1);
-        }else if (elementPos==2){
+        } else if (elementPos == 2) {
             //robot.followTrajectoryAsync(avoid2);
             robot.turnAsync(Math.toRadians(90));
-        } else{
+        } else {
             robot.followTrajectoryAsync(avoid3);
-
         }
         waitOnDT();
 
+        //intake white
+        if (elementPos == 1) {
+            robot.followTrajectory(intakeWhite1);
+        } else if (elementPos == 2) {
+            robot.followTrajectory(intakeWhite2);
+        } else {
+            robot.followTrajectory(intakeWhite3);
+        }
+    waitOnDT();
+    intake.setState(Intake.PositionState.FIVE);
+    intake.setState(Intake.PowerState.INTAKE);
+    waitT(2000);
+    intake.setState(Intake.PowerState.OFF);
 
-        //deposit white pixel
-        if(elementPos==1) {
-            robot.followTrajectoryAsync(placeWhite1);
-        }else if (elementPos==2){
-            robot.followTrajectoryAsync(placeWhite2);
-        } else{
-            robot.followTrajectoryAsync(placeWhite3);
-        }
-        waitOnDT();
 
-        scheduler.scheduleTaskList(slideupbase);
-        waitOnMacro();
+    if (elementPos == 1) {
+        robot.followTrajectoryAsync(prepWhite1);
+        waitOnDT();
+        robot.followTrajectoryAsync(placeWhite1);
+    } else if (elementPos == 2) {
+        robot.followTrajectoryAsync(prepWhite2);
+        waitOnDT();
+        robot.followTrajectoryAsync(placeWhite2);
+    } else {
+        robot.followTrajectoryAsync(prepWhite3);
+        waitOnDT();
+        robot.followTrajectoryAsync(placeWhite3);
+    }
+    waitOnDT();
 
-        //strafe and deposit yellow
-        if(elementPos==1) {
-            robot.followTrajectoryAsync(strafeYellow1);
-        }else if (elementPos==2){
-            robot.followTrajectoryAsync(strafeYellow2);
-        } else{
-            robot.followTrajectoryAsync(strafeYellow3);
-        }
-        waitOnDT();
-        deposit.setState(Deposit.PusherState.TWO);
-        waitT(2000);
-        waitOnMacro();
-        deposit.setState(Deposit.PusherState.IN);
-        waitOnMacro();
-        waitT(500);
-        scheduler.scheduleTaskList(slidedown);
-        waitOnMacro();
-        waitT(500);
-        intake.setState(Intake.PositionState.PURP);
-        intake.setState(Intake.PowerState.INTAKE);
-        if(elementPos==1) {
-            robot.followTrajectoryAsync(intakeAllianceYellow1);
-        }else if (elementPos==2){
-            robot.followTrajectoryAsync(intakeAllianceYellow2);
-        } else{
-            robot.followTrajectoryAsync(intakeAllianceYellow3);
-        }
-        waitOnDT();
-        intake.setState(Intake.PositionState.TELE);
-        waitOnMacro();
-        waitT(2500);
-        scheduler.scheduleTaskList(slideupbase2);
-        intake.setState(Intake.PowerState.OFF );
-        waitOnMacro();
-        if(elementPos==1) {
-            robot.followTrajectoryAsync(placeAllianceYellow1);
-        }else if (elementPos==2){
-            robot.followTrajectoryAsync(placeAllianceYellow2);
-        } else{
-            robot.followTrajectoryAsync(placeAllianceYellow3);
-        }
-        waitOnDT();
-        deposit.setState(Deposit.PusherState.TWO);
-        waitT(2000);
-        waitOnMacro();
-        deposit.setState(Deposit.PusherState.IN);
-        waitOnMacro();
-        waitT(500);
-        scheduler.scheduleTaskList(slidedown);
+    scheduler.scheduleTaskList(slideupbase);
+    waitOnMacro();
+    deposit.setState(Deposit.PusherState.ONE);
+    waitT(2000);
+    deposit.setState(Deposit.PusherState.IN);
+    waitOnMacro();
+    waitT(500);
+    //strafe and deposit yellow
+    if (elementPos == 1) {
+        robot.followTrajectoryAsync(strafeYellow1);
+    } else if (elementPos == 2) {
+        robot.followTrajectoryAsync(strafeYellow2);
+    } else {
+        robot.followTrajectoryAsync(strafeYellow3);
+    }
+    waitOnDT();
+
+    scheduler.scheduleTaskList(slidedown);
+    waitOnMacro();
+
+//        intake.setState(Intake.PositionState.PURP);
+//        intake.setState(Intake.PowerState.INTAKE);
+//        if(elementPos==1) {
+//            robot.followTrajectoryAsync(intakeAllianceYellow1);
+//        }else if (elementPos==2){
+//            robot.followTrajectoryAsync(intakeAllianceYellow2);
+//        } else{
+//            robot.followTrajectoryAsync(intakeAllianceYellow3);
+//        }
+//        waitOnDT();
+//        intake.setState(Intake.PositionState.TELE);
+//        waitOnMacro();
+//        waitT(2500);
+//        scheduler.scheduleTaskList(slideupbase2);
+//        intake.setState(Intake.PowerState.OFF );
+//        waitOnMacro();
+//        if(elementPos==1) {
+//            robot.followTrajectoryAsync(placeAllianceYellow1);
+//        }else if (elementPos==2){
+//            robot.followTrajectoryAsync(placeAllianceYellow2);
+//        } else{
+//            robot.followTrajectoryAsync(placeAllianceYellow3);
+//        }
+//        waitOnDT();
+//        deposit.setState(Deposit.PusherState.TWO);
+//        waitT(2000);
+//        waitOnMacro();
+//        deposit.setState(Deposit.PusherState.IN);
+//        waitOnMacro();
+//        waitT(500);
+//        scheduler.scheduleTaskList(slidedown);
 
 //        //get alliance yellow
 //        intake.setState(Intake.PositionState.TWO);
@@ -322,6 +320,7 @@ public class  FarBlue extends EnhancedOpMode {
 //        waitT(500);
 //        scheduler.scheduleTaskList(slidedown);
 
+
     }
 
     @Override
@@ -351,9 +350,9 @@ public class  FarBlue extends EnhancedOpMode {
                 .moduleAction(slides, Slides.SlideState.AUTO_LOW)
                 .awaitPreviousModuleActionCompletion()
                 //.delay(100)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
-                .delay(100)
                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .delay(100)
+                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
                 .executeCode(()->macroRunning=false)
                 .build();
         slideupbase2=builder.createNew()

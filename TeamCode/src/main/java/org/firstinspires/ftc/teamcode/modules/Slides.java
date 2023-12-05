@@ -26,7 +26,7 @@ public class Slides extends Module
     PIDCoefficients standardcoeff, closecoeff, downcoeff;
     public static enum SlideState implements ModuleState
     {
-        GROUND(0), SLIDE_UP(25), AUTO_LOW(125),AUTO_TWO(250), RAISED(300), ROW1(600), ROW2(900), ROW3(0);
+        GROUND(0), SLIDE_UP(25), AUTO_LOW(125),AUTO_TWO(250), RAISED(300), ROW1(700), ROW2(1000), ROW3(0);
 
         double position;
         SlideState(double position)
@@ -44,7 +44,7 @@ public class Slides extends Module
     SlideState state;
 
     public Slides(HardwareMap hardwareMap)
-    {
+    {   
         //super(true);
         super(false);
         slide1 =hardwareMap.get(DcMotorEx.class, "slide1");

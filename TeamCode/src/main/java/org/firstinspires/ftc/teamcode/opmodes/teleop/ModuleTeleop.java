@@ -49,7 +49,7 @@ public class ModuleTeleop extends EnhancedOpMode
     GamepadEx g1, g2;
     ButtonReader slideUpBase, slideUpRow1, slideUpRow2, slideDown, pusher1, pusher2,
             strafeLeft, strafeRight, intake1, intake2, intake3, droneButton;
-    List<Task> slideupbase, slideup1, slideup2, slidedown, slideup1raised, slideup2raised, slideuphalf;
+    List<Task> slideupbase, slideup1, slideup2, slidedown, slideupbaseraised, slideup1raised, slideup2raised, slideuphalf;
     int intakeposition;
     double ninja;
     Intake.PositionState[] intakepositions;
@@ -159,7 +159,7 @@ public class ModuleTeleop extends EnhancedOpMode
 
 
             //slides macro
-            if(slideUpBase.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.SLIDE_UP)&&!slidesMoving)
+            if(slideUpBase.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.HALF)&&!slidesMoving)
             {
                 //deposit.funnimode=true;
                 slides.setOperationState(Module.OperationState.PRESET);
@@ -173,17 +173,23 @@ public class ModuleTeleop extends EnhancedOpMode
 //                slidesMoving=true;
 //                scheduler.scheduleTaskList(slideuphalf);
 //            }
-            else if(slideUpRow1.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.SLIDE_UP)&&!slidesMoving)
+            else if(slideUpRow1.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.HALF)&&!slidesMoving)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slideup1);
             }
-            else if(slideUpRow2.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.SLIDE_UP)&&!slidesMoving)
+            else if(slideUpRow2.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.HALF)&&!slidesMoving)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
                 slidesMoving=true;
                 scheduler.scheduleTaskList(slideup2);
+            }
+            else if(slideUpBase.wasJustPressed()&&slides.getState()!=Slides.SlideState.GROUND&&!slidesMoving)
+            {
+                slides.setOperationState(Module.OperationState.PRESET);
+                slidesMoving=true;
+                scheduler.scheduleTaskList(slideupbaseraised);
             }
             else if(slideUpRow1.wasJustPressed()&&slides.getState()!=Slides.SlideState.GROUND&&!slidesMoving)
             {
@@ -389,7 +395,7 @@ public class ModuleTeleop extends EnhancedOpMode
 
         slideuphalf=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
-                .moduleAction(slides, Slides.SlideState.SLIDE_UP)
+                .moduleAction(slides, Slides.SlideState.HALF)
                 .await(()->slides.currentPosition()>200)
                 .build();
 
@@ -421,6 +427,12 @@ public class ModuleTeleop extends EnhancedOpMode
                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .delay(100)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
+                .build();
+
+        slideupbaseraised=builder.createNew()
+                .moduleAction(slides, Slides.SlideState.RAISED)
+                .awaitPreviousModuleActionCompletion()
+                .executeCode(()->slidesMoving=false)
                 .build();
 
         slideup1raised=builder.createNew()

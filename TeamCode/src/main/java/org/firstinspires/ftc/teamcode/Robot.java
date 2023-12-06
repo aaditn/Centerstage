@@ -148,8 +148,9 @@ public class Robot extends MecanumDrive
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
         teamElementDetector=new TeamElementDetection(l.telemetry);
         camera.setPipeline(teamElementDetector);
-
+        FtcDashboard.getInstance().startCameraStream(camera, 0);
         camera.setMillisecondsPermissionTimeout(5000);
+
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened()

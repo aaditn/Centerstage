@@ -200,7 +200,7 @@ public class CloseRed extends EnhancedOpMode {
                 .executeCode(()->macroRunning=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE)
                 .delay(100)
-                .moduleAction(slides, Slides.SlideState.HALF)
+                .moduleAction(slides, Slides.SlideState.SLIDE_UP)
                 //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .awaitPreviousModuleActionCompletion()
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)

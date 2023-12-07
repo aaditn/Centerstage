@@ -12,7 +12,7 @@ public class DroneLauncher extends Module
 
     public static enum State implements ModuleState
     {
-        RELEASED(0.1), LOCKED(0.6);
+        RELEASED(0.1), LOCKED(0.62);
 
         double position;
         State(double position)

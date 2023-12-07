@@ -127,7 +127,6 @@ public class CloseRed extends EnhancedOpMode {
         robot.setPoseEstimate(startPos);
 
         deposit.setState(Deposit.WristState.TRANSFER);
-        deposit.setState(Deposit.PusherState.EXTENDED);
         intake.setState(Intake.PositionState.PURP);
 
         waitT(1000);

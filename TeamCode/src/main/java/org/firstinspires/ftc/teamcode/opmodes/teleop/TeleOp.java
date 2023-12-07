@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 import java.util.List;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "1 - DRIVER CONTROL (2 PLAYER)")
+//@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "1 - DRIVER CONTROL (2 PLAYER)")
 @Config
 public class TeleOp extends EnhancedOpMode
 {

@@ -30,6 +30,7 @@ public class Deposit extends Module
 
     public static double initwrist =.67;//.93
     public static double cradle = .92;//.99
+    public static double cradle_auto=0.86;
     public static double depositwrist=0.30;//.55
 
     public static double pusherIn=0.04;
@@ -72,7 +73,7 @@ public class Deposit extends Module
 
     public enum WristState implements ModuleState
     {
-        TRANSFER(initwrist), CRADLE(cradle), DEPOSIT(depositwrist);
+        TRANSFER(initwrist), CRADLE(cradle), CRADLE_AUTO(cradle_auto), DEPOSIT(depositwrist);
 
         double pos1;
         WristState(double pos1)

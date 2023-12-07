@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
@@ -100,7 +101,7 @@ public class  FarBlue extends EnhancedOpMode {
                 .lineToConstantHeading(new Vector2d(-67, 11))
                 .build();
         Trajectory intakeWhite3 = robot.trajectoryBuilder(avoid3.end())
-                .lineToConstantHeading(new Vector2d(-65, 12))
+                .lineToConstantHeading(new Vector2d(-65.7, 12))
                 .build();
 
         Trajectory prepWhite1 = robot.trajectoryBuilder(intakeWhite1.end())
@@ -109,8 +110,13 @@ public class  FarBlue extends EnhancedOpMode {
         Trajectory prepWhite2 = robot.trajectoryBuilder(intakeWhite2.end())
                 .lineToLinearHeading(new Pose2d(31, 12, Math.toRadians(180)))
                 .build();
-        Trajectory prepWhite3 = robot.trajectoryBuilder(intakeWhite3.end())
-                .lineToLinearHeading(new Pose2d(31, 15, Math.toRadians(180)))
+        TrajectorySequence prepWhite3 = robot.trajectorySequenceBuilder(intakeWhite3.end())
+                .lineToConstantHeading(new Vector2d(31, 15))
+                .addTemporalMarker(2,()->{scheduler.scheduleTaskList(slideupbase);
+                    intake.setState(Intake.PowerState.OFF);})
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(45,39),Math.toRadians(0))
+                .setReversed(false)
                 .build();
 
         Trajectory placeWhite1 = robot.trajectoryBuilder(prepWhite1.end())
@@ -123,40 +129,58 @@ public class  FarBlue extends EnhancedOpMode {
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(30))
                 .build();
-        Trajectory placeWhite3 = robot.trajectoryBuilder(prepWhite3.end())
-                .lineToLinearHeading(new Pose2d(45, 37,Math.toRadians(180)),
-                        robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(33))
-                .build();
 
-        Trajectory strafeYellow1 = robot.trajectoryBuilder(placeWhite3.end())
+        Trajectory strafeYellow1 = robot.trajectoryBuilder(placeWhite1.end())
+                .lineToConstantHeading(new Vector2d(42, 45))
+                .build();
+        Trajectory strafeYellow2 = robot.trajectoryBuilder(placeWhite2.end())
                 .lineToConstantHeading(new Vector2d(42, 43.5))
                 .build();
-        Trajectory strafeYellow2 = robot.trajectoryBuilder(placeWhite3.end())
-                .lineToConstantHeading(new Vector2d(42, 43.5))
-                .build();
-        Trajectory strafeYellow3 = robot.trajectoryBuilder(placeWhite3.end())
+        Trajectory strafeYellow3 = robot.trajectoryBuilder(prepWhite3.end())
                 .lineToConstantHeading(new Vector2d(45, 27))
                 .build();
 
         Trajectory intakeWhiteTwo1 = robot.trajectoryBuilder(strafeYellow1.end())
-                .lineToConstantHeading(new Vector2d(-20, 11))
+                .lineToConstantHeading(new Vector2d(20, 6))
                 .build();
         Trajectory intakeWhiteTwo2 = robot.trajectoryBuilder(strafeYellow2.end())
-                .lineToConstantHeading(new Vector2d(-20, 11))
+                .lineToConstantHeading(new Vector2d(20, 6))
                 .build();
-        Trajectory intakeWhiteTwo3 = robot.trajectoryBuilder(strafeYellow3.end())
-                .lineToConstantHeading(new Vector2d(-20, 12))
+        TrajectorySequence intakeWhiteTwo3 = robot.trajectorySequenceBuilder(strafeYellow3.end())
+                .splineToConstantHeading(new Vector2d(20, 6),Math.toRadians(180))
+                .lineToConstantHeading(new Vector2d(-105, 8))
                 .build();
+
         Trajectory intakeWhiteThree1 = robot.trajectoryBuilder(intakeWhiteTwo1.end())
-                .lineToConstantHeading(new Vector2d(-67, 11))
+                .lineToConstantHeading(new Vector2d(-90, 11))
                 .build();
         Trajectory intakeWhiteThree2 = robot.trajectoryBuilder(intakeWhiteTwo2.end())
-                .lineToConstantHeading(new Vector2d(-67, 11))
+                .lineToConstantHeading(new Vector2d(-90, 11))
                 .build();
-        Trajectory intakeWhiteThree3 = robot.trajectoryBuilder(intakeWhiteTwo3.end())
-                .lineToConstantHeading(new Vector2d(-65, 12))
+
+        Trajectory prepWhiteTwo1 = robot.trajectoryBuilder(intakeWhiteThree1.end())
+                .lineToLinearHeading(new Pose2d(31, 12, Math.toRadians(180)))
                 .build();
+        Trajectory prepWhiteTwo2 = robot.trajectoryBuilder(intakeWhiteThree2.end())
+                .lineToLinearHeading(new Pose2d(31, 12, Math.toRadians(180)))
+                .build();
+        TrajectorySequence prepWhiteTwo3 = robot.trajectorySequenceBuilder(intakeWhiteTwo3.end())
+                .addTemporalMarker(1,()->{
+                    intake.setState(Intake.PowerState.EXTAKE);})
+                .lineToConstantHeading(new Vector2d(20, 8))
+                .addTemporalMarker(2,()->{scheduler.scheduleTaskList(slideupbase2);
+                intake.setState(Intake.PowerState.OFF);})
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(45,40),Math.toRadians(0))
+                .setReversed(false)
+                .build();
+        Trajectory strafeYellowTwo1 = robot.trajectoryBuilder(prepWhiteTwo1.end())
+                .lineToConstantHeading(new Vector2d(42, 43.5))
+                .build();
+        Trajectory strafeYellowTwo2 = robot.trajectoryBuilder(prepWhiteTwo2.end())
+                .lineToConstantHeading(new Vector2d(42, 43.5))
+                .build();
+
         waitForStart();
         robot.setPoseEstimate(startPos);
 
@@ -177,9 +201,9 @@ public class  FarBlue extends EnhancedOpMode {
         waitOnDT();
 
         intake.setState(Intake.PositionState.HIGH);
-        waitOnMacro();
+        //waitOnMacro();
 
-        waitT(500);
+        waitT(200);
 
         if (elementPos == 1) {
             robot.followTrajectoryAsync(avoid1);
@@ -201,34 +225,33 @@ public class  FarBlue extends EnhancedOpMode {
         }
     waitOnDT();
     intake.setState(Intake.PositionState.FIVE);
-    waitT(500);
     intake.setState(Intake.PowerState.INTAKE);
-    waitT(1700);
+    waitT(1000);
     intake.setState(Intake.PowerState.EXTAKE);
 
     if (elementPos == 1) {
         robot.followTrajectoryAsync(prepWhite1);
         waitOnDT();
 
+        scheduler.scheduleTaskList(slideupbase);
         intake.setState(Intake.PowerState.OFF);
         robot.followTrajectoryAsync(placeWhite1);
     } else if (elementPos == 2) {
         robot.followTrajectoryAsync(prepWhite2);
         waitOnDT();
+
+        scheduler.scheduleTaskList(slideupbase);
         intake.setState(Intake.PowerState.OFF);
         robot.followTrajectoryAsync(placeWhite2);
     } else {
-        robot.followTrajectoryAsync(prepWhite3);
-        waitOnDT();
-        intake.setState(Intake.PowerState.OFF);
-        robot.followTrajectoryAsync(placeWhite3);
+        robot.followTrajectorySequenceAsync(prepWhite3);
     }
     waitOnDT();
 
-    scheduler.scheduleTaskList(slideupbase);
-    waitOnMacro(); //buh is this even doing anything T-T
+        waitOnMacro();
+    //buh is this even doing anything T-T
     deposit.setState(Deposit.PusherState.ONE);
-    waitT(750);
+    waitT(500);
     //strafe and deposit yellow
     if (elementPos == 1) {
         robot.followTrajectoryAsync(strafeYellow1);
@@ -240,7 +263,7 @@ public class  FarBlue extends EnhancedOpMode {
     waitOnDT();
 
     deposit.setState(Deposit.PusherState.TWO);
-    waitT(750);
+    waitT(500);
     //park
 
     scheduler.scheduleTaskList(slidedown);
@@ -252,25 +275,42 @@ public class  FarBlue extends EnhancedOpMode {
         } else if (elementPos == 2) {
             robot.followTrajectory(intakeWhiteTwo2);
         } else {
-            robot.followTrajectory(intakeWhiteTwo3);
+            robot.followTrajectorySequence(intakeWhiteTwo3);
         }
         waitOnDT();
+
         if (elementPos == 1) {
             robot.followTrajectory(intakeWhiteThree1);
         } else if (elementPos == 2) {
             robot.followTrajectory(intakeWhiteThree2);
         } else {
-            robot.followTrajectory(intakeWhiteThree3);
         }
-        intake.setState(Intake.PositionState.FOUR);
-        waitT(500);
-        intake.setState(Intake.PowerState.INTAKE);
-        waitT(1000);
         intake.setState(Intake.PositionState.THREE);
-        waitT(1000);
-        intake.setState(Intake.PowerState.EXTAKE);
-        waitT(1700);
+        intake.setState(Intake.PowerState.INTAKE);
+        waitT(250);
+        intake.setState(Intake.PositionState.TWO);
+        waitT(750);
+        if (elementPos == 1) {
+            robot.followTrajectory(prepWhiteTwo1);
+        } else if (elementPos == 2) {
+            robot.followTrajectory(prepWhiteTwo2);
+        } else {
+            robot.followTrajectorySequence(prepWhiteTwo3);
+        }
+        waitOnDT();
+        if (elementPos == 1) {
+            robot.followTrajectory(strafeYellowTwo1);
+        } else if (elementPos == 2) {
+            robot.followTrajectory(strafeYellowTwo2);
+        } else {
+        }
+        deposit.setState(Deposit.PusherState.ONE);
+        waitT(250);
+        deposit.setState(Deposit.PusherState.TWO);
+        waitT(500);
 
+        scheduler.scheduleTaskList(slidedown);
+        waitOnMacro();
     }
 
     @Override
@@ -291,10 +331,10 @@ public class  FarBlue extends EnhancedOpMode {
 
         slideupbase=builder.createNew()
                 .executeCode(()->macroRunning=true)
-                .moduleAction(deposit, Deposit.WristState.CRADLE)
+                .moduleAction(deposit, Deposit.WristState.CRADLE_AUTO)
                 .delay(200)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
-                .delay(300)
+                //.moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
+                //.delay(300)
                 .moduleAction(slides, Slides.SlideState.AUTO_LOW)
                 //.awaitPreviousModuleActionCompletion()
                 .delay(200)
@@ -306,10 +346,10 @@ public class  FarBlue extends EnhancedOpMode {
                 .build();
         slideupbase2=builder.createNew()
                 .executeCode(()->macroRunning=true)
-                .moduleAction(deposit, Deposit.WristState.CRADLE)
+                .moduleAction(deposit, Deposit.WristState.CRADLE_AUTO)
                 .delay(200)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
-                .delay(300)
+                //.moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
+                //.delay(300)
                 .moduleAction(slides, Slides.SlideState.AUTO_TWO)
                 .awaitPreviousModuleActionCompletion()
                 //.delay(100)

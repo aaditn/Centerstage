@@ -38,6 +38,8 @@ public class  FarBlue extends EnhancedOpMode {
     List<Task> slideupbase;
     List<Task> slideupbase2;
     List<Task> slidedown;
+    List<Task> shiftdeposit;
+    List<Task> colorsensorcorrection;
     boolean macroRunning=false;
 
     public void waitOnDT()
@@ -101,7 +103,7 @@ public class  FarBlue extends EnhancedOpMode {
                 .lineToConstantHeading(new Vector2d(-67, 11))
                 .build();
         Trajectory intakeWhite3 = robot.trajectoryBuilder(avoid3.end())
-                .lineToConstantHeading(new Vector2d(-65.7, 12))
+                .lineToConstantHeading(new Vector2d(-65, 12))
                 .build();
 
         Trajectory prepWhite1 = robot.trajectoryBuilder(intakeWhite1.end())
@@ -111,11 +113,12 @@ public class  FarBlue extends EnhancedOpMode {
                 .lineToLinearHeading(new Pose2d(31, 12, Math.toRadians(180)))
                 .build();
         TrajectorySequence prepWhite3 = robot.trajectorySequenceBuilder(intakeWhite3.end())
-                .lineToConstantHeading(new Vector2d(31, 15))
-                .addTemporalMarker(2,()->{scheduler.scheduleTaskList(slideupbase);
-                    intake.setState(Intake.PowerState.OFF);})
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(45,39),Math.toRadians(0))
+                .lineTo(new Vector2d(20, 15))
+                //.addTemporalMarker(2,()->{scheduler.scheduleTaskList(slideupbase);
+                  //  intake.setState(Intake.PowerState.OFF);})
+
+                .splineToConstantHeading(new Vector2d(44,39),Math.toRadians(0))
                 .setReversed(false)
                 .build();
 
@@ -137,7 +140,7 @@ public class  FarBlue extends EnhancedOpMode {
                 .lineToConstantHeading(new Vector2d(42, 43.5))
                 .build();
         Trajectory strafeYellow3 = robot.trajectoryBuilder(prepWhite3.end())
-                .lineToConstantHeading(new Vector2d(45, 27))
+                .lineToConstantHeading(new Vector2d(44, 27))
                 .build();
 
         Trajectory intakeWhiteTwo1 = robot.trajectoryBuilder(strafeYellow1.end())
@@ -147,8 +150,8 @@ public class  FarBlue extends EnhancedOpMode {
                 .lineToConstantHeading(new Vector2d(20, 6))
                 .build();
         TrajectorySequence intakeWhiteTwo3 = robot.trajectorySequenceBuilder(strafeYellow3.end())
-                .splineToConstantHeading(new Vector2d(20, 6),Math.toRadians(180))
-                .lineToConstantHeading(new Vector2d(-105, 8))
+                .splineToConstantHeading(new Vector2d(20, 2),Math.toRadians(180))
+                .lineTo(new Vector2d(-103.5, 2))
                 .build();
 
         Trajectory intakeWhiteThree1 = robot.trajectoryBuilder(intakeWhiteTwo1.end())
@@ -165,13 +168,13 @@ public class  FarBlue extends EnhancedOpMode {
                 .lineToLinearHeading(new Pose2d(31, 12, Math.toRadians(180)))
                 .build();
         TrajectorySequence prepWhiteTwo3 = robot.trajectorySequenceBuilder(intakeWhiteTwo3.end())
+                .setReversed(true)
                 .addTemporalMarker(1,()->{
                     intake.setState(Intake.PowerState.EXTAKE);})
-                .lineToConstantHeading(new Vector2d(20, 8))
+                .lineTo(new Vector2d(20, 2))
                 .addTemporalMarker(2,()->{scheduler.scheduleTaskList(slideupbase2);
                 intake.setState(Intake.PowerState.OFF);})
-                .setReversed(true)
-                .splineToConstantHeading(new Vector2d(45,40),Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(45.5,40),Math.toRadians(0))
                 .setReversed(false)
                 .build();
         Trajectory strafeYellowTwo1 = robot.trajectoryBuilder(prepWhiteTwo1.end())
@@ -231,22 +234,26 @@ public class  FarBlue extends EnhancedOpMode {
 
     if (elementPos == 1) {
         robot.followTrajectoryAsync(prepWhite1);
+        scheduler.scheduleTaskList(slideupbase);
         waitOnDT();
 
-        scheduler.scheduleTaskList(slideupbase);
         intake.setState(Intake.PowerState.OFF);
         robot.followTrajectoryAsync(placeWhite1);
     } else if (elementPos == 2) {
         robot.followTrajectoryAsync(prepWhite2);
+        scheduler.scheduleTaskList(slideupbase);
         waitOnDT();
 
-        scheduler.scheduleTaskList(slideupbase);
         intake.setState(Intake.PowerState.OFF);
         robot.followTrajectoryAsync(placeWhite2);
     } else {
         robot.followTrajectorySequenceAsync(prepWhite3);
+        scheduler.scheduleTaskList(slideupbase);
+        //scheduler.scheduleTaskList(colorsensorcorrection);
     }
+    scheduler.scheduleTaskList(shiftdeposit);
     waitOnDT();
+    robot.waitingForCS=false;
 
         waitOnMacro();
     //buh is this even doing anything T-T
@@ -262,6 +269,7 @@ public class  FarBlue extends EnhancedOpMode {
     }
     waitOnDT();
 
+    waitT(100);
     deposit.setState(Deposit.PusherState.TWO);
     waitT(500);
     //park
@@ -296,8 +304,10 @@ public class  FarBlue extends EnhancedOpMode {
             robot.followTrajectory(prepWhiteTwo2);
         } else {
             robot.followTrajectorySequence(prepWhiteTwo3);
+            //scheduler.scheduleTaskList(colorsensorcorrection);
         }
         waitOnDT();
+        robot.waitingForCS=false;
         if (elementPos == 1) {
             robot.followTrajectory(strafeYellowTwo1);
         } else if (elementPos == 2) {
@@ -329,7 +339,30 @@ public class  FarBlue extends EnhancedOpMode {
         intake.init();
         deposit.init();
 
+
+        colorsensorcorrection=builder.createNew()
+                .executeCode(()->robot.waitingForCS=true)
+                .await(()->robot.tapeDetected||!robot.waitingForCS)
+                .executeCode(()->
+                {
+                    if(robot.waitingForCS)
+                    {
+                        robot.setPoseEstimate(new Pose2d(40, robot.getPoseEstimate().getY(), robot.getPoseEstimate().getHeading()));
+                        Context.debug++;
+
+                    }
+                    robot.waitingForCS=false;
+                })
+                .build();
+
+        shiftdeposit=builder.createNew()
+                .await(()->robot.getPoseEstimate().getY()>30)
+                .moduleAction(deposit,Deposit.RotationState.DEPOSIT_HIGH)
+                .build();
+
         slideupbase=builder.createNew()
+                .delay(2000)
+                .moduleAction(intake, Intake.PowerState.OFF)
                 .executeCode(()->macroRunning=true)
                 .moduleAction(deposit, Deposit.WristState.CRADLE_AUTO)
                 .delay(200)
@@ -340,7 +373,7 @@ public class  FarBlue extends EnhancedOpMode {
                 .delay(200)
                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .delay(100)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
+                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_Q3)
                 .delay(300)
                 .executeCode(()->macroRunning=false)
                 .build();

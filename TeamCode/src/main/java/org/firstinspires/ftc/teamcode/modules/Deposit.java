@@ -23,19 +23,20 @@ public class Deposit extends Module
     public static double deposit1Mid = (transfer1+deposit1High)*3/8;//0.94;//.83
     public static double deposit2Mid = (transfer2+deposit2High)*3/8;//0.11;//.22
 
-    public static double deposit1Quarter3=(transfer1+deposit1High)*3/4;
-    public static double deposit2Quarter3=(transfer2+deposit2High)*3/4;
+    public static double deposit1Quarter3=0.1;
+    public static double deposit2Quarter3=0.9;
     public static double deposit1Low= 1;//0.98;//.83
     public static double deposit2Low= 0.05;//0.07;//.22
 
     public static double initwrist =.67;//.93
     public static double cradle = .92;//.99
-    public static double cradle_auto=0.86;
+    public static double cradle_auto=0.98;
     public static double depositwrist=0.30;//.55
 
     public static double pusherIn=0.04;
     public static double pusherExtended =0.16;
     public static double pusherOne=0.25;
+    public static double pusherOneAuto=0.28;
     public static double pusherTwo=0.35;
     public static double pusherHalf= 0.265;
     int debugCounter=0;
@@ -90,7 +91,7 @@ public class Deposit extends Module
 
     public static enum PusherState implements  ModuleState
     {
-        IN(pusherIn),EXTENDED(pusherExtended), ONE(pusherOne), TWO(pusherTwo), HALF(pusherHalf);
+        IN(pusherIn),EXTENDED(pusherExtended), ONE(pusherOne), TWO(pusherTwo), ONE_AUTO(pusherOneAuto), HALF(pusherHalf);
 
         double position;
         PusherState(double position)

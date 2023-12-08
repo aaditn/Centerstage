@@ -32,6 +32,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityCons
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -108,6 +109,10 @@ public class Robot extends MecanumDrive
     public TeamElementDetection teamElementDetector;
     Pose2d localDrivePowers;
     ElapsedTime timer;
+    public boolean waitingForCS=false;
+    public boolean tapeDetected=false;
+    ColorRangeSensor columnCS, droneCS;
+
 
 
     public Robot(LinearOpMode l)
@@ -128,6 +133,7 @@ public class Robot extends MecanumDrive
         }
         //teamElementDetector=new TeamElementDetection(l.telemetry);
 
+        waitingForCS=false;
         dtInit();
         
 
@@ -238,6 +244,12 @@ public class Robot extends MecanumDrive
                 follower, HEADING_PID, batteryVoltageSensor,
                 lastEncPositions, lastEncVels, lastTrackingEncPositions, lastTrackingEncVels
         );
+
+        if(!Context.isTele)
+        {
+            columnCS=hardwareMap.get(ColorRangeSensor.class, "columnCS");
+            droneCS=hardwareMap.get(ColorRangeSensor.class, "droneCS");
+        }
     }
 
     public void initLoop()
@@ -247,11 +259,26 @@ public class Robot extends MecanumDrive
         write();
         //loop whatever else u want
     }
+
     public void primaryLoop()
     {
         tel.update();
         read();
         write();
+
+        if(waitingForCS&&!Context.isTele)
+        {
+            if(droneCS.getLightDetected()>0.16||columnCS.getLightDetected()>0.16)
+            {
+                tapeDetected=true;
+            }
+            Context.tel.addData("Drone CS Light Detected", droneCS.getLightDetected());
+            Context.tel.addData("Column CS Light Detected", columnCS.getLightDetected());
+        }
+        else
+        {
+            tapeDetected=false;
+        }
 
         if(isBusy()||!Context.isTele)
         {
@@ -267,6 +294,7 @@ public class Robot extends MecanumDrive
             Log.d(null, "Status: " + Context.statusError);
             timer.reset();
         }
+        Context.tel.addData("debug", Context.debug);
         //loop whatever else u want
     }
 
@@ -378,7 +406,7 @@ public class Robot extends MecanumDrive
         updatePoseEstimate();
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         if (signal != null) setDriveSignal(signal);
-        Context.debug++;
+        //Context.debug++;
     }
 
     public void waitForIdle() {

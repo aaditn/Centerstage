@@ -75,7 +75,6 @@ public class ModuleTeleop extends EnhancedOpMode
             {
                 reader.readValue();
             }
-            telemetry.addData("CS1",deposit.firstPixel.getDistance(DistanceUnit.MM));
             //pusher buttons
             if(pusher1.wasJustPressed()||pusher2.wasJustPressed())
             {
@@ -460,7 +459,7 @@ public class ModuleTeleop extends EnhancedOpMode
                 .executeCode(()->slidesMoving=false)
                 .build();
 
-
+        robot.waitingForCS=true;
     }
 
     @Override
@@ -483,6 +482,7 @@ public class ModuleTeleop extends EnhancedOpMode
         Context.tel.addData("HangPow", hang.getPower());
         Context.tel.addData("HangPos", hang.getCurrentPosition());
         Context.tel.addData("Drone pos", droneLauncher.getCurrentPosition());
+        Context.tel.addData("CS1",deposit.firstPixel.getDistance(DistanceUnit.MM));
         //Context.tel.addData("Robot Current", robot.getCurrent());
     }
 

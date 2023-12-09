@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.util.Context;
 @Config
 public class Deposit extends Module
 {
-    public static double transfer1=0.99;
-    public static double transfer2=0.01;
+    public static double transfer1=0.94;
+    public static double transfer2=0.06;
 
     public static double deposit1High= 0;//0.91;//.83
     public static double deposit2High = 1;//0.14;//.22
@@ -28,10 +28,10 @@ public class Deposit extends Module
     public static double deposit1Low= 1;//0.98;//.83
     public static double deposit2Low= 0.05;//0.07;//.22
 
-    public static double initwrist =.71;//.93
-    public static double cradle = .92;//.99
-    public static double cradle_auto=0.98;
-    public static double depositwrist=0.30;//.55
+    public static double initwrist =0.81;//.77, .71, .93
+    public static double cradle = 0.92;//.92, .99
+    public static double cradle_auto=0.98; // 0.98
+    public static double depositwrist=0.47;//0.3 .55
 
     public static double pusherIn=0; // 0.04
     public static double pusherExtendedAuto=0.12;

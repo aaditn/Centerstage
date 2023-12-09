@@ -112,7 +112,7 @@ public class  FarBlue extends EnhancedOpMode {
                         robot.getAccelerationConstraint(30))
                 .build();
         Trajectory placeWhite2 = robot.trajectoryBuilder(prepWhite2.end())
-                .lineToLinearHeading(new Pose2d(48, 33.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(48, 37,Math.toRadians(180)),
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(30))
                 .build();
@@ -139,7 +139,7 @@ public class  FarBlue extends EnhancedOpMode {
 
         Trajectory goStackTwo2 = robot.trajectoryBuilder(goStackOne2.end())
 
-                .splineToConstantHeading(new Vector2d(-61,10),Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(-61.5,11.5),Math.toRadians(180))
                 .build();
 
         Trajectory goStackTwo3 = robot.trajectoryBuilder(goStackOne3.end())
@@ -258,7 +258,7 @@ public class  FarBlue extends EnhancedOpMode {
         waitOnDT();
         intake.setState(Intake.PositionState.FIVE);
         waitT(500);
-        intake.setState(Intake.PowerState.INTAKE);
+        intake.setState(Intake.PowerState.INTAKE_AUTO);
         waitT(900);
         intake.setState(Intake.PositionState.FOUR);
         waitOnMacro();
@@ -294,7 +294,7 @@ public class  FarBlue extends EnhancedOpMode {
         }
 
 
-        waitT(1500);
+        waitT(2000);
         deposit.setState(Deposit.PusherState.HALF);
         waitT(1200);
         deposit.setState(Deposit.PusherState.IN);

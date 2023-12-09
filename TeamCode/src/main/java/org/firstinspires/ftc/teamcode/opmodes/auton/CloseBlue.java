@@ -58,7 +58,7 @@ public class CloseBlue extends EnhancedOpMode {
 
     public void waitOnMacro()
     {
-        while(macroRunning&&opModeIsActive())
+        while(macroRunning&&opModeIsActive() && !isStopRequested())
         {
             //stall
         }
@@ -122,7 +122,7 @@ public class CloseBlue extends EnhancedOpMode {
         robot.setPoseEstimate(startPos);
 
         deposit.setState(Deposit.WristState.TRANSFER);
-        deposit.setState(Deposit.PusherState.EXTENDED);
+        deposit.setState(Deposit.PusherState.IN);
         intake.setState(Intake.PositionState.PURP);
 
 
@@ -152,6 +152,7 @@ public class CloseBlue extends EnhancedOpMode {
 
         scheduler.scheduleTaskList(slideupbase);
 
+        waitOnMacro();
         if(elementPos==1) {
             robot.followTrajectoryAsync(yellowPixel1);
         } else if (elementPos==2){
@@ -160,13 +161,13 @@ public class CloseBlue extends EnhancedOpMode {
             robot.followTrajectoryAsync(yellowPixel3);
         }
 
-        waitOnMacro();
         waitOnDT();
+
+        waitT(2000);
 
         deposit.setState(Deposit.PusherState.TWO);
 
         waitT(1000);
-
         scheduler.scheduleTaskList(slidedown);
 
         waitOnMacro();
@@ -203,30 +204,36 @@ public class CloseBlue extends EnhancedOpMode {
 
         intake.init();
         deposit.init();
+        deposit.setState(Deposit.PusherState.IN);
 
         slideupbase=builder.createNew()
+               // .delay(2000)
+                .moduleAction(intake, Intake.PowerState.OFF)
                 .executeCode(()->macroRunning=true)
-                .moduleAction(deposit, Deposit.WristState.CRADLE)
-                .delay(100)
-                .moduleAction(slides, Slides.SlideState.HALF)
-                //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
-                .awaitPreviousModuleActionCompletion()
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
-                .delay(100)
+                .moduleAction(deposit, Deposit.WristState.CRADLE_AUTO)
+                .delay(200)
+                //.moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
+                //.delay(300)
+                .moduleAction(slides, Slides.SlideState.AUTO_LOW)
+                //.awaitPreviousModuleActionCompletion()
+                .delay(200)
                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .delay(100)
+                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
+                .delay(300)
                 .executeCode(()->macroRunning=false)
                 .build();
 
         slidedown=builder.createNew()
                 .executeCode(()->macroRunning=true)
                 .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
-                .delay(300)
+                .delay(400)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .moduleAction(deposit, Deposit.PusherState.IN)
-                .await(()->slides.currentPosition()<100)
+                .await(()->slides.currentPosition()<120)
                 .moduleAction(deposit, Deposit.RotationState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.TRANSFER)
-                .await(()->slides.getStatus()==Module.Status.IDLE)
+                .await(()->slides.getStatus()== Module.Status.IDLE)
                 .executeCode(()->macroRunning=false)
                 .build();
     }

@@ -219,10 +219,10 @@ public class ModuleTeleop extends EnhancedOpMode
                 if(slidestimer.milliseconds()>150)
                 {
                     double newTarget=slides.getTargetPosition() + (30*Math.signum(gamepad2.left_stick_y)*-1);
-                    if(newTarget<300)
-                    {
-                        newTarget=300;
-                    }
+//                    if(newTarget<300)
+//                    {
+//                        newTarget=300;
+//                    }
                     slides.manualChange(newTarget);
 
                     slidestimer.reset();

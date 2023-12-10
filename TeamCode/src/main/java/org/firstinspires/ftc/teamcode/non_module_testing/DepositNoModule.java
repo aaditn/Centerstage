@@ -10,21 +10,24 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 @Config
 public class DepositNoModule extends EnhancedOpMode
 {
-    Servo rl, rr, p, wrist;
+    Servo rl, rr, pusher, wrist;
 
 
 
-    public static double pusherInit=0;
-
-    public static double pusherExtended=0.18;
+    public static double pusherIn =0;
+    public static double pusherOne=0.25;
+    public static double pusherHalf= 0.265;
+    public static double pusherTwo=0.35;
     public static double transfer1=0.96;
     public static double transfer2=0.04;
 
-    public static double deposit1High= 0.01;//0.91;//.83
-    public static double deposit2High = 0.99;//0.14;//.22
+    public static double deposit1High= 0.01;
+    public static double deposit2High = 0.99;
 
-    public static double wristInit = 0.73;
-    public static double wristDeposit = 0.34;
+    public static double wristInit = 0.795;
+    public static double wristDeposit = 0.47;
+    int pusherPos = 0;
+    double[] pusherPositions = {pusherIn, pusherOne, pusherHalf, pusherTwo};
 
     @Override
     public void linearOpMode() {
@@ -38,28 +41,34 @@ public class DepositNoModule extends EnhancedOpMode
         rr = hardwareMap.get(Servo.class, "rightRotator");
         rr.setDirection(Servo.Direction.REVERSE);
         rl.setDirection(Servo.Direction.REVERSE);
-        p = hardwareMap.get(Servo.class, "pusher");
+        pusher = hardwareMap.get(Servo.class, "pusher");
         wrist = hardwareMap.get(Servo.class, "wrist");
     }
 
     @Override
     public void primaryLoop() {
-        if(gamepad1.a)
+        if(gamepad2.a)
         {
             rr.setPosition(deposit1High);
             rl.setPosition(deposit2High);
             wrist.setPosition(wristDeposit);
         }
-        else if(gamepad1.b)
+        else if(gamepad2.b)
         {
             rr.setPosition(transfer1);
             rl.setPosition(transfer2);
             wrist.setPosition(wristInit);
-            p.setPosition(pusherExtended);
         }
-        else if(gamepad1.x)
+        if(gamepad2.x)
         {
-            p.setPosition(pusherExtended);
+            if(pusherPos > pusherPositions.length-1)
+            {
+                pusherPos = 0;
+            }
+            else {
+                pusherPos++;
+            }
+            pusher.setPosition(pusherPositions[pusherPos]);
         }
     }
 }

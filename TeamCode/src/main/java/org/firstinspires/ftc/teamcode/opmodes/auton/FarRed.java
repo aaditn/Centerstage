@@ -107,12 +107,12 @@ public class  FarRed extends EnhancedOpMode {
                 .build();
 
         Trajectory placeWhite1 = robot.trajectoryBuilder(prepWhite1.end())
-                .lineToLinearHeading(new Pose2d(51, -29.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(51, -28.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(30))
                 .build();
         Trajectory placeWhite2 = robot.trajectoryBuilder(prepWhite2.end())
-                .lineToLinearHeading(new Pose2d(51, -33.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(51, -34.25,Math.toRadians(180)),
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(30))
                 .build();

@@ -48,7 +48,8 @@ public class ModuleTeleop extends EnhancedOpMode
     KeyReader[] keyReaders;
     GamepadEx g1, g2;
     ButtonReader slideUpBase, slideUpRow1, slideUpRow2, slideDown, pusher1, pusher2,
-            strafeLeft, strafeRight, intake1, intake2, intake3, droneButton;
+            strafeLeft, strafeRight, intake1, intake2, intake3, intakeFive, intakeFour, intakeThree, intakeTwo,
+            droneButton1;
     List<Task> slideupbase, slideup1, slideup2, slidedown, slideupbaseraised, slideup1raised, slideup2raised, slideuphalf;
     int intakeposition;
     double ninja;
@@ -133,6 +134,23 @@ public class ModuleTeleop extends EnhancedOpMode
                 intake.setState(intakepositions[intakeposition]);
             }
 
+            if (intakeFive.wasJustPressed())
+            {
+                intake.setState(Intake.PositionState.FIVE);
+            }
+            else if (intakeFour.wasJustPressed())
+            {
+                intake.setState(Intake.PositionState.FOUR);
+            }
+            else if (intakeThree.wasJustPressed())
+            {
+                intake.setState(Intake.PositionState.THREE);
+            }
+            else if (intakeTwo.wasJustPressed())
+            {
+                intake.setState(Intake.PositionState.TWO);
+            }
+
 
 
             /*//set intake to high or low
@@ -146,7 +164,7 @@ public class ModuleTeleop extends EnhancedOpMode
 
              */
 
-            if (droneButton.wasJustPressed()) {
+            if (droneButton1.wasJustPressed()) {
                 if(droneLauncher.getState()==DroneLauncher.State.LOCKED) {
                     droneLauncher.setState(DroneLauncher.State.RELEASED);
                 }
@@ -330,6 +348,7 @@ public class ModuleTeleop extends EnhancedOpMode
         droneLauncher=robot.droneLauncher;
 
         intake.init();
+        intake.setState(Intake.PositionState.TELE);
         deposit.init();
         droneLauncher.init();
         intake.setOperationState(Module.OperationState.MANUAL);
@@ -355,18 +374,22 @@ public class ModuleTeleop extends EnhancedOpMode
                 .build();
 
         keyReaders= new KeyReader[]{
-                slideUpBase = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_LEFT),
+                slideUpBase= new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_LEFT),
                 slideUpRow1= new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_UP),
                 slideUpRow2=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_RIGHT),
-                slideDown = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_DOWN),
+                slideDown= new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_DOWN),
                 pusher1=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
                 pusher2=new ToggleButtonReader(g2, GamepadKeys.Button.X),
                 intake1=new ToggleButtonReader(g2, GamepadKeys.Button.A),
                 intake2=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
                 intake3=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
+                intakeFive=new ToggleButtonReader(g1, GamepadKeys.Button.Y),
+                intakeFour=new ToggleButtonReader(g1, GamepadKeys.Button.B),
+                intakeThree=new ToggleButtonReader(g1, GamepadKeys.Button.X),
+                intakeTwo=new ToggleButtonReader(g1, GamepadKeys.Button.A),
                 strafeLeft=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_RIGHT),
                 strafeRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT),
-                droneButton=new ToggleButtonReader(g1, GamepadKeys.Button.Y)
+                droneButton1=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_DOWN)
         };
 
      //   intake.setState(intakepositions[0]);

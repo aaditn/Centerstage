@@ -28,18 +28,18 @@ public class Deposit extends Module
     public static double deposit1Low= 1;//0.98;//.83
     public static double deposit2Low= 0.05;//0.07;//.22
 
-    public static double initwrist =0.81;//.77, .71, .93
-    public static double cradle = 0.92;//.92, .99
-    public static double cradle_auto=0.98; // 0.98
-    public static double depositwrist=0.47;//0.3 .55
+    public static double initwrist =0.81;
+    public static double cradle = 0.92;
+    public static double cradle_auto=0.98;
+    public static double depositwrist=0.47;
 
-    public static double pusherIn=0; // 0.04
+    public static double pusherIn=0;
     public static double pusherExtendedAuto=0.12;
     public static double pusherExtended =0.16;
-    public static double pusherOne=0.25;
-    public static double pusherOneAuto=0.28;
-    public static double pusherTwo=0.35;
-    public static double pusherHalf= 0.265;
+    public static double pusherOne=0.17;//.25
+    public static double pusherOneAuto=0.2;//.28
+    public static double pusherTwo=0.27;//.35
+    public static double pusherHalf= 0.185;//.265
     int debugCounter=0;
 
     public boolean funnimode=true;
@@ -164,6 +164,7 @@ public class Deposit extends Module
         super.telemetryUpdate();
         //Context.tel.addData("left current", leftRotator.);
         Context.tel.addData("Left position", leftRotator.getPosition());
+        Context.tel.addData("pusher pos", pusherPos);
         Context.tel.addData("internal update called counter", debugCounter);
     }
 

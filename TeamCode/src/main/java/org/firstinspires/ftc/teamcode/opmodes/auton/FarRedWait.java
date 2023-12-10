@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
@@ -22,8 +21,8 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import java.util.List;
 
 @Config
-@Autonomous(name= "Far Red")
-public class  FarRed extends EnhancedOpMode {
+@Autonomous(name= "Far Red Wait")
+public class FarRedWait extends EnhancedOpMode {
 
     Robot robot;
 
@@ -121,62 +120,18 @@ public class  FarRed extends EnhancedOpMode {
                         robot.getVelocityConstraint(35, 1.65, 15.06),
                         robot.getAccelerationConstraint(35))
                 .build();
-        Trajectory goStackOne1 = robot.trajectoryBuilder(placeWhite1.end())
-                .lineToConstantHeading(new Vector2d(20, -10))
+        Trajectory park1 = robot.trajectoryBuilder(placeWhite1.end())
+                .strafeRight(24)
                 .build();
-
-        Trajectory goStackOne2 = robot.trajectoryBuilder(placeWhite2.end())
-                .lineToConstantHeading(new Vector2d(20, -10))
+        Trajectory park2 = robot.trajectoryBuilder(placeWhite1.end())
+                .strafeRight(18)
                 .build();
-
-        Trajectory goStackOne3 = robot.trajectoryBuilder(placeWhite3.end())
-                .lineToConstantHeading(new Vector2d(20, -7))
+        Trajectory park3 = robot.trajectoryBuilder(placeWhite1.end())
+                .strafeRight(12)
                 .build();
-        Trajectory goStackTwo1 = robot.trajectoryBuilder(goStackOne1.end())
-
-                .splineToConstantHeading(new Vector2d(-58.5,-10),Math.toRadians(180))
-                .build();
-
-        Trajectory goStackTwo2 = robot.trajectoryBuilder(goStackOne2.end())
-
-                .splineToConstantHeading(new Vector2d(-59,-10),Math.toRadians(180))
-                .build();
-
-        Trajectory goStackTwo3 = robot.trajectoryBuilder(goStackOne3.end())
-
-                .splineToConstantHeading(new Vector2d(-62,-10),Math.toRadians(180))
-                .build();
-        Trajectory returnStackOne1 = robot.trajectoryBuilder(goStackTwo1.end())
-                .lineToConstantHeading(new Vector2d(20, -11))
-                .build();
-
-        Trajectory returnStackOne2 = robot.trajectoryBuilder(goStackTwo2.end())
-                .lineToConstantHeading(new Vector2d(20, -11))
-                .build();
-
-        Trajectory returnStackOne3 = robot.trajectoryBuilder(goStackTwo3.end())
-                .lineToConstantHeading(new Vector2d(20, -11))
-                .build();
-
-        Trajectory returnStackTwo1 = robot.trajectoryBuilder(returnStackOne1.end())
-                .lineToLinearHeading(new Pose2d(51, -40,Math.toRadians(180)),
-                        robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
-                .build();
-        Trajectory returnStackTwo2 = robot.trajectoryBuilder(returnStackOne2.end())
-                .lineToLinearHeading(new Pose2d(51, -36.5,Math.toRadians(180)),
-                        robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
-                .build();
-
-        Trajectory returnStackTwo3 = robot.trajectoryBuilder(returnStackOne3.end())
-                .lineToLinearHeading(new Pose2d(50, -31,Math.toRadians(180)),
-                        robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(33))
-                .build();
-
 
         waitForStart();
+        waitT(10000);
         robot.setPoseEstimate(startPos);
 
         deposit.setState(Deposit.RotationState.TRANSFER);
@@ -236,75 +191,27 @@ public class  FarRed extends EnhancedOpMode {
         deposit.setState(Deposit.PusherState.TWO);
         waitT(1000);
         //park
+        scheduler.scheduleTaskList(slidedown);
+        intake.setState(Intake.PositionState.HIGH);
+        deposit.setState(Deposit.PusherState.IN);
+        waitOnMacro();
+        waitT(1000);
+        if (elementPos == 1) {
+            robot.followTrajectoryAsync(park1);
+
+        } else if (elementPos == 2) {
+            robot.followTrajectoryAsync(park2);
+        } else {
+            robot.followTrajectoryAsync(park3);
+        }
+        waitOnDT();
+        waitOnMacro(); //buh is this even do
+
 
         scheduler.scheduleTaskList(slidedown);
         intake.setState(Intake.PositionState.HIGH);
         deposit.setState(Deposit.PusherState.IN);
         waitOnMacro();
-
-        if (elementPos == 1) {
-            robot.followTrajectoryAsync(goStackOne1);
-            waitOnDT();
-            robot.followTrajectoryAsync(goStackTwo1);
-        } else if (elementPos == 2) {
-            robot.followTrajectoryAsync(goStackOne2);
-            waitOnDT();
-            robot.followTrajectoryAsync(goStackTwo2);
-        } else {
-            robot.followTrajectoryAsync(goStackOne3);
-            waitOnDT();
-            robot.followTrajectoryAsync(goStackTwo3);
-        }
-        waitOnDT();
-        intake.setState(Intake.PositionState.FIVE);
-        waitT(600);
-        intake.setState(Intake.PowerState.INTAKE_AUTO);
-        waitT(1200);
-        intake.setState(Intake.PositionState.FOUR);
-        waitOnMacro();
-
-        waitT(2000);
-        if (elementPos == 1) {
-            intake.setState(Intake.PowerState.EXTAKE);
-            waitOnMacro();
-            robot.followTrajectoryAsync(returnStackOne1);
-            waitOnDT();
-            intake.setState(Intake.PowerState.OFF);
-            scheduler.scheduleTaskList(slideupbase2);
-            waitOnMacro();
-            robot.followTrajectoryAsync(returnStackTwo1);
-        } else if (elementPos == 2) {
-            robot.followTrajectoryAsync(returnStackOne2);
-            intake.setState(Intake.PowerState.EXTAKE);
-            waitOnMacro();
-            waitOnDT();
-            intake.setState(Intake.PowerState.OFF);
-            scheduler.scheduleTaskList(slideupbase2);
-            waitOnMacro();
-            robot.followTrajectoryAsync(returnStackTwo2);
-        } else {
-            intake.setState(Intake.PowerState.EXTAKE);
-            waitOnMacro();
-            robot.followTrajectoryAsync(returnStackOne3);
-            waitOnDT();
-            intake.setState(Intake.PowerState.OFF);
-            scheduler.scheduleTaskList(slideupbase2);
-            waitOnMacro();
-            robot.followTrajectoryAsync(returnStackTwo3);
-        }
-
-        waitT(2500);
-        deposit.setState(Deposit.PusherState.HALF);
-        waitT(1200);
-        deposit.setState(Deposit.PusherState.IN);
-        waitT(300);
-        deposit.setState(Deposit.PusherState.TWO);
-        waitT(1000);
-        scheduler.scheduleTaskList(slidedown);
-        deposit.setState(Deposit.PusherState.IN);
-        waitOnMacro();
-
-
 
 
     }

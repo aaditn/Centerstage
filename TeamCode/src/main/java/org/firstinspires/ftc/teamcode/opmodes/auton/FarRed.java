@@ -108,18 +108,18 @@ public class  FarRed extends EnhancedOpMode {
 
         Trajectory placeWhite1 = robot.trajectoryBuilder(prepWhite1.end())
                 .lineToLinearHeading(new Pose2d(51, -28.5,Math.toRadians(180)),
-                        robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
+                        robot.getVelocityConstraint(35, 1.65, 15.06),
+                        robot.getAccelerationConstraint(35))
                 .build();
         Trajectory placeWhite2 = robot.trajectoryBuilder(prepWhite2.end())
                 .lineToLinearHeading(new Pose2d(51, -34.25,Math.toRadians(180)),
-                        robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(30))
+                        robot.getVelocityConstraint(35, 1.65, 15.06),
+                        robot.getAccelerationConstraint(35))
                 .build();
         Trajectory placeWhite3 = robot.trajectoryBuilder(prepWhite3.end())
                 .lineToLinearHeading(new Pose2d(49, -40,Math.toRadians(180)),
-                        robot.getVelocityConstraint(30, 1.65, 15.06),
-                        robot.getAccelerationConstraint(33))
+                        robot.getVelocityConstraint(35, 1.65, 15.06),
+                        robot.getAccelerationConstraint(35))
                 .build();
         Trajectory goStackOne1 = robot.trajectoryBuilder(placeWhite1.end())
                 .lineToConstantHeading(new Vector2d(20, -10))
@@ -232,7 +232,7 @@ public class  FarRed extends EnhancedOpMode {
         }
         waitOnDT();
         waitOnMacro(); //buh is this even doing anything T-T
-
+        waitT(500);
         deposit.setState(Deposit.PusherState.TWO);
         waitT(1000);
         //park
@@ -257,9 +257,9 @@ public class  FarRed extends EnhancedOpMode {
         }
         waitOnDT();
         intake.setState(Intake.PositionState.FIVE);
-        waitT(500);
+        waitT(600);
         intake.setState(Intake.PowerState.INTAKE_AUTO);
-        waitT(900);
+        waitT(1200);
         intake.setState(Intake.PositionState.FOUR);
         waitOnMacro();
 
@@ -293,7 +293,7 @@ public class  FarRed extends EnhancedOpMode {
             robot.followTrajectoryAsync(returnStackTwo3);
         }
 
-        waitT(2000);
+        waitT(2500);
         deposit.setState(Deposit.PusherState.HALF);
         waitT(1200);
         deposit.setState(Deposit.PusherState.IN);

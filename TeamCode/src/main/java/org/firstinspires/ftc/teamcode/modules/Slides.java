@@ -160,6 +160,18 @@ public class Slides extends Module
         setInternalStates(state);
     }
 
+    public void setMotorRunMode(DcMotor.RunMode runmode)
+    {
+        slide1.setMode(runmode);
+        slide2.setMode(runmode);
+    }
+
+    public DcMotor.RunMode getMotorRunMode()
+    {
+        return slide1.getMode();
+    }
+
+
     //gets called repeatedly(meant for changing idle/transitioning)
     @Override
     protected void updateInternalStatus()

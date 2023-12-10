@@ -112,12 +112,12 @@ public class  FarBlue extends EnhancedOpMode {
                         robot.getAccelerationConstraint(30))
                 .build();
         Trajectory placeWhite2 = robot.trajectoryBuilder(prepWhite2.end())
-                .lineToLinearHeading(new Pose2d(48, 37,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(48, 36,Math.toRadians(180)),
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(30))
                 .build();
         Trajectory placeWhite3 = robot.trajectoryBuilder(prepWhite3.end())
-                .lineToLinearHeading(new Pose2d(54, 30.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(54, 31.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(33))
                 .build();
@@ -181,7 +181,7 @@ public class  FarBlue extends EnhancedOpMode {
 
         deposit.setState(Deposit.RotationState.TRANSFER);
         deposit.setState(Deposit.WristState.TRANSFER);
-        deposit.setState(Deposit.PusherState.EXTENDED_AUTO);
+        deposit.setState(Deposit.PusherState.IN);
         intake.setState(Intake.PositionState.PURP);
         waitT(300);
         if (elementPos == 1) {
@@ -394,7 +394,6 @@ public class  FarBlue extends EnhancedOpMode {
                 .executeCode(()->macroRunning=false)
                 .build();
 
-        deposit.setState(Deposit.PusherState.EXTENDED_AUTO);
     }
 
     public void initLoop()

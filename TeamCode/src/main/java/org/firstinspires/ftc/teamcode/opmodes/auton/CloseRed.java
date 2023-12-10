@@ -99,13 +99,13 @@ public class CloseRed extends EnhancedOpMode {
                 .build();
 
         Trajectory yellowPixel2 = robot.trajectoryBuilder(purplePixel2.end())
-                .lineToLinearHeading(new Pose2d(60.5,-30,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(60.5,-28,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();
 
         Trajectory yellowPixel3 = robot.trajectoryBuilder(purplePixel3.end())
-                .lineToLinearHeading(new Pose2d(60.5  ,-34.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(60.5  ,-33.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();

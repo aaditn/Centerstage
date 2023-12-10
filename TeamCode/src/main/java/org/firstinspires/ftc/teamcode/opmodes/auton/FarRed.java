@@ -76,10 +76,10 @@ public class  FarRed extends EnhancedOpMode {
                 .lineToConstantHeading(new Vector2d(-36, -50))
                 .build();
         Trajectory placePurple3 = robot.trajectoryBuilder(placePurple3Init.end())
-                .lineToLinearHeading(new Pose2d(-33, -28, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(-35, -32, Math.toRadians(0)))
                 .build();
         Trajectory placePurple2 = robot.trajectoryBuilder(startPos)
-                .lineToLinearHeading(new Pose2d(-37, -12.25, Math.toRadians(-90)))//90
+                .lineToLinearHeading(new Pose2d(-37, -12.25, Math.toRadians(270)))//90
                 .build();
         Trajectory placePurple1 = robot.trajectoryBuilder(startPos)
                 .lineToLinearHeading(new Pose2d(-37, -25, Math.toRadians(180)))
@@ -92,7 +92,7 @@ public class  FarRed extends EnhancedOpMode {
                 .lineToLinearHeading(new Pose2d(-36, -5, Math.toRadians(180)))
                 .build();
         Trajectory avoid3 = robot.trajectoryBuilder(placePurple3.end())
-                .lineToLinearHeading(new Pose2d(-36, -5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-40, -5, Math.toRadians(180.01)))
                 .build();
 
 
@@ -103,7 +103,7 @@ public class  FarRed extends EnhancedOpMode {
                 .lineToLinearHeading(new Pose2d(31, -12, Math.toRadians(180)))
                 .build();
         Trajectory prepWhite3 = robot.trajectoryBuilder(avoid3.end())
-                .lineToLinearHeading(new Pose2d(31, -15, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(31, -17, Math.toRadians(180)))
                 .build();
 
         Trajectory placeWhite1 = robot.trajectoryBuilder(prepWhite1.end())
@@ -117,7 +117,7 @@ public class  FarRed extends EnhancedOpMode {
                         robot.getAccelerationConstraint(30))
                 .build();
         Trajectory placeWhite3 = robot.trajectoryBuilder(prepWhite3.end())
-                .lineToLinearHeading(new Pose2d(52, -42,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(49, -40,Math.toRadians(180)),
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(33))
                 .build();
@@ -130,7 +130,7 @@ public class  FarRed extends EnhancedOpMode {
                 .build();
 
         Trajectory goStackOne3 = robot.trajectoryBuilder(placeWhite3.end())
-                .lineToConstantHeading(new Vector2d(20, -10))
+                .lineToConstantHeading(new Vector2d(20, -7))
                 .build();
         Trajectory goStackTwo1 = robot.trajectoryBuilder(goStackOne1.end())
 
@@ -144,7 +144,7 @@ public class  FarRed extends EnhancedOpMode {
 
         Trajectory goStackTwo3 = robot.trajectoryBuilder(goStackOne3.end())
 
-                .splineToConstantHeading(new Vector2d(-58,-10),Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(-62,-10),Math.toRadians(180))
                 .build();
         Trajectory returnStackOne1 = robot.trajectoryBuilder(goStackTwo1.end())
                 .lineToConstantHeading(new Vector2d(20, -11))
@@ -164,13 +164,13 @@ public class  FarRed extends EnhancedOpMode {
                         robot.getAccelerationConstraint(30))
                 .build();
         Trajectory returnStackTwo2 = robot.trajectoryBuilder(returnStackOne2.end())
-                .lineToLinearHeading(new Pose2d(52.5, -36.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(51, -36.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(30))
                 .build();
 
         Trajectory returnStackTwo3 = robot.trajectoryBuilder(returnStackOne3.end())
-                .lineToLinearHeading(new Pose2d(52.5, -31,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(50, -31,Math.toRadians(180)),
                         robot.getVelocityConstraint(30, 1.65, 15.06),
                         robot.getAccelerationConstraint(33))
                 .build();
@@ -181,7 +181,7 @@ public class  FarRed extends EnhancedOpMode {
 
         deposit.setState(Deposit.RotationState.TRANSFER);
         deposit.setState(Deposit.WristState.TRANSFER);
-        deposit.setState(Deposit.PusherState.EXTENDED_AUTO);
+        deposit.setState(Deposit.PusherState.IN);
         intake.setState(Intake.PositionState.PURP);
         waitT(300);
         if (elementPos == 3) {
@@ -258,7 +258,7 @@ public class  FarRed extends EnhancedOpMode {
         waitOnDT();
         intake.setState(Intake.PositionState.FIVE);
         waitT(500);
-        intake.setState(Intake.PowerState.INTAKE);
+        intake.setState(Intake.PowerState.INTAKE_AUTO);
         waitT(900);
         intake.setState(Intake.PositionState.FOUR);
         waitOnMacro();
@@ -393,7 +393,7 @@ public class  FarRed extends EnhancedOpMode {
                 .executeCode(()->macroRunning=false)
                 .build();
 
-        deposit.setState(Deposit.PusherState.EXTENDED_AUTO);
+        deposit.setState(Deposit.PusherState.IN);
     }
 
     public void initLoop()

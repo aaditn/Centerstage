@@ -94,7 +94,7 @@ public class CloseBlue extends EnhancedOpMode {
                 .build();
 
         Trajectory yellowPixel2 = robot.trajectoryBuilder(purplePixel2.end())
-                .lineToLinearHeading(new Pose2d(59.5,30.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(59.5,28.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();
@@ -163,7 +163,7 @@ public class CloseBlue extends EnhancedOpMode {
 
         waitOnDT();
 
-        waitT(2000);
+        waitT(300);
 
         deposit.setState(Deposit.PusherState.TWO);
 

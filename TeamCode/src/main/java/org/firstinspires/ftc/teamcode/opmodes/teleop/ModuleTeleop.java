@@ -49,7 +49,7 @@ public class ModuleTeleop extends EnhancedOpMode
     GamepadEx g1, g2;
     ButtonReader slideUpBase, slideUpRow1, slideUpRow2, slideDown, pusher1, pusher2,
             strafeLeft, strafeRight, intake1, intake2, intake3, intakeFive, intakeFour, intakeThree, intakeTwo,
-            droneButton1;
+            droneButton1, slideReset, slidesOverride;
     List<Task> slideupbase, slideup1, slideup2, slidedown, slideupbaseraised, slideup1raised, slideup2raised, slideuphalf;
     int intakeposition;
     double ninja;
@@ -230,7 +230,7 @@ public class ModuleTeleop extends EnhancedOpMode
 
 
             //slides manual
-            if(slides.getState()!=Slides.SlideState.GROUND&&!slidesMoving&&Math.abs(gamepad2.left_stick_y)>0.3)
+            if((slides.getState()!=Slides.SlideState.GROUND||slidesOverride.isDown())&&!slidesMoving&&Math.abs(gamepad2.left_stick_y)>0.3)
             {
                 slides.setOperationState(Module.OperationState.MANUAL);
 
@@ -320,6 +320,16 @@ public class ModuleTeleop extends EnhancedOpMode
                 hang.setPower(0);
             }
 
+            if(slideReset.isDown())
+            {
+                slides.setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+            else if(slides.getMotorRunMode()== DcMotor.RunMode.STOP_AND_RESET_ENCODER)
+            {
+                slides.setMotorRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+
+
             driverLoopCount++;
         }
     }
@@ -389,7 +399,10 @@ public class ModuleTeleop extends EnhancedOpMode
                 intakeTwo=new ToggleButtonReader(g1, GamepadKeys.Button.A),
                 strafeLeft=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_RIGHT),
                 strafeRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT),
-                droneButton1=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_DOWN)
+                droneButton1=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_DOWN),
+                slideReset=new ToggleButtonReader(g2, GamepadKeys.Button.B),
+                slidesOverride=new ToggleButtonReader(g2, GamepadKeys.Button.Y)
+
         };
 
      //   intake.setState(intakepositions[0]);

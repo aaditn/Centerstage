@@ -30,7 +30,7 @@ public class Intake extends Module {
 
     public static enum PositionState implements ModuleState
     {
-        HOLD_AUTO (0), TELE(0.03), HIGH(0.52), FIVE(0.21), FOUR(0.18), THREE(0.13), TWO(0.08), ONE(0.03), PURP(0.04);
+        HOLD_AUTO (0), TELE(0.03), HIGH(0.52), FIVE(0.19), FOUR(0.18), THREE(0.13), TWO(0.08), ONE(0.03), PURP(0.04);
 
         double position;
 

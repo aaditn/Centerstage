@@ -31,7 +31,7 @@ public class Deposit extends Module
     public static double initwrist =0.82;
     public static double cradle = 0.92;
     public static double cradle_auto=0.98;
-    public static double depositwrist=0.47;
+    public static double depositwrist=0.49;
 
     public static double pusherIn=0;
     public static double pusherExtendedAuto=0.12;

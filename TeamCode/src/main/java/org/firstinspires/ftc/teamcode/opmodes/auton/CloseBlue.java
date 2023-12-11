@@ -88,19 +88,19 @@ public class CloseBlue extends EnhancedOpMode {
 
 
         Trajectory yellowPixel1 = robot.trajectoryBuilder(purplePixel1.end())
-                .lineToLinearHeading(new Pose2d(60,35.75,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(61.5,35.75,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();
 
         Trajectory yellowPixel2 = robot.trajectoryBuilder(purplePixel2.end())
-                .lineToLinearHeading(new Pose2d(59.5,28.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(62,28.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();
 
         Trajectory yellowPixel3 = robot.trajectoryBuilder(purplePixel3.end())
-                .lineToLinearHeading(new Pose2d(60.5  ,21.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(62  ,21.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();

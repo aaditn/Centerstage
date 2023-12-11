@@ -48,10 +48,10 @@ public class TeamElementDetection extends OpenCvPipeline{
     public static int SHigh2 = 255;
     public static int VHigh2 = 255;
 
-    public static int bHLow = 100;
+    public static int bHLow = 103;
     public static int bSLow = 0;
     public static int bVLow = 0;
-    public static int bHHigh = 200;
+    public static int bHHigh = 130;
     public static int bSHigh = 255;
     public static int bVHigh = 255;
 

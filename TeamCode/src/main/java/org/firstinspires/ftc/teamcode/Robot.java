@@ -112,6 +112,8 @@ public class Robot extends MecanumDrive
     public boolean waitingForCS=false;
     public boolean tapeDetected=false;
     ColorRangeSensor columnCS, droneCS;
+    static Robot robot;
+
 
 
 
@@ -120,10 +122,11 @@ public class Robot extends MecanumDrive
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         this.l=l;
         tel = new MultipleTelemetry(l.telemetry, FtcDashboard.getInstance().getTelemetry());
+
         Context.resetValues();
-        Context.opmode=this.l;
         Context.tel=tel;
         Context.updateValues();
+
         hardwareMap=l.hardwareMap;
         timer=new ElapsedTime();
 
@@ -145,6 +148,15 @@ public class Robot extends MecanumDrive
         intake.init();
         deposit.init();
         droneLauncher.init();
+    }
+
+    public static Robot getInstance()
+    {
+        if(robot==null)
+        {
+            robot=new Robot(Context.opmode);
+        }
+        return robot;
     }
 
 

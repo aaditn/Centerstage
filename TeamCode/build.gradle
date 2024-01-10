@@ -40,10 +40,4 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.0"
 
     implementation 'com.acmerobotics.roadrunner:core:0.5.6'
-    implementation (name:'navx_ftc-release', ext:'aar')
-}
-repositories {
-    flatDir {
-        dirs 'libs', 'C:\\Users\\Robot\\navx-mxp\\android\\libs'
-    }
 }

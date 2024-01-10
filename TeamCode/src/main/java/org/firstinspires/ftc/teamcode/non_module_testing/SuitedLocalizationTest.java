@@ -35,6 +35,8 @@ public class SuitedLocalizationTest extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Pose2d startPos = new Pose2d(20,56,Math.toRadians(270));
 
+        int count = 0;
+
         vision.setEstHeading(drive.getPoseEstimate().getHeading());
         previous.add(new Pose2d(0,0,0));
         previous.add(new Pose2d(0,0,0));
@@ -44,8 +46,8 @@ public class SuitedLocalizationTest extends LinearOpMode {
         while (!isStopRequested()) {
             drive.setLocalDrivePowers(
                     new Pose2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x,
+                            gamepad1.left_stick_y,
+                            gamepad1.left_stick_x,
                             -gamepad1.right_stick_x
                     )
             );
@@ -59,9 +61,9 @@ public class SuitedLocalizationTest extends LinearOpMode {
             for(Pose2d exist : detectionPositions) {
 
                 Context.tel.addData("exist", exist.getX());
-
                 Context.tel.addData("prev", previous.get(i).getX());
-                Context.tel.update();
+                Context.tel.addData("count", count);
+                count++;
                 if(exist.getX() != previous.get(i).getX()) {
                     drive.setPoseEstimate(new Pose2d(
                             (current.getX() + exist.getX() * aprilTagConfidence) / (1 + aprilTagConfidence),

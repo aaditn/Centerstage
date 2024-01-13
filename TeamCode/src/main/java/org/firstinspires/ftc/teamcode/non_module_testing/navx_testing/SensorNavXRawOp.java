@@ -29,8 +29,11 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.non_module_testing.navx_testing;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Canvas;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -71,12 +74,39 @@ public class SensorNavXRawOp extends OpMode {
   private String startDate;
   private ElapsedTime runtime = new ElapsedTime();
   private AHRS navx_device;
+
+    private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 10;
+    private boolean calibration_complete = false;
+
+    private FtcDashboard dashboard;
+    public static void drawRobot(Canvas canvas, double yaw) {
+        canvas.strokeCircle(0, 0, 9);
+        double x1 = 0, y1 = 0;
+        double x2 = 9*Math.cos(Math.toRadians(-yaw)), y2 = 9*Math.sin(Math.toRadians(yaw));
+        canvas.strokeLine(x1, y1, x2, y2);
+
+    }
   @Override
   public void init() {
       navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
-              AHRS.DeviceDataType.kQuatAndRawData);  }
+              AHRS.DeviceDataType.kProcessedData,
+              NAVX_DEVICE_UPDATE_RATE_HZ);
+      while ( !calibration_complete ) {
+            /* navX-Micro Calibration completes automatically ~15 seconds after it is
+            powered on, as long as the device is still.  To handle the case where the
+            navX-Micro has not been able to calibrate successfully, hold off using
+            the navX-Micro Yaw value until calibration is complete.
+             */
+          calibration_complete = !navx_device.isCalibrating();
+          if (!calibration_complete) {
+              telemetry.addData("navX-Micro", "Startup Calibration in Progress");
+          }
+      }
+      navx_device.zeroYaw();
+      dashboard = FtcDashboard.getInstance();
+  }
 
-  @Override
+      @Override
   public void stop() {
     navx_device.close();
   }
@@ -99,6 +129,7 @@ public class SensorNavXRawOp extends OpMode {
       boolean connected = navx_device.isConnected();
       telemetry.addData("1 navX-Device", connected ? "Connected" : "Disconnected" );
       String gyrocal, gyro_raw, accel_raw, mag_raw;
+      gyrocal = "";
       boolean magnetometer_calibrated;
       if ( connected ) {
           DecimalFormat df = new DecimalFormat("#.##");
@@ -109,6 +140,16 @@ public class SensorNavXRawOp extends OpMode {
           accel_raw = df.format(navx_device.getRawAccelX()) + ", " +
                       df.format(navx_device.getRawAccelY()) + ", " +
                       df.format(navx_device.getRawAccelZ());
+          gyrocal = df.format(navx_device.getYaw()) +"\n"+df.format(navx_device.getRoll())+"\n"+df.format(navx_device.getPitch())+"\n"+
+                  df.format(navx_device.getFusedHeading());
+          TelemetryPacket packet = new TelemetryPacket();
+
+          Canvas fieldOverlay = packet.fieldOverlay();
+          drawRobot(fieldOverlay, navx_device.getYaw());
+
+          // Push telemetry to the Driver Station.
+
+          dashboard.sendTelemetryPacket(packet);
           if ( magnetometer_calibrated ) {
               mag_raw = df.format(navx_device.getRawMagX()) + ", " +
                       df.format(navx_device.getRawMagY()) + ", " +
@@ -124,6 +165,7 @@ public class SensorNavXRawOp extends OpMode {
       telemetry.addData("2 Gyros (Degrees/Sec):", gyro_raw);
       telemetry.addData("3 Accelerometers  (G):", accel_raw );
       telemetry.addData("4 Magnetometers  (uT):", mag_raw );
+      telemetry.addData("ppepe",gyrocal);
   }
 
 }

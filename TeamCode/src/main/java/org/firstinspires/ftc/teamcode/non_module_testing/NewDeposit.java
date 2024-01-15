@@ -12,7 +12,6 @@ import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;

@@ -3,13 +3,13 @@ package org.firstinspires.ftc.teamcode.modules.moduleTesting;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.modules.Deposit;
+import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 @TeleOp
 @Config
 public class DepositTest extends EnhancedOpMode
 {
-    Deposit d;
+    DepositOld d;
     @Override
     public void linearOpMode()
     {
@@ -20,7 +20,7 @@ public class DepositTest extends EnhancedOpMode
     @Override
     public void initialize()
     {
-        d=new Deposit(hardwareMap);
+        d=new DepositOld(hardwareMap);
     }
 
     @Override
@@ -31,19 +31,19 @@ public class DepositTest extends EnhancedOpMode
 
         if(gamepad1.a)
         {
-            d.setState(Deposit.RotationState.TRANSFER);
+            d.setState(DepositOld.RotationState.TRANSFER);
         }
         if (gamepad1.b)
         {
-            d.setState(Deposit.RotationState.DEPOSIT_HIGH);
+            d.setState(DepositOld.RotationState.DEPOSIT_HIGH);
         }
         if(gamepad1.x)
         {
-            d.setState(Deposit.PusherState.IN);
+            d.setState(DepositOld.PusherState.IN);
         }
         if(gamepad1.y)
         {
-            d.setState(Deposit.PusherState.TWO);
+            d.setState(DepositOld.PusherState.TWO);
         }
     }
 }

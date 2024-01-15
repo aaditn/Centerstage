@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.teleop;
+package org.firstinspires.ftc.teamcode.opmodesOld.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.modules.Deposit;
+import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
@@ -33,7 +33,7 @@ public class TeleOp extends EnhancedOpMode
     ElapsedTime timer = new ElapsedTime();
     Boolean threshold1 =false;
     boolean threshold2 = false;
-    Deposit deposit;
+    DepositOld deposit;
     //Slides slides;
     TaskListBuilder builder;
     List<Task> testTaskList;
@@ -118,7 +118,7 @@ public class TeleOp extends EnhancedOpMode
 
         this.setLoopTimes(0);
         builder=new TaskListBuilder(this);
-        deposit=new Deposit(hardwareMap);
+        deposit=new DepositOld(hardwareMap);
         intake=new Intake(hardwareMap);
         //droneLauncher=new DroneLauncher(hardwareMap);
         slideLeft=hardwareMap.get(DcMotor.class, "slide1");
@@ -181,8 +181,8 @@ public class TeleOp extends EnhancedOpMode
         deposit.writeLoop();
        // droneLauncher.writeLoop();
         if (slideLeft.getCurrentPosition() < 100) {
-            deposit.setState(Deposit.RotationState.TRANSFER);
-            deposit.setState(Deposit.PusherState.IN);
+            deposit.setState(DepositOld.RotationState.TRANSFER);
+            deposit.setState(DepositOld.PusherState.IN);
             wrist.setPosition(initwrist);
             threshold2 =true;
             threshold1 =false;
@@ -190,8 +190,8 @@ public class TeleOp extends EnhancedOpMode
         else if (slideLeft.getCurrentPosition() > 100) {
             if(threshold2 == true){
 
-                deposit.setState(Deposit.RotationState.DEPOSIT_MID);
-                deposit.setState(Deposit.RotationState.DEPOSIT_MID);
+                deposit.setState(DepositOld.RotationState.DEPOSIT_MID);
+                deposit.setState(DepositOld.RotationState.DEPOSIT_MID);
                 wrist.setPosition(cradleWrist);
                 threshold1 =true;
                 threshold2 = false;

@@ -1,189 +1,121 @@
 package org.firstinspires.ftc.teamcode.modules;
 
-import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
-import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 
-@Config
 public class Deposit extends Module
 {
-    public static double transfer1=0.92;
-    public static double transfer2=0.08;
+    Servo deposit1, deposit2, wrist, rotatewrist, claw;
+    public static double clawOpen=0.88, clawClosed1=0.72, clawClosed2=0.72;
+    public static double rotateNinety=0.36, rotateZero=0.03, rotateOneEighty=0.69, rotateTwoSeventy=1;
+    public static double wristTransfer =0.21, wristDeposit=0.54, wristFloaty=0.44;
+    public static double rotator1Transfer =0.99, rotator1Deposit=0.22;
+    public static double rotator2Transfer =0.01, rotator2Deposit=0.78;
 
-    public static double deposit1High= 0;//0.91;//.83
-    public static double deposit2High = 1;//0.14;//.22
-
-    public static double deposit1Quarter1=(transfer1+deposit1High)/4;
-    public static double deposit2Quarter1=(transfer2+deposit2High)/4;
-    public static double deposit1Mid = (transfer1+deposit1High)*3/8;//0.94;//.83
-    public static double deposit2Mid = (transfer2+deposit2High)*3/8;//0.11;//.22
-
-    public static double deposit1Quarter3=0.1;
-    public static double deposit2Quarter3=0.9;
-    public static double deposit1Low= 1;//0.98;//.83
-    public static double deposit2Low= 0.05;//0.07;//.22
-
-    public static double initwrist =0.82;
-    public static double cradle = 0.92;
-    public static double cradle_auto=0.98;
-    public static double depositwrist=0.49;
-
-    public static double pusherIn=0;
-    public static double pusherExtendedAuto=0.12;
-    public static double pusherExtended =0.16;
-    public static double pusherOne=0.2;//.25
-    public static double pusherOneAuto=0.2;//.28
-    public static double pusherTwo=0.29;//.35
-    public static double pusherHalf= 0.25;//.265
-    int debugCounter=0;
-
-    public boolean funnimode=true;
-    @Config
-    public static enum RotationState implements ModuleState
+    public enum FlipState implements ModuleState
     {
-
-        TRANSFER(transfer1, transfer2), DEPOSIT_LOW(deposit1Low, deposit2Low), DEPOSIT_Q1(deposit1Quarter1, deposit2Quarter1), DEPOSIT_MID(deposit1Mid, deposit2Mid), DEPOSIT_Q3(deposit1Quarter3, deposit2Quarter3), DEPOSIT_HIGH(deposit1High, deposit2High);
-
+        TRANSFER(rotator1Transfer, rotator2Transfer), DEPOSIT(rotator1Deposit, rotator2Deposit);
         double pos1, pos2;
-        RotationState(double pos1, double pos2)
+        FlipState(double pos1, double pos2)
         {
             this.pos1=pos1;
             this.pos2=pos2;
         }
-
         @Override
         public double getOutput(int... index) {
             if(index[0]==1)
-            {
                 return pos1;
-            }
             else if(index[0]==2)
-            {
                 return pos2;
-            }
             else
-            {
                 return 0;
-            }
         }
     }
 
     public enum WristState implements ModuleState
     {
-        TRANSFER(initwrist), CRADLE(cradle), CRADLE_AUTO(cradle_auto), DEPOSIT(depositwrist);
-
+        TRANSFER(wristTransfer), DEPOSIT(wristDeposit), HOVER(wristFloaty);
         double pos1;
         WristState(double pos1)
         {
             this.pos1=pos1;
         }
-
+        @Override
+        public double getOutput(int... index) {
+            return pos1;
+        }
+    }
+    public enum ClawState implements ModuleState
+    {
+        OPEN(clawOpen), CLOSED1(clawClosed1), CLOSED2(clawClosed2);
+        double pos1;
+        ClawState(double pos1)
+        {
+            this.pos1=pos1;
+        }
         @Override
         public double getOutput(int... index) {
             return pos1;
         }
     }
 
-
-    public static enum PusherState implements  ModuleState
-    {
-        IN(pusherIn),EXTENDED(pusherExtended), EXTENDED_AUTO(pusherExtendedAuto), ONE(pusherOne), TWO(pusherTwo), ONE_AUTO(pusherOneAuto), HALF(pusherHalf);
-
-        double position;
-        PusherState(double position)
+    public enum WristRotateState implements ModuleState {
+        ZERO(rotateZero), NINETY(rotateNinety), ONE_EIGHTY(rotateOneEighty),TWO_SEVENTY(rotateTwoSeventy);
+        double pos1;
+        WristRotateState(double pos1)
         {
-            this.position=position;
+            this.pos1=pos1;
         }
         @Override
         public double getOutput(int... index) {
-            return position;
+            return pos1;
         }
     }
-
-    double leftRotatorPos, rightRotatorPos, pusherPos, wristPos;
-    RotationState rstate;
-    PusherState pstate;
+    double rotator1Pos, rotator2Pos, clawPos, wristPos, wristRotatePos;
+    FlipState fstate;
     WristState wstate;
+    WristRotateState wrstate;
+    ClawState cstate;
 
-    Servo leftRotator, rightRotator;
-    public ColorRangeSensor firstPixel, secondPixel;
-    Servo pusher, wrist;
-
-    public Deposit(HardwareMap hardwareMap)
-    {
-        super(true);
-        leftRotator=hardwareMap.get(Servo.class, "leftRotator");
-        rightRotator=hardwareMap.get(Servo.class, "rightRotator");
-        //leftRotator.setDirection(Servo.Direction.REVERSE);
-        //rightRotator.setDirection(Servo.Direction.REVERSE);
-        pusher=hardwareMap.get(Servo.class, "pusher");
-        wrist =hardwareMap.get(Servo.class,"wrist");
-        firstPixel = hardwareMap.get(ColorRangeSensor.class, "firstCS");
-        secondPixel = hardwareMap.get(ColorRangeSensor.class, "secondCS");
+    public Deposit(HardwareMap hardwareMap) {
+        super(false);
+        deposit1=hardwareMap.get(Servo.class, "deposit1");
+        deposit2=hardwareMap.get(Servo.class, "deposit2");
+        wrist=hardwareMap.get(Servo.class, "wrist");
+        rotatewrist=hardwareMap.get(Servo.class, "rotatewrist");
+        claw=hardwareMap.get(Servo.class, "claw");
     }
-
 
     @Override
     protected void write()
     {
-        /*
-            if(Math.abs(leftRotator.getPosition()-leftRotatorPos)>=0.01)
-            {
-                if(leftRotator.getPosition()<leftRotatorPos){
-                    leftRotator.setPosition(leftRotator.getPosition()+0.01);
-                }
-                else if(leftRotator.getPosition()>leftRotatorPos){
-                    leftRotator.setPosition(leftRotator.getPosition()-0.01);
-                }
-            }
-            if(Math.abs(rightRotator.getPosition()-rightRotatorPos)>=0.01)
-            {
-                if(rightRotator.getPosition()<rightRotatorPos){
-                    rightRotator.setPosition(rightRotator.getPosition()+0.01);
-                }
-                else if(leftRotator.getPosition()>leftRotatorPos) {
-                    rightRotator.setPosition(rightRotator.getPosition() - 0.01);
-                }
-            }
-        */
-        rightRotator.setPosition(rightRotatorPos);
-        leftRotator.setPosition(leftRotatorPos);
-
+        deposit1.setPosition(rotator1Pos);
+        deposit2.setPosition(rotator2Pos);
         wrist.setPosition(wristPos);
-        pusher.setPosition(pusherPos);
+        claw.setPosition(clawPos);
+        rotatewrist.setPosition(wristRotatePos);
     }
 
     @Override
-    protected void telemetryUpdate()
-    {
-        super.telemetryUpdate();
-        //Context.tel.addData("left current", leftRotator.);
-        Context.tel.addData("Left position", leftRotator.getPosition());
-        Context.tel.addData("pusher pos", pusherPos);
-        Context.tel.addData("internal update called counter", debugCounter);
+    protected void internalUpdate() {
+        rotator1Pos=getState(Deposit.FlipState.class).getOutput(1);
+        rotator2Pos=getState(Deposit.FlipState.class).getOutput(2);
+        wristPos=getState(Deposit.WristState.class).getOutput();
+        clawPos=getState(Deposit.ClawState.class).getOutput();
+        wristRotatePos=getState(Deposit.WristRotateState.class).getOutput();
     }
 
     @Override
-    protected void internalUpdate()
-    {
-        leftRotatorPos=getState(RotationState.class).getOutput(1);
-        rightRotatorPos=getState(RotationState.class).getOutput(2);
-        wristPos=getState(WristState.class).getOutput();
-        pusherPos=getState(PusherState.class).getOutput();
-    }
-
-    @Override
-    protected void initInternalStates()
-    {
-        pstate=PusherState.IN;
-        rstate=RotationState.TRANSFER;
+    protected void initInternalStates() {
+        fstate=FlipState.TRANSFER;
         wstate=WristState.TRANSFER;
-        setInternalStates(pstate, rstate, wstate);
+        wrstate=WristRotateState.ZERO;
+        cstate=ClawState.OPEN;
+        setInternalStates(fstate, wstate, wrstate, cstate);
     }
 
     @Override

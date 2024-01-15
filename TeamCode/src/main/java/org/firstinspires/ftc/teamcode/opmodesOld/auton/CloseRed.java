@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auton;
+package org.firstinspires.ftc.teamcode.opmodesOld.auton;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.modules.Deposit;
+import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
@@ -27,7 +27,7 @@ public class CloseRed extends EnhancedOpMode {
     Robot robot;
 
     Intake intake;
-    Deposit deposit;
+    DepositOld deposit;
     Slides slides;
     Pose2d startPos = new Pose2d(20,-56,Math.toRadians(90));
     TaskScheduler scheduler;
@@ -126,7 +126,7 @@ public class CloseRed extends EnhancedOpMode {
 
         robot.setPoseEstimate(startPos);
 
-        deposit.setState(Deposit.WristState.TRANSFER);
+        deposit.setState(DepositOld.WristState.TRANSFER);
         intake.setState(Intake.PositionState.PURP);
 
         waitT(1000);
@@ -160,7 +160,7 @@ public class CloseRed extends EnhancedOpMode {
         waitOnMacro();
         waitOnDT();
 
-        deposit.setState(Deposit.PusherState.TWO);
+        deposit.setState(DepositOld.PusherState.TWO);
 
         waitT(1000);
 
@@ -197,26 +197,26 @@ public class CloseRed extends EnhancedOpMode {
 
         slideupbase=builder.createNew()
                 .executeCode(()->macroRunning=true)
-                .moduleAction(deposit, Deposit.WristState.CRADLE)
+                .moduleAction(deposit, DepositOld.WristState.CRADLE)
                 .delay(100)
                 .moduleAction(slides, Slides.SlideState.HALF)
                 //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .awaitPreviousModuleActionCompletion()
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
+                .moduleAction(deposit, DepositOld.RotationState.DEPOSIT_HIGH)
                 .delay(100)
-                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .moduleAction(deposit, DepositOld.WristState.DEPOSIT)
                 .executeCode(()->macroRunning=false)
                 .build();
 
         slidedown=builder.createNew()
                 .executeCode(()->macroRunning=true)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
+                .moduleAction(deposit, DepositOld.RotationState.DEPOSIT_MID)
                 .delay(300)
                 .moduleAction(slides, Slides.SlideState.GROUND)
-                .moduleAction(deposit, Deposit.PusherState.IN)
+                .moduleAction(deposit, DepositOld.PusherState.IN)
                 .await(()->slides.currentPosition()<100)
-                .moduleAction(deposit, Deposit.RotationState.TRANSFER)
-                .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                .moduleAction(deposit, DepositOld.RotationState.TRANSFER)
+                .moduleAction(deposit, DepositOld.WristState.TRANSFER)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->macroRunning=false)
                 .build();

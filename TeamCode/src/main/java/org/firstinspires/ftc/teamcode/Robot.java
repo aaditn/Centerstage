@@ -46,7 +46,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.modules.Deposit;
+import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Slides;
@@ -101,7 +101,7 @@ public class Robot extends MecanumDrive
     HardwareMap hardwareMap;
     MultipleTelemetry tel;
     public Slides slides;
-    public Deposit deposit;
+    public DepositOld deposit;
     public Intake intake;
 
     public DroneLauncher droneLauncher;
@@ -109,13 +109,8 @@ public class Robot extends MecanumDrive
     public TeamElementDetection teamElementDetector;
     Pose2d localDrivePowers;
     ElapsedTime timer;
-    public boolean waitingForCS=false;
     public boolean tapeDetected=false;
-    ColorRangeSensor columnCS, droneCS;
     static Robot robot;
-
-
-
 
     public Robot(LinearOpMode l)
     {
@@ -141,7 +136,7 @@ public class Robot extends MecanumDrive
         
 
         slides=new Slides(hardwareMap);
-        deposit=new Deposit(hardwareMap);
+        deposit=new DepositOld(hardwareMap);
         intake=new Intake(hardwareMap);
         droneLauncher = new DroneLauncher(hardwareMap);
 
@@ -256,12 +251,6 @@ public class Robot extends MecanumDrive
                 follower, HEADING_PID, batteryVoltageSensor,
                 lastEncPositions, lastEncVels, lastTrackingEncPositions, lastTrackingEncVels
         );
-
-        if(!Context.isTele)
-        {
-            columnCS=hardwareMap.get(ColorRangeSensor.class, "columnCS");
-            droneCS=hardwareMap.get(ColorRangeSensor.class, "droneCS");
-        }
     }
 
     public void initLoop()
@@ -278,28 +267,11 @@ public class Robot extends MecanumDrive
         read();
         write();
 
-        if(waitingForCS&&!Context.isTele)
-        {
-            if(droneCS.getLightDetected()>0.16||columnCS.getLightDetected()>0.16)
-            {
-                tapeDetected=true;
-            }
-            Context.tel.addData("Drone CS Light Detected", droneCS.getLightDetected());
-            Context.tel.addData("Column CS Light Detected", columnCS.getLightDetected());
-        }
-        else
-        {
-            tapeDetected=false;
-        }
 
         if(isBusy()||!Context.isTele)
-        {
             update();
-        }
         else
-        {
             updateDrivePowers();
-        }
 
         if(timer.milliseconds()>500)
         {
@@ -307,7 +279,6 @@ public class Robot extends MecanumDrive
             timer.reset();
         }
         Context.tel.addData("debug", Context.debug);
-        //loop whatever else u want
     }
 
     public void read()

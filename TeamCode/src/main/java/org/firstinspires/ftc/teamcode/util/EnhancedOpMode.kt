@@ -24,6 +24,8 @@ abstract class EnhancedOpMode(): LinearOpMode ()
     override fun runOpMode()
     {
         linearElapsedTime = ElapsedTime()
+        Context.opmode=this
+
         initialize()
         startCoroutine()
         linearOpMode()

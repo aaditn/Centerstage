@@ -131,7 +131,6 @@ public class Robot extends MecanumDrive
         }
         //teamElementDetector=new TeamElementDetection(l.telemetry);
 
-        waitingForCS=false;
         dtInit();
         
 

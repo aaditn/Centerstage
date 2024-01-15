@@ -221,11 +221,11 @@ public class TeleOp extends EnhancedOpMode
 
         if(gamepad2.a)
         {
-            intake.setState(Intake.PositionState.TELE);
+            intake.setState(Intake.OldPositionState.TELE);
         }
         else if(gamepad2.b)
         {
-            intake.setState(Intake.PositionState.HIGH);
+            intake.setState(Intake.OldPositionState.HIGH);
         }
         intake.manualChange(-gamepad2.right_stick_y);
 

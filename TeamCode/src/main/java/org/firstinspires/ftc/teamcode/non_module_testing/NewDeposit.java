@@ -26,12 +26,11 @@ import java.util.List;
 @Config
 public class NewDeposit extends EnhancedOpMode
 {
-    public static double clawOpen=0.88, clawClosed1=0.72, clawClosed2=0.72;
+    public static double clawOpen=0.88, clawClosed1=0.72, clawClosed2=0.68;
     public static double rotateFlat=0.36, rotate90=0.03; //0.69, 1
-    public static double wristIntake=0.21, wristDeposit=0.54, wristFloaty=0.44;
-    public static double rotator1Intake=0.99, rotator1Deposit=0.22;
-    public static double rotator2Intake=0.01, rotator2Deposit=0.78;
-    Servo deposit1, deposit2, wrist, rotatewrist, claw;
+    public static double wristIntake=0.84, wristDeposit=0.54, wristFloaty=0.64;
+    public static double rotatorTransfer=0.94, rotatorDeposit=0.16;
+    Servo leftArm, rightArm, wrist, rotatewrist, claw, anglerLeft, anglerRight;
 
     //wrist 0:
 
@@ -74,14 +73,14 @@ public class NewDeposit extends EnhancedOpMode
 
             if(gamepad1.dpad_up)
             {
-                deposit1.setPosition(rotator1Deposit);
-                deposit2.setPosition(rotator2Deposit);
+                leftArm.setPosition(rotatorDeposit);
+                rightArm.setPosition(rotatorDeposit);
                 wrist.setPosition(wristDeposit);
             }
             else if(gamepad1.dpad_down)
             {
-                deposit1.setPosition(rotator1Intake);
-                deposit2.setPosition(rotator2Intake);
+                leftArm.setPosition(rotatorTransfer);
+                rightArm.setPosition(rotatorTransfer);
                 wrist.setPosition(wristIntake);
             }
             if(slideupb.wasJustPressed())
@@ -101,11 +100,17 @@ public class NewDeposit extends EnhancedOpMode
     @Override
     public void initialize()
     {
-        deposit1=hardwareMap.get(Servo.class, "deposit1");
-        deposit2=hardwareMap.get(Servo.class, "deposit2");
+        leftArm=hardwareMap.get(Servo.class, "leftArm");
+        rightArm=hardwareMap.get(Servo.class, "rightArm");
+        rightArm.setDirection(Servo.Direction.REVERSE);
+
         wrist=hardwareMap.get(Servo.class, "wrist");
         rotatewrist=hardwareMap.get(Servo.class, "rotatewrist");
         claw=hardwareMap.get(Servo.class, "claw");
+
+        anglerLeft = hardwareMap.get(Servo.class, "anglerLeft");
+        anglerRight = hardwareMap.get(Servo.class, "anglerRight");
+        anglerRight.setDirection(Servo.Direction.REVERSE);
 
         tel = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -128,8 +133,8 @@ public class NewDeposit extends EnhancedOpMode
         slideup=builder.createNew()
                 .executeCode(()->claw.setPosition(clawClosed2))
                 .delay(500)
-                .executeCode(()->deposit1.setPosition(rotator1Deposit))
-                .executeCode(()->deposit2.setPosition(rotator2Deposit))
+                .executeCode(()->leftArm.setPosition(rotatorDeposit))
+                .executeCode(()->rightArm.setPosition(rotatorDeposit))
                 .moduleAction(slides, Slides.SlideState.ROW2)
                 .delay(200)
                 .executeCode(()->wrist.setPosition(wristFloaty))
@@ -145,13 +150,15 @@ public class NewDeposit extends EnhancedOpMode
                 .delay(300)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .await(()->slides.currentPosition()<100)
-                .executeCode(()->deposit1.setPosition(rotator1Intake))
-                .executeCode(()->deposit2.setPosition(rotator2Intake))
+                .executeCode(()->leftArm.setPosition(rotatorTransfer))
+                .executeCode(()->rightArm.setPosition(rotatorTransfer))
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->wrist.setPosition(wristIntake))
                 .delay(300)
                 .build();
 
+        anglerLeft.setPosition(0);
+        anglerRight.setPosition(0);
     }
 
     @Override

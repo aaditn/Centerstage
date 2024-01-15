@@ -123,7 +123,7 @@ public class CloseBlue extends EnhancedOpMode {
 
         deposit.setState(DepositOld.WristState.TRANSFER);
         deposit.setState(DepositOld.PusherState.IN);
-        intake.setState(Intake.PositionState.PURP);
+        intake.setState(Intake.OldPositionState.PURP);
 
 
         waitT(1000);
@@ -147,7 +147,7 @@ public class CloseBlue extends EnhancedOpMode {
         waitT(200);
 
         intake.setState(Intake.PowerState.OFF);
-        intake.setState(Intake.PositionState.HIGH);
+        intake.setState(Intake.OldPositionState.HIGH);
 
 
         scheduler.scheduleTaskList(slideupbase);

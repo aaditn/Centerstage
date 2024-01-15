@@ -5,13 +5,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
-import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 
 public class Deposit extends Module
 {
-    Servo deposit1, deposit2, wrist, rotatewrist, claw;
+    Servo leftArm, rightArm, wrist, rotatewrist, claw;
     public static double clawOpen=0.88, clawClosed1=0.72, clawClosed2=0.72;
-    public static double rotateNinety=0.36, rotateZero=0.03, rotateOneEighty=0.69, rotateTwoSeventy=1;
+    public static double rotateNinety=0.49, rotateZero=0.435, rotateOneEighty=0.5475, rotateTwoSeventy=1;
     public static double wristTransfer =0.21, wristDeposit=0.54, wristFloaty=0.44;
     public static double rotator1Transfer =0.99, rotator1Deposit=0.22;
     public static double rotator2Transfer =0.01, rotator2Deposit=0.78;
@@ -83,8 +82,8 @@ public class Deposit extends Module
 
     public Deposit(HardwareMap hardwareMap) {
         super(false);
-        deposit1=hardwareMap.get(Servo.class, "deposit1");
-        deposit2=hardwareMap.get(Servo.class, "deposit2");
+        leftArm=hardwareMap.get(Servo.class, "leftArm");
+        rightArm=hardwareMap.get(Servo.class, "rightArm");
         wrist=hardwareMap.get(Servo.class, "wrist");
         rotatewrist=hardwareMap.get(Servo.class, "rotatewrist");
         claw=hardwareMap.get(Servo.class, "claw");
@@ -93,8 +92,8 @@ public class Deposit extends Module
     @Override
     protected void write()
     {
-        deposit1.setPosition(rotator1Pos);
-        deposit2.setPosition(rotator2Pos);
+        leftArm.setPosition(rotator1Pos);
+        rightArm.setPosition(rotator2Pos);
         wrist.setPosition(wristPos);
         claw.setPosition(clawPos);
         rotatewrist.setPosition(wristRotatePos);

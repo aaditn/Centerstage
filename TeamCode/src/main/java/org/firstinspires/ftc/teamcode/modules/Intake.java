@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -9,10 +10,10 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 
 public class Intake extends Module {
-    public static DcMotorEx intake;
-    Servo angler1, angler2;
-    double threshold = 0.02; // you might need one because power is inconsistent
-    public static enum PowerState implements ModuleState
+    DcMotorEx intake;
+    Servo anglerLeft, anglerRight, sweeperLeft, sweeperRight;
+    CRServo conveyorLeft, conveyorRight;
+    public enum PowerState implements ModuleState
     {
         INTAKE_AUTO(1.0), INTAKE(0.9), INTAKE_LOW(0.7), EXTAKE(-0.9), OFF(0), LOW(-0.3);
         double power;
@@ -27,41 +28,74 @@ public class Intake extends Module {
             return power;
         }
     }
-
-    public static enum PositionState implements ModuleState
+    public enum PositionState implements ModuleState
     {
-        HOLD_AUTO (0), TELE(0.03), HIGH(0.52), FIVE(0.19), FOUR(0.18), THREE(0.13), TWO(0.08), ONE(0.03), PURP(0.04);
-
+        RAISED(0.05), DOWN(0.29);
         double position;
-
         PositionState(double position)
         {
             this.position=position;
         }
-
+        @Override
+        public double getOutput(int... index) {
+            return 0;
+        }
+    }
+    public enum ConveyorState implements  ModuleState
+    {
+        INTAKE(1), EXTAKE(-1), OFF(0);
+        double power;
+        ConveyorState(double power)
+        {
+            this.power=power;
+        }
         @Override
         public double getOutput(int... index)
         {
+            return power;
+        }
+    }
+
+    public enum SweeperState implements ModuleState
+    {
+        ZERO(0.035), ONE_SWEEP(0.15), TWO_SWEEP(0.265), THREE_SWEEP(0.38);
+        double position;
+        SweeperState(double position)
+        {
+            this.position=position;
+        }
+        @Override
+        public double getOutput(int... index) {
             return position;
         }
     }
 
 
 
-    double currentPower;
-    double currentPosition;
+    double currentPower, currentPosition, conveyorPower, sweeperPos;
 
     PowerState pwstate;
     PositionState poState;
+    ConveyorState cstate;
+    SweeperState sstate;
 
     public Intake(HardwareMap hardwareMap)
     {
         super(false);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
-        angler1 = hardwareMap.get(Servo.class, "intake1");
-        angler2 = hardwareMap.get(Servo.class, "intake2");
-        angler2.setDirection(Servo.Direction.REVERSE);
+
+        conveyorLeft = hardwareMap.get(CRServo.class, "conveyorLeft");
+        conveyorRight = hardwareMap.get(CRServo.class, "conveyorRight");
+        conveyorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        sweeperLeft = hardwareMap.get(Servo.class, "sweeperLeft");
+        sweeperRight = hardwareMap.get(Servo.class, "sweeperRight");
+        sweeperRight.setDirection(Servo.Direction.REVERSE);
+
+        anglerLeft = hardwareMap.get(Servo.class, "anglerLeft");
+        anglerRight = hardwareMap.get(Servo.class, "anglerRight");
+        anglerRight.setDirection(Servo.Direction.REVERSE);
     }
 
     @Override
@@ -75,34 +109,66 @@ public class Intake extends Module {
     protected void write()
     {
         intake.setPower(currentPower);
-        angler1.setPosition(currentPosition);
-        angler2.setPosition(currentPosition);
+
+        anglerLeft.setPosition(currentPosition);
+        anglerRight.setPosition(currentPosition);
+
+        sweeperLeft.setPosition(sweeperPos);
+        sweeperRight.setPosition(sweeperPos);
+
+        conveyorLeft.setPower(conveyorPower);
+        conveyorRight.setPower(conveyorPower);
     }
 
     @Override
     protected void internalUpdate()
     {
         currentPower=getState(PowerState.class).getOutput();
-        currentPosition=getState(PositionState.class).getOutput();
+        currentPosition=getState(OldPositionState.class).getOutput();
+        conveyorPower =getState(ConveyorState.class).getOutput();
+        sweeperPos=getState(SweeperState.class).getOutput();
     }
 
     @Override
     protected void internalUpdateManual()
     {
-        currentPosition=getState(PositionState.class).getOutput();
+        currentPosition=getState(OldPositionState.class).getOutput();
+        conveyorPower =getState(ConveyorState.class).getOutput();
+        sweeperPos=getState(SweeperState.class).getOutput();
     }
 
 
     @Override
     protected void initInternalStates()
     {
-        poState= PositionState.HIGH;
-        pwstate= PowerState.OFF;
-        setInternalStates(poState, pwstate);
+        poState=PositionState.RAISED;
+        pwstate=PowerState.OFF;
+        cstate=ConveyorState.OFF;
+        sstate=SweeperState.ZERO;
+        setInternalStates(poState, pwstate, cstate, sstate);
     }
 
     @Override
-    protected void updateInternalStatus() {
+    protected void updateInternalStatus()
+    {
         status=Status.IDLE;
+    }
+
+    public enum OldPositionState implements ModuleState
+    {
+        HOLD_AUTO (0), TELE(0.03), HIGH(0.52), FIVE(0.19), FOUR(0.18), THREE(0.13), TWO(0.08), ONE(0.03), PURP(0.04);
+
+        double position;
+
+        OldPositionState(double position)
+        {
+            this.position=position;
+        }
+
+        @Override
+        public double getOutput(int... index)
+        {
+            return position;
+        }
     }
 }

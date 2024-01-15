@@ -53,7 +53,7 @@ public class ModuleTeleop extends EnhancedOpMode
     List<Task> slideupbase, slideup1, slideup2, slidedown, slideupbaseraised, slideup1raised, slideup2raised, slideuphalf;
     int intakeposition;
     double ninja;
-    Intake.PositionState[] intakepositions;
+    Intake.OldPositionState[] intakepositions;
 
     DcMotor hang;
     ElapsedTime slidestimer;
@@ -136,19 +136,19 @@ public class ModuleTeleop extends EnhancedOpMode
 
             if (intakeFive.wasJustPressed())
             {
-                intake.setState(Intake.PositionState.FIVE);
+                intake.setState(Intake.OldPositionState.FIVE);
             }
             else if (intakeFour.wasJustPressed())
             {
-                intake.setState(Intake.PositionState.FOUR);
+                intake.setState(Intake.OldPositionState.FOUR);
             }
             else if (intakeThree.wasJustPressed())
             {
-                intake.setState(Intake.PositionState.THREE);
+                intake.setState(Intake.OldPositionState.THREE);
             }
             else if (intakeTwo.wasJustPressed())
             {
-                intake.setState(Intake.PositionState.TWO);
+                intake.setState(Intake.OldPositionState.TWO);
             }
 
 
@@ -358,7 +358,7 @@ public class ModuleTeleop extends EnhancedOpMode
         droneLauncher=robot.droneLauncher;
 
         intake.init();
-        intake.setState(Intake.PositionState.TELE);
+        intake.setState(Intake.OldPositionState.TELE);
         deposit.init();
         droneLauncher.init();
         intake.setOperationState(Module.OperationState.MANUAL);
@@ -406,11 +406,11 @@ public class ModuleTeleop extends EnhancedOpMode
         };
 
      //   intake.setState(intakepositions[0]);
-        intakepositions=new Intake.PositionState[]
+        intakepositions=new Intake.OldPositionState[]
                 {
-                        Intake.PositionState.TELE, Intake.PositionState.TWO,
-                        Intake.PositionState.THREE, Intake.PositionState.FOUR, Intake.PositionState.FIVE,
-                        Intake.PositionState.HIGH
+                        Intake.OldPositionState.TELE, Intake.OldPositionState.TWO,
+                        Intake.OldPositionState.THREE, Intake.OldPositionState.FOUR, Intake.OldPositionState.FIVE,
+                        Intake.OldPositionState.HIGH
                 };
 
         slideupbase=builder.createNew()
@@ -495,7 +495,6 @@ public class ModuleTeleop extends EnhancedOpMode
                 .executeCode(()->slidesMoving=false)
                 .build();
 
-        robot.waitingForCS=true;
     }
 
     @Override

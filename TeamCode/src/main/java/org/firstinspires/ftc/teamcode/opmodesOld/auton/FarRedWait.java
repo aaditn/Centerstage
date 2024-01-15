@@ -137,7 +137,7 @@ public class FarRedWait extends EnhancedOpMode {
         deposit.setState(DepositOld.RotationState.TRANSFER);
         deposit.setState(DepositOld.WristState.TRANSFER);
         deposit.setState(DepositOld.PusherState.IN);
-        intake.setState(Intake.PositionState.PURP);
+        intake.setState(Intake.OldPositionState.PURP);
         waitT(300);
         if (elementPos == 3) {
             robot.followTrajectoryAsync(placePurple3Init);
@@ -150,7 +150,7 @@ public class FarRedWait extends EnhancedOpMode {
         }
         waitOnDT();
 
-        intake.setState(Intake.PositionState.HIGH);
+        intake.setState(Intake.OldPositionState.HIGH);
         waitOnMacro();
 
         waitT(1000);
@@ -192,7 +192,7 @@ public class FarRedWait extends EnhancedOpMode {
         waitT(1000);
         //park
         scheduler.scheduleTaskList(slidedown);
-        intake.setState(Intake.PositionState.HIGH);
+        intake.setState(Intake.OldPositionState.HIGH);
         deposit.setState(DepositOld.PusherState.IN);
         waitOnMacro();
         waitT(1000);
@@ -209,7 +209,7 @@ public class FarRedWait extends EnhancedOpMode {
 
 
         scheduler.scheduleTaskList(slidedown);
-        intake.setState(Intake.PositionState.HIGH);
+        intake.setState(Intake.OldPositionState.HIGH);
         deposit.setState(DepositOld.PusherState.IN);
         waitOnMacro();
 
@@ -234,20 +234,7 @@ public class FarRedWait extends EnhancedOpMode {
         deposit.init();
 
 
-        colorsensorcorrection=builder.createNew()
-                .executeCode(()->robot.waitingForCS=true)
-                .await(()->robot.tapeDetected||!robot.waitingForCS)
-                .executeCode(()->
-                {
-                    if(robot.waitingForCS)
-                    {
-                        robot.setPoseEstimate(new Pose2d(40, robot.getPoseEstimate().getY(), robot.getPoseEstimate().getHeading()));
-                        Context.debug++;
 
-                    }
-                    robot.waitingForCS=false;
-                })
-                .build();
 
         shiftdeposit=builder.createNew()
                 .await(()->robot.getPoseEstimate().getY()>30)

@@ -49,7 +49,7 @@ public class Slides extends Module
         super(false);
         slide1 =hardwareMap.get(DcMotorEx.class, "slide1");
         slide2 =hardwareMap.get(DcMotorEx.class, "slide2");
-        slide2.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide1.setDirection(DcMotorSimple.Direction.REVERSE);
         slide1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

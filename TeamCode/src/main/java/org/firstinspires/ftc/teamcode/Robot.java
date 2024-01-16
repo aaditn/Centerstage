@@ -46,6 +46,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
@@ -101,7 +102,7 @@ public class Robot extends MecanumDrive
     HardwareMap hardwareMap;
     MultipleTelemetry tel;
     public Slides slides;
-    public DepositOld deposit;
+    public Deposit deposit;
     public Intake intake;
 
     public DroneLauncher droneLauncher;
@@ -135,7 +136,7 @@ public class Robot extends MecanumDrive
         
 
         slides=new Slides(hardwareMap);
-        deposit=new DepositOld(hardwareMap);
+        deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
         droneLauncher = new DroneLauncher(hardwareMap);
 

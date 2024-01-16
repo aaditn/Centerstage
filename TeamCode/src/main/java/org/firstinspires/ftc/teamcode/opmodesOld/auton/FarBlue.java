@@ -319,7 +319,7 @@ public class  FarBlue extends EnhancedOpMode {
         builder=new TaskListBuilder(this);
         scheduler=new TaskScheduler();
 
-        deposit=robot.deposit;
+        //deposit=robot.deposit;
         intake=robot.intake;
         slides=robot.slides;
 

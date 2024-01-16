@@ -10,6 +10,10 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.Slides;
@@ -26,12 +30,12 @@ import java.util.List;
 @Config
 public class NewDeposit extends EnhancedOpMode
 {
-    public static double clawOpen=0.88, clawClosed1=0.72, clawClosed2=0.68;
+    public static double clawOpen=0.88, clawClosed1=0.72, clawClosed2=0.68; //0.96
     public static double rotateFlat=0.36, rotate90=0.03; //0.69, 1
     public static double wristIntake=0.84, wristDeposit=0.54, wristFloaty=0.64;
     public static double rotatorTransfer=0.94, rotatorDeposit=0.16;
-    Servo leftArm, rightArm, wrist, rotatewrist, claw, anglerLeft, anglerRight;
-
+    Servo leftArm, rightArm, wrist, rotatewrist, claw, anglerLeft, anglerRight, sweeperLeft, sweeperRight;
+    CRServo conveyorLeft, conveyorRight;
     //wrist 0:
 
     TaskListBuilder builder;
@@ -94,6 +98,17 @@ public class NewDeposit extends EnhancedOpMode
                 scheduler.scheduleTaskList(slidedown);
             }
 
+            if(gamepad1.left_bumper)
+            {
+                anglerLeft.setPosition(0);
+                anglerRight.setPosition(0);
+            }
+
+            if(gamepad1.right_bumper)
+            {
+                anglerLeft.setPosition(0.29);
+                anglerRight.setPosition(0.29);
+            }
         }
     }
 
@@ -111,6 +126,14 @@ public class NewDeposit extends EnhancedOpMode
         anglerLeft = hardwareMap.get(Servo.class, "anglerLeft");
         anglerRight = hardwareMap.get(Servo.class, "anglerRight");
         anglerRight.setDirection(Servo.Direction.REVERSE);
+
+        sweeperLeft = hardwareMap.get(Servo.class, "sweeperLeft");
+        sweeperRight = hardwareMap.get(Servo.class, "sweeperRight");
+        sweeperRight.setDirection(Servo.Direction.REVERSE);
+
+        conveyorLeft = hardwareMap.get(CRServo.class, "conveyorLeft");
+        conveyorRight = hardwareMap.get(CRServo.class, "conveyorRight");
+        conveyorRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         tel = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -135,6 +158,7 @@ public class NewDeposit extends EnhancedOpMode
                 .delay(500)
                 .executeCode(()->leftArm.setPosition(rotatorDeposit))
                 .executeCode(()->rightArm.setPosition(rotatorDeposit))
+                .delay(50)
                 .moduleAction(slides, Slides.SlideState.ROW2)
                 .delay(200)
                 .executeCode(()->wrist.setPosition(wristFloaty))
@@ -149,16 +173,23 @@ public class NewDeposit extends EnhancedOpMode
                 .executeCode(()->wrist.setPosition(wristFloaty))
                 .delay(300)
                 .moduleAction(slides, Slides.SlideState.GROUND)
-                .await(()->slides.currentPosition()<100)
+                .delay(100)
                 .executeCode(()->leftArm.setPosition(rotatorTransfer))
                 .executeCode(()->rightArm.setPosition(rotatorTransfer))
-                .await(()->slides.getStatus()==Module.Status.IDLE)
+                .await(()->slides.currentPosition()<100)
                 .executeCode(()->wrist.setPosition(wristIntake))
+                .await(()->slides.getStatus()==Module.Status.IDLE)
                 .delay(300)
                 .build();
 
         anglerLeft.setPosition(0);
         anglerRight.setPosition(0);
+
+        sweeperLeft.setPosition(0.035);
+        sweeperRight.setPosition(0.035);
+        
+        //conveyorLeft.setPower(1);
+        //conveyorRight.setPower(1);
     }
 
     @Override

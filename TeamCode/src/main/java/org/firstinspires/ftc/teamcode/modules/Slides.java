@@ -176,7 +176,7 @@ public class Slides extends Module
     @Override
     protected void updateInternalStatus()
     {
-        if (Math.abs(targetPosition - slide1.getCurrentPosition())<10){
+        if (Math.abs(targetPosition - slide1.getCurrentPosition())<10 ||opstate==OperationState.MANUAL){
             status=Status.IDLE;
         }
         else{

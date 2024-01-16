@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -20,14 +21,14 @@ public class TaskListBuilder
     ModuleState lastModuleStateCalled;
     LinearOpMode l;
 
-    SampleMecanumDrive drive;
+    Robot drive;
 
     public TaskListBuilder(LinearOpMode l)
     {
         this.l=l;
     }
 
-    public TaskListBuilder(LinearOpMode l, SampleMecanumDrive drive)
+    public TaskListBuilder(LinearOpMode l, Robot drive)
     {
         this.l=l;
         this.drive=drive;

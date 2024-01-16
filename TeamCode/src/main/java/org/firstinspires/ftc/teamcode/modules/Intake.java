@@ -87,7 +87,7 @@ public class Intake extends Module {
 
         conveyorLeft = hardwareMap.get(CRServo.class, "conveyorLeft");
         conveyorRight = hardwareMap.get(CRServo.class, "conveyorRight");
-        conveyorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        conveyorRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         sweeperLeft = hardwareMap.get(Servo.class, "sweeperLeft");
         sweeperRight = hardwareMap.get(Servo.class, "sweeperRight");

@@ -188,7 +188,7 @@ public class CloseRed extends EnhancedOpMode {
         builder=new TaskListBuilder(this);
         scheduler=new TaskScheduler();
 
-        deposit=robot.deposit;
+        //deposit=robot.deposit;
         intake=robot.intake;
         slides=robot.slides;
 

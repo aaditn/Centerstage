@@ -42,19 +42,23 @@ public class RobotActions
             return builder.createNew()
                     //.moduleAction(deposit, Deposit.ClawState.CLOSED2)
                     //.delay(500)
+                    .executeCode(()->slides.macroRunning=true)
                     .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                     .delay(50)
                     .moduleAction(slides, row)
                     .delay(200)
                     .moduleAction(deposit, Deposit.WristState.HOVER)
-                    .await(()->slides.getStatus()== Module.Status.IDLE)
+                    .await(()->slides.getStatus()==Module.Status.IDLE)
                     .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                    .executeCode(()->slides.macroRunning=false)
                     .build();
         }
 
         return builder.createNew()
+                .executeCode(()->slides.macroRunning=true)
                 .moduleAction(slides, row)
                 .awaitPreviousModuleActionCompletion()
+                .executeCode(()->slides.macroRunning=false)
                 .build();
     }
 
@@ -64,7 +68,9 @@ public class RobotActions
         return builder.createNew()
                 //.executeCode(()->claw.setPosition(clawOpen))
                 //.delay(500)
+                .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.WristState.HOVER)
+                .moduleAction(deposit, Deposit.WristRotateState.ZERO)
                 .delay(300)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .delay(100)
@@ -72,6 +78,17 @@ public class RobotActions
                 .await(()->slides.currentPosition()<100)
                 .moduleAction(deposit, Deposit.WristState.TRANSFER)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
+                .executeCode(()->slides.macroRunning=false)
+                .build();
+    }
+
+    public List<Task> scorePixels()
+    {
+        return builder.createNew()
+                .executeCode(()->slides.macroRunning=true)
+                .moduleAction(deposit, Deposit.ClawState.OPEN)
+                .delay(300)
+                .addTaskList(lowerSlides())
                 .build();
     }
 

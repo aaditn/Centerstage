@@ -187,7 +187,7 @@ public class NewDeposit extends EnhancedOpMode
 
         sweeperLeft.setPosition(0.035);
         sweeperRight.setPosition(0.035);
-        
+
         //conveyorLeft.setPower(1);
         //conveyorRight.setPower(1);
     }

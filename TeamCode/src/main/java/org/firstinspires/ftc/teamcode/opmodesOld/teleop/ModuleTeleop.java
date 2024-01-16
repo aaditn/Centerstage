@@ -188,7 +188,7 @@ public class ModuleTeleop extends EnhancedOpMode
 //            {
 //                slides.setOperationState(Module.OperationState.PRESET);
 //                slidesMoving=true;
-//                scheduler.scheduleTaskList(slideuphalf);
+//                scheduler.scheduleTaskList(slideshow);
 //            }
             else if(slideUpRow1.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.HALF)&&!slidesMoving)
             {

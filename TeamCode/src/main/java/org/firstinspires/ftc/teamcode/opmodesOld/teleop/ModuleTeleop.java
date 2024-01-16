@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.teleop;
+package org.firstinspires.ftc.teamcode.opmodesOld.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.modules.Deposit;
+import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Slides;
@@ -35,7 +35,7 @@ public class ModuleTeleop extends EnhancedOpMode
 {
     Robot robot;
     Intake intake;
-    Deposit deposit;
+    DepositOld deposit;
     Slides slides;
     DroneLauncher droneLauncher;
 
@@ -53,7 +53,7 @@ public class ModuleTeleop extends EnhancedOpMode
     List<Task> slideupbase, slideup1, slideup2, slidedown, slideupbaseraised, slideup1raised, slideup2raised, slideuphalf;
     int intakeposition;
     double ninja;
-    Intake.PositionState[] intakepositions;
+    Intake.OldPositionState[] intakepositions;
 
     DcMotor hang;
     ElapsedTime slidestimer;
@@ -79,25 +79,25 @@ public class ModuleTeleop extends EnhancedOpMode
             //pusher buttons
             if(pusher1.wasJustPressed()||pusher2.wasJustPressed())
             {
-                if (deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.EXTENDED)
+                if (deposit.getState(DepositOld.PusherState.class)== DepositOld.PusherState.EXTENDED)
                 {
-                    deposit.setState(Deposit.PusherState.ONE);
+                    deposit.setState(DepositOld.PusherState.ONE);
                 }
-                else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.IN)
+                else if(deposit.getState(DepositOld.PusherState.class)== DepositOld.PusherState.IN)
                 {
-                    deposit.setState(Deposit.PusherState.ONE);
+                    deposit.setState(DepositOld.PusherState.ONE);
                 }
-                else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.ONE)
+                else if(deposit.getState(DepositOld.PusherState.class)== DepositOld.PusherState.ONE)
                 {
-                    deposit.setState(Deposit.PusherState.HALF);
+                    deposit.setState(DepositOld.PusherState.HALF);
                 }
-                else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.HALF)
+                else if(deposit.getState(DepositOld.PusherState.class)== DepositOld.PusherState.HALF)
                 {
-                    deposit.setState(Deposit.PusherState.TWO);
+                    deposit.setState(DepositOld.PusherState.TWO);
                 }
-                else if(deposit.getState(Deposit.PusherState.class)==Deposit.PusherState.TWO)
+                else if(deposit.getState(DepositOld.PusherState.class)== DepositOld.PusherState.TWO)
                 {
-                    deposit.setState(Deposit.PusherState.IN);
+                    deposit.setState(DepositOld.PusherState.IN);
                 }
 
                 gamepad1.runRumbleEffect(customRumbleEffect0);
@@ -136,19 +136,19 @@ public class ModuleTeleop extends EnhancedOpMode
 
             if (intakeFive.wasJustPressed())
             {
-                intake.setState(Intake.PositionState.FIVE);
+                intake.setState(Intake.OldPositionState.FIVE);
             }
             else if (intakeFour.wasJustPressed())
             {
-                intake.setState(Intake.PositionState.FOUR);
+                intake.setState(Intake.OldPositionState.FOUR);
             }
             else if (intakeThree.wasJustPressed())
             {
-                intake.setState(Intake.PositionState.THREE);
+                intake.setState(Intake.OldPositionState.THREE);
             }
             else if (intakeTwo.wasJustPressed())
             {
-                intake.setState(Intake.PositionState.TWO);
+                intake.setState(Intake.OldPositionState.TWO);
             }
 
 
@@ -188,7 +188,7 @@ public class ModuleTeleop extends EnhancedOpMode
 //            {
 //                slides.setOperationState(Module.OperationState.PRESET);
 //                slidesMoving=true;
-//                scheduler.scheduleTaskList(slideuphalf);
+//                scheduler.scheduleTaskList(slideshow);
 //            }
             else if(slideUpRow1.wasJustPressed()&&(slides.getState()==Slides.SlideState.GROUND||slides.getState()==Slides.SlideState.HALF)&&!slidesMoving)
             {
@@ -352,13 +352,13 @@ public class ModuleTeleop extends EnhancedOpMode
         builder=new TaskListBuilder(this);
         scheduler=new TaskScheduler();
 
-        deposit=robot.deposit;
+        //deposit=robot.deposit;
         intake=robot.intake;
         slides=robot.slides;
         droneLauncher=robot.droneLauncher;
 
         intake.init();
-        intake.setState(Intake.PositionState.TELE);
+        intake.setState(Intake.OldPositionState.TELE);
         deposit.init();
         droneLauncher.init();
         intake.setOperationState(Module.OperationState.MANUAL);
@@ -406,26 +406,26 @@ public class ModuleTeleop extends EnhancedOpMode
         };
 
      //   intake.setState(intakepositions[0]);
-        intakepositions=new Intake.PositionState[]
+        intakepositions=new Intake.OldPositionState[]
                 {
-                        Intake.PositionState.TELE, Intake.PositionState.TWO,
-                        Intake.PositionState.THREE, Intake.PositionState.FOUR, Intake.PositionState.FIVE,
-                        Intake.PositionState.HIGH
+                        Intake.OldPositionState.TELE, Intake.OldPositionState.TWO,
+                        Intake.OldPositionState.THREE, Intake.OldPositionState.FOUR, Intake.OldPositionState.FIVE,
+                        Intake.OldPositionState.HIGH
                 };
 
         slideupbase=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
-                .moduleAction(deposit, Deposit.WristState.CRADLE)
+                .moduleAction(deposit, DepositOld.WristState.CRADLE)
                 .delay(200)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
+                .moduleAction(deposit, DepositOld.RotationState.DEPOSIT_MID)
 //                .moduleAction(deposit, Deposit.PusherState.EXTENDED)
                 .delay(250)
                 .moduleAction(slides, Slides.SlideState.RAISED)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
-                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .moduleAction(deposit, DepositOld.WristState.DEPOSIT)
                 .delay(100)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
+                .moduleAction(deposit, DepositOld.RotationState.DEPOSIT_HIGH)
                 .build();
 
         slideuphalf=builder.createNew()
@@ -436,32 +436,32 @@ public class ModuleTeleop extends EnhancedOpMode
 
         slideup1=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
-                .moduleAction(deposit, Deposit.WristState.CRADLE)
+                .moduleAction(deposit, DepositOld.WristState.CRADLE)
                 .delay(300)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
+                .moduleAction(deposit, DepositOld.RotationState.DEPOSIT_MID)
 //                .moduleAction(deposit, Deposit.PusherState.EXTENDED)
                 .delay(250)
                 .moduleAction(slides, Slides.SlideState.ROW1)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
-                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .moduleAction(deposit, DepositOld.WristState.DEPOSIT)
                 .delay(100)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
+                .moduleAction(deposit, DepositOld.RotationState.DEPOSIT_HIGH)
                 .build();
 
         slideup2=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
-                .moduleAction(deposit, Deposit.WristState.CRADLE)
+                .moduleAction(deposit, DepositOld.WristState.CRADLE)
                 .delay(300)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
+                .moduleAction(deposit, DepositOld.RotationState.DEPOSIT_MID)
 //                .moduleAction(deposit, Deposit.PusherState.EXTENDED)
                 .delay(250)
                 .moduleAction(slides, Slides.SlideState.ROW2)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
-                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .moduleAction(deposit, DepositOld.WristState.DEPOSIT)
                 .delay(100)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
+                .moduleAction(deposit, DepositOld.RotationState.DEPOSIT_HIGH)
                 .build();
 
         slideupbaseraised=builder.createNew()
@@ -484,18 +484,17 @@ public class ModuleTeleop extends EnhancedOpMode
 
         slidedown=builder.createNew()
                 //.executeCode(()->slidesMoving=true)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
+                .moduleAction(deposit, DepositOld.RotationState.DEPOSIT_MID)
                 .delay(300)
                 .moduleAction(slides, Slides.SlideState.GROUND)
-                .moduleAction(deposit, Deposit.PusherState.IN)
+                .moduleAction(deposit, DepositOld.PusherState.IN)
                 .await(()->slides.currentPosition()<100)
-                .moduleAction(deposit, Deposit.RotationState.TRANSFER)
-                .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                .moduleAction(deposit, DepositOld.RotationState.TRANSFER)
+                .moduleAction(deposit, DepositOld.WristState.TRANSFER)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slidesMoving=false)
                 .build();
 
-        robot.waitingForCS=true;
     }
 
     @Override

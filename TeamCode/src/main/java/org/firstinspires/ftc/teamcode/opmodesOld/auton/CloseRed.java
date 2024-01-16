@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auton;
+package org.firstinspires.ftc.teamcode.opmodesOld.auton;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.modules.Deposit;
+import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
@@ -21,15 +21,15 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import java.util.List;
 
 @Config
-@Autonomous(name= "Close Blue")
-public class CloseBlue extends EnhancedOpMode {
+@Autonomous(name= "Close Red")
+public class CloseRed extends EnhancedOpMode {
 
     Robot robot;
 
     Intake intake;
-    Deposit deposit;
+    DepositOld deposit;
     Slides slides;
-    Pose2d startPos = new Pose2d(20,56,Math.toRadians(270));
+    Pose2d startPos = new Pose2d(20,-56,Math.toRadians(90));
     TaskScheduler scheduler;
     TaskListBuilder builder;
     int elementPos;
@@ -37,13 +37,13 @@ public class CloseBlue extends EnhancedOpMode {
     List<Task> slideupbase;
     List<Task> slidedown;
     boolean macroRunning=false;
-    int checkpoint;
+
 
 
     public void waitT(int ticks)
     {
-        ElapsedTime x= new ElapsedTime();
-        while(x.milliseconds()<ticks&&opModeIsActive())
+        ElapsedTime  x= new ElapsedTime();
+        while(x.milliseconds()<ticks)
         {
 
         }
@@ -58,77 +58,78 @@ public class CloseBlue extends EnhancedOpMode {
 
     public void waitOnMacro()
     {
-        while(macroRunning&&opModeIsActive() && !isStopRequested())
+        while(macroRunning&&opModeIsActive())
         {
             //stall
         }
     }
 
+    public void onStart()
+    {
+        robot.closeCameras();
+    }
+
     @Override
     public void linearOpMode()
     {
-
-
         Trajectory purplePixel1 = robot.trajectoryBuilder(startPos)
-                .splineToConstantHeading(new Vector2d(31.5, 31), Math.toRadians(-90),
+                .lineToConstantHeading(new Vector2d(20, -52))
+                .splineTo(new Vector2d(14, -32), Math.toRadians(120),
                         robot.getVelocityConstraint(30, 1, 15.06),
                         robot.getAccelerationConstraint(40))
                 .build();
 
         Trajectory purplePixel2 = robot.trajectoryBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(16,26))
+                .lineToConstantHeading(new Vector2d(16,-26))
+                //.addTemporalMarker(.1, () -> {intake.setState(Intake.positionState.PURP); intake.updateLoop(); intake.writeLoop();})
                 .build();
 
         Trajectory purplePixel3 = robot.trajectoryBuilder(startPos)
-                .forward(8)
-                .splineTo(new Vector2d(14, 32), Math.toRadians(-120),
+                .forward(7)
+                .splineToConstantHeading(new Vector2d(32.5, -31), Math.toRadians(90),
                         robot.getVelocityConstraint(30, 1, 15.06),
                         robot.getAccelerationConstraint(40))
                 .build();
 
 
         Trajectory yellowPixel1 = robot.trajectoryBuilder(purplePixel1.end())
-                .lineToLinearHeading(new Pose2d(61.5,35.75,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(60.5,-21.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();
 
         Trajectory yellowPixel2 = robot.trajectoryBuilder(purplePixel2.end())
-                .lineToLinearHeading(new Pose2d(62,28.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(60.5,-28,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();
 
         Trajectory yellowPixel3 = robot.trajectoryBuilder(purplePixel3.end())
-                .lineToLinearHeading(new Pose2d(62  ,21.5,Math.toRadians(180)),
+                .lineToLinearHeading(new Pose2d(60.5  ,-33.5,Math.toRadians(180)),
                         robot.getVelocityConstraint(47.5, 1.65, 15.06),
                         robot.getAccelerationConstraint(45))
                 .build();
 
         Trajectory park1 = robot.trajectoryBuilder(yellowPixel2.end())
-                .strafeRight(24)
+                .strafeLeft(24)
                 .build();
 
         Trajectory park2 = robot.trajectoryBuilder(yellowPixel2.end())
-                .strafeRight(24)
+                .strafeLeft(24)
                 .build();
 
         Trajectory park3 = robot.trajectoryBuilder(yellowPixel2.end())
-                .strafeRight(28)
+                .strafeLeft(28)
                 .build();
 
         waitForStart();
 
         robot.setPoseEstimate(startPos);
 
-        deposit.setState(Deposit.WristState.TRANSFER);
-        deposit.setState(Deposit.PusherState.IN);
-        intake.setState(Intake.PositionState.PURP);
-
+        deposit.setState(DepositOld.WristState.TRANSFER);
+        intake.setState(Intake.OldPositionState.PURP);
 
         waitT(1000);
-
-        checkpoint++;
 
         if(elementPos==1) {
             robot.followTrajectoryAsync(purplePixel1);
@@ -138,21 +139,16 @@ public class CloseBlue extends EnhancedOpMode {
             robot.followTrajectoryAsync(purplePixel3);
         }
 
-        checkpoint++;
-
         waitOnDT();
-
-        checkpoint++;
 
         waitT(200);
 
         intake.setState(Intake.PowerState.OFF);
-        intake.setState(Intake.PositionState.HIGH);
+        intake.setState(Intake.OldPositionState.HIGH);
 
 
         scheduler.scheduleTaskList(slideupbase);
 
-        waitOnMacro();
         if(elementPos==1) {
             robot.followTrajectoryAsync(yellowPixel1);
         } else if (elementPos==2){
@@ -161,13 +157,13 @@ public class CloseBlue extends EnhancedOpMode {
             robot.followTrajectoryAsync(yellowPixel3);
         }
 
+        waitOnMacro();
         waitOnDT();
 
-        waitT(300);
-
-        deposit.setState(Deposit.PusherState.TWO);
+        deposit.setState(DepositOld.PusherState.TWO);
 
         waitT(1000);
+
         scheduler.scheduleTaskList(slidedown);
 
         waitOnMacro();
@@ -183,57 +179,45 @@ public class CloseBlue extends EnhancedOpMode {
         waitOnDT();
     }
 
-    public void onStart()
-    {
-        robot.closeCameras();
-    }
-
     @Override
     public void initialize()
     {
         this.setLoopTimes(10);
 
         robot=new Robot(this);
-        Context.isTeamRed=false;
         builder=new TaskListBuilder(this);
         scheduler=new TaskScheduler();
 
-        deposit=robot.deposit;
+        //deposit=robot.deposit;
         intake=robot.intake;
         slides=robot.slides;
 
         intake.init();
         deposit.init();
-        deposit.setState(Deposit.PusherState.IN);
 
         slideupbase=builder.createNew()
-               // .delay(2000)
-                .moduleAction(intake, Intake.PowerState.OFF)
                 .executeCode(()->macroRunning=true)
-                .moduleAction(deposit, Deposit.WristState.CRADLE_AUTO)
-                .delay(200)
-                //.moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
-                //.delay(300)
-                .moduleAction(slides, Slides.SlideState.AUTO_LOW)
-                //.awaitPreviousModuleActionCompletion()
-                .delay(200)
-                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .moduleAction(deposit, DepositOld.WristState.CRADLE)
                 .delay(100)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_HIGH)
-                .delay(300)
+                .moduleAction(slides, Slides.SlideState.HALF)
+                //.moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                .awaitPreviousModuleActionCompletion()
+                .moduleAction(deposit, DepositOld.RotationState.DEPOSIT_HIGH)
+                .delay(100)
+                .moduleAction(deposit, DepositOld.WristState.DEPOSIT)
                 .executeCode(()->macroRunning=false)
                 .build();
 
         slidedown=builder.createNew()
                 .executeCode(()->macroRunning=true)
-                .moduleAction(deposit, Deposit.RotationState.DEPOSIT_MID)
-                .delay(400)
+                .moduleAction(deposit, DepositOld.RotationState.DEPOSIT_MID)
+                .delay(300)
                 .moduleAction(slides, Slides.SlideState.GROUND)
-                .moduleAction(deposit, Deposit.PusherState.IN)
-                .await(()->slides.currentPosition()<120)
-                .moduleAction(deposit, Deposit.RotationState.TRANSFER)
-                .moduleAction(deposit, Deposit.WristState.TRANSFER)
-                .await(()->slides.getStatus()== Module.Status.IDLE)
+                .moduleAction(deposit, DepositOld.PusherState.IN)
+                .await(()->slides.currentPosition()<100)
+                .moduleAction(deposit, DepositOld.RotationState.TRANSFER)
+                .moduleAction(deposit, DepositOld.WristState.TRANSFER)
+                .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->macroRunning=false)
                 .build();
     }
@@ -247,9 +231,8 @@ public class CloseBlue extends EnhancedOpMode {
         } else {
             elementPos = 2;
         }
-        Context.tel.addData("Team red?", Context.isTeamRed);
         Context.tel.addData("element Pos", elementPos);
-        Context.tel.addData("centerY", robot.teamElementDetector.centerY);
+        Context.tel.addData("centerY", robot.teamElementDetector);
         Context.tel.addData("largest area", robot.teamElementDetector.getLargestArea());
         //Context.tel.update();
         robot.initLoop();
@@ -257,8 +240,6 @@ public class CloseBlue extends EnhancedOpMode {
     @Override
     public void primaryLoop()
     {
-        Context.tel.addData("checkpoint", checkpoint);
-        Context.tel.addData("Debug", Context.debug);
         robot.primaryLoop();
     }
 }

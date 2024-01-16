@@ -16,6 +16,7 @@ public abstract class Module
 
     protected ElapsedTime timer;
     protected int currentTimeout;
+    public boolean macroRunning;
 
     public enum Status
     {

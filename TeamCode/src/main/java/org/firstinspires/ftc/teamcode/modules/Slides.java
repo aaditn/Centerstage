@@ -26,7 +26,7 @@ public class Slides extends Module
     PIDCoefficients standardcoeff, closecoeff, downcoeff;
     public static enum SlideState implements ModuleState
     {
-        GROUND(0), HALF(25), AUTO_LOW(90),AUTO_TWO(250), RAISED(300), ROW1(700), ROW2(1000), ROW3(0);
+        GROUND(0), HALF(25), AUTO_LOW(90),AUTO_TWO(250), RAISED(300), ROW1(700), ROW2(1000), ROW3(1300);
 
         double position;
         SlideState(double position)
@@ -49,7 +49,7 @@ public class Slides extends Module
         super(false);
         slide1 =hardwareMap.get(DcMotorEx.class, "slide1");
         slide2 =hardwareMap.get(DcMotorEx.class, "slide2");
-        slide2.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide1.setDirection(DcMotorSimple.Direction.REVERSE);
         slide1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -176,7 +176,7 @@ public class Slides extends Module
     @Override
     protected void updateInternalStatus()
     {
-        if (Math.abs(targetPosition - slide1.getCurrentPosition())<10){
+        if (Math.abs(targetPosition - slide1.getCurrentPosition())<10 ||opstate==OperationState.MANUAL){
             status=Status.IDLE;
         }
         else{

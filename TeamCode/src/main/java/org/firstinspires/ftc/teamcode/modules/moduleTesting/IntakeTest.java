@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.modules;
+package org.firstinspires.ftc.teamcode.modules.moduleTesting;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
+import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
@@ -85,19 +86,19 @@ public class IntakeTest extends EnhancedOpMode
         }*/
         if(gamepad2.a)
         {
-            intake.setState(Intake.PositionState.FIVE);
+            intake.setState(Intake.OldPositionState.FIVE);
         }
         else if(gamepad2.b)
         {
-            intake.setState(Intake.PositionState.FOUR);
+            intake.setState(Intake.OldPositionState.FOUR);
         }
         else if(gamepad2.x)
         {
-            intake.setState(Intake.PositionState.THREE);
+            intake.setState(Intake.OldPositionState.THREE);
         }
         else if(gamepad2.y)
         {
-            intake.setState(Intake.PositionState.TWO);
+            intake.setState(Intake.OldPositionState.TWO);
         }
         //intake.setPowerManual(gamepad2.right_stick_y);
 

@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,7 +21,8 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
-public class TeleOp extends EnhancedOpMode
+@TeleOp
+public class TeleOpp extends EnhancedOpMode
 {
     DcMotor hang;
     Robot robot;
@@ -167,7 +169,7 @@ public class TeleOp extends EnhancedOpMode
                 scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.ROW3));
             }
             //SLIDES MANUAL
-            if((slides.getState()!=Slides.SlideState.GROUND||slidesOverride.isDown())&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
+            if(slides.getState()!=Slides.SlideState.GROUND&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
             {
                 slides.setOperationState(Module.OperationState.MANUAL);
 

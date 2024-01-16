@@ -42,6 +42,7 @@ public class SuitedLocalizationTest extends LinearOpMode {
         previous.add(new Pose2d(0,0,0));
         previous.add(new Pose2d(0,0,0));
         waitForStart();
+        drive.setYaw();
         drive.setPoseEstimate(startPos);
         while (!isStopRequested()) {
             drive.setLocalDrivePowers(

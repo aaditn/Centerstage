@@ -123,16 +123,18 @@ public class Intake extends Module {
     @Override
     protected void internalUpdate()
     {
+
         currentPower=getState(PowerState.class).getOutput();
-        currentPosition=getState(OldPositionState.class).getOutput();
         conveyorPower =getState(ConveyorState.class).getOutput();
         sweeperPos=getState(SweeperState.class).getOutput();
+
+        currentPosition=getState(PositionState.class).getOutput();
     }
 
     @Override
     protected void internalUpdateManual()
     {
-        currentPosition=getState(OldPositionState.class).getOutput();
+        currentPosition=getState(PositionState.class).getOutput();
         conveyorPower =getState(ConveyorState.class).getOutput();
         sweeperPos=getState(SweeperState.class).getOutput();
     }

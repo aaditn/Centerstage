@@ -123,10 +123,11 @@ public class Robot extends MecanumDrive
 
     public Robot(LinearOpMode l)
     {
+
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         this.l=l;
         tel = new MultipleTelemetry(l.telemetry, FtcDashboard.getInstance().getTelemetry());
-
+tel.addData("sohej","opgojiajioa");
         Context.resetValues();
         Context.tel=tel;
         Context.updateValues();
@@ -139,19 +140,20 @@ public class Robot extends MecanumDrive
             cameraInit();
         }
         //teamElementDetector=new TeamElementDetection(l.telemetry);
-
+        tel.addData("seeeohej","opgojwwiajioa");
         dtInit();
-        
+        tel.addData("sohej","opgojiajioa");
 
         slides=new Slides(hardwareMap);
         deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
         droneLauncher = new DroneLauncher(hardwareMap);
-
+        tel.addData("sohej","opgojiajioa");
         intake.init();
         deposit.init();
         droneLauncher.init();
         tel.addData("Robot Initialization:", "Complete");
+
     }
 
     public static Robot getInstance()
@@ -231,9 +233,6 @@ public class Robot extends MecanumDrive
         rightRear = hardwareMap.get(DcMotorEx.class, "br");
         rightFront = hardwareMap.get(DcMotorEx.class, "fr");
 
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
         for (DcMotorEx motor : motors) {
@@ -269,12 +268,7 @@ public class Robot extends MecanumDrive
 
             columnCS=hardwareMap.get(ColorRangeSensor.class, "columnCS");
             droneCS=hardwareMap.get(ColorRangeSensor.class, "droneCS");
-            while (navx.isCalibrating() ) {
-                tel.addData("navX-Micro", "Startup Calibration in Progress");
 
-            }
-
-            navx.zeroYaw();
         }
     }
 
@@ -285,7 +279,8 @@ public class Robot extends MecanumDrive
         write();
         //loop whatever else u want
     }
-
+public void setYaw(){
+}
     public void primaryLoop()
     {
         tel.update();
@@ -506,7 +501,7 @@ public class Robot extends MecanumDrive
     @Override
     public double getRawExternalHeading() {
 //        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        return navx.getYaw();
+        return Math.toRadians(navx.getRoll());
     }
 
     @Override

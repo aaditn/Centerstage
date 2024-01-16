@@ -29,6 +29,8 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.kauailabs.navx.ftc.AHRS;
+import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -79,6 +81,8 @@ public class Robot extends MecanumDrive
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
+    private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 10;
+
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
@@ -106,9 +110,11 @@ public class Robot extends MecanumDrive
 
     public DroneLauncher droneLauncher;
     OpenCvWebcam camera;
+
     public TeamElementDetection teamElementDetector;
     Pose2d localDrivePowers;
     ElapsedTime timer;
+    AHRS navx;
     public boolean waitingForCS=false;
     public boolean tapeDetected=false;
     ColorRangeSensor columnCS, droneCS;
@@ -145,6 +151,7 @@ public class Robot extends MecanumDrive
         intake.init();
         deposit.init();
         droneLauncher.init();
+        tel.addData("Robot Initialization:", "Complete");
     }
 
 
@@ -205,6 +212,10 @@ public class Robot extends MecanumDrive
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
+        navx = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
+                AHRS.DeviceDataType.kProcessedData,
+                NAVX_DEVICE_UPDATE_RATE_HZ);
+
 
         leftFront = hardwareMap.get(DcMotorEx.class, "fl");
         leftRear = hardwareMap.get(DcMotorEx.class, "bl");
@@ -247,8 +258,15 @@ public class Robot extends MecanumDrive
 
         if(!Context.isTele)
         {
+
             columnCS=hardwareMap.get(ColorRangeSensor.class, "columnCS");
             droneCS=hardwareMap.get(ColorRangeSensor.class, "droneCS");
+            while (navx.isCalibrating() ) {
+                tel.addData("navX-Micro", "Startup Calibration in Progress");
+
+            }
+
+            navx.zeroYaw();
         }
     }
 
@@ -497,7 +515,8 @@ public class Robot extends MecanumDrive
 
     @Override
     public double getRawExternalHeading() {
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        return navx.getYaw();
     }
 
     @Override

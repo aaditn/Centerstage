@@ -38,7 +38,7 @@ public class TeleOpRewrite extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
     ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesBottomRow, slidesSetLine1, slidesSetLine2,
-    slidesSetLine3, slidesOverride, depositMacro, grabPixel, flush, CCW45, CW45;
+    slidesSetLine3, slidesOverride, depositMacro, grabPixel, flush, CCW45, CW45, clawManual;
     double ninja;
     int sweeperCounter;
     int wristRotateCounter;
@@ -142,6 +142,14 @@ public class TeleOpRewrite extends EnhancedOpMode
             {
                 scheduler.scheduleTaskList(actions.grabAndHold());
                 //TODO tune floaty position(get it from Ethan)
+            }
+            //MANUAL CLAW OPEN CLOSE
+            if(clawManual.wasJustPressed())
+            {
+                if(deposit.getState(Deposit.ClawState.class)==Deposit.ClawState.OPEN)
+                    deposit.setState(Deposit.ClawState.CLOSED2);
+                else if(deposit.getState(Deposit.ClawState.class)==Deposit.ClawState.CLOSED2)
+                    deposit.setState(Deposit.ClawState.OPEN);
             }
 
 
@@ -262,7 +270,8 @@ public class TeleOpRewrite extends EnhancedOpMode
                 grabPixel=new ToggleButtonReader(g2, GamepadKeys.Button.A),
                 flush=new ToggleButtonReader(g2, GamepadKeys.Button.X),
                 CCW45=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
-                CW45=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER)
+                CW45=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
+                clawManual=new ToggleButtonReader(g1, GamepadKeys.Button.X)
         };
 
         sweeperPositions=new Intake.SweeperState[]{

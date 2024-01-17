@@ -129,7 +129,10 @@ public class Robot extends MecanumDrive
         tel = new MultipleTelemetry(l.telemetry, FtcDashboard.getInstance().getTelemetry());
         Context.resetValues();
         Context.tel=tel;
-        Context.updateValues();
+        if(Context.opmode!=null)
+        {
+            Context.updateValues();
+        }
 
         hardwareMap=l.hardwareMap;
         timer=new ElapsedTime();

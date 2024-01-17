@@ -232,8 +232,8 @@ public class Robot extends MecanumDrive
         leftRear = hardwareMap.get(DcMotorEx.class, "bl");
         rightRear = hardwareMap.get(DcMotorEx.class, "br");
         rightFront = hardwareMap.get(DcMotorEx.class, "fr");
-leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
         for (DcMotorEx motor : motors) {
@@ -280,8 +280,8 @@ leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         write();
         //loop whatever else u want
     }
-public void setYaw(){
-}
+    public void setYaw(){
+    }
     public void primaryLoop()
     {
         tel.update();

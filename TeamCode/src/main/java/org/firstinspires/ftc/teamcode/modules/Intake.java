@@ -30,7 +30,7 @@ public class Intake extends Module {
     }
     public enum PositionState implements ModuleState
     {
-        RAISED(0.05), DOWN(0.29);
+        RAISED(0.05), DOWN(0.31);
         double position;
         PositionState(double position)
         {

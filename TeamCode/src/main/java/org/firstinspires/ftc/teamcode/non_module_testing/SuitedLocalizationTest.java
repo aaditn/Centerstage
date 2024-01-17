@@ -64,6 +64,7 @@ public class SuitedLocalizationTest extends LinearOpMode {
                 Context.tel.addData("exist", exist.getX());
                 Context.tel.addData("prev", previous.get(i).getX());
                 Context.tel.addData("count", count);
+                Context.tel.addData("rawExternalHeading", drive.getRawExternalHeading());
                 count++;
                 if(exist.getX() != previous.get(i).getX()) {
                     drive.setPoseEstimate(new Pose2d(

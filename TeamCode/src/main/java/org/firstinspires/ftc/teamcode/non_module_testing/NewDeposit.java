@@ -11,8 +11,6 @@ import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -30,10 +28,11 @@ import java.util.List;
 @Config
 public class NewDeposit extends EnhancedOpMode
 {
-    public static double clawOpen=0.88, clawClosed1=0.72, clawClosed2=0.68; //0.96
-    public static double rotateFlat=0.36, rotate90=0.03; //0.69, 1
-    public static double wristIntake=0.84, wristDeposit=0.54, wristFloaty=0.64;
-    public static double rotatorTransfer=0.94, rotatorDeposit=0.16;
+    public static double clawOpen=0.99, clawClosed1=0.72, clawClosed2=0.68;
+    public static double rotateZero =0.435, rotate90=0.49;
+    public static double wristTransfer =0.99, wristDeposit=0.63, wristFloaty=0.83;
+    public static double rotatorTransfer=0.95, rotatorDeposit=0.22;
+    public static double raised = 0, down = 0;
     Servo leftArm, rightArm, wrist, rotatewrist, claw, anglerLeft, anglerRight, sweeperLeft, sweeperRight;
     CRServo conveyorLeft, conveyorRight;
     //wrist 0:
@@ -68,7 +67,7 @@ public class NewDeposit extends EnhancedOpMode
 
             if(gamepad1.a)
             {
-                rotatewrist.setPosition(rotateFlat);
+                rotatewrist.setPosition(rotateZero);
             }
             else if(gamepad1.b)
             {
@@ -85,7 +84,7 @@ public class NewDeposit extends EnhancedOpMode
             {
                 leftArm.setPosition(rotatorTransfer);
                 rightArm.setPosition(rotatorTransfer);
-                wrist.setPosition(wristIntake);
+                wrist.setPosition(wristTransfer);
             }
             if(slideupb.wasJustPressed())
             {
@@ -177,7 +176,7 @@ public class NewDeposit extends EnhancedOpMode
                 .executeCode(()->leftArm.setPosition(rotatorTransfer))
                 .executeCode(()->rightArm.setPosition(rotatorTransfer))
                 .await(()->slides.currentPosition()<100)
-                .executeCode(()->wrist.setPosition(wristIntake))
+                .executeCode(()->wrist.setPosition(wristTransfer))
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .delay(300)
                 .build();

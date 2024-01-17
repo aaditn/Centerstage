@@ -25,6 +25,11 @@ public class RobotActions
         return robotActions;
     }
 
+    public static void deleteActionsInstance()
+    {
+        robotActions=null;
+    }
+
     public RobotActions(Robot robot)
     {
         this.robot=robot;
@@ -43,7 +48,7 @@ public class RobotActions
                     //.moduleAction(deposit, Deposit.ClawState.CLOSED2)
                     //.delay(500)
                     .executeCode(()->slides.macroRunning=true)
-                    .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                    .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                     .delay(50)
                     .moduleAction(slides, row)
                     .delay(200)
@@ -84,11 +89,30 @@ public class RobotActions
 
     public List<Task> scorePixels()
     {
+        /*
         return builder.createNew()
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
                 .delay(300)
                 .addTaskList(lowerSlides())
+                .build();*/
+        return builder.createNew()
+                //.executeCode(()->claw.setPosition(clawOpen))
+                //.delay(500)
+                .executeCode(()->slides.macroRunning=true)
+                .moduleAction(deposit, Deposit.ClawState.OPEN)
+                .delay(300)
+                .executeCode(()->slides.macroRunning=true)
+                .moduleAction(deposit, Deposit.WristState.HOVER)
+                .moduleAction(deposit, Deposit.WristRotateState.ZERO)
+                .delay(300)
+                .moduleAction(slides, Slides.SlideState.GROUND)
+                .delay(100)
+                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                .await(()->slides.currentPosition()<100)
+                .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                .await(()->slides.getStatus()==Module.Status.IDLE)
+                .executeCode(()->slides.macroRunning=false)
                 .build();
     }
 
@@ -108,6 +132,15 @@ public class RobotActions
                 .moduleAction(intake, Intake.PositionState.DOWN)
                 .moduleAction(intake, Intake.PowerState.INTAKE)
                 .moduleAction(intake, Intake.ConveyorState.INTAKE)
+                .build();
+    }
+
+    public List<Task> grabAndHold()
+    {
+        return builder.createNew()
+                .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                .delay(300)
+                .moduleAction(deposit, Deposit.WristState.HOVER)
                 .build();
     }
 

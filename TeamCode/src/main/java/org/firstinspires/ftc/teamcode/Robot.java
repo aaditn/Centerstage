@@ -127,7 +127,7 @@ public class Robot extends MecanumDrive
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         this.l=l;
         tel = new MultipleTelemetry(l.telemetry, FtcDashboard.getInstance().getTelemetry());
-tel.addData("sohej","opgojiajioa");
+        tel.addData("sohej","opgojiajioa");
         Context.resetValues();
         Context.tel=tel;
         Context.updateValues();
@@ -153,7 +153,6 @@ tel.addData("sohej","opgojiajioa");
         deposit.init();
         droneLauncher.init();
         tel.addData("Robot Initialization:", "Complete");
-
     }
 
     public static Robot getInstance()
@@ -163,6 +162,11 @@ tel.addData("sohej","opgojiajioa");
             robot=new Robot(Context.opmode);
         }
         return robot;
+    }
+
+    public static void destroyRobotInstance()
+    {
+        robot=null;
     }
 
 
@@ -232,7 +236,8 @@ tel.addData("sohej","opgojiajioa");
         leftRear = hardwareMap.get(DcMotorEx.class, "bl");
         rightRear = hardwareMap.get(DcMotorEx.class, "br");
         rightFront = hardwareMap.get(DcMotorEx.class, "fr");
-
+leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
         for (DcMotorEx motor : motors) {

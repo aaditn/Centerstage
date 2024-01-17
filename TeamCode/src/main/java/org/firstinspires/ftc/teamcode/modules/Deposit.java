@@ -9,29 +9,23 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 public class Deposit extends Module
 {
     Servo leftArm, rightArm, wrist, rotatewrist, claw;
-    public static double clawOpen=0.88, clawClosed1=0.72, clawClosed2=0.72;
+    public static double clawOpen=0.99, clawClosed1=0.72, clawClosed2=0.68;
     public static double rotateNinety=0.49, rotateZero=0.435, rotateOneEighty=0.5475, rotateTwoSeventy=0.6075;
-    public static double wristTransfer =0.82, wristDeposit=0.54, wristFloaty=0.64;
-    public static double rotator1Transfer =0.99, rotator1Deposit=0.22;
-    public static double rotator2Transfer =0.01, rotator2Deposit=0.78;
+    public static double wristTransfer=0.82, wristDeposit=0.54, wristFloaty=0.83;
+    public static double rotatorTransfer=0.94, rotatorDeposit=0.16;
+
 
     public enum FlipState implements ModuleState
     {
-        TRANSFER(rotator1Transfer, rotator2Transfer), DEPOSIT(rotator1Deposit, rotator2Deposit);
-        double pos1, pos2;
-        FlipState(double pos1, double pos2)
+        TRANSFER(rotatorTransfer), DEPOSIT(rotatorDeposit);
+        double pos1;
+        FlipState(double pos1)
         {
             this.pos1=pos1;
-            this.pos2=pos2;
         }
         @Override
         public double getOutput(int... index) {
-            if(index[0]==1)
-                return pos1;
-            else if(index[0]==2)
-                return pos2;
-            else
-                return 0;
+            return pos1;
         }
     }
 
@@ -84,6 +78,8 @@ public class Deposit extends Module
         super(false);
         leftArm=hardwareMap.get(Servo.class, "leftArm");
         rightArm=hardwareMap.get(Servo.class, "rightArm");
+        rightArm.setDirection(Servo.Direction.REVERSE);
+
         wrist=hardwareMap.get(Servo.class, "wrist");
         rotatewrist=hardwareMap.get(Servo.class, "rotatewrist");
         claw=hardwareMap.get(Servo.class, "claw");

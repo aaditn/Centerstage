@@ -37,8 +37,9 @@ public class Intake extends Module {
             this.position=position;
         }
         @Override
-        public double getOutput(int... index) {
-            return 0;
+        public double getOutput(int... index)
+        {
+            return position;
         }
     }
     public enum ConveyorState implements  ModuleState
@@ -103,6 +104,7 @@ public class Intake extends Module {
     {
         super.manualChange(power);
         currentPower=power;
+        conveyorPower=Math.signum(power);
     }
 
     @Override
@@ -127,7 +129,6 @@ public class Intake extends Module {
         currentPower=getState(PowerState.class).getOutput();
         conveyorPower =getState(ConveyorState.class).getOutput();
         sweeperPos=getState(SweeperState.class).getOutput();
-
         currentPosition=getState(PositionState.class).getOutput();
     }
 
@@ -135,7 +136,6 @@ public class Intake extends Module {
     protected void internalUpdateManual()
     {
         currentPosition=getState(PositionState.class).getOutput();
-        conveyorPower =getState(ConveyorState.class).getOutput();
         sweeperPos=getState(SweeperState.class).getOutput();
     }
 

@@ -29,8 +29,6 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import java.util.List;
 
 @Config
-@TeleOp(name="A - ModuleTeleop")
-
 public class ModuleTeleop extends EnhancedOpMode
 {
     Robot robot;

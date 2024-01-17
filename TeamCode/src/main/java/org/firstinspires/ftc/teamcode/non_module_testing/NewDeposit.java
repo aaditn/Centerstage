@@ -182,8 +182,8 @@ public class NewDeposit extends EnhancedOpMode
                 .delay(300)
                 .build();
 
-        anglerLeft.setPosition(0);
-        anglerRight.setPosition(0);
+        anglerLeft.setPosition(0.29);
+        anglerRight.setPosition(0.29);
 
         sweeperLeft.setPosition(0.035);
         sweeperRight.setPosition(0.035);

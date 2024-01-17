@@ -29,4 +29,13 @@ object Context
         debug=0;
         statusError="Functioning Normally"
     }
+    @JvmStatic fun clearValues()
+    {
+        opmode=null;
+        tel=null;
+        isTeamRed=true;
+        isTele=true;
+        debug=0;
+        statusError="Functioning Normally"
+    }
 }

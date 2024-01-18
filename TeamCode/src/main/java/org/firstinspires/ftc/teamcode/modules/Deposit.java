@@ -11,7 +11,7 @@ public class Deposit extends Module
     Servo leftArm, rightArm, wrist, rotatewrist, claw;
     public static double clawOpen=0.99, clawClosed1=0.72, clawClosed2=0.68;
     public static double rotateZero=0.435, rotateNinety=0.49, rotateOneEighty=0.5475, rotateTwoSeventy=0.6075;
-    public static double wristTransfer=0.99, wristDeposit=0.63, wristFloaty=0.83;
+    public static double wristTransfer=0.94, wristDeposit=0.63, wristFloaty=0.83;
     public static double rotatorTransfer=0.95, rotatorDeposit=0.22;
 
 

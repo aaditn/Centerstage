@@ -24,14 +24,14 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 import java.util.List;
 
-@TeleOp
+@TeleOp(name="A - NewDeposit")
 @Config
 public class NewDeposit extends EnhancedOpMode
 {
     public static double clawOpen=0.99, clawClosed1=0.72, clawClosed2=0.68;
     public static double rotateZero =0.435, rotate90=0.49;
     public static double wristTransfer =0.99, wristDeposit=0.63, wristFloaty=0.83;
-    public static double rotatorTransfer=0.95, rotatorDeposit=0.22;
+    public static double rotatorTransfer=0.94, rotatorDeposit=0.22;
     public static double raised = 0, down = 0;
     Servo leftArm, rightArm, wrist, rotatewrist, claw, anglerLeft, anglerRight, sweeperLeft, sweeperRight;
     CRServo conveyorLeft, conveyorRight;

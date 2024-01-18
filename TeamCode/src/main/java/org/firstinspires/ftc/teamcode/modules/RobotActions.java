@@ -45,8 +45,8 @@ public class RobotActions
         if(slides.getState()==Slides.SlideState.GROUND)
         {
             return builder.createNew()
-                    //.moduleAction(deposit, Deposit.ClawState.CLOSED2)
-                    //.delay(500)
+                    .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                    .delay(500)
                     .executeCode(()->slides.macroRunning=true)
                     .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                     .delay(50)

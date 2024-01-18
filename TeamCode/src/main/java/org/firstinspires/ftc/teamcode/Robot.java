@@ -153,6 +153,36 @@ public class Robot extends MecanumDrive
         droneLauncher.init();
         tel.addData("Robot Initialization:", "Complete");
     }
+    public Robot(LinearOpMode l, boolean noHWInit)
+    {
+
+        super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
+        this.l=l;
+        tel = new MultipleTelemetry(l.telemetry, FtcDashboard.getInstance().getTelemetry());
+        Context.resetValues();
+        Context.tel=tel;
+        if(Context.opmode!=null)
+        {
+            Context.updateValues();
+        }
+
+        hardwareMap=l.hardwareMap;
+        timer=new ElapsedTime();
+
+        if(!Context.isTele)
+        {
+            cameraInit();
+        }
+        //teamElementDetector=new TeamElementDetection(l.telemetry);
+
+        slides=new Slides(hardwareMap);
+        deposit=new Deposit(hardwareMap);
+        intake=new Intake(hardwareMap);
+        droneLauncher = new DroneLauncher(hardwareMap);
+
+        dtInit();
+        tel.addData("Robot Initialization:", "Complete");
+    }
 
     public static Robot getInstance()
     {

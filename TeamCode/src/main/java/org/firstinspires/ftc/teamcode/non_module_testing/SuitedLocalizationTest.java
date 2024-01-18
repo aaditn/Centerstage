@@ -29,7 +29,7 @@ public class SuitedLocalizationTest extends LinearOpMode {
     @Override
 
     public void runOpMode() throws InterruptedException {
-        Robot drive = new Robot(this);
+        Robot drive = new Robot(this, true);
 
         vision.initAprilTag(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -70,12 +70,17 @@ public class SuitedLocalizationTest extends LinearOpMode {
                     drive.setPoseEstimate(new Pose2d(
                             (current.getX() + exist.getX() * aprilTagConfidence) / (1 + aprilTagConfidence),
                             (current.getY() + exist.getY() * aprilTagConfidence) / (1 + aprilTagConfidence),
-                            (current.getHeading() + exist.getHeading() * aprilTagConfidence) / (1 + aprilTagConfidence)
+                            (drive.getRawExternalHeading())
                     ));
+                    drive.updatePoseEstimate();
                 }
                 previous.set(i,exist);
                 i++;
             }
+            Pose2d updatePos = drive.getPoseEstimate();
+            // if it doesn't pass through apriltag you still want to update imu
+            drive.setPoseEstimate(new Pose2d(updatePos.getX(), updatePos.getY(), drive.getRawExternalHeading()));
+
             Context.tel.addData("x", current.getX());
             Context.tel.addData("y",current.getY());
             Context.tel.addData("heading",current.getHeading());

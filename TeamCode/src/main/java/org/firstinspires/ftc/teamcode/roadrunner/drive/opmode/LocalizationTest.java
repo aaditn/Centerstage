@@ -27,7 +27,7 @@ public class LocalizationTest extends LinearOpMode {
         waitForStart();
 drive.setYaw();
         while (!isStopRequested()) {
-            drive.setWeightedDrivePower(
+            drive.setLocalDrivePowers(
                     new Pose2d(
                             -gamepad1.left_stick_y,
                             -gamepad1.left_stick_x,
@@ -36,7 +36,7 @@ drive.setYaw();
             );
 
             drive.primaryLoop();
-
+drive.update();
             Pose2d poseEstimate = drive.getPoseEstimate();
             Context.tel.addData("x", poseEstimate.getX());
             Context.tel.addData("y", poseEstimate.getY());

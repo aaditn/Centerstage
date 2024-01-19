@@ -72,7 +72,7 @@ public class SuitedLocalizationTest extends LinearOpMode {
                             (current.getY() + exist.getY() * aprilTagConfidence) / (1 + aprilTagConfidence),
                             (drive.getRawExternalHeading())
                     ));
-                    drive.updatePoseEstimate();
+
                 }
                 previous.set(i,exist);
                 i++;
@@ -83,7 +83,7 @@ public class SuitedLocalizationTest extends LinearOpMode {
 
             Context.tel.addData("x", current.getX());
             Context.tel.addData("y",current.getY());
-            Context.tel.addData("heading",current.getHeading());
+            Context.tel.addData("heading",Math.toDegrees(current.getHeading()));
 
 
         }

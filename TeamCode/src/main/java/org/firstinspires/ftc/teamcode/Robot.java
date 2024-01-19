@@ -82,7 +82,7 @@ public class Robot extends MecanumDrive
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
-    private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 10;
+    private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 100;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -535,7 +535,7 @@ public class Robot extends MecanumDrive
     @Override
     public double getRawExternalHeading() {
 //        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        return Math.toRadians(navx.getRoll());
+        return Math.toRadians(-navx.getYaw());
     }
 
     @Override

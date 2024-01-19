@@ -19,15 +19,35 @@ public class MeepMeepTesting {
         Pose2d blueFarStart = new Pose2d(-36,61,Math.toRadians(270));
         Pose2d blueCloseStart = new Pose2d(12,61,Math.toRadians(270));
         Pose2d redFarStart = new Pose2d(-36,-61,Math.toRadians(90));
-        Pose2d redCloseStart = new Pose2d(12,-61,Math.toRadians(270));
+        Pose2d redCloseStart = new Pose2d(12,-61,Math.toRadians(90));
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(54, 31.5,Math.toRadians(180)))
-                                .lineToConstantHeading(new Vector2d(20, 12))
-                                .splineToConstantHeading(new Vector2d(-58,12),Math.toRadians(180))
+                        drive.trajectorySequenceBuilder(blueFarStart)
+                                .lineToLinearHeading(new Pose2d(-36, 30, Math.toRadians(180)))
+
+                                .waitSeconds(1)
+
+                                .lineTo(new Vector2d(-40, -22))
+                                .splineToSplineHeading(new Pose2d(-56, -12, Math.toRadians(180)), Math.toRadians(180))
+
+                                .waitSeconds(1)
+
+                                .lineToConstantHeading(new Vector2d(24, -12))
+                                .splineToConstantHeading(new Vector2d(48, -41), Math.toRadians(0))
+
+                                .waitSeconds(1)
+
+                                .splineToConstantHeading(new Vector2d(24, -12), Math.toRadians(180))
+                                .lineToConstantHeading(new Vector2d(-56, -12))
+
+                                .waitSeconds(1)
+
+                                .lineToConstantHeading(new Vector2d(24, -12))
+                                .splineToConstantHeading(new Vector2d(48, -35), Math.toRadians(0))
+
                                 .build()
                 );
 

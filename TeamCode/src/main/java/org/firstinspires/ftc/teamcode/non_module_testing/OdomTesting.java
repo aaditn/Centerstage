@@ -39,8 +39,8 @@ public class OdomTesting extends EnhancedOpMode
     public void primaryLoop()
     {
         Context.tel.addData("perpendicular encoder", frontRightEncoder.getCurrentPosition());
-        //telemetry.addData("front left", frontLeftEncoder.getCurrentPosition());
-        //telemetry.addData("back right", backRightEncoder.getCurrentPosition());
+        Context.tel.addData("front left", frontLeftEncoder.getCurrentPosition());
+        Context.tel.addData("back right", backRightEncoder.getCurrentPosition());
         Context.tel.addData("parallel encoder", frontLeftEncoder.getCurrentPosition());
         Context.tel.update();
     }

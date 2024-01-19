@@ -75,7 +75,7 @@ public class SensorNavXRawOp extends OpMode {
   private ElapsedTime runtime = new ElapsedTime();
   private AHRS navx_device;
 
-    private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 10;
+    private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 100;
     private boolean calibration_complete = false;
 
     private FtcDashboard dashboard;
@@ -145,7 +145,7 @@ public class SensorNavXRawOp extends OpMode {
           TelemetryPacket packet = new TelemetryPacket();
 
           Canvas fieldOverlay = packet.fieldOverlay();
-          drawRobot(fieldOverlay, navx_device.getYaw());
+          drawRobot(fieldOverlay, -navx_device.getYaw());
 
           // Push telemetry to the Driver Station.
 

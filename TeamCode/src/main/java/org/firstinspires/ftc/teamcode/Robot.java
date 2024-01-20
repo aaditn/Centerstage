@@ -300,9 +300,6 @@ public class Robot extends MecanumDrive
         if(!Context.isTele)
         {
 
-            columnCS=hardwareMap.get(ColorRangeSensor.class, "columnCS");
-            droneCS=hardwareMap.get(ColorRangeSensor.class, "droneCS");
-
         }
     }
 

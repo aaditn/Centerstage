@@ -9,27 +9,72 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.modules.Deposit;
+import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
+import org.firstinspires.ftc.teamcode.modules.Intake;
+import org.firstinspires.ftc.teamcode.modules.RobotActions;
+import org.firstinspires.ftc.teamcode.modules.Slides;
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.opencv.core.Mat;
 
 @Autonomous
-public class farBlue extends LinearOpMode {
+public class farBlue extends EnhancedOpMode {
     Pose2d blueFarStart = new Pose2d(-36,61,Math.toRadians(270));
     Robot drive;
-    public void runOpMode() {
-        drive = new Robot(this);
+    Deposit deposit;
+    Intake intake;
+    Slides slides;
+
+    TaskScheduler scheduler;
+    RobotActions actions;
+
+    @Override
+    public void primaryLoop() {
+        drive.primaryLoop();
+    }
+    public void initLoop(){
+        drive.initLoop();
+    }
+    public void onEnd(){
+
+        Robot.destroyRobotInstance();
+        RobotActions.deleteActionsInstance();
+        Context.clearValues();
+    }
+    public void onStart()
+    {
+        drive.closeCameras();
+    }
+    public void linearOpMode() {
 
         TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(blueFarStart)
-                .lineToLinearHeading(new Pose2d(-36, 30, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-34, 20, Math.toRadians(180)))
                 .build();
         TrajectorySequence leftToStack0 = drive.trajectorySequenceBuilder(leftPurple.end())
-                .lineTo(new Vector2d(-34, 18))
-                .splineToConstantHeading(new Vector2d(-42, 12), Math.toRadians(180))
-                .lineToSplineHeading(new Pose2d(-56, 12, Math.toRadians(180)))
+                .addTemporalMarker(1, () -> intake.setState(Intake.PositionState.DOWN))
+                .lineTo(new Vector2d(-31, 33))
+                .splineToConstantHeading(new Vector2d(-45, 35), Math.toRadians(180))
+                .lineToSplineHeading(new Pose2d(-58, 35, Math.toRadians(180)))
                 .build();
         TrajectorySequence leftBackFromStack = drive.trajectorySequenceBuilder(leftToStack0.end())
-                .lineToConstantHeading(new Vector2d(24, 12))
-                .splineToConstantHeading(new Vector2d(48, 29), Math.toRadians(0))
+                .addSpatialMarker(new Vector2d(0, 57), () ->  deposit.setState(Deposit.ClawState.CLOSED2))
+                .addSpatialMarker(new Vector2d(20, 57), () ->  {
+                    scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.AUTO_LOW));
+                    intake.setState(Intake.PowerState.OFF);
+                    intake.setState(Intake.ConveyorState.OFF);
+                })
+                .lineTo(new Vector2d(-58, 36))
+                .splineToConstantHeading(new Vector2d(-35, 57), Math.toRadians(0),
+                        drive.getVelocityConstraint(30, 1, 15.06),
+                        drive.getAccelerationConstraint(40))
+                .lineToConstantHeading(new Vector2d(24, 57))
+                .splineToConstantHeading(new Vector2d(51, 29), Math.toRadians(0),
+                        drive.getVelocityConstraint(30, 1, 15.06),
+                        drive.getAccelerationConstraint(40))
                 .build();
         TrajectorySequence leftStackFromBack = drive.trajectorySequenceBuilder(leftBackFromStack.end())
                 .splineToConstantHeading(new Vector2d(24, 12), Math.toRadians(180))
@@ -41,17 +86,17 @@ public class farBlue extends LinearOpMode {
                 .build();
         TrajectorySequence midToStack0 = drive.trajectorySequenceBuilder(midPlacePurple.end())
                 .lineTo(new Vector2d(-37, 13))
-                .splineToConstantHeading(new Vector2d(-42, 12), Math.toRadians(180))
-                .lineToSplineHeading(new Pose2d(-56, 12, Math.toRadians(180)))
+                .splineToConstantHeading(new Vector2d(-42, 10), Math.toRadians(180))
+                .lineToSplineHeading(new Pose2d(-56, 10, Math.toRadians(180)))
                 .build();
 
         TrajectorySequence midBackFromStack = drive.trajectorySequenceBuilder(midToStack0.end())
-                .lineToConstantHeading(new Vector2d(24, 12))
+                .lineToConstantHeading(new Vector2d(24, 10))
                 .splineToConstantHeading(new Vector2d(48, 35), Math.toRadians(0))
                 .build();
         TrajectorySequence midStackFromBack = drive.trajectorySequenceBuilder(midBackFromStack.end())
-                .splineToConstantHeading(new Vector2d(24, 12), Math.toRadians(180))
-                .lineToConstantHeading(new Vector2d(-56, 12))
+                .splineToConstantHeading(new Vector2d(24, 10), Math.toRadians(180))
+                .lineToConstantHeading(new Vector2d(-56, 10))
                 .build();
 
         TrajectorySequence rightPurple = drive.trajectorySequenceBuilder(blueFarStart)
@@ -59,31 +104,56 @@ public class farBlue extends LinearOpMode {
                 .build();
         TrajectorySequence rightToStack0 = drive.trajectorySequenceBuilder(rightPurple.end())
                 .lineTo(new Vector2d(-40, 22))
-                .splineToSplineHeading(new Pose2d(-56, 12, Math.toRadians(180)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-56, 10, Math.toRadians(180)), Math.toRadians(180))
                 .build();
         TrajectorySequence rightBackFromStack = drive.trajectorySequenceBuilder(rightToStack0.end())
-                .lineToConstantHeading(new Vector2d(24, 12))
+                .lineToConstantHeading(new Vector2d(24, 10))
                 .splineToConstantHeading(new Vector2d(48, 41), Math.toRadians(0))
                 .build();
         TrajectorySequence rightStackFromBack = drive.trajectorySequenceBuilder(rightBackFromStack.end())
-                .splineToConstantHeading(new Vector2d(24, 12), Math.toRadians(180))
-                .lineToConstantHeading(new Vector2d(-56, 12))
+                .splineToConstantHeading(new Vector2d(24, 10), Math.toRadians(180))
+                .lineToConstantHeading(new Vector2d(-56, 10))
                 .build();
 
         waitForStart();
+        drive.setPoseEstimate(blueFarStart);
+        drive.followTrajectorySequenceAsync(leftPurple);
+        while(drive.isBusy()){
 
-        drive.followTrajectorySequence(leftPurple);
-        die(1000);
-        drive.followTrajectorySequence(leftToStack0);
-        die(1000);
-        drive.followTrajectorySequence(leftBackFromStack);
-        die(1000);
-        drive.followTrajectorySequence(leftStackFromBack);
-        die(1000);
-        drive.followTrajectorySequence(leftBackFromStack);
-        die(1000);
-        drive.followTrajectorySequence(leftStackFromBack);
-        die(1000);
+        }
+        intake.setState(Intake.PositionState.DOWN);
+        die(750);
+        intake.setState(Intake.SweeperState.ZERO);
+
+        die(750);
+        intake.setState(Intake.PositionState.MID);
+        die(750);
+        drive.followTrajectorySequenceAsync(leftToStack0);
+        while(drive.isBusy()){
+
+        }
+        die(500);
+        intake.setState(Intake.PowerState.INTAKE);
+        intake.setState(Intake.ConveyorState.INTAKE);
+        intake.setState(Intake.SweeperState.ONE_SWEEP);
+        die(500);
+        intake.setState(Intake.PositionState.RAISED);
+        die(500);
+        drive.followTrajectorySequenceAsync(leftBackFromStack);
+        while (drive.isBusy()) {
+
+        }
+        scheduler.scheduleTaskList(actions.scorePixels());
+
+
+//        drive.followTrajectorySequence(leftBackFromStack);
+//        die(1000);
+//        drive.followTrajectorySequence(leftStackFromBack);
+//        die(1000);
+//        drive.followTrajectorySequence(leftBackFromStack);
+//        die(1000);
+//        drive.followTrajectorySequence(leftStackFromBack);
+//        die(1000);
 
     }
 
@@ -93,5 +163,24 @@ public class farBlue extends LinearOpMode {
         while (timer.milliseconds() < milliseconds) {
             Context.tel.addData("in wait", timer.milliseconds());
         }
+    }
+
+    @Override
+    public void initialize() {
+
+        this.setLoopTimes(10);
+        drive=Robot.getInstance();
+        scheduler=new TaskScheduler();
+        actions= RobotActions.getInstance();
+        deposit=drive.deposit;
+        intake=drive.intake;
+        slides=drive.slides;
+
+        intake.init();
+        deposit.init();
+        slides.init();
+        intake.setOperationState(Module.OperationState.PRESET);
+        intake.setState(Intake.SweeperState.INIT);
+        deposit.setState(Deposit.ClawState.OPEN);
     }
 }

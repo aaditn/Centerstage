@@ -30,7 +30,7 @@ public class Intake extends Module {
     }
     public enum PositionState implements ModuleState
     {
-        RAISED(0.05), DOWN(0.31);
+        RAISED(0.05), MID (.2),DOWN(0.31);
         double position;
         PositionState(double position)
         {
@@ -59,7 +59,7 @@ public class Intake extends Module {
 
     public enum SweeperState implements ModuleState
     {
-        ZERO(0.035), ONE_SWEEP(0.15), TWO_SWEEP(0.265), THREE_SWEEP(0.38);
+        ZERO(0.035), INIT(0.09), ONE_SWEEP(0.15), TWO_SWEEP(0.265), THREE_SWEEP(0.38);
         double position;
         SweeperState(double position)
         {

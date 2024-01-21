@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
+import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.opencv.core.Mat;
@@ -36,15 +37,17 @@ boolean offset;
     public void primaryLoop() {
         drive.primaryLoop();
     }
-    public void initLoop(){
+    public void initLoop()
+    {
         drive.initLoop();
+        AutoSelector.getInstance().loop();
     }
     public void onStart()
     {
         drive.closeCameras();
     }
     public void linearOpMode() {
-offset=false;
+        offset=false;
         TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(blueFarStart)
                 .lineToLinearHeading(new Pose2d(-35, 20, Math.toRadians(180)))
                 .build();

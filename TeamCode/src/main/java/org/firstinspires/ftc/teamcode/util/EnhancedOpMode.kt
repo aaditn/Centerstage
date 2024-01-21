@@ -48,6 +48,7 @@ abstract class EnhancedOpMode(): LinearOpMode ()
         RobotActions.deleteActionsInstance()
         clearValues()
         ModuleStateConverter.deleteConverterInstance()
+        AutoSelector.destroySelectorInstance()
     }
     abstract fun linearOpMode()
     abstract fun initialize()

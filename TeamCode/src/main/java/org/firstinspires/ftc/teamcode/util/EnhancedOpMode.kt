@@ -25,6 +25,8 @@ abstract class EnhancedOpMode(): LinearOpMode ()
     override fun runOpMode()
     {
         linearElapsedTime = ElapsedTime()
+
+        resetStaticVars()
         Context.opmode=this
 
         initialize()

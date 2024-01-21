@@ -22,12 +22,6 @@ public class HangExample extends Module
         {
             this.power=power;
         }
-
-        @Override
-        public double getOutput(int... index)
-        {
-            return power;
-        }
     }
 
     double currentPower;
@@ -74,5 +68,10 @@ public class HangExample extends Module
         {
             status=Status.TRANSITIONING;
         }
+    }
+
+    @Override
+    protected void mapToKey() {
+
     }
 }

@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode.util
 
 import com.acmerobotics.dashboard.FtcDashboard
-import com.acmerobotics.dashboard.canvas.Canvas
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.firstinspires.ftc.teamcode.Robot
+import org.firstinspires.ftc.teamcode.modules.RobotActions
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleStateConverter
+import org.firstinspires.ftc.teamcode.util.Context.clearValues
 import kotlin.coroutines.CoroutineContext
 
 abstract class EnhancedOpMode(): LinearOpMode ()
@@ -25,6 +25,8 @@ abstract class EnhancedOpMode(): LinearOpMode ()
     override fun runOpMode()
     {
         linearElapsedTime = ElapsedTime()
+
+        resetStaticVars()
         Context.opmode=this
 
         initialize()
@@ -39,6 +41,14 @@ abstract class EnhancedOpMode(): LinearOpMode ()
     private fun printError()
     {
         telemetry.addData("Coroutine Error", error)
+    }
+    private fun resetStaticVars()
+    {
+        Robot.destroyRobotInstance()
+        RobotActions.deleteActionsInstance()
+        clearValues()
+        ModuleStateConverter.deleteConverterInstance()
+        AutoSelector.destroySelectorInstance()
     }
     abstract fun linearOpMode()
     abstract fun initialize()
@@ -105,6 +115,7 @@ abstract class EnhancedOpMode(): LinearOpMode ()
 
             try
             {
+                resetStaticVars()
                 onEnd()
                 printError()
             }

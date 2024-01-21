@@ -43,7 +43,7 @@ public class TeleOpRewrite extends EnhancedOpMode
     int sweeperCounter;
     int wristRotateCounter;
     Intake.SweeperState[] sweeperPositions;
-    Deposit.WristRotateState[] wristRotatePositions;
+    Deposit.RotateState[] wristRotatePositions;
 
     @Override
     public void linearOpMode()
@@ -183,7 +183,7 @@ public class TeleOpRewrite extends EnhancedOpMode
                 scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.ROW3));
             }
             //SLIDES MANUAL
-            if((slides.getState()!=Slides.SlideState.GROUND/*||slidesOverride.isDown()*/)&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
+            if((slides.getState()!=Slides.SlideState.GROUND||slidesOverride.isDown())&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
             {
                 slides.setOperationState(Module.OperationState.MANUAL);
 
@@ -204,6 +204,15 @@ public class TeleOpRewrite extends EnhancedOpMode
                 slides.setOperationState(Module.OperationState.PRESET);
                 scheduler.scheduleTaskList(actions.scorePixels());
                 wristRotateCounter=0;
+            }
+            //SLIDE RESET
+            if(slidesOverride.wasJustReleased())
+            {
+                slides.setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+            else if(slides.getMotorRunMode()==DcMotor.RunMode.STOP_AND_RESET_ENCODER)
+            {
+                slides.setMotorRunMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
 
@@ -267,7 +276,8 @@ public class TeleOpRewrite extends EnhancedOpMode
                 CCW45=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
                 CW45=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
                 clawManual=new ToggleButtonReader(g1, GamepadKeys.Button.X),
-                depositMacro2= new ToggleButtonReader(g2, GamepadKeys.Button.B)
+                depositMacro2= new ToggleButtonReader(g2, GamepadKeys.Button.B),
+                slidesOverride=new ToggleButtonReader(g2, GamepadKeys.Button.Y)
         };
 
         sweeperPositions=new Intake.SweeperState[]{
@@ -275,11 +285,11 @@ public class TeleOpRewrite extends EnhancedOpMode
                 Intake.SweeperState.TWO_SWEEP,
                 Intake.SweeperState.THREE_SWEEP
         };
-        wristRotatePositions=new Deposit.WristRotateState[]{
-                Deposit.WristRotateState.ZERO,
-                Deposit.WristRotateState.NINETY,
-                Deposit.WristRotateState.ONE_EIGHTY,
-                Deposit.WristRotateState.TWO_SEVENTY
+        wristRotatePositions=new Deposit.RotateState[]{
+                Deposit.RotateState.ZERO,
+                Deposit.RotateState.NINETY,
+                Deposit.RotateState.ONE_EIGHTY,
+                Deposit.RotateState.TWO_SEVENTY
         };
     }
 
@@ -287,12 +297,7 @@ public class TeleOpRewrite extends EnhancedOpMode
     {
         robot.initLoop();
     }
-    public void onEnd()
-    {
-        Robot.destroyRobotInstance();
-        RobotActions.deleteActionsInstance();
-        Context.clearValues();
-    }
+
     @Override
     public void primaryLoop()
     {

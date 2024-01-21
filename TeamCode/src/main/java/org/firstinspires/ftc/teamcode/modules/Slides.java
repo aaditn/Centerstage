@@ -25,24 +25,14 @@ public class Slides extends Module
     public static double kp3=0.002, ki3, kd3=0.0001;
     public static boolean telemetryToggle=false;
 
+
     PIDCoefficients standardcoeff, closecoeff, downcoeff;
-    public static enum SlideState implements ModuleState
+    public enum SlideState implements ModuleState
     {
-        GROUND(0), HALF(25), AUTO_LOW(90),AUTO_TWO(250), RAISED(300), ROW1(700), ROW2(1000), ROW3(1300);
-
-        double position;
-        SlideState(double position)
-        {
-            this.position=position;
-        }
-
-        @Override
-        public double getOutput(int... index) {
-            return position;
-        }
+        GROUND, HALF, AUTO_LOW,AUTO_TWO, RAISED, ROW1, ROW2, ROW3;
     }
-
-
+    public static double GROUND=0, HALF=25, AUTO_LOW=90, AUTO_TWO=250, RAISED=300, ROW1=700, ROW2=1000, ROW3=1300;
+    double[] stateValues={GROUND, HALF, AUTO_LOW, AUTO_TWO, RAISED, ROW1, ROW2, ROW3};
     SlideState state;
 
     public Slides(HardwareMap hardwareMap)
@@ -56,8 +46,8 @@ public class Slides extends Module
         slide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide1.setTargetPosition((int)getState().getOutput());
-        slide2.setTargetPosition((int)getState().getOutput());
+        slide1.setTargetPosition((int)converter.getOutput(getState()));
+        slide2.setTargetPosition((int)converter.getOutput(getState()));
         //slide1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //slide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -86,7 +76,7 @@ public class Slides extends Module
     @Override
     public void internalUpdate()
     {
-        targetPosition=getState().getOutput();
+        targetPosition=converter.getOutput(getState());
 
         if(targetPosition>slideCap)
         {
@@ -185,6 +175,13 @@ public class Slides extends Module
             status=Status.TRANSITIONING;
         }
     }
+
+    @Override
+    protected void mapToKey()
+    {
+        converter.add(SlideState.values(), stateValues);
+    }
+
     public Status getStatus()
     {
         return status;

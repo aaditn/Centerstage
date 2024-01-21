@@ -20,10 +20,6 @@ public class Hang extends Module
             this.position=position;
             this.power=power;
         }
-        @Override
-        public double getOutput(int... index) {
-            return 0;
-        }
     }
     public Hang(HardwareMap hardwareMap)
     {
@@ -49,6 +45,11 @@ public class Hang extends Module
 
     @Override
     protected void updateInternalStatus() {
+
+    }
+
+    @Override
+    protected void mapToKey() {
 
     }
 }

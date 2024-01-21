@@ -1,32 +1,23 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
-
+@Config
 public class DroneLauncher extends Module
 {
     Servo lock;
     public static boolean telemetryToggle=false;
+    public static double RELEASED=0.1, LOCKED =0.62;
 
-    public static enum State implements ModuleState
+    public enum State implements ModuleState
     {
-        RELEASED(0.1), LOCKED(0.62);
-
-        double position;
-        State(double position)
-        {
-            this.position=position;
-        }
-
-        @Override
-        public double getOutput(int... index)
-        {
-            return position;
-        }
+        RELEASED, LOCKED;
     }
+    double[] stateValues={RELEASED, LOCKED};
 
     double currentPosition;
 
@@ -52,7 +43,7 @@ public class DroneLauncher extends Module
     @Override
     protected void internalUpdate()
     {
-        currentPosition=getState().getOutput();
+        currentPosition=converter.getOutput(getState());
     }
 
     @Override
@@ -73,5 +64,11 @@ public class DroneLauncher extends Module
         {
             status=Status.IDLE;
         }
+    }
+
+    @Override
+    protected void mapToKey()
+    {
+        converter.add(State.values(), stateValues);
     }
 }

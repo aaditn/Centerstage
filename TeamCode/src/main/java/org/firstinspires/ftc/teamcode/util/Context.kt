@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import org.firstinspires.ftc.teamcode.util.AutoSelector.Auto_State
 
 object Context
 {
@@ -12,6 +13,8 @@ object Context
     @JvmField var opmode: LinearOpMode? = null;
     @JvmField var isTele: Boolean = true
     @JvmField var statusError: String ="Functioning Normally"
+    @JvmField var autoWaitTime: Int = 0
+    @JvmField var autoState: Auto_State = Auto_State.TEMP
 
     @JvmStatic fun updateValues()
     {
@@ -28,6 +31,8 @@ object Context
         isTele=true;
         debug=0;
         statusError="Functioning Normally"
+        autoWaitTime=0
+        autoState=Auto_State.TEMP
     }
     @JvmStatic fun clearValues()
     {
@@ -37,5 +42,7 @@ object Context
         isTele=true;
         debug=0;
         statusError="Functioning Normally"
+        autoWaitTime=0
+        autoState=Auto_State.TEMP
     }
 }

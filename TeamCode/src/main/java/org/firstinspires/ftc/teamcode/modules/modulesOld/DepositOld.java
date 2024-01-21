@@ -56,21 +56,6 @@ public class DepositOld extends Module
             this.pos2=pos2;
         }
 
-        @Override
-        public double getOutput(int... index) {
-            if(index[0]==1)
-            {
-                return pos1;
-            }
-            else if(index[0]==2)
-            {
-                return pos2;
-            }
-            else
-            {
-                return 0;
-            }
-        }
     }
 
     public enum WristState implements ModuleState
@@ -83,10 +68,7 @@ public class DepositOld extends Module
             this.pos1=pos1;
         }
 
-        @Override
-        public double getOutput(int... index) {
-            return pos1;
-        }
+
     }
 
 
@@ -99,10 +81,7 @@ public class DepositOld extends Module
         {
             this.position=position;
         }
-        @Override
-        public double getOutput(int... index) {
-            return position;
-        }
+
     }
 
     double leftRotatorPos, rightRotatorPos, pusherPos, wristPos;
@@ -171,10 +150,10 @@ public class DepositOld extends Module
     @Override
     protected void internalUpdate()
     {
-        leftRotatorPos=getState(RotationState.class).getOutput(1);
-        rightRotatorPos=getState(RotationState.class).getOutput(2);
-        wristPos=getState(WristState.class).getOutput();
-        pusherPos=getState(PusherState.class).getOutput();
+        //leftRotatorPos=getState(RotationState.class).getOutput(1);
+        //rightRotatorPos=getState(RotationState.class).getOutput(2);
+        //wristPos=getState(WristState.class).getOutput();
+        //pusherPos=getState(PusherState.class).getOutput();
     }
 
     @Override
@@ -190,5 +169,10 @@ public class DepositOld extends Module
     protected void updateInternalStatus()
     {
         //TODO
+    }
+
+    @Override
+    protected void mapToKey() {
+
     }
 }

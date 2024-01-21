@@ -26,12 +26,6 @@ public class ModuleTest extends Module
         {
             power=pow;
         }
-
-        @Override
-        public double getOutput(int... index)
-        {
-            return power;
-        }
     }
 
     State state;
@@ -52,7 +46,7 @@ public class ModuleTest extends Module
     @Override
     protected void internalUpdate()
     {
-        currentMotorPower=getState().getOutput();
+        //currentMotorPower=getState().getOutput();
     }
 
     @Override
@@ -74,5 +68,10 @@ public class ModuleTest extends Module
         {
             status=Status.TRANSITIONING;
         }
+    }
+
+    @Override
+    protected void mapToKey() {
+
     }
 }

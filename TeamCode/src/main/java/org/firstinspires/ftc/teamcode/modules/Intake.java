@@ -13,7 +13,7 @@ public class Intake extends Module {
     DcMotorEx intake;
     Servo anglerLeft, anglerRight, sweeperLeft, sweeperRight;
     CRServo conveyorLeft, conveyorRight;
-    public static boolean telemetryToggle=false;
+    public static boolean telemetryToggle=true;
 
     public enum PowerState implements ModuleState
     {

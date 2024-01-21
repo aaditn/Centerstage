@@ -98,6 +98,7 @@ public abstract class Module
     public void setOperationState(OperationState s)
     {
         opstate=s;
+        stateChanged=true;
     }
 
     public OperationState getOpstate()

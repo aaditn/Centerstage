@@ -44,7 +44,6 @@ public class TeleOpRewrite extends EnhancedOpMode
     int wristRotateCounter;
     Intake.SweeperState[] sweeperPositions;
     Deposit.WristRotateState[] wristRotatePositions;
-    boolean intakeToggled=false;
 
     @Override
     public void linearOpMode()
@@ -93,13 +92,11 @@ public class TeleOpRewrite extends EnhancedOpMode
                 if(intake.getState(Intake.PositionState.class)==Intake.PositionState.RAISED)
                 {
                     scheduler.scheduleTaskList(actions.lowerIntake());
-                    intakeToggled=true;
                 }
                 else if(intake.getState(Intake.PositionState.class)==Intake.PositionState.DOWN)
                 {
                     scheduler.scheduleTaskList(actions.raiseIntake());
                     sweeperCounter=0;
-                    intakeToggled=false;
                 }
             }
             //INTAKE SWEEPERS
@@ -128,11 +125,9 @@ public class TeleOpRewrite extends EnhancedOpMode
                 intake.setOperationState(Module.OperationState.MANUAL);
                 intake.manualChange(-gamepad2.right_stick_y);
             }
-            else if(!intakeToggled)
+            else
             {
                 intake.setOperationState(Module.OperationState.PRESET);
-                intake.setState(Intake.PowerState.OFF);
-                intake.setState(Intake.ConveyorState.OFF);
             }
 
 
@@ -301,5 +296,6 @@ public class TeleOpRewrite extends EnhancedOpMode
     public void primaryLoop()
     {
         robot.primaryLoop();
+        Context.tel.addData("intake stick", gamepad2.right_stick_y);
     }
 }

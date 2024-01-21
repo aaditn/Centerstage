@@ -28,7 +28,12 @@ public class NavxWrapper
 
     public double getVelocity()
     {
+        //navx.
         //TODO
         return 0;
+    }
+    public void close()
+    {
+        navx.close();
     }
 }

@@ -179,6 +179,8 @@ public class Slides extends Module
     @Override
     protected void mapToKey()
     {
+        Context.tel.addData("funny", SlideState.values().length);
+        Context.tel.addData("funny 2", stateValues.length);
         converter.add(SlideState.values(), stateValues);
     }
 

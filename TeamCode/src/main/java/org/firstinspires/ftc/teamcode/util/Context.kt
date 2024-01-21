@@ -15,6 +15,7 @@ object Context
     @JvmField var statusError: String ="Functioning Normally"
     @JvmField var autoWaitTime: Int = 0
     @JvmField var autoState: Auto_State = Auto_State.TEMP
+    @JvmField var colorSensorsEnabled: Boolean = false
 
     @JvmStatic fun updateValues()
     {
@@ -33,6 +34,7 @@ object Context
         statusError="Functioning Normally"
         autoWaitTime=0
         autoState=Auto_State.TEMP
+        colorSensorsEnabled=false
     }
     @JvmStatic fun clearValues()
     {
@@ -44,5 +46,6 @@ object Context
         statusError="Functioning Normally"
         autoWaitTime=0
         autoState=Auto_State.TEMP
+        colorSensorsEnabled=false
     }
 }

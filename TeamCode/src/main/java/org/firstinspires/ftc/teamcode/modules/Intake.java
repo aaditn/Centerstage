@@ -104,6 +104,12 @@ public class Intake extends Module {
         else
             csstate=ColorSensorState.ZERO;
     }
+    public void closeColorSensors()
+    {
+        cs1.close();
+        cs2.close();
+        cs3.close();
+    }
 
     public ColorSensorState getColorSensorState()
     {

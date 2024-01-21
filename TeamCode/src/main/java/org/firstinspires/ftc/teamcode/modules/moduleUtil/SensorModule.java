@@ -8,7 +8,7 @@ public class SensorModule
     Runnable function;
     double lastTimeRan;
 
-    public SensorModule(double maxFrequency, Runnable function)
+    public SensorModule(Runnable function, double maxFrequency)
     {
         this.milisPerCycle = (long) (1000. / maxFrequency);
         this.function=function;

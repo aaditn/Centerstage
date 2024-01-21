@@ -38,7 +38,7 @@ public class TeleOpRewrite extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
     ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesBottomRow, slidesSetLine1, slidesSetLine2,
-    slidesSetLine3, slidesOverride, depositMacro, grabPixel, flush, CCW45, CW45, clawManual, slideReset;
+    slidesSetLine3, slidesOverride, depositMacro, grabPixel, flush, CCW45, CW45, clawManual;
     double ninja;
     int sweeperCounter;
     int wristRotateCounter;
@@ -206,7 +206,7 @@ public class TeleOpRewrite extends EnhancedOpMode
                 wristRotateCounter=0;
             }
             //SLIDE RESET
-            if(slideReset.isDown())
+            if(slidesOverride.wasJustReleased())
             {
                 slides.setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
@@ -277,7 +277,6 @@ public class TeleOpRewrite extends EnhancedOpMode
                 CW45=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
                 clawManual=new ToggleButtonReader(g1, GamepadKeys.Button.X),
                 slidesOverride=new ToggleButtonReader(g2, GamepadKeys.Button.Y),
-                slideReset=new ToggleButtonReader(g2, GamepadKeys.Button.B)
         };
 
         sweeperPositions=new Intake.SweeperState[]{

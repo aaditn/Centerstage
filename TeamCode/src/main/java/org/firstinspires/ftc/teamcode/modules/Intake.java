@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.MM;
+
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -8,11 +12,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
-
+@Config
 public class Intake extends Module {
     DcMotorEx intake;
     Servo anglerLeft, anglerRight, sweeperLeft, sweeperRight;
     CRServo conveyorLeft, conveyorRight;
+    ColorRangeSensor cs1, cs2, cs3;
     public static boolean telemetryToggle=true;
 
     public enum PowerState implements ModuleState
@@ -47,12 +52,20 @@ public class Intake extends Module {
     double[] sweeperValues={SWEEPER_ZERO, SWEEPER_INIT, SWEEPER_ONE, SWEEPER_TWO, SWEEPER_THREE, SWEEPER_FOUR};
 
 
+    public enum ColorSensorState
+    {
+        ZERO, ONE, TWO
+    }
+
     double currentPower, currentPosition, conveyorPower, sweeperPos;
+    int s1Alpha = 1500, s1Dist = 75, s2Alpha = 1500, s2Dist = 75;
 
     PowerState pwstate;
     PositionState poState;
     ConveyorState cstate;
     SweeperState sstate;
+    ColorSensorState csstate;
+
 
     public Intake(HardwareMap hardwareMap)
     {
@@ -71,6 +84,30 @@ public class Intake extends Module {
         anglerLeft = hardwareMap.get(Servo.class, "anglerLeft");
         anglerRight = hardwareMap.get(Servo.class, "anglerRight");
         anglerRight.setDirection(Servo.Direction.REVERSE);
+
+        cs1 = hardwareMap.get(ColorRangeSensor.class, "cs1");
+        cs2 = hardwareMap.get(ColorRangeSensor.class, "cs2");
+        cs3 = hardwareMap.get(ColorRangeSensor.class, "cs3");
+    }
+
+    public void colorSensorUpdate()
+    {
+        //TODO(this is just copy pasted lmao)
+
+        boolean pixel1 = cs1.getDistance(MM) < s1Dist && cs1.alpha() > s1Alpha;
+        boolean pixel2 = cs2.getDistance(MM) < s2Dist && cs2.alpha() > s2Alpha;
+
+        if(pixel1&&pixel2)
+            csstate=ColorSensorState.TWO;
+        else if(pixel1||pixel2)
+            csstate=ColorSensorState.ONE;
+        else
+            csstate=ColorSensorState.ZERO;
+    }
+
+    public ColorSensorState getColorSensorState()
+    {
+        return csstate;
     }
 
     @Override
@@ -120,6 +157,7 @@ public class Intake extends Module {
         pwstate=PowerState.OFF;
         cstate=ConveyorState.OFF;
         sstate=SweeperState.ZERO;
+        csstate=ColorSensorState.ZERO;
         setInternalStates(poState, pwstate, cstate, sstate);
     }
 

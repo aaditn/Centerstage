@@ -9,15 +9,15 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 public class Deposit extends Module
 {
     Servo leftArm, rightArm, wrist, rotatewrist, claw;
-    public static double clawOpen=0.99, clawClosed1=0.72, clawClosed2=0.68;
+    public static double clawOpen=0.99, clawClosed1=0.72, clawClosed2=0.68,clawPrimed = .75;
     public static double rotateZero=0.435, rotateNinety=0.49, rotateOneEighty=0.5475, rotateTwoSeventy=0.6075;
-    public static double wristTransfer=0.94, wristDeposit=0.63, wristFloaty=0.83;
-    public static double rotatorTransfer=0.95, rotatorDeposit=0.22;
+    public static double wristTransfer=0.64, wristDeposit=0.33, wristFloaty=0.53,wristScope=.74;
+    public static double rotatorTransfer=0.94,rotatorDepositPrimed = .80, rotatorDeposit=0.22;
 
 
     public enum FlipState implements ModuleState
     {
-        TRANSFER(rotatorTransfer), DEPOSIT(rotatorDeposit);
+        TRANSFER(rotatorTransfer), DEPOSIT(rotatorDeposit),PRIMED(rotatorDepositPrimed);
         double pos1;
         FlipState(double pos1)
         {
@@ -31,7 +31,7 @@ public class Deposit extends Module
 
     public enum WristState implements ModuleState
     {
-        TRANSFER(wristTransfer), DEPOSIT(wristDeposit), HOVER(wristFloaty);
+        TRANSFER(wristTransfer), DEPOSIT(wristDeposit), HOVER(wristFloaty), TELESCOPE(wristScope);
         double pos1;
         WristState(double pos1)
         {
@@ -44,7 +44,7 @@ public class Deposit extends Module
     }
     public enum ClawState implements ModuleState
     {
-        OPEN(clawOpen), CLOSED1(clawClosed1), CLOSED2(clawClosed2);
+        OPEN(clawOpen), CLOSED1(clawClosed1), CLOSED2(clawClosed2),PRIMED(clawPrimed);
         double pos1;
         ClawState(double pos1)
         {
@@ -106,8 +106,8 @@ public class Deposit extends Module
 
     @Override
     protected void initInternalStates() {
-        fstate=FlipState.TRANSFER;
-        wstate=WristState.TRANSFER;
+        fstate=FlipState.PRIMED;
+        wstate=WristState.TELESCOPE;
         wrstate=WristRotateState.ZERO;
         cstate=ClawState.OPEN;
         setInternalStates(fstate, wstate, wrstate, cstate);

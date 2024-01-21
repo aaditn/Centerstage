@@ -9,10 +9,10 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 public class Deposit extends Module
 {
     Servo leftArm, rightArm, wrist, rotatewrist, claw;
-    public static double clawOpen=0.99, clawClosed1=0.72, clawClosed2=0.68,clawPrimed = .75;
+    public static double clawOpen=0.99, clawClosed1=0.72, clawClosed2=0.68,clawPrimed = .80;
     public static double rotateZero=0.435, rotateNinety=0.49, rotateOneEighty=0.5475, rotateTwoSeventy=0.6075;
-    public static double wristTransfer=0.64, wristDeposit=0.33, wristFloaty=0.53,wristScope=.74;
-    public static double rotatorTransfer=0.94,rotatorDepositPrimed = .80, rotatorDeposit=0.22;
+    public static double wristTransfer=0.62, wristDeposit=0.33, wristFloaty=0.53,wristScope=.74;
+    public static double rotatorTransfer=0.96,rotatorDepositPrimed = .88, rotatorDeposit=0.22;
 
     public static boolean telemetryToggle;
 

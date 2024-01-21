@@ -45,9 +45,8 @@ public class RobotActions
         if(slides.getState()==Slides.SlideState.GROUND)
         {
             return builder.createNew()
-
-                    .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                     .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                    .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                     .delay(500)
                     .moduleAction(deposit, Deposit.ClawState.CLOSED2)
                     .delay(500)

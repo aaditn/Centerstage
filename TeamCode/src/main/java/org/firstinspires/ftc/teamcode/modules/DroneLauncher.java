@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 public class DroneLauncher extends Module
 {
     Servo lock;
+    public static boolean telemetryToggle=false;
 
     public static enum State implements ModuleState
     {
@@ -33,7 +34,7 @@ public class DroneLauncher extends Module
 
     public DroneLauncher(HardwareMap hardwareMap)
     {
-        super(false);
+        super(false, telemetryToggle);
         lock=hardwareMap.get(Servo.class, "droneLock");
     }
 

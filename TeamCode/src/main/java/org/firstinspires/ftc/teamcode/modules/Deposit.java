@@ -13,7 +13,7 @@ public class Deposit extends Module
     public static double rotateZero=0.435, rotateNinety=0.49, rotateOneEighty=0.5475, rotateTwoSeventy=0.6075;
     public static double wristTransfer=0.94, wristDeposit=0.63, wristFloaty=0.83;
     public static double rotatorTransfer=0.95, rotatorDeposit=0.22;
-
+    public static boolean telemetryToggle=false;
 
     public enum FlipState implements ModuleState
     {
@@ -75,7 +75,7 @@ public class Deposit extends Module
     ClawState cstate;
 
     public Deposit(HardwareMap hardwareMap) {
-        super(false);
+        super(false, telemetryToggle);
         leftArm=hardwareMap.get(Servo.class, "leftArm");
         rightArm=hardwareMap.get(Servo.class, "rightArm");
         rightArm.setDirection(Servo.Direction.REVERSE);

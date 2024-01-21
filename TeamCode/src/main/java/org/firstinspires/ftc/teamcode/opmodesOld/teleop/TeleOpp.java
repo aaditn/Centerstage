@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.opmodesOld.teleop;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
@@ -19,10 +19,10 @@ import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
-import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-@TeleOp(name="A - Teleop")
-public class TeleOpRewrite extends EnhancedOpMode
+
+@TeleOp
+public class TeleOpp extends EnhancedOpMode
 {
     DcMotor hang;
     Robot robot;
@@ -38,13 +38,12 @@ public class TeleOpRewrite extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
     ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesBottomRow, slidesSetLine1, slidesSetLine2,
-    slidesSetLine3, slidesOverride, depositMacro, grabPixel, flush, CCW45, CW45, clawManual;
+    slidesSetLine3, slidesOverride, depositMacro, grabPixel, flush, CCW45, CW45;
     double ninja;
     int sweeperCounter;
     int wristRotateCounter;
     Intake.SweeperState[] sweeperPositions;
     Deposit.WristRotateState[] wristRotatePositions;
-    boolean intakeToggled=false;
 
     @Override
     public void linearOpMode()
@@ -91,15 +90,11 @@ public class TeleOpRewrite extends EnhancedOpMode
                 intake.setOperationState(Module.OperationState.PRESET);
 
                 if(intake.getState(Intake.PositionState.class)==Intake.PositionState.RAISED)
-                {
                     scheduler.scheduleTaskList(actions.lowerIntake());
-                    intakeToggled=true;
-                }
                 else if(intake.getState(Intake.PositionState.class)==Intake.PositionState.DOWN)
                 {
                     scheduler.scheduleTaskList(actions.raiseIntake());
                     sweeperCounter=0;
-                    intakeToggled=false;
                 }
             }
             //INTAKE SWEEPERS
@@ -112,27 +107,21 @@ public class TeleOpRewrite extends EnhancedOpMode
             //INTAKE FLUSH
             if(flush.isDown())
             {
-                intake.setOperationState(Module.OperationState.PRESET);
+                intake.setOperationState(Module.OperationState.MANUAL);
                 intake.setState(Intake.ConveyorState.INTAKE);
                 intake.setState(Intake.PowerState.EXTAKE);
             }
             else if(flush.wasJustReleased())
             {
-                intake.setOperationState(Module.OperationState.PRESET);
+                intake.setOperationState(Module.OperationState.MANUAL);
                 intake.setState(Intake.ConveyorState.OFF);
                 intake.setState(Intake.PowerState.OFF);
             }
             //INTAKE MANUAL POWER
-            else if(Math.abs(gamepad2.right_stick_y)>0.25)
+            else if(Math.abs(gamepad2.right_stick_y)>0.3)
             {
                 intake.setOperationState(Module.OperationState.MANUAL);
                 intake.manualChange(-gamepad2.right_stick_y);
-            }
-            else if(!intakeToggled)
-            {
-                intake.setOperationState(Module.OperationState.PRESET);
-                intake.setState(Intake.PowerState.OFF);
-                intake.setState(Intake.ConveyorState.OFF);
             }
 
 
@@ -140,16 +129,8 @@ public class TeleOpRewrite extends EnhancedOpMode
             if(grabPixel.wasJustPressed()&&slides.getState()==Slides.SlideState.GROUND&&
                     deposit.getState(Deposit.FlipState.class)==Deposit.FlipState.TRANSFER)
             {
-                scheduler.scheduleTaskList(actions.grabAndHold());
-                //TODO tune floaty position(get it from Ethan)
-            }
-            //MANUAL CLAW OPEN CLOSE
-            if(clawManual.wasJustPressed())
-            {
-                if(deposit.getState(Deposit.ClawState.class)==Deposit.ClawState.OPEN)
-                    deposit.setState(Deposit.ClawState.CLOSED2);
-                else if(deposit.getState(Deposit.ClawState.class)==Deposit.ClawState.CLOSED2)
-                    deposit.setState(Deposit.ClawState.OPEN);
+                deposit.setState(Deposit.ClawState.CLOSED2);
+                deposit.setState(Deposit.WristState.HOVER); //TODO tune this position
             }
 
 
@@ -188,7 +169,7 @@ public class TeleOpRewrite extends EnhancedOpMode
                 scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.ROW3));
             }
             //SLIDES MANUAL
-            if((slides.getState()!=Slides.SlideState.GROUND/*||slidesOverride.isDown()*/)&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
+            if(slides.getState()!=Slides.SlideState.GROUND&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
             {
                 slides.setOperationState(Module.OperationState.MANUAL);
 
@@ -270,8 +251,7 @@ public class TeleOpRewrite extends EnhancedOpMode
                 grabPixel=new ToggleButtonReader(g2, GamepadKeys.Button.A),
                 flush=new ToggleButtonReader(g2, GamepadKeys.Button.X),
                 CCW45=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
-                CW45=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
-                clawManual=new ToggleButtonReader(g1, GamepadKeys.Button.X)
+                CW45=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER)
         };
 
         sweeperPositions=new Intake.SweeperState[]{
@@ -290,12 +270,6 @@ public class TeleOpRewrite extends EnhancedOpMode
     public void initLoop()
     {
         robot.initLoop();
-    }
-    public void onEnd()
-    {
-        Robot.destroyRobotInstance();
-        RobotActions.deleteActionsInstance();
-        Context.clearValues();
     }
     @Override
     public void primaryLoop()

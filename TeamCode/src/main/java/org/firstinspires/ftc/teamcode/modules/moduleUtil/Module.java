@@ -18,6 +18,7 @@ public abstract class Module
     protected ElapsedTime timer;
     protected int currentTimeout;
     public boolean macroRunning;
+    public ModuleStateConverter converter;
 
     public enum Status
     {
@@ -38,6 +39,8 @@ public abstract class Module
     {
         this.constantUpdate=constantUpdate;
         timer=new ElapsedTime();
+        converter=ModuleStateConverter.getInstance();
+        mapToKey();
         initInternalStates();
         telIdentifier=this.getClass().toString().substring(this.getClass().toString().lastIndexOf('.')+1);
         telemetryToggle=true;
@@ -46,6 +49,8 @@ public abstract class Module
     {
         this.constantUpdate=constantUpdate;
         timer=new ElapsedTime();
+        converter=ModuleStateConverter.getInstance();
+        mapToKey();
         initInternalStates();
         telIdentifier=this.getClass().toString().substring(this.getClass().toString().lastIndexOf('.')+1);
         this.telemetryToggle=telemetryToggle;
@@ -222,7 +227,7 @@ public abstract class Module
     //(can be used to check timeouts since constantly runs regardless
     //of if constantUpdate or not
     protected abstract void updateInternalStatus();
-
+    protected abstract void mapToKey();
     public boolean isBusy()
     {
         if(status==Status.TRANSITIONING)

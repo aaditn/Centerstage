@@ -43,7 +43,7 @@ public class TeleOpp extends EnhancedOpMode
     int sweeperCounter;
     int wristRotateCounter;
     Intake.SweeperState[] sweeperPositions;
-    Deposit.WristRotateState[] wristRotatePositions;
+    Deposit.RotateState[] wristRotatePositions;
 
     @Override
     public void linearOpMode()
@@ -259,11 +259,11 @@ public class TeleOpp extends EnhancedOpMode
                 Intake.SweeperState.TWO_SWEEP,
                 Intake.SweeperState.THREE_SWEEP
         };
-        wristRotatePositions=new Deposit.WristRotateState[]{
-                Deposit.WristRotateState.ZERO,
-                Deposit.WristRotateState.NINETY,
-                Deposit.WristRotateState.ONE_EIGHTY,
-                Deposit.WristRotateState.TWO_SEVENTY
+        wristRotatePositions=new Deposit.RotateState[]{
+                Deposit.RotateState.ZERO,
+                Deposit.RotateState.NINETY,
+                Deposit.RotateState.ONE_EIGHTY,
+                Deposit.RotateState.TWO_SEVENTY
         };
     }
 

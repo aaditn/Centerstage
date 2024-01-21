@@ -9,70 +9,44 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 public class Deposit extends Module
 {
     Servo leftArm, rightArm, wrist, rotatewrist, claw;
-    public static double clawOpen=0.99, clawClosed1=0.72, clawClosed2=0.68,clawPrimed = .80;
-    public static double rotateZero=0.435, rotateNinety=0.49, rotateOneEighty=0.5475, rotateTwoSeventy=0.6075;
-    public static double wristTransfer=0.62, wristDeposit=0.33, wristFloaty=0.53,wristScope=.74;
-    public static double rotatorTransfer=0.96,rotatorDepositPrimed = .88, rotatorDeposit=0.22;
 
     public static boolean telemetryToggle;
 
     public enum FlipState implements ModuleState
     {
-        TRANSFER(rotatorTransfer), DEPOSIT(rotatorDeposit),PRIMED(rotatorDepositPrimed);
-        double pos1;
-        FlipState(double pos1)
-        {
-            this.pos1=pos1;
-        }
-        @Override
-        public double getOutput(int... index) {
-            return pos1;
-        }
+        TRANSFER, DEPOSIT,PRIMED;
     }
+    public static double FLIP_TRANSFER =0.96, FLIP_DEPOSIT=0.22, FLIP_PRIMED=.88;
+    double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT, FLIP_PRIMED};
+
 
     public enum WristState implements ModuleState
     {
-        TRANSFER(wristTransfer), DEPOSIT(wristDeposit), HOVER(wristFloaty), TELESCOPE(wristScope);
-        double pos1;
-        WristState(double pos1)
-        {
-            this.pos1=pos1;
-        }
-        @Override
-        public double getOutput(int... index) {
-            return pos1;
-        }
+        TRANSFER, DEPOSIT, HOVER, TELESCOPE;
     }
+    public static double WRIST_TRANSFER=0.62, WRIST_DEPOSIT=0.33, WRIST_HOVER=0.53, WRIST_SCOPE=.74;
+    double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE};
+
+
     public enum ClawState implements ModuleState
     {
-        OPEN(clawOpen), CLOSED1(clawClosed1), CLOSED2(clawClosed2),PRIMED(clawPrimed);
-        double pos1;
-        ClawState(double pos1)
-        {
-            this.pos1=pos1;
-        }
-        @Override
-        public double getOutput(int... index) {
-            return pos1;
-        }
+        OPEN, CLOSED1, CLOSED2,PRIMED;
     }
+    public static double CLAW_OPEN=0.99, CLAW_CLOSED_1=0.72, CLAW_CLOSED_2=0.68, CLAW_PRIMED=.80;
+    double[] clawValues={CLAW_OPEN, CLAW_CLOSED_1, CLAW_CLOSED_2, CLAW_PRIMED};
 
-    public enum WristRotateState implements ModuleState {
-        ZERO(rotateZero), NINETY(rotateNinety), ONE_EIGHTY(rotateOneEighty),TWO_SEVENTY(rotateTwoSeventy);
-        double pos1;
-        WristRotateState(double pos1)
-        {
-            this.pos1=pos1;
-        }
-        @Override
-        public double getOutput(int... index) {
-            return pos1;
-        }
+
+    public enum RotateState implements ModuleState {
+        ZERO, NINETY, ONE_EIGHTY,TWO_SEVENTY;
     }
-    double rotator1Pos, rotator2Pos, clawPos, wristPos, wristRotatePos;
+    public static double ROTATE_0=0.435, ROTATE_90=0.49, ROTATE_180=0.5475, ROTATE_270=0.6075;
+    double[] rotateValues={ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270};
+
+
+    double flip1Pos, flip2Pos, clawPos, wristPos, rotatePos;
     FlipState fstate;
     WristState wstate;
-    WristRotateState wrstate;
+    RotateState wrstate;
     ClawState cstate;
 
     public Deposit(HardwareMap hardwareMap) {
@@ -89,27 +63,28 @@ public class Deposit extends Module
     @Override
     protected void write()
     {
-        leftArm.setPosition(rotator1Pos);
-        rightArm.setPosition(rotator2Pos);
+        leftArm.setPosition(flip1Pos);
+        rightArm.setPosition(flip2Pos);
         wrist.setPosition(wristPos);
         claw.setPosition(clawPos);
-        rotatewrist.setPosition(wristRotatePos);
+        rotatewrist.setPosition(rotatePos);
     }
 
     @Override
-    protected void internalUpdate() {
-        rotator1Pos=getState(Deposit.FlipState.class).getOutput(1);
-        rotator2Pos=getState(Deposit.FlipState.class).getOutput(2);
-        wristPos=getState(Deposit.WristState.class).getOutput();
-        clawPos=getState(Deposit.ClawState.class).getOutput();
-        wristRotatePos=getState(Deposit.WristRotateState.class).getOutput();
+    protected void internalUpdate()
+    {
+        flip1Pos=converter.getOutput(getState(FlipState.class));
+        flip2Pos=converter.getOutput(getState(FlipState.class));
+        wristPos=converter.getOutput(getState(WristState.class));
+        clawPos=converter.getOutput(getState(ClawState.class));
+        rotatePos=converter.getOutput(getState(RotateState.class));
     }
 
     @Override
     protected void initInternalStates() {
         fstate=FlipState.PRIMED;
         wstate=WristState.TELESCOPE;
-        wrstate=WristRotateState.ZERO;
+        wrstate= RotateState.ZERO;
         cstate=ClawState.PRIMED;
         setInternalStates(fstate, wstate, wrstate, cstate);
     }
@@ -118,5 +93,14 @@ public class Deposit extends Module
     protected void updateInternalStatus()
     {
         //TODO
+    }
+
+    @Override
+    protected void mapToKey()
+    {
+        converter.add(FlipState.values(), flipValues);
+        converter.add(WristState.values(), wristValues);
+        converter.add(ClawState.values(), clawValues);
+        converter.add(RotateState.values(), rotateValues);
     }
 }

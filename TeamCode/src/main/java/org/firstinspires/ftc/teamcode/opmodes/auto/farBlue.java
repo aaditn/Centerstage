@@ -39,12 +39,6 @@ boolean offset;
     public void initLoop(){
         drive.initLoop();
     }
-    public void onEnd(){
-
-        Robot.destroyRobotInstance();
-        RobotActions.deleteActionsInstance();
-        Context.clearValues();
-    }
     public void onStart()
     {
         drive.closeCameras();

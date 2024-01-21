@@ -23,6 +23,8 @@ public class Slides extends Module
     public static double kp=0.007, ki=0, kd=0.0003;
     public static double kp2=0.0005, ki2=0, kd2=0.0001;
     public static double kp3=0.002, ki3, kd3=0.0001;
+    public static boolean telemetryToggle=false;
+
     PIDCoefficients standardcoeff, closecoeff, downcoeff;
     public static enum SlideState implements ModuleState
     {
@@ -46,7 +48,7 @@ public class Slides extends Module
     public Slides(HardwareMap hardwareMap)
     {   
         //super(true);
-        super(false);
+        super(false, telemetryToggle);
         slide1 =hardwareMap.get(DcMotorEx.class, "slide1");
         slide2 =hardwareMap.get(DcMotorEx.class, "slide2");
         slide1.setDirection(DcMotorSimple.Direction.REVERSE);

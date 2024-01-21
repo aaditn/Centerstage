@@ -13,6 +13,8 @@ public class Intake extends Module {
     DcMotorEx intake;
     Servo anglerLeft, anglerRight, sweeperLeft, sweeperRight;
     CRServo conveyorLeft, conveyorRight;
+    public static boolean telemetryToggle=false;
+
     public enum PowerState implements ModuleState
     {
         INTAKE_AUTO(1.0), INTAKE(0.9), INTAKE_LOW(0.7), EXTAKE(-0.9), OFF(0), LOW(-0.3);
@@ -82,7 +84,7 @@ public class Intake extends Module {
 
     public Intake(HardwareMap hardwareMap)
     {
-        super(false);
+        super(false, telemetryToggle);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 

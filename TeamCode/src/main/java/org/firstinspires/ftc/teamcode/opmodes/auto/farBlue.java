@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -192,7 +192,7 @@ offset=false;
         die(750);
         intake.setState(Intake.PositionState.MID);
         die(750);
-        drive.followTrajectorySequenceAsync(leftToStack0);
+        drive.followTrajectorySequence(leftToStack0);
         while(drive.isBusy()){
 
         }

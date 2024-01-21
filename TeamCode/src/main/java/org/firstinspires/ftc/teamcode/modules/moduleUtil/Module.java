@@ -11,6 +11,7 @@ public abstract class Module
     public boolean constantUpdate;
     boolean stateChanged;
     boolean readUpdateChecker;
+    boolean telemetryToggle=true;
 
     public String telIdentifier;
 
@@ -39,7 +40,17 @@ public abstract class Module
         timer=new ElapsedTime();
         initInternalStates();
         telIdentifier=this.getClass().toString().substring(this.getClass().toString().lastIndexOf('.')+1);
+        telemetryToggle=true;
     }
+    public Module(boolean constantUpdate, boolean telemetryToggle)
+    {
+        this.constantUpdate=constantUpdate;
+        timer=new ElapsedTime();
+        initInternalStates();
+        telIdentifier=this.getClass().toString().substring(this.getClass().toString().lastIndexOf('.')+1);
+        this.telemetryToggle=telemetryToggle;
+    }
+
 
     //needed to store states of a module within this class(array to store if same class has multiple states.
     //ie: multiple servo deposit)
@@ -178,13 +189,15 @@ public abstract class Module
     //prints telemetry stuff. can rewrite implementation for it(if you want less or more info)
     protected void telemetryUpdate()
     {
-
-        Context.tel.addData(telIdentifier+": time spent in state", timeSpentInState());
-        Context.tel.addData(telIdentifier+" status", status);
-        Context.tel.addData(telIdentifier+" operation status", opstate);
-        for(ModuleState s: states)
+        if(telemetryToggle)
         {
-            Context.tel.addData(telIdentifier+": "+ s.getClass()+" state", s);
+            Context.tel.addData(telIdentifier+": time spent in state", timeSpentInState());
+            Context.tel.addData(telIdentifier+" status", status);
+            Context.tel.addData(telIdentifier+" operation state", opstate);
+            for(ModuleState s: states)
+            {
+                Context.tel.addData(telIdentifier+": "+ s.getClass()+" state", s);
+            }
         }
     }
 

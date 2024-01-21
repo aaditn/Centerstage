@@ -10,20 +10,13 @@ public class SampleModule extends Module
     {
         HI, BYE;
 
-        @Override
-        public double getOutput(int... index) {
-            return 0;
-        }
     }
 
     public enum State2 implements ModuleState
     {
         HELLO, GOODBYE;
 
-        @Override
-        public double getOutput(int... index) {
-            return 0;
-        }
+
     }
 
     State1 state1=State1.BYE;
@@ -61,6 +54,11 @@ public class SampleModule extends Module
         status=Status.IDLE;
         //or
         status=Status.TRANSITIONING;
+    }
+
+    @Override
+    protected void mapToKey() {
+
     }
 
     //gets called repeatedly(meant for updating telemetry)

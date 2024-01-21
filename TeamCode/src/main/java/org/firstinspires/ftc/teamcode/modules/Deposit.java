@@ -109,7 +109,7 @@ public class Deposit extends Module
         fstate=FlipState.PRIMED;
         wstate=WristState.TELESCOPE;
         wrstate=WristRotateState.ZERO;
-        cstate=ClawState.OPEN;
+        cstate=ClawState.PRIMED;
         setInternalStates(fstate, wstate, wrstate, cstate);
     }
 

@@ -87,6 +87,7 @@ public class RobotActions
                 .moduleAction(deposit, Deposit.FlipState.PRIMED)
                 .await(()->slides.currentPosition()<100)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                .moduleAction(deposit, Deposit.ClawState.PRIMED)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slides.macroRunning=false)
                 .build();
@@ -113,9 +114,10 @@ public class RobotActions
                 .delay(300)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .delay(100)
-                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                .moduleAction(deposit, Deposit.FlipState.PRIMED)
                 .await(()->slides.currentPosition()<100)
-                .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                .moduleAction(deposit, Deposit.ClawState.PRIMED)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slides.macroRunning=false)
                 .build();

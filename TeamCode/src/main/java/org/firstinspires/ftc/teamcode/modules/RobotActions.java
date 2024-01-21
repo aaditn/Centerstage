@@ -46,6 +46,7 @@ public class RobotActions
         {
             return builder.createNew()
                     .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                    .delay(50)
                     .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                     .delay(500)
                     .moduleAction(deposit, Deposit.ClawState.CLOSED2)

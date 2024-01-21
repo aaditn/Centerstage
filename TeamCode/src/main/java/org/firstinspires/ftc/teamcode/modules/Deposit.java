@@ -14,6 +14,7 @@ public class Deposit extends Module
     public static double wristTransfer=0.64, wristDeposit=0.33, wristFloaty=0.53,wristScope=.74;
     public static double rotatorTransfer=0.94,rotatorDepositPrimed = .80, rotatorDeposit=0.22;
 
+    public static boolean telemetryToggle;
 
     public enum FlipState implements ModuleState
     {

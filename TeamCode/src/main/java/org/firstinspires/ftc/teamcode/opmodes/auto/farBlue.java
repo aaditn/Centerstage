@@ -40,7 +40,6 @@ boolean offset;
     public void initLoop()
     {
         drive.initLoop();
-        AutoSelector.getInstance().loop();
     }
     public void onStart()
     {

@@ -38,7 +38,7 @@ public class TeleOpRewrite extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
     ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesBottomRow, slidesSetLine1, slidesSetLine2,
-    slidesSetLine3, slidesOverride, depositMacro, grabPixel, flush, CCW45, CW45, clawManual;
+    slidesSetLine3, slidesOverride, depositMacro, grabPixel, flush, CCW45, CW45, clawManual, slideReset;
     double ninja;
     int sweeperCounter;
     int wristRotateCounter;
@@ -183,7 +183,7 @@ public class TeleOpRewrite extends EnhancedOpMode
                 scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.ROW3));
             }
             //SLIDES MANUAL
-            if((slides.getState()!=Slides.SlideState.GROUND/*||slidesOverride.isDown()*/)&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
+            if((slides.getState()!=Slides.SlideState.GROUND||slidesOverride.isDown())&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
             {
                 slides.setOperationState(Module.OperationState.MANUAL);
 
@@ -204,6 +204,15 @@ public class TeleOpRewrite extends EnhancedOpMode
                 slides.setOperationState(Module.OperationState.PRESET);
                 scheduler.scheduleTaskList(actions.scorePixels());
                 wristRotateCounter=0;
+            }
+            //SLIDE RESET
+            if(slideReset.isDown())
+            {
+                slides.setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+            else if(slides.getMotorRunMode()==DcMotor.RunMode.STOP_AND_RESET_ENCODER)
+            {
+                slides.setMotorRunMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
 
@@ -266,7 +275,9 @@ public class TeleOpRewrite extends EnhancedOpMode
                 flush=new ToggleButtonReader(g2, GamepadKeys.Button.X),
                 CCW45=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
                 CW45=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
-                clawManual=new ToggleButtonReader(g1, GamepadKeys.Button.X)
+                clawManual=new ToggleButtonReader(g1, GamepadKeys.Button.X),
+                slidesOverride=new ToggleButtonReader(g2, GamepadKeys.Button.Y),
+                slideReset=new ToggleButtonReader(g2, GamepadKeys.Button.B)
         };
 
         sweeperPositions=new Intake.SweeperState[]{

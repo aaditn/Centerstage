@@ -45,10 +45,15 @@ public class RobotActions
         if(slides.getState()==Slides.SlideState.GROUND)
         {
             return builder.createNew()
+
+                    .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                    .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                    .delay(500)
                     .moduleAction(deposit, Deposit.ClawState.CLOSED2)
                     .delay(500)
                     .executeCode(()->slides.macroRunning=true)
                     .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                    .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                     .delay(50)
                     .moduleAction(slides, row)
                     .delay(200)
@@ -79,9 +84,9 @@ public class RobotActions
                 .delay(300)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .delay(100)
-                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                .moduleAction(deposit, Deposit.FlipState.PRIMED)
                 .await(()->slides.currentPosition()<100)
-                .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slides.macroRunning=false)
                 .build();

@@ -61,7 +61,7 @@ public class Intake extends Module {
 
     public enum SweeperState implements ModuleState
     {
-        ZERO(0.035), INIT(0.09), ONE_SWEEP(0.15), TWO_SWEEP(0.265), THREE_SWEEP(0.38);
+        ZERO(0.035), INIT(0.09), ONE_SWEEP(0.15), TWO_SWEEP(0.265), THREE_SWEEP(0.38),FOUR_SWEEP(.495);
         double position;
         SweeperState(double position)
         {

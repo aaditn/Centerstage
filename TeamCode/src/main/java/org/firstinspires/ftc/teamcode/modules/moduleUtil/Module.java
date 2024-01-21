@@ -193,6 +193,7 @@ public abstract class Module
         {
             Context.tel.addData(telIdentifier+": time spent in state", timeSpentInState());
             Context.tel.addData(telIdentifier+" status", status);
+            Context.tel.addData(telIdentifier+" operation state", opstate);
             for(ModuleState s: states)
             {
                 Context.tel.addData(telIdentifier+": "+ s.getClass()+" state", s);

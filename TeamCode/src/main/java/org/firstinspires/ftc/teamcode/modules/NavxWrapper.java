@@ -28,9 +28,8 @@ public class NavxWrapper
 
     public double getVelocity()
     {
-        //navx.
-        //TODO
-        return 0;
+        //idk reverse? TODO
+        return Math.toRadians(navx.getRawGyroZ());
     }
     public void close()
     {

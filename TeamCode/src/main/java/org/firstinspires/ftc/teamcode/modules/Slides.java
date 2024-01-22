@@ -32,7 +32,7 @@ public class Slides extends Module
         GROUND, HALF, AUTO_LOW,AUTO_TWO, RAISED, ROW1, ROW2, ROW3;
     }
     public static double GROUND=0, HALF=25, AUTO_LOW=90, AUTO_TWO=250, RAISED=300, ROW1=700, ROW2=1000, ROW3=1300;
-    double[] stateValues={GROUND, HALF, AUTO_LOW, AUTO_TWO, RAISED, ROW1, ROW2, ROW3};
+    public static double[] stateValues={GROUND, HALF, AUTO_LOW, AUTO_TWO, RAISED, ROW1, ROW2, ROW3};
     SlideState state;
 
     public Slides(HardwareMap hardwareMap)
@@ -179,8 +179,6 @@ public class Slides extends Module
     @Override
     protected void mapToKey()
     {
-        Context.tel.addData("funny", SlideState.values().length);
-        Context.tel.addData("funny 2", stateValues.length);
         converter.add(SlideState.values(), stateValues);
     }
 

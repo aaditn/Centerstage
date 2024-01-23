@@ -128,7 +128,6 @@ public class RobotActions
         return builder.createNew()
                 .moduleAction(intake, Intake.PositionState.RAISED)
                 .moduleAction(intake, Intake.SweeperState.ZERO)
-                .moduleAction(intake, Intake.ConveyorState.OFF)
                 .moduleAction(intake, Intake.PowerState.OFF)
                 .build();
     }

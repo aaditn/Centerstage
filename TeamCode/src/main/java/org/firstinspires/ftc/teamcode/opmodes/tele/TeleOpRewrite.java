@@ -116,7 +116,6 @@ public class TeleOpRewrite extends EnhancedOpMode
             else if(flush.wasJustReleased())
             {
                 intake.setOperationState(Module.OperationState.PRESET);
-                intake.setState(Intake.ConveyorState.OFF);
                 intake.setState(Intake.PowerState.OFF);
             }
             //INTAKE MANUAL POWER
@@ -127,6 +126,7 @@ public class TeleOpRewrite extends EnhancedOpMode
             }
             else
             {
+                intake.setState(Intake.ConveyorState.INTAKE);
                 intake.setOperationState(Module.OperationState.PRESET);
             }
 

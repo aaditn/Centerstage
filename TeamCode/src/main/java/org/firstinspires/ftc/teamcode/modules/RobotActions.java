@@ -150,5 +150,13 @@ public class RobotActions
                 .build();
     }
 
+    public List<Task> autoRaiseSlides(double xThreshold, Slides.SlideState level, Deposit.RotateState rotation)
+    {
+        return builder.createNew()
+                .await(()->robot.getPoseEstimate().getX()>xThreshold)
+                .addTaskList(raiseSlides(level))
+                .moduleAction(deposit, rotation)
+                .build();
+    }
 
 }

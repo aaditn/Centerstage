@@ -1,8 +1,10 @@
-package org.firstinspires.ftc.teamcode.modules.moduleUtil;
+package org.firstinspires.ftc.teamcode.modules.modulesOld;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 
 public class SampleModule extends Module
 {

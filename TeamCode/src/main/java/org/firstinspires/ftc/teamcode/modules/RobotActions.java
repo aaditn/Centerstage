@@ -39,6 +39,32 @@ public class RobotActions
         slides=robot.slides;
         intake=robot.intake;
     }
+    public List<Task> autoRaiseSlides(Slides.SlideState row)
+    {
+        if(slides.getState()==Slides.SlideState.GROUND)
+        {
+            return builder.createNew()
+                    .delay(500)
+                    .executeCode(()->slides.macroRunning=true)
+                    .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                    .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                    .delay(50)
+                    .moduleAction(slides, row)
+                    .delay(200)
+                    .moduleAction(deposit, Deposit.WristState.HOVER)
+                    .await(()->slides.getStatus()==Module.Status.IDLE)
+                    .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                    .executeCode(()->slides.macroRunning=false)
+                    .build();
+        }
+
+        return builder.createNew()
+                .executeCode(()->slides.macroRunning=true)
+                .moduleAction(slides, row)
+                .awaitPreviousModuleActionCompletion()
+                .executeCode(()->slides.macroRunning=false)
+                .build();
+    }
 
     public List<Task> raiseSlides(Slides.SlideState row)
     {

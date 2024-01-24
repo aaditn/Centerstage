@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import java.util.List;
 
 @Config
-@Autonomous(name= "Far Red Wait")
 public class FarRedWait extends EnhancedOpMode {
 
     Robot robot;

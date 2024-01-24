@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import java.util.List;
 
 @Config
-@Autonomous(name= "Far Red")
 public class  FarRed extends EnhancedOpMode {
 
     Robot robot;

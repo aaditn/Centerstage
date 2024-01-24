@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 import java.util.List;
-
+@Autonomous
 public class farRed extends EnhancedOpMode {
     Pose2d redFarStart = new Pose2d(-36,-61,Math.toRadians(90));
     Robot drive;
@@ -32,7 +33,6 @@ public class farRed extends EnhancedOpMode {
     RobotActions actions;
     public void linearOpMode()
     {
-        drive = new Robot(this);
 
         TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(redFarStart)
                 .lineToLinearHeading(new Pose2d(-36, -30, Math.toRadians(180)))
@@ -41,11 +41,11 @@ public class farRed extends EnhancedOpMode {
                 .lineToConstantHeading(new Vector2d(-34, -58))
                 .build();
         TrajectorySequence goBackboard = drive.trajectorySequenceBuilder(prepTressFar.end())
-                .lineToConstantHeading(new Vector2d(40, -58))
-                .splineToConstantHeading(new Vector2d(44, -40), Math.toRadians(180))
+                .lineToConstantHeading(new Vector2d(36, -58))
+                .splineToConstantHeading(new Vector2d(40, -40), Math.toRadians(180))
                 .build();
 
-        
+
         TrajectorySequence leftToStack0 = drive.trajectorySequenceBuilder(leftPurple.end())
                 .lineTo(new Vector2d(-34, -18))
                 .splineToConstantHeading(new Vector2d(-42, -12), Math.toRadians(180))
@@ -105,8 +105,14 @@ public class farRed extends EnhancedOpMode {
         die(500);
 
         drive.followTrajectorySequence(prepTressFar);
-        scheduler.scheduleTaskList(actions.autoRaiseSlides(-10, Slides.SlideState.AUTO_LOW, Deposit.RotateState.ONE_EIGHTY));
+        scheduler.scheduleTaskList(actions.autoRaiseSlides(0, Slides.SlideState.AUTO_LOW, Deposit.RotateState.ONE_EIGHTY));
         drive.followTrajectorySequence(goBackboard);
+
+        while(slides.isBusy())
+        {
+
+        }
+        die(500);
 
         scheduler.scheduleTaskList(actions.scorePixels());
 

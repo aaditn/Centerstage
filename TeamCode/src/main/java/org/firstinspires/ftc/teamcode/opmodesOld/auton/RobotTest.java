@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
-@TeleOp
 public class RobotTest extends EnhancedOpMode
 {
     SampleMecanumDrive m;

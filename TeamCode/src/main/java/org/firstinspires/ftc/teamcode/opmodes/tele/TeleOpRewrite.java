@@ -165,22 +165,22 @@ public class TeleOpRewrite extends EnhancedOpMode
             if(slidesBottomRow.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.RAISED));
+                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED));
             }
             else if(slidesSetLine1.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.ROW1));
+                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1));
             }
             else if(slidesSetLine2.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.ROW2));
+                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2));
             }
             else if(slidesSetLine3.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.ROW3));
+                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3));
             }
             //SLIDES MANUAL
             if((slides.getState()!=Slides.SlideState.GROUND||slidesOverride.isDown())&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
@@ -208,11 +208,12 @@ public class TeleOpRewrite extends EnhancedOpMode
             //SLIDE RESET
             if(slidesOverride.wasJustReleased())
             {
-                //TODO: go down a tiny bit before resetting
                 slides.setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
             else if(slides.getMotorRunMode()==DcMotor.RunMode.STOP_AND_RESET_ENCODER)
             {
+                slides.setState(Slides.SlideState.GROUND);
+                slides.setOperationState(Module.OperationState.PRESET);
                 slides.setMotorRunMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 

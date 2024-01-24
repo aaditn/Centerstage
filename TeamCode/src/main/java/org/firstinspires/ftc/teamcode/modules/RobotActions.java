@@ -66,6 +66,14 @@ public class RobotActions
                 .build();
     }
 
+    public List<Task> runSweepersAuto(double xPos)
+    {
+        return builder.createNew()
+                .await(()->robot.getPoseEstimate().getX()<xPos)
+                .moduleAction(intake, Intake.SweeperState.THREE_SWEEP)
+                .build();
+    }
+
     public List<Task> raiseSlides(Slides.SlideState row)
     {
         if(slides.getState()==Slides.SlideState.GROUND)
@@ -149,6 +157,36 @@ public class RobotActions
                 .build();
     }
 
+    public List<Task> scorePixelDelay()
+    {
+        /*
+        return builder.createNew()
+                .executeCode(()->slides.macroRunning=true)
+                .moduleAction(deposit, Deposit.ClawState.OPEN)
+                .delay(300)
+                .addTaskList(lowerSlides())
+                .build();*/
+        return builder.createNew()
+                //.executeCode(()->claw.setPosition(clawOpen))
+                //.delay(500)
+                .executeCode(()->slides.macroRunning=true)
+                .delay(500)
+                .moduleAction(deposit, Deposit.ClawState.OPEN)
+                .delay(300)
+                .moduleAction(deposit, Deposit.RotateState.ZERO)
+                .delay(500)
+                .moduleAction(deposit, Deposit.WristState.HOVER)
+                .delay(300)
+                .moduleAction(slides, Slides.SlideState.GROUND)
+                .delay(100)
+                .moduleAction(deposit, Deposit.FlipState.PRIMED)
+                .await(()->slides.currentPosition()<100)
+                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                .moduleAction(deposit, Deposit.ClawState.PRIMED)
+                .await(()->slides.getStatus()==Module.Status.IDLE)
+                .executeCode(()->slides.macroRunning=false)
+                .build();
+    }
     public List<Task> raiseIntake()
     {
         return builder.createNew()

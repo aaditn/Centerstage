@@ -116,7 +116,6 @@ public class TeleOpRewrite extends EnhancedOpMode
             else if(flush.wasJustReleased())
             {
                 intake.setOperationState(Module.OperationState.PRESET);
-                intake.setState(Intake.ConveyorState.OFF);
                 intake.setState(Intake.PowerState.OFF);
             }
             //INTAKE MANUAL POWER
@@ -127,6 +126,7 @@ public class TeleOpRewrite extends EnhancedOpMode
             }
             else
             {
+                intake.setState(Intake.ConveyorState.INTAKE);
                 intake.setOperationState(Module.OperationState.PRESET);
             }
 
@@ -276,8 +276,8 @@ public class TeleOpRewrite extends EnhancedOpMode
                 CCW45=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
                 CW45=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
                 clawManual=new ToggleButtonReader(g1, GamepadKeys.Button.X),
-                depositMacro2= new ToggleButtonReader(g2, GamepadKeys.Button.B),
-                slidesOverride=new ToggleButtonReader(g2, GamepadKeys.Button.Y)
+                depositMacro2= new ToggleButtonReader(g2, GamepadKeys.Button.Y),
+                slidesOverride=new ToggleButtonReader(g2, GamepadKeys.Button.B)
         };
 
         sweeperPositions=new Intake.SweeperState[]{

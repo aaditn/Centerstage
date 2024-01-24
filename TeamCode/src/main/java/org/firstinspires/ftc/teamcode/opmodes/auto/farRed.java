@@ -3,20 +3,49 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.modules.Deposit;
+import org.firstinspires.ftc.teamcode.modules.Intake;
+import org.firstinspires.ftc.teamcode.modules.RobotActions;
+import org.firstinspires.ftc.teamcode.modules.Slides;
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.task_scheduler.Task;
+import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
+import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
-public class farRed extends LinearOpMode {
+import java.util.List;
+
+public class farRed extends EnhancedOpMode {
     Pose2d redFarStart = new Pose2d(-36,-61,Math.toRadians(90));
     Robot drive;
-    public void runOpMode() {
+    Deposit deposit;
+    Intake intake;
+    Slides slides;
+    boolean offset;
+    TaskScheduler scheduler;
+    RobotActions actions;
+    public void linearOpMode()
+    {
         drive = new Robot(this);
 
         TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(redFarStart)
                 .lineToLinearHeading(new Pose2d(-36, -30, Math.toRadians(180)))
                 .build();
+        TrajectorySequence prepTressFar = drive.trajectorySequenceBuilder(leftPurple.end())
+                .lineToConstantHeading(new Vector2d(-34, -58))
+                .build();
+        TrajectorySequence goBackboard = drive.trajectorySequenceBuilder(prepTressFar.end())
+                .lineToConstantHeading(new Vector2d(40, -58))
+                .splineToConstantHeading(new Vector2d(44, -40), Math.toRadians(180))
+                .build();
+
+        
         TrajectorySequence leftToStack0 = drive.trajectorySequenceBuilder(leftPurple.end())
                 .lineTo(new Vector2d(-34, -18))
                 .splineToConstantHeading(new Vector2d(-42, -12), Math.toRadians(180))
@@ -64,5 +93,74 @@ public class farRed extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(-56, -12))
                 .build();
         waitForStart();
+
+        drive.setPoseEstimate(redFarStart);
+        drive.followTrajectorySequence(leftPurple);
+
+        intake.setState(Intake.PositionState.DOWN);
+        intake.setState(Intake.SweeperState.ONE_SWEEP);
+
+        die(500);
+        intake.setState(Intake.PositionState.MID);
+        die(500);
+
+        drive.followTrajectorySequence(prepTressFar);
+        scheduler.scheduleTaskList(actions.autoRaiseSlides(-10, Slides.SlideState.AUTO_LOW, Deposit.RotateState.ONE_EIGHTY));
+        drive.followTrajectorySequence(goBackboard);
+
+        scheduler.scheduleTaskList(actions.scorePixels());
+
+        /*die(500);
+        drive.followTrajectorySequence(leftStackFromBack);
+
+        intake.setState(Intake.SweeperState.FOUR_SWEEP);
+        die (1500);
+        intake.setState(Intake.PositionState.RAISED);
+        die(500);
+        drive.followTrajectorySequence(leftBackFromStack);
+
+        die(500);
+        scheduler.scheduleTaskList(actions.scorePixels());
+        die(500);*/
+    }
+
+    public void die (int milliseconds) {
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        while (timer.milliseconds() < milliseconds&&opModeIsActive()) {
+            Context.tel.addData("in wait", timer.milliseconds());
+        }
+    }
+    @Override
+    public void initialize()
+    {
+        this.setLoopTimes(10);
+        drive=Robot.getInstance();
+        scheduler=new TaskScheduler();
+        actions= RobotActions.getInstance();
+        deposit=drive.deposit;
+        intake=drive.intake;
+        slides=drive.slides;
+
+        intake.init();
+        deposit.init();
+        slides.init();
+        intake.setOperationState(Module.OperationState.PRESET);
+        intake.setState(Intake.SweeperState.INIT);
+        deposit.setState(Deposit.ClawState.OPEN);
+
+    }
+
+    public void onStart()
+    {
+        drive.closeCameras();
+    }
+    public void initLoop()
+    {
+        drive.initLoop();
+    }
+    @Override
+    public void primaryLoop() {
+        drive.primaryLoop();
     }
 }

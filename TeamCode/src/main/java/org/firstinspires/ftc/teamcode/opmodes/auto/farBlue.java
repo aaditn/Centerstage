@@ -180,10 +180,8 @@ boolean offset;
 
         waitForStart();
         drive.setPoseEstimate(blueFarStart);
-        drive.followTrajectorySequenceAsync(leftPurple);
-        while(drive.isBusy()){
+        drive.followTrajectorySequence(leftPurple);
 
-        }
         intake.setState(Intake.PositionState.DOWN);
         intake.setState(Intake.SweeperState.ONE_SWEEP);
 
@@ -191,9 +189,7 @@ boolean offset;
         intake.setState(Intake.PositionState.MID);
         die(750);
         drive.followTrajectorySequence(leftToStack0);
-        while(drive.isBusy()){
 
-        }
         die(500);
         intake.setState(Intake.PowerState.INTAKE);
         intake.setState(Intake.ConveyorState.INTAKE);
@@ -201,31 +197,24 @@ boolean offset;
         die(500);
         intake.setState(Intake.PositionState.RAISED);
         die(500);
-        drive.followTrajectorySequenceAsync(leftBackFromStack);
-        while (drive.isBusy()) {
+        drive.followTrajectorySequence(leftBackFromStack);
 
-        }
+        offset=true;
         die(500);
         scheduler.scheduleTaskList(actions.scorePixels());
         die(500);
-        drive.followTrajectorySequenceAsync(leftStackFromBack);
-        while (drive.isBusy()) {
+        drive.followTrajectorySequence(leftStackFromBack);
 
-        }
+
         intake.setState(Intake.SweeperState.FOUR_SWEEP);
         die (1500);
         intake.setState(Intake.PositionState.RAISED);
         die(500);
-        drive.followTrajectorySequenceAsync(leftBackFromStack);
-        while (drive.isBusy()) {
+        drive.followTrajectorySequence(leftBackFromStack);
 
-        }
         die(500);
         scheduler.scheduleTaskList(actions.scorePixels());
         die(500);
-
-
-
 
 //        drive.followTrajectorySequence(leftBackFromStack);
 //        die(1000);

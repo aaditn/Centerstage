@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.modules;
+package org.firstinspires.ftc.teamcode.localizer;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.kauailabs.navx.ftc.AHRS;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class NavxWrapper
 {
     AHRS navx;
-    double cachedYaw;
+    double cachedYaw, cachedVelocity;
     private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 100;
     public NavxWrapper(HardwareMap hardwareMap)
     {
@@ -24,12 +24,12 @@ public class NavxWrapper
     public void update()
     {
         cachedYaw=Math.toRadians(-navx.getYaw());
+        cachedVelocity=Math.toRadians(-navx.getRawGyroZ());
     }
 
     public double getVelocity()
     {
-        //idk reverse? TODO
-        return Math.toRadians(navx.getRawGyroZ());
+        return cachedVelocity;
     }
     public void close()
     {

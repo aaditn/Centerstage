@@ -15,10 +15,10 @@ public class Deposit extends Module
 
     public enum FlipState implements ModuleState
     {
-        TRANSFER, DEPOSIT,PRIMED;
+        TRANSFER, DEPOSIT,PRIMED,LOAD;
     }
-    public static double FLIP_TRANSFER =0.96, FLIP_DEPOSIT=0.22, FLIP_PRIMED=.88;
-    public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT, FLIP_PRIMED};
+    public static double FLIP_TRANSFER =0.96, FLIP_DEPOSIT=0.22, FLIP_PRIMED=.88,FLIP_LOAD=.5;
+    public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT, FLIP_PRIMED,FLIP_LOAD};
 
 
     public enum WristState implements ModuleState
@@ -31,10 +31,10 @@ public class Deposit extends Module
 
     public enum ClawState implements ModuleState
     {
-        OPEN, CLOSED1, CLOSED2,PRIMED;
+        OPEN, CLOSED_AUTO, CLOSED1, CLOSED2,PRIMED;
     }
-    public static double CLAW_OPEN=0.99, CLAW_CLOSED_1=0.72, CLAW_CLOSED_2=0.68, CLAW_PRIMED=.80;
-    public static double[] clawValues={CLAW_OPEN, CLAW_CLOSED_1, CLAW_CLOSED_2, CLAW_PRIMED};
+    public static double CLAW_OPEN=0.99, CLAW_CLOSED_1=0.72, CLAW_CLOSED_2=0.68, CLOSED_AUTO=0.74, CLAW_PRIMED=.80;
+    public static double[] clawValues={CLAW_OPEN, CLOSED_AUTO, CLAW_CLOSED_1, CLAW_CLOSED_2, CLAW_PRIMED};
 
 
     public enum RotateState implements ModuleState {

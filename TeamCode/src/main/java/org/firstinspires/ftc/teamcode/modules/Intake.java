@@ -32,7 +32,7 @@ public class Intake extends Module {
     {
         RAISED, MID,DOWN;
     }
-    static double POSITION_RAISED=0.15, POSITION_MID=0.2, POSITION_DOWN=0.31;
+    static double POSITION_RAISED=0.05, POSITION_MID=0.15, POSITION_DOWN=0.31;
     public static double[] positionValues={POSITION_RAISED, POSITION_MID, POSITION_DOWN};
 
 

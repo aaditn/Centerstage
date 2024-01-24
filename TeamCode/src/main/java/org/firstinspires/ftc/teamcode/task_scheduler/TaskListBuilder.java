@@ -107,10 +107,7 @@ public class TaskListBuilder
 
     public TaskListBuilder addTaskList(List<Task> task)
     {
-        for(Task t: task)
-        {
-            tasks.add(t);
-        }
+        tasks.addAll(task);
         return this;
     }
 

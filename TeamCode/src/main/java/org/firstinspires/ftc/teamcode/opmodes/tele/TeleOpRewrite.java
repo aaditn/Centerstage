@@ -126,7 +126,7 @@ public class TeleOpRewrite extends EnhancedOpMode
             }
             else
             {
-                intake.setState(Intake.ConveyorState.INTAKE);
+                intake.setState(Intake.ConveyorState.OFF);
                 intake.setOperationState(Module.OperationState.PRESET);
             }
 
@@ -208,6 +208,7 @@ public class TeleOpRewrite extends EnhancedOpMode
             //SLIDE RESET
             if(slidesOverride.wasJustReleased())
             {
+                //TODO: go down a tiny bit before resetting
                 slides.setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
             else if(slides.getMotorRunMode()==DcMotor.RunMode.STOP_AND_RESET_ENCODER)

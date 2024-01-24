@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
@@ -86,13 +88,16 @@ public class RobotActions
                     .moduleAction(deposit, Deposit.ClawState.CLOSED2)
                     .delay(500)
                     .executeCode(()->slides.macroRunning=true)
-                    .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                     .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                    .delay(150)
+                    .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                     .delay(50)
                     .moduleAction(slides, row)
-                    .delay(200)
+                    //.delay(50)
+                    .delay(300)
                     .moduleAction(deposit, Deposit.WristState.HOVER)
-                    .await(()->slides.getStatus()==Module.Status.IDLE)
+                    .delay(200)
+                    //.await(()->slides.getStatus()==Module.Status.IDLE)
                     .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                     .executeCode(()->slides.macroRunning=false)
                     .build();
@@ -143,13 +148,13 @@ public class RobotActions
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
                 .delay(300)
                 .moduleAction(deposit, Deposit.RotateState.ZERO)
-                .delay(500)
+                .delay(200)
                 .moduleAction(deposit, Deposit.WristState.HOVER)
-                .delay(300)
+                .delay(200)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .delay(100)
                 .moduleAction(deposit, Deposit.FlipState.PRIMED)
-                .await(()->slides.currentPosition()<100)
+                .await(()->slides.currentPosition()<150)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .moduleAction(deposit, Deposit.ClawState.PRIMED)
                 .await(()->slides.getStatus()==Module.Status.IDLE)

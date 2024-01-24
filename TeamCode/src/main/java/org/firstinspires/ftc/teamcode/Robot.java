@@ -203,7 +203,7 @@ public class Robot extends MecanumDrive
     public void cameraInit()
     {
         int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "test"), monitorID);
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "frontCamera"), monitorID);
         teamElementDetector=new TeamElementDetection(l.telemetry);
         camera.setPipeline(teamElementDetector);
         FtcDashboard.getInstance().startCameraStream(camera, 0);

@@ -22,20 +22,43 @@ public class MeepMeepTesting {
         Pose2d redCloseStart = new Pose2d(12,-61,Math.toRadians(90));
 
 
+      /*
+        TrajectorySequence midPurple = drive.trajectorySequenceBuilder(blueCloseStart)
+                .lineTo(new Vector2d(12, -34))
+                .build();
+        TrajectorySequence midYellow = drive.trajectorySequenceBuilder(midPurple.end())
+                .lineToLinearHeading(new Pose2d(51, -33, Math.toRadians(180)))
+                .build();
+        TrajectorySequence midStack = drive.trajectorySequenceBuilder(midYellow.end())
+                .splineToConstantHeading(new Vector2d(30, -57), Math.toRadians(180))
+                .lineToConstantHeading(new Vector2d(-25, -57))
+                .splineToConstantHeading(new Vector2d(-56, 35), Math.toRadians(180))
+                .build();
+        TrajectorySequence midBack = drive.trajectorySequenceBuilder(midStack.end())
+                .lineToConstantHeading(new Vector2d(-54, -36))
+                .splineToConstantHeading(new Vector2d(-35, -57), Math.toRadians(0))
+                .lineToConstantHeading(new Vector2d(24, -57))
+                .splineToConstantHeading(new Vector2d(51, -29), Math.toRadians(0))
+                .build();
+        TrajectorySequence rightPurple = drive.trajectorySequenceBuilder(blueCloseStart)
+                .lineTo(new Vector2d(13, -60))
+                .splineToConstantHeading(new Vector2d(25, -37), Math.toRadians(270))
+                .build();
+        TrajectorySequence rightYellow = drive.trajectorySequenceBuilder(rightPurple.end())
+                .lineToLinearHeading(new Pose2d(52, -40, Math.toRadians(180)))
+                .build();
+
+       */
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-48, -36, Math.toRadians(90)))
-                                .lineTo(new Vector2d(-48, -37))
-                                .splineToSplineHeading(new Pose2d(-34,-57, Math.toRadians(180)), Math.toRadians(0))
-                                .lineToConstantHeading(new Vector2d(20,-57))
-                                .splineToConstantHeading(new Vector2d(49, -26), Math.toRadians(0))
+                        drive.trajectorySequenceBuilder(redCloseStart)
+                                .lineTo(new Vector2d(12, -45))
+                                .splineToSplineHeading(new Pose2d(9, -38,Math.toRadians(135)), Math.toRadians(135))
+                                .lineToLinearHeading(new Pose2d(52, -27, Math.toRadians(180)))
                                 .build()
                 );
-
-
-
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)

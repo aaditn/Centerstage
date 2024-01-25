@@ -127,6 +127,46 @@ public class RobotActions
                 .executeCode(()->slides.macroRunning=false)
                 .build();
     }
+    public List<Task> updatedSlidesMacro(Slides.SlideState row)
+    {
+        if(slides.getState()==Slides.SlideState.GROUND)
+        {
+            return builder.createNew()
+                    .executeCode(()->slides.macroRunning=true)
+                    .moduleAction(slides, Slides.SlideState.HALF)
+                    .await(()->slides.getStatus()==Module.Status.IDLE)
+                    .delay(400)
+                    .moduleAction(deposit, Deposit.ClawState.PRIMED)
+                    .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                    .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                    .delay(1000)
+                    .moduleAction(slides, Slides.SlideState.GROUND)
+                    .await(()->slides.getStatus()==Module.Status.IDLE)
+                    .delay(100)
+                    .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                    .delay(1000)
+                    .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                    .delay(150)
+                    .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                    .delay(50)
+                    .moduleAction(slides, row)
+                    //.delay(50)
+                    .delay(300)
+                    .moduleAction(deposit, Deposit.WristState.HOVER)
+                    .delay(200)
+                    //.await(()->slides.getStatus()==Module.Status.IDLE)
+                    .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                    .executeCode(()->slides.macroRunning=false)
+                    .build();
+        }
+
+        return builder.createNew()
+                .executeCode(()->slides.macroRunning=true)
+                .moduleAction(slides, row)
+                .awaitPreviousModuleActionCompletion()
+                .executeCode(()->slides.macroRunning=false)
+                .build();
+    }
     public List<Task> raiseSlides(Slides.SlideState row)
     {
         if(!Context.isTele&&slides.getState()==Slides.SlideState.GROUND){

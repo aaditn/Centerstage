@@ -165,7 +165,7 @@ public class TeleOpRewrite extends EnhancedOpMode
             if(slidesBottomRow.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED));
+                scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.RAISED));
             }
             else if(slidesSetLine1.wasJustPressed()&&!slides.macroRunning)
             {

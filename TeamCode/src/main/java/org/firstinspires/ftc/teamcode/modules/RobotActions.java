@@ -81,6 +81,8 @@ public class RobotActions
     {
         return builder.createNew()
                 .await(()->robot.getPoseEstimate().getX()<xPos)
+                .moduleAction(intake,Intake.SweeperState.TWO_SWEEP)
+                .delay(750)
                 .moduleAction(intake,Intake.SweeperState.THREE_SWEEP)
                 .build();
     }
@@ -94,6 +96,7 @@ public class RobotActions
                     .moduleAction(deposit, Deposit.ClawState.PRIMED)
                     .moduleAction(slides, Slides.SlideState.HALF)
                     .await(()->slides.getStatus()==Module.Status.IDLE)
+                    .delay(100)
                     .moduleAction(deposit, Deposit.WristState.TRANSFER)
                     .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                     .delay(1000)
@@ -126,7 +129,31 @@ public class RobotActions
     }
     public List<Task> raiseSlides(Slides.SlideState row)
     {
-        if(slides.getState()==Slides.SlideState.GROUND)
+        if(!Context.isTele&&slides.getState()==Slides.SlideState.GROUND){
+            return builder.createNew()
+                    .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                    .delay(50)
+                    .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                    .delay(500)
+                    .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                    .delay(200)
+                    .await(()->robot.getPoseEstimate().getX()>-10)
+                    .executeCode(()->slides.macroRunning=true)
+                    .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                    .delay(150)
+                    .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                    .delay(50)
+                    .moduleAction(slides, row)
+                    //.delay(50)
+                    .delay(300)
+                    .moduleAction(deposit, Deposit.WristState.HOVER)
+                    .delay(200)
+                    //.await(()->slides.getStatus()==Module.Status.IDLE)
+                    .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                    .executeCode(()->slides.macroRunning=false)
+                    .build();
+        }
+        else if(slides.getState()==Slides.SlideState.GROUND)
         {
             return builder.createNew()
                     .moduleAction(deposit, Deposit.WristState.TRANSFER)

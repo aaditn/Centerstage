@@ -69,11 +69,19 @@ public class RobotActions
                 .build();
     }
 
+    public List<Task> runSweepersAuto(double xPos,boolean x)
+    {
+        return builder.createNew()
+                .await(()->robot.getPoseEstimate().getX()<xPos)
+                .moduleAction(intake, Intake.SweeperState.FIVE_SWEEP)
+                .build();
+    }
+
     public List<Task> runSweepersAuto(double xPos)
     {
         return builder.createNew()
                 .await(()->robot.getPoseEstimate().getX()<xPos)
-                .moduleAction(intake, Intake.SweeperState.THREE_SWEEP)
+                .moduleAction(intake,Intake.SweeperState.THREE_SWEEP)
                 .build();
     }
 

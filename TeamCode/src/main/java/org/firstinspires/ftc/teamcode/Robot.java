@@ -14,6 +14,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
@@ -70,14 +71,14 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+@Config
 public class Robot extends MecanumDrive
 {
 
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(9, 0, 1);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 1);
 
-    public static double LATERAL_MULTIPLIER = 1;
+    public static double LATERAL_MULTIPLIER = 2;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -242,7 +243,7 @@ public class Robot extends MecanumDrive
     {
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
-                new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
+                new Pose2d(0.5, 0.5, Math.toRadians(5.0)), .3);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 

@@ -58,7 +58,6 @@ boolean offset;
                 .addTemporalMarker(0.5, () -> intake.setState(Intake.PositionState.DOWN))
                 .splineToConstantHeading(new Vector2d(-48, -36),Math.toRadians(-270))
                 .addTemporalMarker(1.5,()->
-
                         intake.setState(Intake.SweeperState.ONE_SWEEP))
                 .build();
 
@@ -146,11 +145,11 @@ boolean offset;
 
         TrajectorySequence rightPurple = drive.trajectorySequenceBuilder(redFarStart)
                 .addTemporalMarker(0.5, () ->  intake.setState(Intake.PositionState.DOWN))
-                .lineTo(new Vector2d(-36, 45),
+                .lineTo(new Vector2d(-36, -45),
                         drive.getVelocityConstraint(40, 2.4, 15.06),
                         drive.getAccelerationConstraint(35))
-                .splineToSplineHeading(new Pose2d(-31, 36, Math.toRadians(-45)), Math.toRadians(-45),
-                        drive.getVelocityConstraint(40, 1.5, 15.06),
+                .splineToSplineHeading(new Pose2d(-31, -36, Math.toRadians(45)), Math.toRadians(45),
+                        drive.getVelocityConstraint(40, 2.4, 15.06),
                         drive.getAccelerationConstraint(35))
                 .build();
         TrajectorySequence rightPurpleToBack = drive.trajectorySequenceBuilder(rightPurple.end())

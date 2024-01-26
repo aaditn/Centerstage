@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
-import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 
 import java.util.List;
@@ -73,6 +72,13 @@ public class RobotActions
         return builder.createNew()
                 .await(()->robot.getPoseEstimate().getX()<xPos)
                 .moduleAction(intake, Intake.SweeperState.FIVE_SWEEP)
+                .build();
+    }
+    public List<Task> runSweepersAuto(double xPos,boolean x,boolean y)
+    {
+        return builder.createNew()
+                .await(()->robot.getPoseEstimate().getX()<xPos)
+                .moduleAction(intake, Intake.SweeperState.SEVEN_SWEEP)
                 .build();
     }
 

@@ -292,18 +292,18 @@ boolean offset;
             case 3:
                 drive.followTrajectorySequence(rightBackToStack);
         }
-        die(1000);
+        waitMS(1000);
         intake.setState(Intake.PositionState.RAISED);
         drive.followTrajectorySequence(stackToBack1);
         drive.followTrajectorySequence(backToStack1);
-        die(1000);
+        waitMS(1000);
         intake.setState(Intake.PositionState.RAISED);
-        die(250);
+        waitMS(250);
         drive.followTrajectorySequence(stackToBack2);
         scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.AUTO_LOW));
     }
 
-    public void die (int milliseconds) {
+    public void waitMS(int milliseconds) {
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
         while (timer.milliseconds() < milliseconds&&opModeIsActive()) {

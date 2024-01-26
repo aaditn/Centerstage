@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto.closeAuto;
+package org.firstinspires.ftc.teamcode.opmodes.auto.archive;
 
 
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.Trajectories.blueCloseStart;

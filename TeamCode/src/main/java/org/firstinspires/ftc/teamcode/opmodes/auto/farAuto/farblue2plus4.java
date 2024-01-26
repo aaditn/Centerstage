@@ -36,9 +36,9 @@ boolean offset;
     {
 
         if(drive.teamElementDetector.centerY < 0) {
-            dice = 3;
-        } else if(drive.teamElementDetector.centerY < 107){
             dice = 1;
+        } else if(drive.teamElementDetector.centerY < 107){
+            dice = 3    ;
         } else {
             dice = 2;
         }
@@ -57,13 +57,13 @@ boolean offset;
 
         TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(blueFarStart)
                 .addTemporalMarker(0.5, () -> intake.setState(Intake.PositionState.DOWN))
-                .splineToConstantHeading(new Vector2d(-48, 36),Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(-46.5, 36),Math.toRadians(270))
                 .addTemporalMarker(1.5,()->
                         intake.setState(Intake.SweeperState.ONE_SWEEP))
                 .build();
         TrajectorySequence leftPurpleToBack = drive.trajectorySequenceBuilder(leftPurple.end())
                 .setReversed(true)
-                .lineTo(new Vector2d(-48, 37))
+                .lineTo(new Vector2d(-46.5, 37))
                 .splineToSplineHeading(new Pose2d(-34,57, Math.toRadians(180)), Math.toRadians(0),
                         drive.getVelocityConstraint(40, 2, 15.06),
                         drive.getAccelerationConstraint(40))
@@ -152,7 +152,7 @@ boolean offset;
                 .lineTo(new Vector2d(-36, 45),
                         drive.getVelocityConstraint(40, 2.4, 15.06),
                         drive.getAccelerationConstraint(35))
-                .splineToSplineHeading(new Pose2d(-31, 36, Math.toRadians(45)), Math.toRadians(45),
+                .splineToSplineHeading(new Pose2d(-31, 36, Math.toRadians(-45)), Math.toRadians(-45),
                         drive.getVelocityConstraint(40, 2.4, 15.06),
                         drive.getAccelerationConstraint(35))
                 .build();
@@ -205,9 +205,9 @@ boolean offset;
                         drive.getVelocityConstraint(40, 2, 15.06),
                         drive.getAccelerationConstraint(40))
                 .splineToConstantHeading(new Vector2d(49, 38), Math.toRadians(0),
-                        drive.getVelocityConstraint(40, 2, 15.06),
+                        drive.getVelocityConstraint(35, 2, 15.06),
                         drive.getAccelerationConstraint(40))
-                .lineTo(new Vector2d(51, -38))
+                .lineTo(new Vector2d(51, 38))
                 .addSpatialMarker(new Vector2d(-30, 57), () -> {
                     scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PositionState.RAISED);
@@ -227,8 +227,12 @@ boolean offset;
                         drive.getVelocityConstraint(40, 2, 15.06),
                         drive.getAccelerationConstraint(45))
                 .lineToConstantHeading(new Vector2d(-28,57))
-                .splineToConstantHeading(new Vector2d(-55, 33), Math.toRadians(180))
-                .lineToConstantHeading(new Vector2d(-58, 33))
+                .splineToConstantHeading(new Vector2d(-53, 33), Math.toRadians(180),
+                        drive.getVelocityConstraint(35, 2, 15.06),
+                        drive.getAccelerationConstraint(35))
+                .lineToConstantHeading(new Vector2d(-58, 33),
+                        drive.getVelocityConstraint(30, 2, 15.06),
+                        drive.getAccelerationConstraint(35))
                 .addSpatialMarker(new Vector2d(-30, 55), () -> {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
@@ -236,10 +240,10 @@ boolean offset;
                     scheduler.scheduleTaskList(actions.runSweepersAuto(-56.5,true));
                 })
                 .build();
-        TrajectorySequence stackToBack2 = drive.trajectorySequenceBuilder(leftBackToStack.end())
+        TrajectorySequence stackToBack2 = drive.trajectorySequenceBuilder(backToStack1.end())
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(-36,57),Math.toRadians(0),
-                        drive.getVelocityConstraint(40, 2, 15.06),
+                        drive.getVelocityConstraint(35, 2, 15.06),
                         drive.getAccelerationConstraint(40))
                 .lineToConstantHeading(new Vector2d(20,57))
                 .splineToConstantHeading(new Vector2d(49, 38), Math.toRadians(0))
@@ -298,7 +302,6 @@ boolean offset;
         intake.setState(Intake.PositionState.RAISED);
         die(250);
         drive.followTrajectorySequence(stackToBack2);
-        scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.AUTO_LOW));
     }
 
     public void die (int milliseconds) {

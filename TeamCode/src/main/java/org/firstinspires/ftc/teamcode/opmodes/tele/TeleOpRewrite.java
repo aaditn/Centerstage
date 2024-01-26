@@ -41,7 +41,7 @@ public class TeleOpRewrite extends EnhancedOpMode
     slidesSetLine3, slidesOverride, depositMacro, depositMacro2, grabPixel, flush, CCW45, CW45, clawManual;
     double ninja;
     int sweeperCounter;
-    int wristRotateCounter;
+    int wristRotateCounter=2;
     Intake.SweeperState[] sweeperPositions;
     Deposit.RotateState[] wristRotatePositions;
 
@@ -203,7 +203,7 @@ public class TeleOpRewrite extends EnhancedOpMode
             {
                 slides.setOperationState(Module.OperationState.PRESET);
                 scheduler.scheduleTaskList(actions.scorePixels());
-                wristRotateCounter=0;
+                wristRotateCounter=2;
             }
             //SLIDE RESET
             if(slidesOverride.wasJustReleased())

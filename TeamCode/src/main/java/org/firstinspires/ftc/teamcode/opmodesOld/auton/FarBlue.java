@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import java.util.List;
 
 @Config
+@Disabled
 public class  FarBlue extends EnhancedOpMode {
 
     Robot robot;

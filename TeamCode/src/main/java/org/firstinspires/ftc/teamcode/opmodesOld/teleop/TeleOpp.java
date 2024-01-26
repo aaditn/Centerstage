@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 @TeleOp
+@Disabled
 public class TeleOpp extends EnhancedOpMode
 {
     DcMotor hang;

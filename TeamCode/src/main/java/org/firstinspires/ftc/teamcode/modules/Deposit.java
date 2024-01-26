@@ -17,7 +17,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT,PRIMED,LOAD;
     }
-    public static double FLIP_TRANSFER =0.92, FLIP_DEPOSIT=0.22, FLIP_PRIMED=0.90,FLIP_LOAD=.5;
+    public static double FLIP_TRANSFER =0.92, FLIP_DEPOSIT=0.22, FLIP_PRIMED=0.91,FLIP_LOAD=.5;
     public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT, FLIP_PRIMED,FLIP_LOAD};
 
 
@@ -25,7 +25,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE;
     }
-    public static double WRIST_TRANSFER=0.67, WRIST_DEPOSIT=0.33, WRIST_HOVER=0.53, WRIST_SCOPE=0.71;
+    public static double WRIST_TRANSFER=0.67, WRIST_DEPOSIT=0.25, WRIST_HOVER=0.53, WRIST_SCOPE=0.71;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE};
 
 
@@ -33,14 +33,14 @@ public class Deposit extends Module
     {
         OPEN, CLOSED_AUTO, CLOSED1, CLOSED2,PRIMED, HALF;
     }
-    public static double CLAW_OPEN=0.8, CLAW_CLOSED_1=0.7, CLAW_CLOSED_2=0.6, CLOSED_AUTO=0.74, CLAW_PRIMED=.75, CLAW_HALF = .68;
+    public static double CLAW_OPEN=0.85, CLAW_CLOSED_1=0.7, CLAW_CLOSED_2=0.6, CLOSED_AUTO=0.74, CLAW_PRIMED=.75, CLAW_HALF = .68;
     public static double[] clawValues={CLAW_OPEN, CLOSED_AUTO, CLAW_CLOSED_1, CLAW_CLOSED_2, CLAW_PRIMED, CLAW_HALF};
 
 
     public enum RotateState implements ModuleState {
         ZERO, NINETY, ONE_EIGHTY,TWO_SEVENTY;
     }
-    public static double ROTATE_0=0.4345, ROTATE_90=0.49, ROTATE_180=0.5475, ROTATE_270=0.6075;
+    public static double ROTATE_0=0.5475, ROTATE_90=0.6075, ROTATE_180=0.4345, ROTATE_270=0.49;
     public static double[] rotateValues={ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270};
 
 

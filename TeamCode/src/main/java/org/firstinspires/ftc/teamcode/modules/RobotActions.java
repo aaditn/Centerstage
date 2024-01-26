@@ -47,7 +47,6 @@ public class RobotActions
         if(slides.getState()==Slides.SlideState.GROUND)
         {
             return builder.createNew()
-                    .delay(500)
                     .executeCode(()->slides.macroRunning=true)
                     .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                     .moduleAction(deposit, Deposit.WristState.TELESCOPE)
@@ -82,7 +81,7 @@ public class RobotActions
         return builder.createNew()
                 .await(()->robot.getPoseEstimate().getX()<xPos)
                 .moduleAction(intake,Intake.SweeperState.TWO_SWEEP)
-                .delay(750)
+                .delay(1250)
                 .moduleAction(intake,Intake.SweeperState.THREE_SWEEP)
                 .build();
     }
@@ -92,7 +91,7 @@ public class RobotActions
         if(slides.getState()==Slides.SlideState.GROUND)
         {
             return builder.createNew()
-                    .executeCode(()->slides.macroRunning=true)
+                    .executeCode(()->slides.macroRunning=true)/*
                     .moduleAction(deposit, Deposit.ClawState.PRIMED)
                     .moduleAction(slides, Slides.SlideState.HALF)
                     .await(()->slides.getStatus()==Module.Status.IDLE)
@@ -102,7 +101,7 @@ public class RobotActions
                     .delay(500)
                     .moduleAction(slides, Slides.SlideState.GROUND)
                     .await(()->slides.getStatus()==Module.Status.IDLE)
-                    .delay(1000)
+                    .delay(1000)*/
                     .moduleAction(deposit, Deposit.ClawState.CLOSED2)
                     .delay(1000)
                     .moduleAction(deposit, Deposit.WristState.TELESCOPE)
@@ -316,9 +315,8 @@ public class RobotActions
                 //.executeCode(()->claw.setPosition(clawOpen))
                 //.delay(500)
                 .executeCode(()->slides.macroRunning=true)
-                .delay(500)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .delay(300)
+                .delay(200)
                 .moduleAction(deposit, Deposit.RotateState.ONE_EIGHTY)
                 .delay(500)
                 .moduleAction(deposit, Deposit.WristState.HOVER)
@@ -339,6 +337,7 @@ public class RobotActions
                 .moduleAction(intake, Intake.PositionState.RAISED)
                 .moduleAction(intake, Intake.SweeperState.ZERO)
                 .moduleAction(intake, Intake.PowerState.OFF)
+                .moduleAction(intake, Intake.ConveyorState.OFF)
                 .build();
     }
 

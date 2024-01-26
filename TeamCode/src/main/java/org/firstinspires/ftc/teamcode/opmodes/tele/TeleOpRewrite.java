@@ -117,6 +117,7 @@ public class TeleOpRewrite extends EnhancedOpMode
             {
                 intake.setOperationState(Module.OperationState.PRESET);
                 intake.setState(Intake.PowerState.OFF);
+                intake.setState(Intake.ConveyorState.OFF);
             }
             //INTAKE MANUAL POWER
             else if(Math.abs(gamepad2.right_stick_y)>0.25)
@@ -126,7 +127,7 @@ public class TeleOpRewrite extends EnhancedOpMode
             }
             else
             {
-                intake.setState(Intake.ConveyorState.OFF);
+                //intake.setState(Intake.ConveyorState.OFF);
                 intake.setOperationState(Module.OperationState.PRESET);
             }
 

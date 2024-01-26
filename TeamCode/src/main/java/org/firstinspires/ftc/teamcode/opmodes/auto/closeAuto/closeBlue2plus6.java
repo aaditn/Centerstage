@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 @Autonomous
-public class closeBlueCycle extends EnhancedOpMode {
+public class closeBlue2plus6 extends EnhancedOpMode {
     Robot drive;
     Deposit deposit;
     Intake intake;
@@ -76,7 +76,7 @@ int dice;
                         drive.getAccelerationConstraint(40))
                 .lineTo(new Vector2d(-58,11.5))
 
-                .addSpatialMarker(new Vector2d(-30, -11), () -> {
+                .addSpatialMarker(new Vector2d(-30, 11), () -> {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
@@ -99,7 +99,7 @@ int dice;
                         drive.getAccelerationConstraint(40))
                 .lineTo(new Vector2d(-58,11.5))
 
-                .addSpatialMarker(new Vector2d(-30, -11), () -> {
+                .addSpatialMarker(new Vector2d(-30, 11), () -> {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
@@ -121,7 +121,7 @@ int dice;
                         drive.getAccelerationConstraint(40))
                 .lineTo(new Vector2d(-58,11.5))
 
-                .addSpatialMarker(new Vector2d(-30, -11), () -> {
+                .addSpatialMarker(new Vector2d(-30, 11), () -> {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
@@ -153,7 +153,7 @@ int dice;
                         drive.getAccelerationConstraint(40))
                 .lineTo(new Vector2d(-58,11.5))
 
-                .addSpatialMarker(new Vector2d(-30, -11), () -> {
+                .addSpatialMarker(new Vector2d(-30, 11), () -> {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
@@ -186,7 +186,7 @@ int dice;
                         drive.getAccelerationConstraint(40))
                 .lineTo(new Vector2d(-58,11.5))
 
-                .addSpatialMarker(new Vector2d(-30, -11), () -> {
+                .addSpatialMarker(new Vector2d(-30, 11), () -> {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);

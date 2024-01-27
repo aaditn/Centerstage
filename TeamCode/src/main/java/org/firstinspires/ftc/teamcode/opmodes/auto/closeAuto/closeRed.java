@@ -43,10 +43,8 @@ int dice;
         } else {
             dice = 2;
         }
-        Context.tel.addData("Team red?", Context.isTeamRed);
         Context.tel.addData("element Pos", dice);
-        Context.tel.addData("centerY", drive.teamElementDetector.centerY);
-        Context.tel.addData("largest area", drive.teamElementDetector.getLargestArea());
+        Context.tel.addData("Traj Status", Context.trajStatus);
         //Context.tel.update();
         drive.initLoop();
     }
@@ -90,8 +88,10 @@ int dice;
                         drive.getAccelerationConstraint(35))
                 .build();
 
-waitForStart();
-drive.setPoseEstimate(redCloseStart);
+        Context.trajStatus="100% Autonomous Ready";
+
+        waitForStart();
+        drive.setPoseEstimate(redCloseStart);
 
         switch(dice){
             case 1:

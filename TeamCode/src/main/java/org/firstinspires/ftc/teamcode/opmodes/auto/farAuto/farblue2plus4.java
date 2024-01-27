@@ -39,7 +39,6 @@ boolean offset;
     }
     public void initLoop()
     {
-
         if(drive.teamElementDetector.centerY < 0) {
             dice = 1;
         } else if(drive.teamElementDetector.centerY < 107){
@@ -47,11 +46,8 @@ boolean offset;
         } else {
             dice = 2;
         }
-        Context.tel.addData("Team red?", Context.isTeamRed);
         Context.tel.addData("element Pos", dice);
-        Context.tel.addData("centerY", drive.teamElementDetector.centerY);
-        Context.tel.addData("largest area", drive.teamElementDetector.getLargestArea());
-        Context.tel.addData("Status Error", Context.statusError);
+        Context.tel.addData("Traj Status", Context.trajStatus);
         drive.initLoop();
     }
     public void onStart()
@@ -60,16 +56,14 @@ boolean offset;
     }
     public void linearOpMode() {
         offset=false;
-
+        Context.trajStatus="0% In Progress";
         TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(blueFarStart)
                 .addTemporalMarker(0.25, () -> intake.setState(Intake.PositionState.DOWN))
                 .splineToConstantHeading(new Vector2d(-46.5, 34),Math.toRadians(270))
                 .addTemporalMarker(1,()->
                         intake.setState(Intake.SweeperState.ONE_SWEEP))
                 .build();
-
-        Context.statusError="1st traj";
-
+        Context.trajStatus="7% In Progress";
         TrajectorySequence leftPurpleToBack = drive.trajectorySequenceBuilder(leftPurple.end())
                 .setReversed(true)
                 .lineTo(new Vector2d(-46.5, 37))
@@ -89,9 +83,7 @@ boolean offset;
                 })
                 .addTemporalMarker(1, () ->  {intake.setState(Intake.PositionState.RAISED);})
                 .build();
-
-        Context.statusError="2nd traj";
-
+        Context.trajStatus="11% In Progress";
         TrajectorySequence leftBackToStack = drive.trajectorySequenceBuilder(leftPurpleToBack.end())
                 .setReversed(false)
                 .splineToConstantHeading(new Vector2d(10, 58), Math.toRadians(180),
@@ -111,18 +103,14 @@ boolean offset;
                     scheduler.scheduleTaskList(actions.runSweepersAuto(-56));
                 })
                 .build();
-
-        Context.statusError="3rd traj";
-
+        Context.trajStatus="17% In Progress";
         TrajectorySequence midPurple = drive.trajectorySequenceBuilder(blueFarStart)
                 .addTemporalMarker(0.25, () ->  intake.setState(Intake.PositionState.DOWN))
                 .lineTo(new Vector2d(-36, 34))
                 .addTemporalMarker(1,()->
                         intake.setState(Intake.SweeperState.ONE_SWEEP))
                 .build();
-
-        Context.statusError="4th traj";
-
+        Context.trajStatus="25% In Progress";
         TrajectorySequence midPurpleToBack = drive.trajectorySequenceBuilder(midPurple.end())
                 .lineTo(new Vector2d(-36, 35))
                 .splineToSplineHeading(new Pose2d(-29, 57, Math.toRadians(180)), Math.toRadians(0),
@@ -142,9 +130,7 @@ boolean offset;
                 })
                 .addTemporalMarker(1, () ->  {intake.setState(Intake.PositionState.RAISED);})
                 .build();
-
-        Context.statusError="5th traj";
-
+        Context.trajStatus="35% In Progress";
         TrajectorySequence midBackToStack = drive.trajectorySequenceBuilder(midPurpleToBack.end())
                 .setReversed(false)
                 .splineToConstantHeading(new Vector2d(10, 58), Math.toRadians(180),
@@ -164,9 +150,7 @@ boolean offset;
                     scheduler.scheduleTaskList(actions.runSweepersAuto(-56));
                 })
                 .build();
-
-        Context.statusError="6th traj";
-
+        Context.trajStatus="44% In Progress";
         TrajectorySequence rightPurple = drive.trajectorySequenceBuilder(blueFarStart)
                 .addTemporalMarker(0.25, () ->  intake.setState(Intake.PositionState.DOWN))
                 .addTemporalMarker(1,()->
@@ -178,6 +162,7 @@ boolean offset;
                         drive.getVelocityConstraint(40, 2.4, 15.06),
                         drive.getAccelerationConstraint(35))
                 .build();
+        Context.trajStatus="56% In Progress";
         TrajectorySequence rightPurpleToBack = drive.trajectorySequenceBuilder(rightPurple.end())
                 .addTemporalMarker(1, () ->  {intake.setState(Intake.PositionState.RAISED);})
                 .lineTo(new Vector2d(-32, 37),
@@ -197,6 +182,7 @@ boolean offset;
                     scheduler.scheduleTaskList(actions.scorePixelDelay());
                 })
                 .build();
+        Context.trajStatus="66% In Progress";
         TrajectorySequence rightBackToStack = drive.trajectorySequenceBuilder(rightPurpleToBack.end())
                 .setReversed(false)
                 .splineToConstantHeading(new Vector2d(10, 58), Math.toRadians(180),
@@ -217,7 +203,7 @@ boolean offset;
                 })
                 .build();
 
-
+        Context.trajStatus="75% In Progress";
         TrajectorySequence stackToBack1 = drive.trajectorySequenceBuilder(leftBackToStack.end())
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(-36,57),Math.toRadians(0),
@@ -242,6 +228,7 @@ boolean offset;
                     intake.setState(Intake.ConveyorState.OFF);
                 })
                 .build();
+        Context.trajStatus="83% In Progress";
         TrajectorySequence backToStack1 = drive.trajectorySequenceBuilder(stackToBack1.end())
 
                 .setReversed(false)
@@ -262,6 +249,7 @@ boolean offset;
                     scheduler.scheduleTaskList(actions.runSweepersAuto(-56.5,true));
                 })
                 .build();
+        Context.trajStatus="91% In Progress";
         TrajectorySequence stackToBack2 = drive.trajectorySequenceBuilder(backToStack1.end())
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(-36,57),Math.toRadians(0),
@@ -283,7 +271,7 @@ boolean offset;
                 })
                 .build();
 
-        Context.statusError="Trajectories all created";
+        Context.trajStatus="100% Autonomous Ready";
 
         waitForStart();
 

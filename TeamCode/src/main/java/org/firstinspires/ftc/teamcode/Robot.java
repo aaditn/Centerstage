@@ -300,9 +300,9 @@ public class Robot extends MecanumDrive
 
     public void initLoop()
     {
-        tel.update();
         read();
         write();
+        tel.update();
         //if(!Context.isTele)
             //AutoSelector.getInstance().loop();
         //loop whatever else u want

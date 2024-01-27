@@ -6,6 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.firstinspires.ftc.teamcode.util.Context
 
 class TaskScheduler
 {
@@ -19,15 +20,18 @@ class TaskScheduler
 
     fun scheduleTaskList(t: List<Task>): Unit
     {
-        val taskList: List<Task> = t
-        GlobalScope.launch(Dispatchers.Default)
+        if(Context.opmode!!.opModeIsActive())
         {
-            for(task in taskList)
+            val taskList: List<Task> = t
+            GlobalScope.launch(Dispatchers.Default)
             {
-                val job = async(Dispatchers.Default){task.execute()}
-                if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java)
+                for(task in taskList)
                 {
-                    job.join()
+                    val job = async(Dispatchers.Default){task.execute()}
+                    if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java)
+                    {
+                        job.join()
+                    }
                 }
             }
         }

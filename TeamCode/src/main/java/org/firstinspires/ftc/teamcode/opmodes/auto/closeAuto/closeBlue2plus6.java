@@ -159,7 +159,7 @@ int dice;
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
-                    scheduler.scheduleTaskList(actions.runSweepersAuto(-56,true));
+                  //  scheduler.scheduleTaskList(actions.runSweepersAuto(-56,true));
                 })
                 .build();
         TrajectorySequence stackToBack2 = drive.trajectorySequenceBuilder(leftBackToStack.end())

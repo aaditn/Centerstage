@@ -18,6 +18,8 @@ public class RobotActions
     Deposit deposit;
     Intake intake;
     TaskListBuilder builder;
+    Intake.SweeperState[] sweepStates = {Intake.SweeperState.INIT,Intake.SweeperState.ONE_SWEEP, Intake.SweeperState.TWO_SWEEP,Intake.SweeperState.THREE_SWEEP,Intake.SweeperState.FOUR_SWEEP};
+
     public static double slidesDelay=2000;
     public static RobotActions getInstance()
     {
@@ -74,6 +76,15 @@ public class RobotActions
                 .moduleAction(intake, Intake.SweeperState.FOUR_SWEEP)
                 .delay(750)
                 .moduleAction(intake, Intake.SweeperState.FIVE_SWEEP)
+                .build();
+    }
+    public List<Task> runSweepersAuto(double xPos,boolean x, int sweeperIndex)
+    {
+        return builder.createNew()
+                .await(()->robot.getPoseEstimate().getX()<xPos)
+                .moduleAction(intake, sweepStates[sweeperIndex])
+                .delay(750)
+                .moduleAction(intake, sweepStates[sweeperIndex+1])
                 .build();
     }
     public List<Task> runSweepersAuto(double xPos,boolean x,boolean y)

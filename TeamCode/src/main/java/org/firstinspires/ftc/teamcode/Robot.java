@@ -49,8 +49,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
-import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Slides;
@@ -60,7 +60,6 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.roadrunner.util.LynxModuleUtil;
-import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -124,7 +123,7 @@ public class Robot extends MecanumDrive
     AHRS navx;
     public boolean waitingForCS=false;
     public boolean tapeDetected=false;
-    ColorRangeSensor columnCS, droneCS;
+    ColorRangeSensor cs3, cs2, cs1;
     static Robot robot;
 
     public Robot(LinearOpMode l)
@@ -270,6 +269,9 @@ public class Robot extends MecanumDrive
         leftRear = hardwareMap.get(DcMotorEx.class, "bl");
         rightRear = hardwareMap.get(DcMotorEx.class, "br");
         rightFront = hardwareMap.get(DcMotorEx.class, "fr");
+        cs3 = hardwareMap.get(ColorRangeSensor .class, "cs3");
+        cs2 = hardwareMap.get(ColorRangeSensor.class, "cs2");
+        cs1 = hardwareMap.get(ColorRangeSensor.class, "cs1");
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
@@ -558,5 +560,19 @@ public class Robot extends MecanumDrive
 
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
+    }
+    public boolean isPixelCs1() {
+        int distance = 70;
+        if (cs1.getDistance(DistanceUnit.MM) < distance) {
+            return true;
+        }
+        return false;
+    }
+    public boolean isPixelCs2() {
+        int distance = 70;
+        if (cs2.getDistance(DistanceUnit.MM) < distance) {
+            return true;
+        }
+        return false;
     }
 }

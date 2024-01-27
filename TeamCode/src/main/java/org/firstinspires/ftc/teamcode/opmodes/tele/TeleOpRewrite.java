@@ -41,7 +41,7 @@ public class TeleOpRewrite extends EnhancedOpMode
     slidesSetLine3, slidesOverride, depositMacro, depositMacro2, grabPixel, flush, CCW45, CW45, clawManual;
     double ninja;
     int sweeperCounter;
-    int wristRotateCounter=2;
+    int wristRotateCounter=4;
     Intake.SweeperState[] sweeperPositions;
     Deposit.RotateState[] wristRotatePositions;
 
@@ -188,9 +188,9 @@ public class TeleOpRewrite extends EnhancedOpMode
             {
                 slides.setOperationState(Module.OperationState.MANUAL);
 
-                if(slidestimer.milliseconds()>150)
+                if(slidestimer.milliseconds()>30)
                 {
-                    double newTarget=slides.getTargetPosition() + (30*Math.signum(gamepad2.left_stick_y)*-1);
+                    double newTarget=slides.getTargetPosition() + (15*Math.signum(gamepad2.left_stick_y)*-1);
 //                    if(newTarget<300)
 //                    {
 //                        newTarget=300;
@@ -200,11 +200,11 @@ public class TeleOpRewrite extends EnhancedOpMode
                 }
             }
             //DEPOSIT AND RESET
-            if((depositMacro.wasJustPressed() || depositMacro2.wasJustPressed())&&!slides.macroRunning&&slides.getState()!=Slides.SlideState.GROUND)
+            if((sweeperIncrement.wasJustPressed() || depositMacro2.wasJustPressed() ||depositMacro.wasJustPressed())&&!slides.macroRunning&&slides.getState()!=Slides.SlideState.GROUND)
             {
-                slides.setOperationState(Module.OperationState.PRESET);
+                //slides.setOperationState(Module.OperationState.PRESET);
                 scheduler.scheduleTaskList(actions.scorePixels());
-                wristRotateCounter=2;
+                wristRotateCounter=4;
             }
             //SLIDE RESET
             if(slidesOverride.wasJustReleased())
@@ -289,13 +289,14 @@ public class TeleOpRewrite extends EnhancedOpMode
                 Intake.SweeperState.THREE_SWEEP
         };
         wristRotatePositions=new Deposit.RotateState[]{
+                Deposit.RotateState.MINUS_ONE_EIGHTY,
+                Deposit.RotateState.MINUS_ONE_THREE_FIVE,
+                Deposit.RotateState.MINUS_NINETY,
+                Deposit.RotateState.MINUS_FOURTY_FIVE,
                 Deposit.RotateState.ZERO,
-                Deposit.RotateState.FOURTY_FIVE,
-                Deposit.RotateState.NINETY,
-                Deposit.RotateState.ONE_THREE_FIVE,
-                Deposit.RotateState.ONE_EIGHTY,
-                Deposit.RotateState.TWO_TWO_FIVE,
-                Deposit.RotateState.TWO_SEVENTY
+                Deposit.RotateState.PLUS_FOURTY_FIVE,
+                Deposit.RotateState.PLUS_NINETY,
+                Deposit.RotateState.PLUS_ONE_THREE_FIVE,
         };
     }
 

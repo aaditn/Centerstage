@@ -19,7 +19,7 @@ public class Slides extends Module
     BPIDFController controller;
     public double targetPosition, motorPower;
     public double debugValue=0;
-    public static double slideCap=1100;
+    public static double slideCap=1400;
     public static double kp=0.007, ki=0, kd=0.0003;
     public static double kp2=0.0005, ki2=0, kd2=0.0001;
     public static double kp3=0.002, ki3, kd3=0.0001;
@@ -31,7 +31,7 @@ public class Slides extends Module
     {
         GROUND, HALF, AUTO_LOW,AUTO_TWO, RAISED, ROW1, ROW2, ROW3;
     }
-    public static double GROUND=0, HALF=150, AUTO_LOW=200, AUTO_TWO=500, RAISED=300, ROW1=700, ROW2=1000, ROW3=1300;
+    public static double GROUND=0, HALF=150, AUTO_LOW=200, AUTO_TWO=500, RAISED=300, ROW1=700, ROW2=1000, ROW3=1350;
     public static double[] stateValues={GROUND, HALF, AUTO_LOW, AUTO_TWO, RAISED, ROW1, ROW2, ROW3};
     SlideState state;
 

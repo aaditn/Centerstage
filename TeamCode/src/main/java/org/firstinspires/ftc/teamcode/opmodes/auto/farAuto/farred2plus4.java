@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
-@Autonomous
+@Autonomous(name="* Far Red 2+4")
 public class farred2plus4 extends EnhancedOpMode {
     int dice =0;
     Pose2d redFarStart = new Pose2d(-35 ,-61,Math.toRadians(-270));

@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Robot
 import org.firstinspires.ftc.teamcode.modules.RobotActions
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleStateConverter
 import org.firstinspires.ftc.teamcode.util.Context.clearValues
+import org.firstinspires.ftc.teamcode.util.Context.opmode
 import kotlin.coroutines.CoroutineContext
 
 abstract class EnhancedOpMode(): LinearOpMode ()
@@ -36,6 +37,7 @@ abstract class EnhancedOpMode(): LinearOpMode ()
         {
 
         }
+        resetStaticVars()
     }
 
     private fun printError()
@@ -59,7 +61,7 @@ abstract class EnhancedOpMode(): LinearOpMode ()
     fun delayLinear(delay: Long)
     {
         linearElapsedTime?.reset()
-        while(linearElapsedTime?.milliseconds()!! < delay)
+        while(linearElapsedTime?.milliseconds()!! < delay && opmode!!.opModeIsActive())
         {
 
         }
@@ -115,7 +117,6 @@ abstract class EnhancedOpMode(): LinearOpMode ()
 
             try
             {
-                resetStaticVars()
                 onEnd()
                 printError()
             }

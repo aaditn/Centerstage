@@ -25,7 +25,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE;
     }
-    public static double WRIST_TRANSFER=0.67, WRIST_DEPOSIT=0.25, WRIST_HOVER=0.53, WRIST_SCOPE=0.71;
+    public static double WRIST_TRANSFER=0.67, WRIST_DEPOSIT=0.26, WRIST_HOVER=0.53, WRIST_SCOPE=0.71;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE};
 
 
@@ -38,10 +38,14 @@ public class Deposit extends Module
 
 
     public enum RotateState implements ModuleState {
-        ZERO, FOURTY_FIVE, NINETY, ONE_THREE_FIVE, ONE_EIGHTY, TWO_TWO_FIVE, TWO_SEVENTY;
+        ZERO, PLUS_FOURTY_FIVE, PLUS_NINETY, PLUS_ONE_THREE_FIVE, PLUS_ONE_EIGHTY, PLUS_TWO_TWO_FIVE, PLUS_TWO_SEVENTY,
+        MINUS_FOURTY_FIVE, MINUS_NINETY, MINUS_ONE_THREE_FIVE, MINUS_ONE_EIGHTY, MINUS_TWO_TWO_FIVE, MINUS_TWO_SEVENTY
     }
-    public static double ROTATE_0=0.5475, FOURTY_FIVE_POS=0.5775, ROTATE_90=0.6075, ONE_THREE_FIVE_POS=0.5210, ROTATE_180=0.4345, TWO_TWO_FIVE_POS=0.4623,ROTATE_270=0.49;
-    public static double[] rotateValues={ROTATE_0, FOURTY_FIVE_POS, ROTATE_90, ONE_THREE_FIVE_POS, ROTATE_180, TWO_TWO_FIVE_POS, ROTATE_270};
+    public static double ROTATE_0=0.4345, ROTATE_PLUS_45=0.4623, ROTATE_PLUS_90=0.49, ROTATE_PLUS_135=0.5210, ROTATE_PLUS_180=0.5475, ROTATE_PLUS_225=0.5775, ROTATE_PLUS_270=0.6075;
+    public static double ROTATE_MINUS_45=0.4067, ROTATE_MINUS_90=0.3789, ROTATE_MINUS_135=0.3511, ROTATE_MINUS_180=0.3233, ROTATE_MINUS_225=0.2955, ROTATE_MINUS_270=0.2677;
+
+    public static double[] rotateValues={ROTATE_0, ROTATE_PLUS_45, ROTATE_PLUS_90, ROTATE_PLUS_135, ROTATE_PLUS_180, ROTATE_PLUS_225, ROTATE_PLUS_270,
+    ROTATE_MINUS_45, ROTATE_MINUS_90, ROTATE_MINUS_135, ROTATE_MINUS_180, ROTATE_MINUS_225, ROTATE_MINUS_270};
 
 
     double flip1Pos, flip2Pos, clawPos, wristPos, rotatePos;
@@ -85,7 +89,7 @@ public class Deposit extends Module
     protected void initInternalStates() {
         fstate=FlipState.PRIMED;
         wstate=WristState.TELESCOPE;
-        wrstate= RotateState.ONE_EIGHTY;
+        wrstate= RotateState.ZERO;
         cstate=ClawState.OPEN;
         setInternalStates(fstate, wstate, wrstate, cstate);
     }

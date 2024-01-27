@@ -14,11 +14,14 @@ import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
-@Autonomous
+import java.util.List;
+
+@Autonomous(name="* Far Blue 2+4")
 public class farblue2plus4 extends EnhancedOpMode {
     int dice =0;
     Pose2d blueFarStart = new Pose2d(-35 ,61,Math.toRadians(270));
@@ -48,6 +51,7 @@ boolean offset;
         Context.tel.addData("element Pos", dice);
         Context.tel.addData("centerY", drive.teamElementDetector.centerY);
         Context.tel.addData("largest area", drive.teamElementDetector.getLargestArea());
+        Context.tel.addData("Status Error", Context.statusError);
         drive.initLoop();
     }
     public void onStart()
@@ -63,6 +67,9 @@ boolean offset;
                 .addTemporalMarker(1,()->
                         intake.setState(Intake.SweeperState.ONE_SWEEP))
                 .build();
+
+        Context.statusError="1st traj";
+
         TrajectorySequence leftPurpleToBack = drive.trajectorySequenceBuilder(leftPurple.end())
                 .setReversed(true)
                 .lineTo(new Vector2d(-46.5, 37))
@@ -82,6 +89,9 @@ boolean offset;
                 })
                 .addTemporalMarker(1, () ->  {intake.setState(Intake.PositionState.RAISED);})
                 .build();
+
+        Context.statusError="2nd traj";
+
         TrajectorySequence leftBackToStack = drive.trajectorySequenceBuilder(leftPurpleToBack.end())
                 .setReversed(false)
                 .splineToConstantHeading(new Vector2d(10, 58), Math.toRadians(180),
@@ -102,12 +112,17 @@ boolean offset;
                 })
                 .build();
 
+        Context.statusError="3rd traj";
+
         TrajectorySequence midPurple = drive.trajectorySequenceBuilder(blueFarStart)
                 .addTemporalMarker(0.25, () ->  intake.setState(Intake.PositionState.DOWN))
                 .lineTo(new Vector2d(-36, 34))
                 .addTemporalMarker(1,()->
                         intake.setState(Intake.SweeperState.ONE_SWEEP))
                 .build();
+
+        Context.statusError="4th traj";
+
         TrajectorySequence midPurpleToBack = drive.trajectorySequenceBuilder(midPurple.end())
                 .lineTo(new Vector2d(-36, 35))
                 .splineToSplineHeading(new Pose2d(-29, 57, Math.toRadians(180)), Math.toRadians(0),
@@ -127,6 +142,9 @@ boolean offset;
                 })
                 .addTemporalMarker(1, () ->  {intake.setState(Intake.PositionState.RAISED);})
                 .build();
+
+        Context.statusError="5th traj";
+
         TrajectorySequence midBackToStack = drive.trajectorySequenceBuilder(midPurpleToBack.end())
                 .setReversed(false)
                 .splineToConstantHeading(new Vector2d(10, 58), Math.toRadians(180),
@@ -146,6 +164,8 @@ boolean offset;
                     scheduler.scheduleTaskList(actions.runSweepersAuto(-56));
                 })
                 .build();
+
+        Context.statusError="6th traj";
 
         TrajectorySequence rightPurple = drive.trajectorySequenceBuilder(blueFarStart)
                 .addTemporalMarker(0.25, () ->  intake.setState(Intake.PositionState.DOWN))
@@ -262,6 +282,9 @@ boolean offset;
                     intake.setState(Intake.ConveyorState.OFF);
                 })
                 .build();
+
+        Context.statusError="Trajectories all created";
+
         waitForStart();
 
         drive.setPoseEstimate(blueFarStart);
@@ -343,5 +366,7 @@ boolean offset;
         intake.setState(Intake.SweeperState.INIT);
         deposit.setState(Deposit.FlipState.PRIMED);
         deposit.setState(Deposit.ClawState.CLOSED1);
+
+        Context.statusError="Init Passed";
     }
 }

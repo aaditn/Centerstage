@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.roadrunner.drive.Trajectories.blueC
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 @Autonomous
+@Disabled
 public class closeBlue2_6 extends EnhancedOpMode {
     Robot drive;
     Deposit deposit;

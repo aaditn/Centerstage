@@ -11,7 +11,7 @@ public class DroneLauncher extends Module
 {
     Servo lock;
     public static boolean telemetryToggle=false;
-    static double RELEASED=0.2, LOCKED =0.62;
+    static double RELEASED=0, LOCKED =0.5;
 
     public enum State implements ModuleState
     {

@@ -29,6 +29,7 @@ public class farBlue extends EnhancedOpMode {
     Deposit deposit;
     Intake intake;
     Slides slides;
+    DroneLauncher drone;
 boolean offset;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -245,10 +246,12 @@ boolean offset;
         deposit=drive.deposit;
         intake=drive.intake;
         slides=drive.slides;
+        drone=drive.droneLauncher;
 
         intake.init();
         deposit.init();
         slides.init();
+        drone.init();
         intake.setOperationState(Module.OperationState.PRESET);
         intake.setState(Intake.SweeperState.INIT);
         deposit.setState(Deposit.ClawState.OPEN);

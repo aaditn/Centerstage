@@ -132,7 +132,7 @@ public class Intake extends Module {
         anglerLeft.setPosition(currentPosition);
         anglerRight.setPosition(currentPosition);
 
-        sweeperLeft.setPosition(sweeperPos);
+        sweeperLeft.setPosition(sweeperPos*.94);
         sweeperRight.setPosition(sweeperPos);
 
         conveyorLeft.setPower(conveyorPower);

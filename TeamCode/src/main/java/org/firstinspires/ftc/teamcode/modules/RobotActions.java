@@ -71,6 +71,8 @@ public class RobotActions
     {
         return builder.createNew()
                 .await(()->robot.getPoseEstimate().getX()<xPos)
+                .moduleAction(intake, Intake.SweeperState.FOUR_SWEEP)
+                .delay(750)
                 .moduleAction(intake, Intake.SweeperState.FIVE_SWEEP)
                 .build();
     }
@@ -87,7 +89,7 @@ public class RobotActions
         return builder.createNew()
                 .await(()->robot.getPoseEstimate().getX()<xPos)
                 .moduleAction(intake,Intake.SweeperState.TWO_SWEEP)
-                .delay(1250)
+                .delay(750)
                 .moduleAction(intake,Intake.SweeperState.THREE_SWEEP)
                 .build();
     }

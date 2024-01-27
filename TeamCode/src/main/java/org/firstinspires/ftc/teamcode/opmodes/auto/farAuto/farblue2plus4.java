@@ -260,7 +260,9 @@ boolean offset;
                     intake.setState(Intake.ConveyorState.OFF);
                 })
                 .build();
-        drive.setPoseEstimate(blueFarStart); waitForStart();
+        waitForStart();
+
+        drive.setPoseEstimate(blueFarStart);
 
         switch(dice){
             case 1:
@@ -329,6 +331,7 @@ boolean offset;
         intake=drive.intake;
         slides=drive.slides;
 
+            
         intake.init();
         deposit.init();
         slides.init();

@@ -187,7 +187,6 @@ public class Robot extends MecanumDrive
         droneLauncher = new DroneLauncher(hardwareMap);
 
         dtInit();
-        tel.addData("Robot Initialization:", "Complete");
     }
 
     public static Robot getInstance()

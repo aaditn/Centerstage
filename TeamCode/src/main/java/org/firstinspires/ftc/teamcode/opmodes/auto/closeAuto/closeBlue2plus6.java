@@ -193,6 +193,8 @@ int dice;
                     scheduler.scheduleTaskList(actions.runSweepersAuto(-56,true,true));
                 })
                 .build();
+
+
         waitForStart();
         drive.setPoseEstimate(blueCloseStart);
         switch(dice){
@@ -215,6 +217,16 @@ int dice;
                 break;
             case 3:
                 drive.followTrajectorySequence(rightYellow);
+        }
+        switch(dice){
+            case 1:
+                drive.followTrajectorySequence(leftBackToStack);
+                break;
+            case 2:
+                drive.followTrajectorySequence(midBackToStack);
+                break;
+            case 3:
+                drive.followTrajectorySequence(rightBackToStack);
         }
         waitMS(1000);
         intake.setState(Intake.PositionState.RAISED);

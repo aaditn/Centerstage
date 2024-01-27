@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto.uselessAuto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -17,10 +15,8 @@ import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
-import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-import org.opencv.core.Mat;
 
 @Autonomous
 public class farBlue extends EnhancedOpMode {
@@ -69,7 +65,7 @@ boolean offset;
 
                 })
                 .addSpatialMarker(new Vector2d(40, 48), () ->  {
-                    deposit.setState(Deposit.RotateState.ONE_EIGHTY);
+                    deposit.setState(Deposit.RotateState.PLUS_ONE_EIGHTY);
                 })
                 .lineToConstantHeading(new Vector2d(-54, 36))
                 .splineToConstantHeading(new Vector2d(-35, 57), Math.toRadians(0),

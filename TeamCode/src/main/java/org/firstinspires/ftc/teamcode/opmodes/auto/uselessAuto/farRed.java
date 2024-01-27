@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto.uselessAuto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -16,12 +14,10 @@ import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
-import java.util.List;
 @Autonomous
 public class farRed extends EnhancedOpMode {
     Pose2d redFarStart = new Pose2d(-36,-61,Math.toRadians(90));
@@ -107,7 +103,7 @@ public class farRed extends EnhancedOpMode {
         die(500);
 
         drive.followTrajectorySequence(prepTressFar);
-        scheduler.scheduleTaskList(actions.autoRaiseSlides(0, Slides.SlideState.AUTO_LOW, Deposit.RotateState.ONE_EIGHTY));
+        scheduler.scheduleTaskList(actions.autoRaiseSlides(0, Slides.SlideState.AUTO_LOW, Deposit.RotateState.PLUS_ONE_EIGHTY));
         drive.followTrajectorySequence(goBackboard);
 
         while(slides.isBusy())

@@ -98,8 +98,6 @@ public class Robot extends MecanumDrive
 
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
-
-    private IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
     private List<Integer> lastEncPositions = new ArrayList<>();
@@ -132,7 +130,6 @@ public class Robot extends MecanumDrive
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         this.l=l;
         tel = new MultipleTelemetry(l.telemetry, FtcDashboard.getInstance().getTelemetry());
-        Context.resetValues();
         Context.tel=tel;
         if(Context.opmode!=null)
         {
@@ -209,7 +206,7 @@ public class Robot extends MecanumDrive
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "frontCamera"), monitorID);
         teamElementDetector=new TeamElementDetection(l.telemetry);
         camera.setPipeline(teamElementDetector);
-        FtcDashboard.getInstance().startCameraStream(camera, 0);
+        //FtcDashboard.getInstance().startCameraStream(camera, 0);
         camera.setMillisecondsPermissionTimeout(5000);
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
@@ -233,7 +230,7 @@ public class Robot extends MecanumDrive
 
     public void updateDrivePowers()
     {
-        setDrivePower(localDrivePowers);
+        setWeightedDrivePower(localDrivePowers);
     }
 
     public void closeCameras()
@@ -256,10 +253,6 @@ public class Robot extends MecanumDrive
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-        imu.initialize(parameters);
         navx = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
                 AHRS.DeviceDataType.kProcessedData,
                 NAVX_DEVICE_UPDATE_RATE_HZ);
@@ -304,17 +297,14 @@ public class Robot extends MecanumDrive
                 follower, HEADING_PID, batteryVoltageSensor,
                 lastEncPositions, lastEncVels, lastTrackingEncPositions, lastTrackingEncVels
         );
-        if(!Context.isTele)
-        {
 
-        }
     }
 
     public void initLoop()
     {
-        tel.update();
         read();
         write();
+        tel.update();
         //if(!Context.isTele)
             //AutoSelector.getInstance().loop();
         //loop whatever else u want
@@ -436,9 +426,13 @@ public class Robot extends MecanumDrive
         trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence);
     }
 
-    public void followTrajectorySequence(TrajectorySequence trajectorySequence) {
-        followTrajectorySequenceAsync(trajectorySequence);
-        waitForIdle();
+    public void followTrajectorySequence(TrajectorySequence trajectorySequence)
+    {
+        if(Context.opmode.opModeIsActive())
+        {
+            followTrajectorySequenceAsync(trajectorySequence);
+            waitForIdle();
+        }
     }
 
     public Pose2d getLastError() {
@@ -548,7 +542,7 @@ public class Robot extends MecanumDrive
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
+        return (double) Math.toRadians(-navx.getRawGyroZ());
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

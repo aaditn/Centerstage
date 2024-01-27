@@ -45,10 +45,9 @@ int dice;
         } else {
             dice = 2;
         }
-        Context.tel.addData("Team red?", Context.isTeamRed);
         Context.tel.addData("element Pos", dice);
-        Context.tel.addData("centerY", drive.teamElementDetector.centerY);
-        Context.tel.addData("largest area", drive.teamElementDetector.getLargestArea());
+        Context.tel.addData("Traj Status", Context.trajStatus);
+        Context.tel.addLine();
         //Context.tel.update();
         drive.initLoop();
     }
@@ -62,24 +61,31 @@ int dice;
                 .splineToSplineHeading(new Pose2d(9, 38,Math.toRadians(225)), Math.toRadians(225))
                 .addTemporalMarker(0.25, () -> intake.setState(Intake.PositionState.DOWN))
                 .build();
+        Context.trajStatus="11% In Progress";
         TrajectorySequence rightYellow = drive.trajectorySequenceBuilder(rightPurple.end())
                 .lineToLinearHeading(new Pose2d(51, 27, Math.toRadians(180)))
                 .build();
+        Context.trajStatus="32% In Progress";
         TrajectorySequence midPurple = drive.trajectorySequenceBuilder(blueCloseStart)
                 .lineTo(new Vector2d(12, 34))
                 .addTemporalMarker(0.25, () -> intake.setState(Intake.PositionState.DOWN))
                 .build();
+        Context.trajStatus="59% In Progress";
         TrajectorySequence midYellow = drive.trajectorySequenceBuilder(midPurple.end())
                 .lineToLinearHeading(new Pose2d(52, 33, Math.toRadians(180)))
                 .build();
+        Context.trajStatus="74% In Progress";
         TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(blueCloseStart)
                 .lineTo(new Vector2d(13, 60))
                 .splineToConstantHeading(new Vector2d(25, 37), Math.toRadians(270))
                 .addTemporalMarker(1, () -> intake.setState(Intake.PositionState.DOWN))
                 .build();
+        Context.trajStatus="89% In Progress";
         TrajectorySequence leftYellow = drive.trajectorySequenceBuilder(leftPurple.end())
                 .lineToLinearHeading(new Pose2d(52, 40, Math.toRadians(180)))
                 .build();
+
+        Context.trajStatus="100% Autonomous Ready";
 
         waitForStart();
         drive.setPoseEstimate(blueCloseStart);
@@ -93,7 +99,7 @@ int dice;
             case 3:
                 drive.followTrajectorySequenceAsync(rightPurple);
         }
-        while(drive.isBusy()){
+        while(drive.isBusy() &&opModeIsActive()){
 
         }
         intake.setState(Intake.PositionState.DOWN);
@@ -112,7 +118,7 @@ int dice;
             case 3:
                 drive.followTrajectorySequence(rightYellow);
         }
-        while (drive.isBusy()) {
+        while (drive.isBusy() &&opModeIsActive()) {
 
         }
         die(500);

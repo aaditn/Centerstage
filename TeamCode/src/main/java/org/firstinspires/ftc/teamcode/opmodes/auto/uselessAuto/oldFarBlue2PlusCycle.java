@@ -18,8 +18,6 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
-import java.util.function.DoublePredicate;
-
 @Autonomous
 @Disabled
 public class oldFarBlue2PlusCycle extends EnhancedOpMode {
@@ -122,7 +120,7 @@ public class oldFarBlue2PlusCycle extends EnhancedOpMode {
                     intake.setState(Intake.ConveyorState.OFF);
                     intake.setState(Intake.PowerState.OFF);
                 })
-                .addSpatialMarker(new Vector2d(50, 34), () -> deposit.setState(Deposit.RotateState.NINETY))
+                .addSpatialMarker(new Vector2d(50, 34), () -> deposit.setState(Deposit.RotateState.PLUS_NINETY))
                 .build();
 
         TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(blueFarStart)

@@ -263,9 +263,9 @@ public class TeleOpp extends EnhancedOpMode
         };
         wristRotatePositions=new Deposit.RotateState[]{
                 Deposit.RotateState.ZERO,
-                Deposit.RotateState.NINETY,
-                Deposit.RotateState.ONE_EIGHTY,
-                Deposit.RotateState.TWO_SEVENTY
+                Deposit.RotateState.PLUS_NINETY,
+                Deposit.RotateState.PLUS_ONE_EIGHTY,
+                Deposit.RotateState.PLUS_TWO_SEVENTY
         };
     }
 

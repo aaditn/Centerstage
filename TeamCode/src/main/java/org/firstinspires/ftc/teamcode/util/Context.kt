@@ -16,6 +16,7 @@ object Context
     @JvmField var autoWaitTime: Int = 0
     @JvmField var autoState: Auto_State = Auto_State.TEMP
     @JvmField var colorSensorsEnabled: Boolean = false
+    @JvmField var trajStatus: String = "Not Loaded"
 
     @JvmStatic fun updateValues()
     {
@@ -35,6 +36,7 @@ object Context
         autoWaitTime=0
         autoState=Auto_State.TEMP
         colorSensorsEnabled=false
+        trajStatus="Not Loaded"
     }
     @JvmStatic fun clearValues()
     {
@@ -47,5 +49,6 @@ object Context
         autoWaitTime=0
         autoState=Auto_State.TEMP
         colorSensorsEnabled=false
+        trajStatus="Not Loaded"
     }
 }

@@ -290,8 +290,11 @@ public class TeleOpRewrite extends EnhancedOpMode
         };
         wristRotatePositions=new Deposit.RotateState[]{
                 Deposit.RotateState.ZERO,
+                Deposit.RotateState.FOURTY_FIVE,
                 Deposit.RotateState.NINETY,
+                Deposit.RotateState.ONE_THREE_FIVE,
                 Deposit.RotateState.ONE_EIGHTY,
+                Deposit.RotateState.TWO_TWO_FIVE,
                 Deposit.RotateState.TWO_SEVENTY
         };
     }

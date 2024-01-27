@@ -38,10 +38,10 @@ public class Deposit extends Module
 
 
     public enum RotateState implements ModuleState {
-        ZERO, NINETY, ONE_EIGHTY,TWO_SEVENTY;
+        ZERO, FOURTY_FIVE, NINETY, ONE_THREE_FIVE, ONE_EIGHTY, TWO_TWO_FIVE, TWO_SEVENTY;
     }
-    public static double ROTATE_0=0.5475, ROTATE_90=0.6075, ROTATE_180=0.4345, ROTATE_270=0.49;
-    public static double[] rotateValues={ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270};
+    public static double ROTATE_0=0.5475, FOURTY_FIVE_POS=0.5775, ROTATE_90=0.6075, ONE_THREE_FIVE_POS=0.5210, ROTATE_180=0.4345, TWO_TWO_FIVE_POS=0.4623,ROTATE_270=0.49;
+    public static double[] rotateValues={ROTATE_0, FOURTY_FIVE_POS, ROTATE_90, ONE_THREE_FIVE_POS, ROTATE_180, TWO_TWO_FIVE_POS, ROTATE_270};
 
 
     double flip1Pos, flip2Pos, clawPos, wristPos, rotatePos;

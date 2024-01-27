@@ -38,13 +38,13 @@ public class TeleOpRewrite extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
     ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesBottomRow, slidesSetLine1, slidesSetLine2,
-    slidesSetLine3, slidesOverride, depositMacro, depositMacro2, grabPixel, flush, CCW45, CW45, clawManual;
+    slidesSetLine3, slidesOverride, depositMacro, depositMacro2, grabPixel, flush, CCW45, CW45, clawManual, pickOne;
     double ninja;
     int sweeperCounter;
     int wristRotateCounter=4;
     Intake.SweeperState[] sweeperPositions;
     Deposit.RotateState[] wristRotatePositions;
-
+boolean pickState = false;
     @Override
     public void linearOpMode()
     {
@@ -133,12 +133,12 @@ public class TeleOpRewrite extends EnhancedOpMode
 
 
             //GRAB AND HOLD
-            if(grabPixel.wasJustPressed()&&slides.getState()==Slides.SlideState.GROUND&&
-                    deposit.getState(Deposit.FlipState.class)==Deposit.FlipState.TRANSFER)
-            {
-                scheduler.scheduleTaskList(actions.grabAndHold());
-                //TODO tune floaty position(get it from Ethan)
-            }
+//            if(grabPixel.wasJustPressed()&&slides.getState()==Slides.SlideState.GROUND&&
+//                    deposit.getState(Deposit.FlipState.class)==Deposit.FlipState.TRANSFER)
+//            {
+//                scheduler.scheduleTaskList(actions.grabAndHold());
+//                //TODO tune floaty position(get it from Ethan)
+//            }
             //MANUAL CLAW OPEN CLOSE
             if(clawManual.wasJustPressed())
             {
@@ -161,27 +161,48 @@ public class TeleOpRewrite extends EnhancedOpMode
                 deposit.setState(wristRotatePositions[wristRotateCounter]);
             }
 
+if(pickOne.wasJustPressed()){
+    pickState= !pickState;
+    if(pickState) gamepad2.runRumbleEffect(customRumbleEffect0);
+    else gamepad2.runRumbleEffect(customRumbleEffect1);
+}
 
             //SLIDES
             if(slidesBottomRow.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED));
+                if(pickState){
+
+                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED,true));
+                }
+                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED));
             }
             else if(slidesSetLine1.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1));
+                if(pickState){
+
+                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1,true));
+                }
+                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1));
             }
             else if(slidesSetLine2.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2));
+                if(pickState){
+
+                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2,true));
+                }
+                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2));
             }
             else if(slidesSetLine3.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3));
+                if(pickState){
+
+                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3,true));
+                }
+                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3));
             }
             //SLIDES MANUAL
             if((slides.getState()!=Slides.SlideState.GROUND||slidesOverride.isDown())&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
@@ -260,7 +281,7 @@ public class TeleOpRewrite extends EnhancedOpMode
 
         customRumbleEffect1 = new Gamepad.RumbleEffect.Builder()
                 .addStep(1.0, 1.0, 200)
-                .addStep(0.0, 0.0, 1000)
+                .addStep(0.0, 0.0, 300)
                 .addStep(1.0, 1.0, 200)
                 .addStep(0.0, 0.0, 1000)//  Rumble right motor 100% for 500 mSec
                 .build();
@@ -274,7 +295,7 @@ public class TeleOpRewrite extends EnhancedOpMode
                 slidesSetLine2=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_UP),
                 slidesSetLine3=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_RIGHT),
                 depositMacro=new ToggleButtonReader(g1, GamepadKeys.Button.LEFT_BUMPER),
-                grabPixel=new ToggleButtonReader(g2, GamepadKeys.Button.A),
+                pickOne=new ToggleButtonReader(g2, GamepadKeys.Button.A),
                 flush=new ToggleButtonReader(g2, GamepadKeys.Button.X),
                 CCW45=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
                 CW45=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),

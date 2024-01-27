@@ -31,10 +31,10 @@ public class Deposit extends Module
 
     public enum ClawState implements ModuleState
     {
-        OPEN, CLOSED_AUTO, CLOSED1, CLOSED2,PRIMED, HALF;
+        OPEN, CLOSED_AUTO, CLOSED1, CLOSED2,PRIMED, HALF, CLOSED_EDGE;
     }
-    public static double CLAW_OPEN=0.72, CLAW_CLOSED_1=0.5, CLAW_CLOSED_2=0.25, CLOSED_AUTO=0.74, CLAW_PRIMED=0.72, CLAW_HALF = .68;
-    public static double[] clawValues={CLAW_OPEN, CLOSED_AUTO, CLAW_CLOSED_1, CLAW_CLOSED_2, CLAW_PRIMED, CLAW_HALF};
+    public static double CLAW_OPEN=0.72, CLAW_CLOSED_1=0.5, CLAW_CLOSED_2=0.16, CLOSED_AUTO=0.74, CLAW_PRIMED=0.72, CLAW_HALF = .68,CLOSED_EDGE = .7;
+    public static double[] clawValues={CLAW_OPEN, CLOSED_AUTO, CLAW_CLOSED_1, CLAW_CLOSED_2, CLAW_PRIMED, CLAW_HALF,CLOSED_EDGE};
 
 
     public enum RotateState implements ModuleState {

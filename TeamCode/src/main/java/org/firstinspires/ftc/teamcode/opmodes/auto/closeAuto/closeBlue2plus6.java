@@ -239,12 +239,6 @@ int dice;
         waitMS(250);
         drive.followTrajectorySequence(stackToBack2);
 
-        drive.followTrajectorySequence(backToStack2);
-        waitMS(1000);
-        intake.setState(Intake.PositionState.RAISED);
-        waitMS(250);
-        drive.followTrajectorySequence(stackToBack2);
-        scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.AUTO_LOW));
     }
 
     public void waitMS(int milliseconds) {

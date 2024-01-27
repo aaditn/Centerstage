@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
+import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
@@ -25,6 +26,7 @@ public class farblue2plus0 extends EnhancedOpMode {
     Deposit deposit;
     Intake intake;
     Slides slides;
+    DroneLauncher drone;
 boolean offset;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -267,10 +269,12 @@ public void waitForDrive(){
         deposit=drive.deposit;
         intake=drive.intake;
         slides=drive.slides;
+        drone=drive.droneLauncher;
 
         intake.init();
         deposit.init();
         slides.init();
+        drone.init();
         intake.setOperationState(Module.OperationState.PRESET);
         intake.setState(Intake.SweeperState.INIT);
         deposit.setState(Deposit.FlipState.PRIMED);

@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto.uselessAuto;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import java.util.function.DoublePredicate;
 
 @Autonomous
+@Disabled
 public class oldFarBlue2PlusCycle extends EnhancedOpMode {
     int dice =0;
     Pose2d blueFarStart = new Pose2d(-36,61,Math.toRadians(270));

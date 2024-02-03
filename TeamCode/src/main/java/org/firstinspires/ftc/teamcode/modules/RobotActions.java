@@ -117,13 +117,15 @@ public class RobotActions
                     .delay(150)
                     .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                     .delay(50)
-                    .moduleAction(slides, row)
+
                     //.delay(50)
                     .delay(300)
+                    .moduleAction(slides, row)
                     .moduleAction(deposit, Deposit.WristState.HOVER)
                     .delay(200)
                     //.await(()->slides.getStatus()==Module.Status.IDLE)
                     .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                    .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                     .executeCode(()->slides.macroRunning=false)
                     .build();
 

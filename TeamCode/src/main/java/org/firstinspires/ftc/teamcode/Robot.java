@@ -33,7 +33,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityCons
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -47,7 +46,6 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
@@ -76,9 +74,8 @@ public class Robot extends MecanumDrive
 
     //public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(9, 0, 1);
     //public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 1);
-
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(9, 0, 1);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 1);
+   public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 1);
 
 
     public static double LATERAL_MULTIPLIER = 2;
@@ -95,7 +92,7 @@ public class Robot extends MecanumDrive
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
 
     private TrajectoryFollower follower;
-
+private IMU imu;
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
     private VoltageSensor batteryVoltageSensor;
@@ -252,11 +249,25 @@ public class Robot extends MecanumDrive
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
+
         // TODO: adjust the names of the following hardware devices to match your configuration
         navx = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
                 AHRS.DeviceDataType.kProcessedData,
                 NAVX_DEVICE_UPDATE_RATE_HZ);
-
+//        imu = hardwareMap.get(IMU.class, "imu");
+//        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+//                new Orientation(
+//                        AxesReference.INTRINSIC,
+//                        AxesOrder.XYX,
+//                            AngleUnit.DEGREES,
+//                        55,
+//                        0,
+//                        0,
+//                        0
+//
+//                )
+//        ));
+//        imu.initialize(parameters);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "fl");
         leftRear = hardwareMap.get(DcMotorEx.class, "bl");

@@ -56,7 +56,7 @@ int dice;
         TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(redCloseStart)
                 .lineTo(new Vector2d(12, -45))
                 .splineToSplineHeading(new Pose2d(9, -38,Math.toRadians(135)), Math.toRadians(135))
-                .addTemporalMarker(0.25, () -> intake.setState(Intake.PositionState.DOWN))
+                .addTemporalMarker(0.25, () -> intake.setState(Intake.PositionState.AUTO))
                 .build();
         TrajectorySequence leftYellow = drive.trajectorySequenceBuilder(leftPurple.end())
                 .lineToLinearHeading(new Pose2d(49, -26, Math.toRadians(180)))
@@ -66,7 +66,7 @@ int dice;
                 .lineTo(new Vector2d(12, -34),
                         drive.getVelocityConstraint(40, 2.4, 15.06),
                         drive.getAccelerationConstraint(35))
-                .addTemporalMarker(0.25, () -> intake.setState(Intake.PositionState.DOWN))
+                .addTemporalMarker(0.25, () -> intake.setState(Intake.PositionState.AUTO))
                 .build();
         TrajectorySequence midYellow = drive.trajectorySequenceBuilder(midPurple.end())
                 .lineToLinearHeading(new Pose2d(51, -33, Math.toRadians(180)),
@@ -80,12 +80,19 @@ int dice;
                 .splineToConstantHeading(new Vector2d(23, -37), Math.toRadians(90),
                         drive.getVelocityConstraint(40, 2.4, 15.06),
                         drive.getAccelerationConstraint(35))
-                .addTemporalMarker(0.25, () -> intake.setState(Intake.PositionState.DOWN))
+                .addTemporalMarker(0.25, () -> intake.setState(Intake.PositionState.AUTO))
                 .build();
         TrajectorySequence rightYellow = drive.trajectorySequenceBuilder(rightPurple.end())
                 .lineToLinearHeading(new Pose2d(51, -40, Math.toRadians(180)),
                         drive.getVelocityConstraint(40, 2.4, 15.06),
                         drive.getAccelerationConstraint(35))
+                .build();
+
+        TrajectorySequence parkRight = drive.trajectorySequenceBuilder(leftYellow.end())
+                .lineToConstantHeading(new Vector2d(52, -60))
+                .build();
+        TrajectorySequence parkLeft = drive.trajectorySequenceBuilder(leftPurple.end())
+                .lineToConstantHeading(new Vector2d(52, -20))
                 .build();
 
         Context.trajStatus="100% Autonomous Ready";
@@ -127,8 +134,10 @@ int dice;
         }
         die(500);
         scheduler.scheduleTaskList(actions.scorePixels());
-        die(500);
+        die(1500);
 
+
+        drive.followTrajectorySequence(parkRight);
       /* drive.followTrajectorySequenceAsync(leftStack);
         while (drive.isBusy()) {
 

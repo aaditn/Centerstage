@@ -25,7 +25,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE;
     }
-    public static double WRIST_TRANSFER=0.67, WRIST_DEPOSIT=0.26, WRIST_HOVER=0.53, WRIST_SCOPE=0.71;
+    public static double WRIST_TRANSFER=0.67, WRIST_DEPOSIT=0.3, WRIST_HOVER=0.53, WRIST_SCOPE=0.71;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE};
 
 

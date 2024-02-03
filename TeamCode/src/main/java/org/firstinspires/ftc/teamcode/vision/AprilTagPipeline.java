@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -29,6 +27,9 @@ public List<Pose2d> getPos(){
     return detections;
 }
     public void initAprilTag(HardwareMap hardwareMap) {
+        detections.add(new Pose2d(0,0,0));
+        detections.add(new Pose2d(0,0,0));
+        detections.add(new Pose2d(0,0,0));
         detections.add(new Pose2d(0,0,0));
         detections.add(new Pose2d(0,0,0));
         detections.add(new Pose2d(0,0,0));
@@ -98,9 +99,9 @@ public List<Pose2d> getPos(){
         double tag1 = 5.5 + 1.125;
         double tag2 = 5.5 + 1.125*3 + 3.5;
         double tag3 = 5.5 + 1.125*5 + 3.5*2;
-        double tag4 = 96-tag3;
-        double tag5 = 96-tag2;
-        double tag6 = 96-tag1;
+        double tag4 = 5.5 + 1.125*5 + 3.5*2;
+        double tag5 = 5.5 + 1.125*3 + 3.5;
+        double tag6 = 5.5 + 1.125;
         double cameraX = 0;
         double cameraY = 10;
         for (AprilTagDetection detection : currentDetections) {
@@ -125,6 +126,27 @@ public List<Pose2d> getPos(){
                 detections.set(2,new Pose2d(
                         72-(getX(cameraX,cameraY,detection)+backBoard),
                         72-(sideBackBoard+tag3-getY(cameraX,cameraY,detection)),
+                        est_heading
+                ));
+            }
+            if(detection.id==4){
+                detections.set(0,new Pose2d(
+                        72-(getX(cameraX,cameraY,detection)+backBoard),
+                        -(72-(sideBackBoard+tag4-getY(cameraX,cameraY,detection))),
+                        est_heading
+                ));
+            }
+            if(detection.id==5){
+                detections.set(1,new Pose2d(
+                        72-(getX(cameraX,cameraY,detection)+backBoard),
+                        -(72-(sideBackBoard+tag5-getY(cameraX,cameraY,detection))),
+                        est_heading
+                ));
+            }
+            if(detection.id==6){
+                detections.set(2,new Pose2d(
+                        72-(getX(cameraX,cameraY,detection)+backBoard),
+                        -(72-(sideBackBoard+tag6-getY(cameraX,cameraY,detection))),
                         est_heading
                 ));
             }

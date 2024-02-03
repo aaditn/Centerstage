@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.closeAuto;
 
 
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.Trajectories.blueCloseStart;
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.Trajectories.redCloseStart;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.Trajectories.redFarStart;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -62,7 +60,7 @@ int dice;
                 .lineTo(new Vector2d(12, -45))
                 .addTemporalMarker(1.5,()->
                         intake.setState(Intake.SweeperState.ONE_SWEEP))
-                .splineToSplineHeading(new Pose2d(9, 38,Math.toRadians(-225)), Math.toRadians(-225))
+                .splineToSplineHeading(new Pose2d(9, -38,Math.toRadians(-225)), Math.toRadians(-225))
                 .addTemporalMarker(0.25, () -> intake.setState(Intake.PositionState.DOWN))
                 .build();
         TrajectorySequence rightYellow = drive.trajectorySequenceBuilder(rightPurple.end())
@@ -78,7 +76,7 @@ int dice;
                 .splineToConstantHeading(new Vector2d(13,-11.5),Math.toRadians(180),
                         drive.getVelocityConstraint(40, 2, 15.06),
                         drive.getAccelerationConstraint(40))
-                .lineTo(new Vector2d(-58,11.5))
+                .lineTo(new Vector2d(-58,-11.5))
 
                 .addSpatialMarker(new Vector2d(-30, -11), () -> {
                     intake.setState(Intake.PositionState.DOWN);
@@ -87,7 +85,7 @@ int dice;
                     scheduler.scheduleTaskList(actions.runSweepersAuto(-56));
                 })
                 .build();
-        TrajectorySequence midPurple = drive.trajectorySequenceBuilder(blueCloseStart)
+        TrajectorySequence midPurple = drive.trajectorySequenceBuilder(redCloseStart)
 
                 .addTemporalMarker(1.5,()->
                         intake.setState(Intake.SweeperState.ONE_SWEEP))
@@ -110,7 +108,7 @@ int dice;
                     scheduler.scheduleTaskList(actions.runSweepersAuto(-56));
                 })
                 .build();
-        TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(blueCloseStart)
+        TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(redCloseStart)
 
                 .lineTo(new Vector2d(13, -60))
                 .splineToConstantHeading(new Vector2d(25, -37), Math.toRadians(270))
@@ -155,7 +153,7 @@ int dice;
                 .splineToConstantHeading(new Vector2d(13,-11.5),Math.toRadians(180),
                         drive.getVelocityConstraint(40, 2, 15.06),
                         drive.getAccelerationConstraint(40))
-                .lineTo(new Vector2d(-58,11.5))
+                .lineTo(new Vector2d(-58,-11.5))
 
                 .addSpatialMarker(new Vector2d(-30, -11), () -> {
                     intake.setState(Intake.PositionState.DOWN);
@@ -198,7 +196,7 @@ int dice;
                 })
                 .build();
         waitForStart();
-        drive.setPoseEstimate(redFarStart);
+        drive.setPoseEstimate(redCloseStart);
         switch(dice){
             case 1:
                 drive.followTrajectorySequence(leftPurple);
@@ -221,8 +219,12 @@ int dice;
                 drive.followTrajectorySequence(rightYellow);
         }
         waitMS(1000);
+        drive.followTrajectorySequence(rightBackToStack);
+        //add intake stuff
         intake.setState(Intake.PositionState.RAISED);
+        waitMS(1500);
         drive.followTrajectorySequence(stackToBack1);
+        waitMS(1500);
         drive.followTrajectorySequence(backToStack1);
         waitMS(1000);
         intake.setState(Intake.PositionState.RAISED);

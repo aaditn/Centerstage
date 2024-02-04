@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
-import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 @Config
 public class DepositOld extends Module
@@ -141,10 +141,10 @@ public class DepositOld extends Module
     protected void telemetryUpdate()
     {
         super.telemetryUpdate();
-        //Context.tel.addData("left current", leftRotator.);
-        Context.tel.addData("Left position", leftRotator.getPosition());
-        Context.tel.addData("pusher pos", pusherPos);
-        Context.tel.addData("internal update called counter", debugCounter);
+        //TelemetryWrapper.getInstance().addData("left current", leftRotator.);
+        Tel.instance().addData("Left position", leftRotator.getPosition());
+        Tel.instance().addData("pusher pos", pusherPos);
+        Tel.instance().addData("internal update called counter", debugCounter);
     }
 
     @Override

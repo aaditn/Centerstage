@@ -20,7 +20,7 @@ public class ModuleStateConverter
         return converter;
     }
 
-    public static void deleteConverterInstance()
+    public static void deleteInstance()
     {
         converter=null;
     }

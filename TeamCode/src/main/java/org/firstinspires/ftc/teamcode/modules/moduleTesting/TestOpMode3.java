@@ -4,12 +4,12 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.modules.moduleTesting.ModuleTest;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 import java.util.List;
 
@@ -69,9 +69,9 @@ public class TestOpMode3 extends EnhancedOpMode
     public void initLoop()
     {
         test.updateLoop();
-        Context.tel.addData("help", help);
-        Context.tel.addData("task list size", testTaskList.size());
-        Context.tel.update();
+        Tel.instance().addData("help", help);
+        Tel.instance().addData("task list size", testTaskList.size());
+        Tel.instance().update();
     }
 
     @Override
@@ -79,9 +79,9 @@ public class TestOpMode3 extends EnhancedOpMode
     {
         test.updateLoop();
         test.writeLoop();
-        Context.tel.addData("help", help);
-        Context.tel.addData("motor power", test.currentMotorPower);
-        Context.tel.addData("task list size", testTaskList.size());
-        Context.tel.update();
+        Tel.instance().addData("help", help);
+        Tel.instance().addData("motor power", test.currentMotorPower);
+        Tel.instance().addData("task list size", testTaskList.size());
+        Tel.instance().update();
     }
 }

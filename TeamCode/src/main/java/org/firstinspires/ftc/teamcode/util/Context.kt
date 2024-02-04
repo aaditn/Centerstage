@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.util
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import org.firstinspires.ftc.teamcode.util.AutoSelector.Auto_State
+import org.firstinspires.ftc.teamcode.util.AutoSelector.CyclePixelCount
 
 object Context
 {
@@ -14,9 +14,11 @@ object Context
     @JvmField var isTele: Boolean = true
     @JvmField var statusError: String ="Functioning Normally"
     @JvmField var autoWaitTime: Int = 0
-    @JvmField var autoState: Auto_State = Auto_State.TEMP
+    @JvmField var autoState: CyclePixelCount = CyclePixelCount.ZERO
     @JvmField var colorSensorsEnabled: Boolean = false
     @JvmField var trajStatus: String = "Not Loaded"
+    @JvmField var dice: Dice = Dice.UNINITIALIZED
+    @JvmField var dashTeleEnabled: Boolean = true
 
     @JvmStatic fun updateValues()
     {
@@ -34,9 +36,11 @@ object Context
         debug=0;
         statusError="Functioning Normally"
         autoWaitTime=0
-        autoState=Auto_State.TEMP
+        autoState= CyclePixelCount.ZERO
         colorSensorsEnabled=false
         trajStatus="Not Loaded"
+        dice=Dice.UNINITIALIZED
+        dashTeleEnabled=true
     }
     @JvmStatic fun clearValues()
     {
@@ -47,8 +51,10 @@ object Context
         debug=0;
         statusError="Functioning Normally"
         autoWaitTime=0
-        autoState=Auto_State.TEMP
+        autoState= CyclePixelCount.ZERO
         colorSensorsEnabled=false
         trajStatus="Not Loaded"
+        dice=Dice.UNINITIALIZED
+        dashTeleEnabled=true
     }
 }

@@ -29,7 +29,7 @@ public class RobotActions
         return robotActions;
     }
 
-    public static void deleteActionsInstance()
+    public static void deleteInstance()
     {
         robotActions=null;
     }
@@ -55,7 +55,7 @@ public class RobotActions
                     .moduleAction(slides, row)
                     .delay(200)
                     .moduleAction(deposit, Deposit.WristState.HOVER)
-                    .await(()->slides.getStatus()==Module.Status.IDLE)
+                    .await(slides::isIdle)
                     .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                     .executeCode(()->slides.macroRunning=false)
                     .build();
@@ -176,14 +176,14 @@ public class RobotActions
             return builder.createNew()
                     .executeCode(()->slides.macroRunning=true)
                     .moduleAction(slides, Slides.SlideState.HALF)
-                    .await(()->slides.getStatus()==Module.Status.IDLE)
+                    .await(slides::isIdle)
                     .delay(400)
                     .moduleAction(deposit, Deposit.ClawState.PRIMED)
                     .moduleAction(deposit, Deposit.WristState.TRANSFER)
                     .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                     .delay(1000)
                     .moduleAction(slides, Slides.SlideState.GROUND)
-                    .await(()->slides.getStatus()==Module.Status.IDLE)
+                    .await(slides::isIdle)
                     .delay(100)
                     .moduleAction(deposit, Deposit.ClawState.CLOSED2)
                     .delay(1000)
@@ -315,7 +315,7 @@ public class RobotActions
                 .await(()->slides.currentPosition()<150)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .await(()->slides.getStatus()==Module.Status.IDLE)
+                .await(slides::isIdle)
                 .executeCode(()->slides.macroRunning=false)
                 .build();
     }
@@ -345,7 +345,7 @@ public class RobotActions
                 .await(()->slides.currentPosition()<100)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .await(()->slides.getStatus()==Module.Status.IDLE)
+                .await(slides::isIdle)
                 .executeCode(()->slides.macroRunning=false)
                 .build();
     }

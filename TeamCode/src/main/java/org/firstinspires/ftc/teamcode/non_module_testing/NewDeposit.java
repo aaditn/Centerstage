@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 import java.util.List;
 
@@ -194,7 +195,7 @@ public class NewDeposit extends EnhancedOpMode
     @Override
     public void initLoop()
     {
-        Context.tel.update();
+        Tel.instance().update();
     }
 
     @Override
@@ -202,6 +203,6 @@ public class NewDeposit extends EnhancedOpMode
     {
         slides.updateLoop();
         slides.writeLoop();
-        Context.tel.update();
+        Tel.instance().update();
     }
 }

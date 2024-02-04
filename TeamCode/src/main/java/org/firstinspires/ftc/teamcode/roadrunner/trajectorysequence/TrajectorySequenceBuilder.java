@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence;
 
+import static org.firstinspires.ftc.teamcode.Robot.ACCEL_CONSTRAINT;
+import static org.firstinspires.ftc.teamcode.Robot.VEL_CONSTRAINT;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_ANG_ACCEL;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_ANG_VEL;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.path.PathContinuityViolationException;

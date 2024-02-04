@@ -6,8 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 /**
  * This is a simple teleop routine for testing localization. Drive the robot around like a normal
@@ -38,9 +37,9 @@ drive.setYaw();
             drive.primaryLoop();
 drive.update();
             Pose2d poseEstimate = drive.getPoseEstimate();
-            Context.tel.addData("x", poseEstimate.getX());
-            Context.tel.addData("y", poseEstimate.getY());
-            Context.tel.addData("heading", poseEstimate.getHeading());
+            Tel.instance().addData("x", poseEstimate.getX());
+            Tel.instance().addData("y", poseEstimate.getY());
+            Tel.instance().addData("heading", poseEstimate.getHeading());
         }
     }
 }

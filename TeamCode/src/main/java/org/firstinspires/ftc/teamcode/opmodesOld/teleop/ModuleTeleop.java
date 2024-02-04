@@ -9,7 +9,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -26,6 +25,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 import java.util.List;
 @Disabled
@@ -510,14 +510,14 @@ public class ModuleTeleop extends EnhancedOpMode
         robot.primaryLoop();
         robot.update();
 
-        Context.tel.addData("Slide Moving", slidesMoving);
-        Context.tel.addData("Driver Loop Times", opmodetimer.milliseconds()/driverLoopCount);
-        Context.tel.addData("Hardware Loop Times", opmodetimer.milliseconds()/hardwareLoopCount);
-        Context.tel.addData("HangPow", hang.getPower());
-        Context.tel.addData("HangPos", hang.getCurrentPosition());
-        Context.tel.addData("Drone pos", droneLauncher.getCurrentPosition());
-        Context.tel.addData("CS1",deposit.firstPixel.getDistance(DistanceUnit.MM));
-        //Context.tel.addData("Robot Current", robot.getCurrent());
+        Tel.instance().addData("Slide Moving", slidesMoving);
+        Tel.instance().addData("Driver Loop Times", opmodetimer.milliseconds()/driverLoopCount);
+        Tel.instance().addData("Hardware Loop Times", opmodetimer.milliseconds()/hardwareLoopCount);
+        Tel.instance().addData("HangPow", hang.getPower());
+        Tel.instance().addData("HangPos", hang.getCurrentPosition());
+        Tel.instance().addData("Drone pos", droneLauncher.getCurrentPosition());
+        Tel.instance().addData("CS1",deposit.firstPixel.getDistance(DistanceUnit.MM));
+        //TelemetryWrapper.getInstance().addData("Robot Current", robot.getCurrent());
     }
 
 }

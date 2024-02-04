@@ -58,7 +58,9 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.roadrunner.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.Tel;
 import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -88,11 +90,11 @@ public class Robot extends MecanumDrive
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
-    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
-    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
+    public static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
+    public static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
 
     private TrajectoryFollower follower;
-private IMU imu;
+    private IMU imu;
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
     private VoltageSensor batteryVoltageSensor;
@@ -191,7 +193,7 @@ private IMU imu;
         return robot;
     }
 
-    public static void destroyRobotInstance()
+    public static void destroyInstance()
     {
         robot=null;
     }
@@ -316,8 +318,8 @@ private IMU imu;
         read();
         write();
         tel.update();
-        //if(!Context.isTele)
-            //AutoSelector.getInstance().loop();
+        if(!Context.isTele)
+            AutoSelector.getInstance().loop();
         //loop whatever else u want
     }
     public void setYaw(){
@@ -339,7 +341,7 @@ private IMU imu;
             Log.d(null, "Status: " + Context.statusError);
             timer.reset();
         }
-        Context.tel.addData("debug", Context.debug);
+        Tel.instance().addData("debug", Context.debug);
     }
 
     public void read()
@@ -399,7 +401,7 @@ private IMU imu;
         return new TrajectoryBuilder(startPose, startHeading, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }
 
-    public TrajectorySequenceBuilder trajectorySequenceBuilder(Pose2d startPose) {
+    public static TrajectorySequenceBuilder trajectorySequenceBuilder(Pose2d startPose) {
         return new TrajectorySequenceBuilder(
                 startPose,
                 VEL_CONSTRAINT, ACCEL_CONSTRAINT,

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.modules.moduleUtil;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 public abstract class Module
 {
@@ -197,12 +197,12 @@ public abstract class Module
     {
         if(telemetryToggle)
         {
-            Context.tel.addData(telIdentifier+": time spent in state", timeSpentInState());
-            Context.tel.addData(telIdentifier+" status", status);
-            Context.tel.addData(telIdentifier+" operation state", opstate);
+            Tel.instance().addData(telIdentifier+": time spent in state", timeSpentInState());
+            Tel.instance().addData(telIdentifier+" status", status);
+            Tel.instance().addData(telIdentifier+" operation state", opstate);
             for(ModuleState s: states)
             {
-                Context.tel.addData(telIdentifier+": "+ s.getClass()+" state", s);
+                Tel.instance().addData(telIdentifier+": "+ s.getClass()+" state", s);
             }
         }
     }

@@ -19,8 +19,9 @@ import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
-import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.Tel;
+
 @TeleOp(name="A - Teleop")
 public class TeleOpRewrite extends EnhancedOpMode
 {
@@ -330,6 +331,6 @@ if(pickOne.wasJustPressed()){
     public void primaryLoop()
     {
         robot.primaryLoop();
-        Context.tel.addData("intake stick", gamepad2.right_stick_y);
+        Tel.instance().addData("intake stick", gamepad2.right_stick_y);
     }
 }

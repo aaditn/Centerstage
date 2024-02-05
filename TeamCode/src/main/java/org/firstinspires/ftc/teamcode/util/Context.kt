@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.util.AutoSelector.CyclePixelCount
+import org.firstinspires.ftc.teamcode.util.enums.Dice
 
 object Context
 {
@@ -39,7 +40,7 @@ object Context
         autoState= CyclePixelCount.ZERO
         colorSensorsEnabled=false
         trajStatus="Not Loaded"
-        dice=Dice.UNINITIALIZED
+        dice= Dice.UNINITIALIZED
         dashTeleEnabled=true
     }
     @JvmStatic fun clearValues()
@@ -54,7 +55,7 @@ object Context
         autoState= CyclePixelCount.ZERO
         colorSensorsEnabled=false
         trajStatus="Not Loaded"
-        dice=Dice.UNINITIALIZED
+        dice= Dice.UNINITIALIZED
         dashTeleEnabled=true
     }
 }

@@ -58,6 +58,8 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.roadrunner.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.task_scheduler.Task;
+import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.Tel;
@@ -122,6 +124,7 @@ public class Robot extends MecanumDrive
     public boolean tapeDetected=false;
     ColorRangeSensor cs3, cs2, cs1;
     static Robot robot;
+    public TaskScheduler scheduler;
 
     public Robot(LinearOpMode l)
     {
@@ -152,7 +155,8 @@ public class Robot extends MecanumDrive
         intake.init();
         deposit.init();
         droneLauncher.init();
-        tel.addData("Robot Initialization:", "Complete");
+
+        scheduler=new TaskScheduler();
     }
     public Robot(LinearOpMode l, boolean noHWInit)
     {
@@ -182,6 +186,8 @@ public class Robot extends MecanumDrive
         droneLauncher = new DroneLauncher(hardwareMap);
 
         dtInit();
+
+        scheduler=new TaskScheduler();
     }
 
     public static Robot getInstance()
@@ -444,6 +450,17 @@ public class Robot extends MecanumDrive
         if(Context.opmode.opModeIsActive())
         {
             followTrajectorySequenceAsync(trajectorySequence);
+            waitForIdle();
+        }
+    }
+
+    public void followTrajectorySequence(TrajectorySequence trajectorySequence, List<Task> taskList)
+    {
+        if(Context.opmode.opModeIsActive())
+        {
+            followTrajectorySequenceAsync(trajectorySequence);
+            //maybe make it not blocking? or terminate after
+            scheduler.scheduleTaskListBlocking(taskList);
             waitForIdle();
         }
     }

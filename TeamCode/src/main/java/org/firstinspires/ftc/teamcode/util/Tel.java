@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Tel
@@ -17,7 +18,7 @@ public class Tel
     Telemetry tel;
     List<List<TelEntry>> entries;
     static Tel telWrapper;
-    static int totalLevels=3;
+    static int totalLevels=6;
 
     public Tel()
     {
@@ -67,6 +68,8 @@ public class Tel
             list.clear();
         }
     }
+
+
     public void addData(String tag, Object data)
     {
         this.entries.get(this.entries.size()-1).add(new TelEntry(tag, data));

@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.task_scheduler;
 
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
-import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.util.enums.Compare;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +89,24 @@ public class TaskListBuilder
     public TaskListBuilder executeBlockingCode(codeExecutable code)
     {
         tasks.add(new BlockingTask(code));
+        return this;
+    }
+
+    public TaskListBuilder awaitDtXPosition(double x, Compare c)
+    {
+        if(c==Compare.GREATER)
+            tasks.add(new AwaitTask(()->drive.getPoseEstimate().getX()>x));
+        else if(c==Compare.LESSER)
+            tasks.add(new AwaitTask(()->drive.getPoseEstimate().getX()<x));
+        return this;
+    }
+
+    public TaskListBuilder awaitDtYPosition(double y, Compare c)
+    {
+        if(c==Compare.GREATER)
+            tasks.add(new AwaitTask(()->drive.getPoseEstimate().getY()>y));
+        else if(c==Compare.LESSER)
+            tasks.add(new AwaitTask(()->drive.getPoseEstimate().getY()<y));
         return this;
     }
 

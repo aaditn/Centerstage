@@ -10,7 +10,7 @@ import static org.opencv.imgproc.Imgproc.MORPH_OPEN;
 
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.util.Dice;
+import org.firstinspires.ftc.teamcode.util.enums.Dice;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;

@@ -214,7 +214,7 @@ int dice;
         drone.init();
         intake.setOperationState(Module.OperationState.PRESET);
         intake.setState(Intake.SweeperState.INIT);
-        deposit.setState(Deposit.FlipState.PRIMED);
+        deposit.setState(Deposit.FlipState.TRANSFER);
         deposit.setState(Deposit.ClawState.CLOSED1);
     }
 }

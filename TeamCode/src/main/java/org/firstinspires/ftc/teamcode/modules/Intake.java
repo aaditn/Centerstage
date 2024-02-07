@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 @Config
 public class Intake extends Module {
     DcMotorEx intake;
-    Servo anglerLeft, anglerRight, sweeperLeft, sweeperRight;
+    Servo  anglerRight, sweeperLeft, sweeperRight;
     CRServo conveyorLeft, conveyorRight;
     ColorRangeSensor cs1, cs2, cs3;
     public static boolean telemetryToggle=true;
@@ -81,7 +81,6 @@ public class Intake extends Module {
         sweeperRight = hardwareMap.get(Servo.class, "sweeperRight");
         sweeperRight.setDirection(Servo.Direction.REVERSE);
 
-        anglerLeft = hardwareMap.get(Servo.class, "anglerLeft");
         anglerRight = hardwareMap.get(Servo.class, "anglerRight");
         anglerRight.setDirection(Servo.Direction.REVERSE);
 
@@ -129,7 +128,6 @@ public class Intake extends Module {
     {
         intake.setPower(currentPower);
 
-        anglerLeft.setPosition(currentPosition);
         anglerRight.setPosition(currentPosition);
 
         sweeperLeft.setPosition(sweeperPos*.94);

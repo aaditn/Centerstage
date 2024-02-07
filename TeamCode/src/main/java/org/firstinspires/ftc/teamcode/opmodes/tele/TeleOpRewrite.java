@@ -7,7 +7,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -22,10 +21,8 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.Tel;
 
-@TeleOp(name="A - Teleop")
-public class TeleOpRewrite extends EnhancedOpMode
-{
-    DcMotor hang;
+@TeleOp(name = "A - Teleop")
+public class TeleOpRewrite extends EnhancedOpMode {
     Robot robot;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -33,43 +30,44 @@ public class TeleOpRewrite extends EnhancedOpMode
     Intake intake;
     DroneLauncher drone;
     Slides slides;
-    ElapsedTime slidestimer;
+    ElapsedTime slidesTimer;
     GamepadEx g1, g2;
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
     ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesBottomRow, slidesSetLine1, slidesSetLine2,
-    slidesSetLine3, slidesOverride, depositMacro, depositMacro2, grabPixel, flush, CCW45, CW45, clawManual, pickOne;
+            slidesSetLine3, rightExtend, depositMacro, normalExtend, leftExtend, CCW45, CW45, clawManual, noExtend;
     double ninja;
     int sweeperCounter;
-    int wristRotateCounter=4;
+    int wristRotateCounter = 4;
+    public enum DepositState {
+        LEFT, RIGHT, NORMAL, EXTENDED
+    }
+
+    DepositState depositState = DepositState.NORMAL;
     Intake.SweeperState[] sweeperPositions;
     Deposit.RotateState[] wristRotatePositions;
-boolean pickState = false;
+
     @Override
-    public void linearOpMode()
-    {
+    public void linearOpMode() {
         waitForStart();
 
-        while(opModeIsActive())
-        {
-            for (KeyReader reader : keyReaders)
-            {
+        while (opModeIsActive()) {
+            for (KeyReader reader : keyReaders) {
                 reader.readValue();
             }
 
             //HANG
-            if(gamepad2.left_trigger>0.5)
-                hang.setPower(1);
-            else if(gamepad2.right_trigger>0.5)
-                hang.setPower(-1);
+            if (gamepad2.left_trigger > 0.5)
+                robot.setHangPower(1);
+            else if (gamepad2.right_trigger > 0.5)
+                robot.setHangPower(-1);
             else
-                hang.setPower(0);
+              robot.setHangPower(0);
 
 
             //NORMAL DT MOVEMENT
-            if(!robot.isBusy())
-            {
+            if (!robot.isBusy()) {
                 double x = gamepad1.left_stick_y * ninja;
                 double y = gamepad1.left_stick_x * ninja;
                 double rx = -gamepad1.right_stick_x * ninja;
@@ -86,48 +84,28 @@ boolean pickState = false;
 
 
             //INTAKE TOGGLE
-            if(intakeToggle.wasJustPressed())
-            {
+            if (intakeToggle.wasJustPressed()) {
                 intake.setOperationState(Module.OperationState.PRESET);
 
-                if(intake.getState(Intake.PositionState.class)==Intake.PositionState.RAISED)
-                {
+                if (intake.getState(Intake.PositionState.class) == Intake.PositionState.RAISED) {
                     scheduler.scheduleTaskList(actions.lowerIntake());
-                }
-                else if(intake.getState(Intake.PositionState.class)==Intake.PositionState.DOWN)
-                {
+                } else if (intake.getState(Intake.PositionState.class) == Intake.PositionState.DOWN) {
                     scheduler.scheduleTaskList(actions.raiseIntake());
-                    sweeperCounter=0;
+                    sweeperCounter = 0;
                 }
             }
             //INTAKE SWEEPERS
-            if(sweeperIncrement.wasJustPressed()&&intake.getState(Intake.PositionState.class)==Intake.PositionState.DOWN)
-            {
-                if(sweeperCounter<3)
+            if (sweeperIncrement.wasJustPressed() && intake.getState(Intake.PositionState.class) == Intake.PositionState.DOWN) {
+                if (sweeperCounter < 3)
                     sweeperCounter++;
-                intake.setState(sweeperPositions[sweeperCounter-1]);
-            }
-            //INTAKE FLUSH
-            if(flush.isDown())
-            {
-                intake.setOperationState(Module.OperationState.PRESET);
-                intake.setState(Intake.ConveyorState.INTAKE);
-                intake.setState(Intake.PowerState.EXTAKE);
-            }
-            else if(flush.wasJustReleased())
-            {
-                intake.setOperationState(Module.OperationState.PRESET);
-                intake.setState(Intake.PowerState.OFF);
-                intake.setState(Intake.ConveyorState.OFF);
+                intake.setState(sweeperPositions[sweeperCounter - 1]);
             }
             //INTAKE MANUAL POWER
-            else if(Math.abs(gamepad2.right_stick_y)>0.25)
-            {
+            if (Math.abs(gamepad2.right_stick_y) > 0.25 && Math.abs(gamepad2.right_stick_x) > .25) {
+
                 intake.setOperationState(Module.OperationState.MANUAL);
-                intake.manualChange(-gamepad2.right_stick_y);
-            }
-            else
-            {
+                intake.manualChange(gamepad2.right_stick_y, gamepad2.right_stick_x);
+            } else {
                 //intake.setState(Intake.ConveyorState.OFF);
                 intake.setOperationState(Module.OperationState.PRESET);
             }
@@ -141,139 +119,108 @@ boolean pickState = false;
 //                //TODO tune floaty position(get it from Ethan)
 //            }
             //MANUAL CLAW OPEN CLOSE
-            if(clawManual.wasJustPressed())
-            {
-                if(deposit.getState(Deposit.ClawState.class)==Deposit.ClawState.OPEN)
-                    deposit.setState(Deposit.ClawState.CLOSED2);
-                else if(deposit.getState(Deposit.ClawState.class)==Deposit.ClawState.CLOSED2)
-                    deposit.setState(Deposit.ClawState.OPEN);
+//            if (clawManual.wasJustPressed()) {
+//                if (deposit.getState(Deposit.ClawState.class) == Deposit.ClawState.OPEN)
+//                    deposit.setState(Deposit.ClawState.CLOSED2);
+//                else if (deposit.getState(Deposit.ClawState.class) == Deposit.ClawState.CLOSED2)
+//                    deposit.setState(Deposit.ClawState.OPEN);
+//            }
+
+            if (leftExtend.wasJustPressed()) {
+                depositState = DepositState.LEFT;
+            } else if (rightExtend.wasJustPressed()) {
+
+                depositState = DepositState.RIGHT;
+            } else if (noExtend.wasJustPressed()) {
+
+                depositState = DepositState.NORMAL;
+            } else if (normalExtend.wasJustPressed()) {
+
+                depositState = DepositState.EXTENDED;
             }
-
-
             //SPIN THE ROTATE WRIST
-            if(CW45.wasJustPressed()&&wristRotateCounter<wristRotatePositions.length-1)
-            {
+            if (CW45.wasJustPressed() && wristRotateCounter < wristRotatePositions.length - 1) {
                 wristRotateCounter++;
                 deposit.setState(wristRotatePositions[wristRotateCounter]);
-            }
-            else if(CCW45.wasJustPressed()&&wristRotateCounter>0)
-            {
+            } else if (CCW45.wasJustPressed() && wristRotateCounter > 0) {
                 wristRotateCounter--;
                 deposit.setState(wristRotatePositions[wristRotateCounter]);
             }
 
-if(pickOne.wasJustPressed()){
-    pickState= !pickState;
-    if(pickState) gamepad2.runRumbleEffect(customRumbleEffect0);
-    else gamepad2.runRumbleEffect(customRumbleEffect1);
-}
-
             //SLIDES
-            if(slidesBottomRow.wasJustPressed()&&!slides.macroRunning)
-            {
+            if (slidesBottomRow.wasJustPressed() && !slides.macroRunning) {
                 slides.setOperationState(Module.OperationState.PRESET);
-                if(pickState){
-
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED,true));
-                }
-                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED));
-            }
-            else if(slidesSetLine1.wasJustPressed()&&!slides.macroRunning)
-            {
+                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED, depositState));
+            } else if (slidesSetLine1.wasJustPressed() && !slides.macroRunning) {
                 slides.setOperationState(Module.OperationState.PRESET);
-                if(pickState){
-
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1,true));
-                }
-                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1));
-            }
-            else if(slidesSetLine2.wasJustPressed()&&!slides.macroRunning)
-            {
+                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1, depositState));
+            } else if (slidesSetLine2.wasJustPressed() && !slides.macroRunning) {
                 slides.setOperationState(Module.OperationState.PRESET);
-                if(pickState){
-
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2,true));
-                }
-                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2));
-            }
-            else if(slidesSetLine3.wasJustPressed()&&!slides.macroRunning)
-            {
+                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2, depositState));
+            } else if (slidesSetLine3.wasJustPressed() && !slides.macroRunning) {
                 slides.setOperationState(Module.OperationState.PRESET);
-                if(pickState){
-
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3,true));
-                }
-                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3));
+                scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3, depositState));
             }
             //SLIDES MANUAL
-            if((slides.getState()!=Slides.SlideState.GROUND||slidesOverride.isDown())&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
-            {
+            if ((slides.getState() != Slides.SlideState.GROUND || rightExtend.isDown()) && !slides.macroRunning && Math.abs(gamepad2.left_stick_y) > 0.3) {
                 slides.setOperationState(Module.OperationState.MANUAL);
 
-                if(slidestimer.milliseconds()>30)
-                {
-                    double newTarget=slides.getTargetPosition() + (15*Math.signum(gamepad2.left_stick_y)*-1);
+                if (slidesTimer.milliseconds() > 30) {
+                    double newTarget = slides.getTargetPosition() + (15 * Math.signum(gamepad2.left_stick_y) * -1);
 //                    if(newTarget<300)
 //                    {
 //                        newTarget=300;
 //                    }
                     slides.manualChange(newTarget);
-                    slidestimer.reset();
+                    slidesTimer.reset();
                 }
             }
             //DEPOSIT AND RESET
-            if((sweeperIncrement.wasJustPressed() || depositMacro2.wasJustPressed() ||depositMacro.wasJustPressed())&&!slides.macroRunning&&slides.getState()!=Slides.SlideState.GROUND)
-            {
+            if (( depositMacro.wasJustPressed()) && !slides.macroRunning && slides.getState() != Slides.SlideState.GROUND) {
                 //slides.setOperationState(Module.OperationState.PRESET);
                 scheduler.scheduleTaskList(actions.scorePixels());
-                wristRotateCounter=4;
+                wristRotateCounter = 4;
             }
-            //SLIDE RESET
-            if(slidesOverride.wasJustReleased())
-            {
-                slides.setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
-            else if(slides.getMotorRunMode()==DcMotor.RunMode.STOP_AND_RESET_ENCODER)
-            {
-                slides.setState(Slides.SlideState.GROUND);
-                slides.setOperationState(Module.OperationState.PRESET);
-                slides.setMotorRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
+//            //SLIDE RESET
+//            if (rightExtend.wasJustReleased()) {
+//                slides.setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            } else if (slides.getMotorRunMode() == DcMotor.RunMode.STOP_AND_RESET_ENCODER) {
+//                slides.setState(Slides.SlideState.GROUND);
+//                slides.setOperationState(Module.OperationState.PRESET);
+//                slides.setMotorRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            }
 
 
             //DRONE
-            if (droneButton1.wasJustPressed())
-            {
-                if(drone.getState()==DroneLauncher.State.LOCKED)
+            if (droneButton1.wasJustPressed()) {
+                if (drone.getState() == DroneLauncher.State.LOCKED)
                     drone.setState(DroneLauncher.State.RELEASED);
-                else if(drone.getState()==DroneLauncher.State.RELEASED)
+                else if (drone.getState() == DroneLauncher.State.RELEASED)
                     drone.setState(DroneLauncher.State.LOCKED);
             }
         }
     }
 
     @Override
-    public void initialize()
-    {
+    public void initialize() {
         this.setLoopTimes(1);
-        hang=hardwareMap.get(DcMotor.class, "hang");
-        robot=Robot.getInstance();
-        scheduler=new TaskScheduler();
-        actions=RobotActions.getInstance();
+        robot = Robot.getInstance();
+        scheduler = new TaskScheduler();
+        actions = RobotActions.getInstance();
 
-        deposit=robot.deposit;
-        intake=robot.intake;
-        slides=robot.slides;
-        drone=robot.droneLauncher;
+        deposit = robot.deposit;
+        intake = robot.intake;
+        slides = robot.slides;
+        drone = robot.droneLauncher;
 
         intake.init();
         deposit.init();
         drone.init();
         intake.setOperationState(Module.OperationState.MANUAL);
 
-        slidestimer=new ElapsedTime();
-        g1=new GamepadEx(gamepad1);
-        g2=new GamepadEx(gamepad2);
+        slidesTimer = new ElapsedTime();
+        g1 = new GamepadEx(gamepad1);
+        g2 = new GamepadEx(gamepad2);
 
         customRumbleEffect0 = new Gamepad.RumbleEffect.Builder()
                 .addStep(1.0, 1.0, 200)
@@ -287,30 +234,30 @@ if(pickOne.wasJustPressed()){
                 .addStep(0.0, 0.0, 1000)//  Rumble right motor 100% for 500 mSec
                 .build();
 
-        keyReaders= new KeyReader[]{
-                droneButton1=new ToggleButtonReader(g1, GamepadKeys.Button.Y),
-                intakeToggle=new ToggleButtonReader(g1, GamepadKeys.Button.A),
-                sweeperIncrement=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
-                slidesBottomRow=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_DOWN),
-                slidesSetLine1=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_LEFT),
-                slidesSetLine2=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_UP),
-                slidesSetLine3=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_RIGHT),
-                depositMacro=new ToggleButtonReader(g1, GamepadKeys.Button.LEFT_BUMPER),
-                pickOne=new ToggleButtonReader(g2, GamepadKeys.Button.A),
-                flush=new ToggleButtonReader(g2, GamepadKeys.Button.X),
-                CCW45=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
-                CW45=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
-                clawManual=new ToggleButtonReader(g1, GamepadKeys.Button.X),
-                depositMacro2= new ToggleButtonReader(g2, GamepadKeys.Button.Y),
-                slidesOverride=new ToggleButtonReader(g2, GamepadKeys.Button.B)
+        keyReaders = new KeyReader[]{
+                droneButton1 = new ToggleButtonReader(g1, GamepadKeys.Button.Y),
+                intakeToggle = new ToggleButtonReader(g1, GamepadKeys.Button.A),
+                sweeperIncrement = new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
+                slidesBottomRow = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_DOWN),
+                slidesSetLine1 = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_LEFT),
+                slidesSetLine2 = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_UP),
+                slidesSetLine3 = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_RIGHT),
+                depositMacro = new ToggleButtonReader(g1, GamepadKeys.Button.LEFT_BUMPER),
+                CCW45 = new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
+                CW45 = new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
+                clawManual = new ToggleButtonReader(g1, GamepadKeys.Button.X),
+                normalExtend = new ToggleButtonReader(g2, GamepadKeys.Button.Y),
+                rightExtend = new ToggleButtonReader(g2, GamepadKeys.Button.B),
+                noExtend = new ToggleButtonReader(g2, GamepadKeys.Button.A),
+                leftExtend = new ToggleButtonReader(g2, GamepadKeys.Button.X),
         };
 
-        sweeperPositions=new Intake.SweeperState[]{
+        sweeperPositions = new Intake.SweeperState[]{
                 Intake.SweeperState.ONE_SWEEP,
                 Intake.SweeperState.TWO_SWEEP,
                 Intake.SweeperState.THREE_SWEEP
         };
-        wristRotatePositions=new Deposit.RotateState[]{
+        wristRotatePositions = new Deposit.RotateState[]{
                 Deposit.RotateState.MINUS_ONE_EIGHTY,
                 Deposit.RotateState.MINUS_ONE_THREE_FIVE,
                 Deposit.RotateState.MINUS_NINETY,
@@ -322,15 +269,13 @@ if(pickOne.wasJustPressed()){
         };
     }
 
-    public void initLoop()
-    {
+    public void initLoop() {
         robot.initLoop();
     }
 
     @Override
-    public void primaryLoop()
-    {
+    public void primaryLoop() {
         robot.primaryLoop();
-        Tel.instance().addData("intake stick", gamepad2.right_stick_y);
+        Tel.instance().addData("intake stick", "INTAKE: "+gamepad2.right_stick_y+ ", CONVEYOR: "+gamepad2.right_stick_x);
     }
 }

@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
+import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.util.Context;
@@ -102,6 +103,97 @@ public class RobotActions
                 .moduleAction(intake,Intake.SweeperState.TWO_SWEEP)
                 .delay(750)
                 .moduleAction(intake,Intake.SweeperState.THREE_SWEEP)
+                .build();
+    }
+    public List<Task> slidesOnly(Slides.SlideState row, TeleOpRewrite.DepositState state)
+    {
+        if(slides.getState()==Slides.SlideState.GROUND)
+        {
+                switch(state) {
+                    case EXTENDED:
+                        return builder.createNew()
+                                .executeCode(()->slides.macroRunning=true)
+                                .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                                .delay(1000)
+                                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                                .delay(150)
+                                .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                                .delay(300)
+                                .moduleAction(slides, row)
+                                .moduleAction(deposit, Deposit.WristState.HOVER)
+                                .delay(400)
+                                //.await(()->slides.getStatus()==Module.Status.IDLE)
+                                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                                .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                                .delay(200)
+                                .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                                .executeCode(()->slides.macroRunning=false)
+                                .build();
+                    case RIGHT:
+                        return builder.createNew()
+                                .executeCode(()->slides.macroRunning=true)
+                                .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                                .delay(1000)
+                                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                                .delay(150)
+                                .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                                .delay(300)
+                                .moduleAction(slides, row)
+                                .moduleAction(deposit, Deposit.WristState.HOVER)
+                                .delay(400)
+                                //.await(()->slides.getStatus()==Module.Status.IDLE)
+                                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                                .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                                .moduleAction(deposit,Deposit.FlipState.RIGHT)
+                                .delay(200)
+                                .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                                .executeCode(()->slides.macroRunning=false)
+                                .build();
+                    case LEFT:
+                        return builder.createNew()
+                                .executeCode(()->slides.macroRunning=true)
+                                .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                                .delay(1000)
+                                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                                .delay(150)
+                                .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                                .delay(300)
+                                .moduleAction(slides, row)
+                                .moduleAction(deposit, Deposit.WristState.HOVER)
+                                .delay(400)
+                                //.await(()->slides.getStatus()==Module.Status.IDLE)
+                                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                                .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                                .moduleAction(deposit,Deposit.FlipState.LEFT)
+                                .delay(200)
+                                .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                                .executeCode(()->slides.macroRunning=false)
+                                .build();
+                    case NORMAL:
+                        return builder.createNew()
+                                .executeCode(()->slides.macroRunning=true)
+                                .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                                .delay(1000)
+                                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                                .delay(150)
+                                .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                                .delay(300)
+                                .moduleAction(slides, row)
+                                .moduleAction(deposit, Deposit.WristState.HOVER)
+                                .delay(400)
+                                //.await(()->slides.getStatus()==Module.Status.IDLE)
+                                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                                .delay(200)
+                                .executeCode(()->slides.macroRunning=false)
+                                .build();
+                }
+            }
+
+        return builder.createNew()
+                .executeCode(()->slides.macroRunning=true)
+                .moduleAction(slides, row)
+                .awaitPreviousModuleActionCompletion()
+                .executeCode(()->slides.macroRunning=false)
                 .build();
     }
 

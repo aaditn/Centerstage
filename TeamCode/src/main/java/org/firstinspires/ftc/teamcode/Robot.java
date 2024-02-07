@@ -98,8 +98,11 @@ public class Robot extends MecanumDrive
     private TrajectoryFollower follower;
     private IMU imu;
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+
+    private DcMotor hang;
     private List<DcMotorEx> motors;
     private VoltageSensor batteryVoltageSensor;
+    private double hangPower = 0;
 
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
@@ -184,6 +187,7 @@ public class Robot extends MecanumDrive
         deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
         droneLauncher = new DroneLauncher(hardwareMap);
+        hang = hardwareMap.get(DcMotor.class, "hang");
 
         dtInit();
 
@@ -330,6 +334,9 @@ public class Robot extends MecanumDrive
     }
     public void setYaw(){
     }
+    public void setHangPower(double power){
+        hangPower = power;
+    }
     public void primaryLoop()
     {
         tel.update();
@@ -339,8 +346,10 @@ public class Robot extends MecanumDrive
 
         if(isBusy()||!Context.isTele)
             update();
-        else
+        else {
             updateDrivePowers();
+
+        }
 
         if(timer.milliseconds()>500)
         {
@@ -364,6 +373,7 @@ public class Robot extends MecanumDrive
         deposit.writeLoop();
         intake.writeLoop();
         droneLauncher.writeLoop();
+        hang.setPower(hangPower);
     }
 
     public void onEnd()

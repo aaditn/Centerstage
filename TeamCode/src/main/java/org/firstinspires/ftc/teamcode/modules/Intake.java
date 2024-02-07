@@ -123,6 +123,13 @@ public class Intake extends Module {
         conveyorPower=Math.signum(power);
     }
 
+    public void manualChange(double power,double conveyer)
+    {
+        super.manualChange(Math.signum(power));
+        currentPower=Math.signum(power);
+        conveyorPower=Math.signum(conveyer);
+    }
+
     @Override
     protected void write()
     {

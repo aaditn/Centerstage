@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.Tel;
 @Disabled
-@TeleOp(name="A - Teleop")
+@TeleOp(name="V2")
 public class TeleOpV2 extends EnhancedOpMode
 {
     DcMotor hang;

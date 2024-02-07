@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 import java.util.List;
 
@@ -247,18 +248,18 @@ public class CloseBlue extends EnhancedOpMode {
         } else {
             elementPos = 2;
         }
-        Context.tel.addData("Team red?", Context.isTeamRed);
-        Context.tel.addData("element Pos", elementPos);
-        Context.tel.addData("centerY", robot.teamElementDetector.centerY);
-        Context.tel.addData("largest area", robot.teamElementDetector.getLargestArea());
-        //Context.tel.update();
+        Tel.instance().addData("Team red?", Context.isTeamRed);
+        Tel.instance().addData("element Pos", elementPos);
+        Tel.instance().addData("centerY", robot.teamElementDetector.centerY);
+        Tel.instance().addData("largest area", robot.teamElementDetector.getLargestArea());
+        //TelemetryWrapper.getInstance().update();
         robot.initLoop();
     }
     @Override
     public void primaryLoop()
     {
-        Context.tel.addData("checkpoint", checkpoint);
-        Context.tel.addData("Debug", Context.debug);
+        Tel.instance().addData("checkpoint", checkpoint);
+        Tel.instance().addData("Debug", Context.debug);
         robot.primaryLoop();
     }
 }

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.*;
 import org.firstinspires.ftc.teamcode.util.BPIDFController;
-import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 @Config
 public class Slides extends Module
@@ -176,6 +176,14 @@ public class Slides extends Module
         }
     }
 
+    public boolean isIdle()
+    {
+        if(status==Status.IDLE)
+            return true;
+        else
+            return false;
+    }
+
     @Override
     protected void mapToKey()
     {
@@ -196,8 +204,8 @@ public class Slides extends Module
     public void telemetryUpdate()
     {
         super.telemetryUpdate();
-        Context.tel.addData("Target Position", targetPosition);
-        Context.tel.addData("Attempted power", motorPower);
-        Context.tel.addData("Slide 1", slide1.getCurrentPosition());
+        Tel.instance().addData("Target Position", targetPosition);
+        Tel.instance().addData("Attempted power", motorPower);
+        Tel.instance().addData("Slide 1", slide1.getCurrentPosition());
     }
 }

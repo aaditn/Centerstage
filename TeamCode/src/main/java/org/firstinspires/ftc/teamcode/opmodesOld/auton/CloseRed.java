@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
-import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 import java.util.List;
 
@@ -231,10 +231,10 @@ public class CloseRed extends EnhancedOpMode {
         } else {
             elementPos = 2;
         }
-        Context.tel.addData("element Pos", elementPos);
-        Context.tel.addData("centerY", robot.teamElementDetector);
-        Context.tel.addData("largest area", robot.teamElementDetector.getLargestArea());
-        //Context.tel.update();
+        Tel.instance().addData("element Pos", elementPos);
+        Tel.instance().addData("centerY", robot.teamElementDetector);
+        Tel.instance().addData("largest area", robot.teamElementDetector.getLargestArea());
+        //TelemetryWrapper.getInstance().update();
         robot.initLoop();
     }
     @Override

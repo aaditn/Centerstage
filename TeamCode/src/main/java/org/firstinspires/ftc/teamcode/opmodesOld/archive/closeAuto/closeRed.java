@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto.closeAuto;
+package org.firstinspires.ftc.teamcode.opmodesOld.archive.closeAuto;
 
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.Trajectories.redCloseStart;
 
@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 @Autonomous
 public class closeRed extends EnhancedOpMode {
@@ -43,9 +44,9 @@ int dice;
         } else {
             dice = 2;
         }
-        Context.tel.addData("element Pos", dice);
-        Context.tel.addData("Traj Status", Context.trajStatus);
-        //Context.tel.update();
+        Tel.instance().addData("element Pos", dice);
+        Tel.instance().addData("Traj Status", Context.trajStatus);
+        //TelemetryWrapper.getInstance().update();
         drive.initLoop();
     }
     public void onStart()

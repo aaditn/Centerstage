@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 import java.util.List;
 
@@ -67,16 +68,16 @@ public class TestOpMode2 extends EnhancedOpMode
     public void initLoop()
     {
         test++;
-        Context.tel.addData("help", test);
-        Context.tel.update();
+        Tel.instance().addData("help", test);
+        Tel.instance().update();
     }
 
     @Override
     public void primaryLoop()
     {
-        Context.tel.addData("hang state", Hang.getState());
-        Context.tel.addData("hang status", Hang.isBusy());
-        Context.tel.update();
+        Tel.instance().addData("hang state", Hang.getState());
+        Tel.instance().addData("hang status", Hang.isBusy());
+        Tel.instance().update();
         Hang.updateLoop();
         Hang.writeLoop();
     }

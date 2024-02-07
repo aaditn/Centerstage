@@ -12,6 +12,9 @@ public class AutoSelector
     ButtonReader increase, decrease, swapLeft, swapRight;
     GamepadEx g1;
     static AutoSelector selector;
+    int localAutoState;
+    CyclePixelCount[] states={CyclePixelCount.ZERO, CyclePixelCount.TWO, CyclePixelCount.FOUR,
+            CyclePixelCount.FIVE, CyclePixelCount.SIX};
     public AutoSelector()
     {
         g1=new GamepadEx(Context.opmode.gamepad1);
@@ -31,7 +34,7 @@ public class AutoSelector
         return selector;
     }
 
-    public static void destroySelectorInstance()
+    public static void destroyInstance()
     {
         selector=null;
     }
@@ -49,18 +52,28 @@ public class AutoSelector
         if(decrease.wasJustPressed()&&Context.autoWaitTime>0)
             Context.autoWaitTime--;
 
-        if(swapLeft.wasJustPressed()){}
-            //do something to manipulate state
-        if (swapRight.wasJustPressed()) {}
-            //do something to manipulate state
+        if(swapLeft.wasJustPressed())
+        {
+            if(localAutoState>0)
+                localAutoState--;
+            else
+                localAutoState=4;
+        }
+        if (swapRight.wasJustPressed())
+        {
+            if(localAutoState<4)
+                localAutoState++;
+            else
+                localAutoState=0;
+        }
+        Context.autoState=states[localAutoState];
 
-        Context.tel.addData("Auto Wait Time", Context.autoWaitTime);
-        Context.tel.addData("Auto State Thing", Context.autoState);
+        Tel.instance().addData("Auto Wait Time", Context.autoWaitTime, 1);
+        Tel.instance().addData("Auto State Thing", Context.autoState, 1);
     }
 
-    public enum Auto_State
+    public enum CyclePixelCount
     {
-        TEMP
-        //idk whatever u want lol
+        ZERO, TWO, FOUR, FIVE, SIX
     }
 }

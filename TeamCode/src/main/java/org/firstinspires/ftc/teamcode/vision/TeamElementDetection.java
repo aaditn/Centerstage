@@ -10,6 +10,7 @@ import static org.opencv.imgproc.Imgproc.MORPH_OPEN;
 
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.enums.Dice;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -157,6 +158,15 @@ public class TeamElementDetection extends OpenCvPipeline{
                 mat=input;
                 centerY =-1;
             }
+
+            //TODO change what the if/elses are
+            if(centerY<0)
+                Context.dice=Dice.LEFT;
+            else if(centerY<107)
+                Context.dice=Dice.MIDDLE;
+            else
+                Context.dice=Dice.RIGHT;
+
             return mat;
         //}
         //Imgproc.rectangle(maskTemplate, new Rect(0, 100, 50, 100), rLowHSV);

@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.firstinspires.ftc.teamcode.Robot
 import org.firstinspires.ftc.teamcode.modules.RobotActions
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleStateConverter
@@ -46,11 +47,12 @@ abstract class EnhancedOpMode(): LinearOpMode ()
     }
     private fun resetStaticVars()
     {
-        Robot.destroyRobotInstance()
-        RobotActions.deleteActionsInstance()
         clearValues()
-        ModuleStateConverter.deleteConverterInstance()
-        AutoSelector.destroySelectorInstance()
+        Robot.destroyInstance()
+        RobotActions.deleteInstance()
+        ModuleStateConverter.deleteInstance()
+        AutoSelector.destroyInstance()
+        Tel.destroyInstance()
     }
     abstract fun linearOpMode()
     abstract fun initialize()
@@ -71,7 +73,6 @@ abstract class EnhancedOpMode(): LinearOpMode ()
 
     private fun startCoroutine()
     {
-
         GlobalScope.launch (Dispatchers.Main)
         {
             while(!isStarted&&!isStopRequested)

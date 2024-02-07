@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto.farAuto;
+package org.firstinspires.ftc.teamcode.opmodesOld.archive.farAuto;
 
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
 @Autonomous
-public class farred2plus0 extends EnhancedOpMode {
+public class farred2plus2 extends EnhancedOpMode {
     int dice =0;
     Pose2d redFarStart = new Pose2d(-35 ,-61,Math.toRadians(-270));
     Robot drive;
@@ -88,10 +88,10 @@ public class farred2plus0 extends EnhancedOpMode {
                         drive.getVelocityConstraint(40, 2, 15.06),
                         drive.getAccelerationConstraint(60))
                 .lineToConstantHeading(new Vector2d(-28,-58))
-                .splineToConstantHeading(new Vector2d(-55, -29), Math.toRadians(180),
+                .splineToConstantHeading(new Vector2d(-55, -30), Math.toRadians(180),
                         drive.getVelocityConstraint(35, 2, 15.06),
                         drive.getAccelerationConstraint(35))
-                .lineToConstantHeading(new Vector2d(-59, -27.5  ),
+                .lineToConstantHeading(new Vector2d(-59, -30),
                         drive.getVelocityConstraint(30, 2, 15.06),
                         drive.getAccelerationConstraint(35))
                 .addSpatialMarker(new Vector2d(-30, -55), () -> {
@@ -158,10 +158,10 @@ public class farred2plus0 extends EnhancedOpMode {
                 .addTemporalMarker(1.5,()->
                         intake.setState(Intake.SweeperState.ONE_SWEEP))
                 .lineTo(new Vector2d(-36, -45),
-                        drive.getVelocityConstraint(30, 1.5, 15.06),
-                        drive.getAccelerationConstraint(30))
-                .splineToSplineHeading(new Pose2d(-31.5, -35.5, Math.toRadians(45)), Math.toRadians(45),
-                        drive.getVelocityConstraint(30, 0.8, 15.06),
+                        drive.getVelocityConstraint(40, 1.5, 15.06),
+                        drive.getAccelerationConstraint(35))
+                .splineToSplineHeading(new Pose2d(-31, -35.5, Math.toRadians(45)), Math.toRadians(45),
+                        drive.getVelocityConstraint(40, 1.5, 15.06),
                         drive.getAccelerationConstraint(35))
                 .build();
         TrajectorySequence rightPurpleToBack = drive.trajectorySequenceBuilder(rightPurple.end())
@@ -172,12 +172,8 @@ public class farred2plus0 extends EnhancedOpMode {
                 .splineToSplineHeading(new Pose2d(-32, -59, Math.toRadians(180)), Math.toRadians(0),
                         drive.getVelocityConstraint(40, 2.4, 15.06),
                         drive.getAccelerationConstraint(35))
-                .lineToConstantHeading(new Vector2d(20,-59),
-                        drive.getVelocityConstraint(40, 2.4, 15.06),
-                        drive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(50.5, -39), Math.toRadians(0),
-                        drive.getVelocityConstraint(40, 2.4, 15.06),
-                        drive.getAccelerationConstraint(35))
+                .lineToConstantHeading(new Vector2d(20,-59))
+                .splineToConstantHeading(new Vector2d(50.5, -39), Math.toRadians(0))
                 .addSpatialMarker(new Vector2d(-10, -57), () ->  {
                     scheduler.scheduleTaskList(actions.autoRaiseSlides(Slides.SlideState.HALF));
                     intake.setState(Intake.PowerState.OFF);
@@ -212,15 +208,13 @@ public class farred2plus0 extends EnhancedOpMode {
                         drive.getVelocityConstraint(40, 2, 15.06),
                         drive.getAccelerationConstraint(40))
                 .lineToConstantHeading(new Vector2d(20,-57),
-                        drive.getVelocityConstraint(30, 2, 15.06),
-                        drive.getAccelerationConstraint(30))
-                .splineToConstantHeading(new Vector2d(48, -33
+                        drive.getVelocityConstraint(40, 2, 15.06),
+                        drive.getAccelerationConstraint(40))
+                .splineToConstantHeading(new Vector2d(49, -33
                         ), Math.toRadians(0),
-                        drive.getVelocityConstraint(30, 2, 15.06),
-                        drive.getAccelerationConstraint(30))
-                .lineTo(new Vector2d(51, -33),
-                        drive.getVelocityConstraint(25, 2, 15.06),
-                        drive.getAccelerationConstraint(30))
+                        drive.getVelocityConstraint(40, 2, 15.06),
+                        drive.getAccelerationConstraint(40))
+                .lineTo(new Vector2d(51, -33))
                 .addSpatialMarker(new Vector2d(-30, -57), () -> {
                     scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PositionState.RAISED);
@@ -277,7 +271,7 @@ public class farred2plus0 extends EnhancedOpMode {
 
         waitForStart();
 
-        waitMS(10000);
+        waitMS(9000);
         switch(dice){
             case 1:
                 drive.followTrajectorySequence(leftPurple);
@@ -301,6 +295,19 @@ public class farred2plus0 extends EnhancedOpMode {
             case 3:
                 drive.followTrajectorySequence(rightPurpleToBack);
         }
+        switch(dice){
+            case 1:
+                drive.followTrajectorySequence(leftBackToStack);
+                break;
+            case 2:
+                drive.followTrajectorySequence(midBackToStack);
+                break;
+            case 3:
+                drive.followTrajectorySequence(rightBackToStack);
+        }
+        waitMS(600);
+        intake.setState(Intake.PositionState.RAISED);
+        drive.followTrajectorySequence(stackToBack1);
     }
 
     public void waitMS(int milliseconds) {

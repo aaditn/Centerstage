@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto.farAuto;
+package org.firstinspires.ftc.teamcode.opmodesOld.archive.farAuto;
 
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -328,7 +328,7 @@ public class farblue2plus4 extends EnhancedOpMode {
 
         Context.isTeamRed=false;
         scheduler=new TaskScheduler();
-        actions= RobotActions.getInstance();
+        actions=RobotActions.getInstance();
         deposit=drive.deposit;
         intake=drive.intake;
         slides=drive.slides;

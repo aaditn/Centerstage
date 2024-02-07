@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.Tel;
 import org.firstinspires.ftc.teamcode.vision.AprilTagPipeline;
 
 import java.util.ArrayList;
@@ -61,10 +61,10 @@ public class SuitedLocalizationTest extends LinearOpMode {
             int i = 0;
             for(Pose2d exist : detectionPositions) {
 
-                Context.tel.addData("exist", exist.getX());
-                Context.tel.addData("prev", previous.get(i).getX());
-                Context.tel.addData("count", count);
-                Context.tel.addData("rawExternalHeading", drive.getRawExternalHeading());
+                Tel.instance().addData("exist", exist.getX());
+                Tel.instance().addData("prev", previous.get(i).getX());
+                Tel.instance().addData("count", count);
+                Tel.instance().addData("rawExternalHeading", drive.getRawExternalHeading());
                 count++;
                 if(exist.getX() != previous.get(i).getX()) {
                     drive.setPoseEstimate(new Pose2d(
@@ -81,9 +81,9 @@ public class SuitedLocalizationTest extends LinearOpMode {
             // if it doesn't pass through apriltag you still want to update imu
             drive.setPoseEstimate(new Pose2d(updatePos.getX(), updatePos.getY(), drive.getRawExternalHeading()));
 
-            Context.tel.addData("x", current.getX());
-            Context.tel.addData("y",current.getY());
-            Context.tel.addData("heading",Math.toDegrees(current.getHeading()));
+            Tel.instance().addData("x", current.getX());
+            Tel.instance().addData("y",current.getY());
+            Tel.instance().addData("heading",Math.toDegrees(current.getHeading()));
 
 
         }

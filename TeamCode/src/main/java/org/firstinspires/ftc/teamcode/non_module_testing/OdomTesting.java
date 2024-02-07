@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 @TeleOp
 public class OdomTesting extends EnhancedOpMode
@@ -38,10 +39,10 @@ public class OdomTesting extends EnhancedOpMode
     @Override
     public void primaryLoop()
     {
-        Context.tel.addData("perpendicular encoder", frontRightEncoder.getCurrentPosition());
-        Context.tel.addData("front left", frontLeftEncoder.getCurrentPosition());
-        Context.tel.addData("back right", backRightEncoder.getCurrentPosition());
-        Context.tel.addData("parallel encoder", frontLeftEncoder.getCurrentPosition());
-        Context.tel.update();
+        Tel.instance().addData("perpendicular encoder", frontRightEncoder.getCurrentPosition());
+        Tel.instance().addData("front left", frontLeftEncoder.getCurrentPosition());
+        Tel.instance().addData("back right", backRightEncoder.getCurrentPosition());
+        Tel.instance().addData("parallel encoder", frontLeftEncoder.getCurrentPosition());
+        Tel.instance().update();
     }
 }

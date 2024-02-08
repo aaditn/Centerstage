@@ -43,7 +43,7 @@ abstract class EnhancedOpMode(): LinearOpMode ()
 
     private fun printError()
     {
-        telemetry.addData("Coroutine Error", error)
+        Tel.instance().addData("Coroutine Error", error, 0)
     }
     private fun resetStaticVars()
     {

@@ -101,6 +101,12 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
             return inches * TICKS_PER_REV_THROUGHBORE / WHEEL_RADIUS_THROUGHBORE / 2 / Math.PI / GEAR_RATIO;
         }
     }
+    @Override
+    public void update()
+    {
+        super.update();
+
+    }
 
     @Override
     public double getHeading() {

@@ -12,7 +12,7 @@ public class Deposit extends Module
     Servo leftArm, rightArm, wrist, rotatewrist, claw, extension;
 
     public static boolean telemetryToggle;
-    public static double offset = 0.01;
+    public static double offset = 0.015;
 
     public enum ExtensionState implements ModuleState
     {
@@ -35,7 +35,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE;
     }
-    public static double WRIST_TRANSFER=0.85, WRIST_DEPOSIT=0.2, WRIST_HOVER=0.5, WRIST_SCOPE=0.85;
+    public static double WRIST_TRANSFER=0.88, WRIST_DEPOSIT=0.2, WRIST_HOVER=0.5, WRIST_SCOPE=0.88;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE};
 
 

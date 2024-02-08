@@ -17,7 +17,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT;
     }
-    public static double EXT_TRANSFER = .2, EXT_DEPOSIT = .5;
+    public static double EXT_TRANSFER = .15, EXT_DEPOSIT = .5;
     public static double[] extValues = {EXT_TRANSFER,EXT_DEPOSIT};
 
 
@@ -26,15 +26,15 @@ public class Deposit extends Module
         TRANSFER, DEPOSIT,PRIMED, LEFT,RIGHT;
     }
     public static double ROTATE_MOD = .0525;
-    public static double FLIP_TRANSFER =0.47, FLIP_DEPOSIT=0.535,FLIP_PRIMED = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT;
-    public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT,FLIP_PRIMED,FLIP_LEFT,FLIP_RIGHT};
+    public static double FLIP_TRANSFER =0.465, FLIP_DEPOSIT=0.535,FLIP_PRIMED = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.55;
+    public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT,FLIP_PRIMED,FLIP_LEFT,FLIP_RIGHT,FLIP_DOWN};
 
 
     public enum WristState implements ModuleState
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE;
     }
-    public static double WRIST_TRANSFER=0.87, WRIST_DEPOSIT=0.2, WRIST_HOVER=0.53, WRIST_SCOPE=0.87;
+    public static double WRIST_TRANSFER=0.85, WRIST_DEPOSIT=0.2, WRIST_HOVER=0.53, WRIST_SCOPE=0.85;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE};
 
 
@@ -50,7 +50,7 @@ public class Deposit extends Module
         ZERO, PLUS_FOURTY_FIVE, PLUS_NINETY, PLUS_ONE_THREE_FIVE, PLUS_ONE_EIGHTY, PLUS_TWO_TWO_FIVE, PLUS_TWO_SEVENTY,
         MINUS_FOURTY_FIVE, MINUS_NINETY, MINUS_ONE_THREE_FIVE, MINUS_ONE_EIGHTY, MINUS_TWO_TWO_FIVE, MINUS_TWO_SEVENTY
     }
-    public static double ROTATE_0=.5, ROTATE_PLUS_45=0.4623, ROTATE_PLUS_90=.83, ROTATE_PLUS_135=0.5210, ROTATE_PLUS_180=0.5475, ROTATE_PLUS_225=0.5775, ROTATE_PLUS_270=0.6075;
+    public static double ROTATE_0=.48, ROTATE_PLUS_45=0.4623, ROTATE_PLUS_90=.83, ROTATE_PLUS_135=0.5210, ROTATE_PLUS_180=0.5475, ROTATE_PLUS_225=0.5775, ROTATE_PLUS_270=0.6075;
     public static double ROTATE_MINUS_45=0.4067, ROTATE_MINUS_90=0.3789, ROTATE_MINUS_135=0.3511, ROTATE_MINUS_180=0.3233, ROTATE_MINUS_225 =0.2955, ROTATE_MINUS_270=0.2677;
 
     public static double[] rotateValues={ROTATE_0, ROTATE_PLUS_45, ROTATE_PLUS_90, ROTATE_PLUS_135, ROTATE_PLUS_180, ROTATE_PLUS_225, ROTATE_PLUS_270,
@@ -81,7 +81,7 @@ extension = hardwareMap.get(Servo.class, "extension");
         leftArm.setPosition(flip1Pos);
         rightArm.setPosition(flip2Pos);
         wrist.setPosition(wristPos);
-        //  claw.setPosition(clawPos);
+        claw.setPosition(clawPos);
         rotatewrist.setPosition(rotatePos);
         extension.setPosition(extPos);
     }
@@ -109,7 +109,7 @@ extension = hardwareMap.get(Servo.class, "extension");
     @Override
     protected void initInternalStates() {
         fstate=FlipState.TRANSFER;
-        wstate=WristState.TELESCOPE;
+        wstate=WristState.TRANSFER;
         wrstate= RotateState.ZERO;
         cstate=ClawState.OPEN;
         estate = ExtensionState.TRANSFER;

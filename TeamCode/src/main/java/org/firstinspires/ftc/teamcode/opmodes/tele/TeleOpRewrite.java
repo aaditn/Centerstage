@@ -40,6 +40,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
     double ninja;
     int sweeperCounter;
     int wristRotateCounter = 4;
+
     public enum DepositState {
         LEFT, RIGHT, NORMAL, EXTENDED
     }

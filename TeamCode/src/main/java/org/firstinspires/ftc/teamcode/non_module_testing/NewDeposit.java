@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.util.Tel;
 
 import java.util.List;
 
-@TeleOp(name="A - NewDeposit")
+@TeleOp(name="NewDeposit")
 @Config
 public class NewDeposit extends EnhancedOpMode
 {

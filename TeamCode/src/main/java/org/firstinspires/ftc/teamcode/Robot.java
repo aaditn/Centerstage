@@ -111,7 +111,7 @@ public class Robot extends MecanumDrive
 
     LinearOpMode l;
     HardwareMap hardwareMap;
-    MultipleTelemetry tel;
+    Tel tel;
     public Slides slides;
     public Deposit deposit;
     public Intake intake;
@@ -134,8 +134,8 @@ public class Robot extends MecanumDrive
 
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         this.l=l;
-        tel = new MultipleTelemetry(l.telemetry, FtcDashboard.getInstance().getTelemetry());
-        Context.tel=tel;
+        tel = Tel.instance();
+
         if(Context.opmode!=null)
         {
             Context.updateValues();
@@ -167,9 +167,8 @@ public class Robot extends MecanumDrive
 
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         this.l=l;
-        tel = new MultipleTelemetry(l.telemetry, FtcDashboard.getInstance().getTelemetry());
+        tel = Tel.instance();
         Context.resetValues();
-        Context.tel=tel;
         if(Context.opmode!=null)
         {
             Context.updateValues();

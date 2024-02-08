@@ -293,7 +293,8 @@ public class TeleOpRewrite extends EnhancedOpMode {
     }
 
     @Override
-    public void primaryLoop() {
+    public void primaryLoop()
+    {
         robot.primaryLoop();
     }
 }

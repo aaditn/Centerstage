@@ -24,7 +24,7 @@ public class Intake extends Module {
     {
         INTAKE_AUTO, INTAKE, INTAKE_LOW, EXTAKE, OFF, LOW;
     }
-    public static double POWER_INTAKE_AUTO=.8, POWER_INTAKE=0.9, POWER_INTAKE_LOW=0.7, POWER_EXTAKE=-0.9, POWER_OFF=0, POWER_LOW=-0.3;
+    public static double POWER_INTAKE_AUTO=-.8, POWER_INTAKE=-0.9, POWER_INTAKE_LOW=-0.7, POWER_EXTAKE=0.9, POWER_OFF=0, POWER_LOW=0.3;
     public static double[] powerValues={POWER_INTAKE_AUTO, POWER_INTAKE, POWER_INTAKE_LOW, POWER_EXTAKE, POWER_OFF, POWER_LOW};
 
 
@@ -40,7 +40,7 @@ public class Intake extends Module {
     {
         INTAKE, EXTAKE, OFF;
     }
-    public static double CONVEYOR_INTAKE=1, CONVEYOR_EXTAKE=-1, CONVEYOR_OFF=0;
+    public static double CONVEYOR_INTAKE=-1, CONVEYOR_EXTAKE=1, CONVEYOR_OFF=0;
     public static double[] conveyorValues={CONVEYOR_INTAKE, CONVEYOR_EXTAKE, CONVEYOR_OFF};
 
 
@@ -79,7 +79,7 @@ public class Intake extends Module {
 
         sweeperLeft = hardwareMap.get(Servo.class, "sweeperLeft");
         sweeperRight = hardwareMap.get(Servo.class, "sweeperRight");
-        sweeperRight.setDirection(Servo.Direction.REVERSE);
+        sweeperLeft.setDirection(Servo.Direction.REVERSE);
 
         anglerRight = hardwareMap.get(Servo.class, "anglerRight");
         anglerRight.setDirection(Servo.Direction.REVERSE);
@@ -127,7 +127,7 @@ public class Intake extends Module {
     {
         super.manualChange(Math.signum(power));
         currentPower=Math.signum(power);
-        conveyorPower=Math.signum(conveyer);
+        conveyorPower=Math.signum(-conveyer);
     }
 
     @Override

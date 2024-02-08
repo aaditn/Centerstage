@@ -105,6 +105,155 @@ public class RobotActions
                 .moduleAction(intake,Intake.SweeperState.THREE_SWEEP)
                 .build();
     }
+    public List<Task> transitionDeposit(TeleOpRewrite.DepositState init, TeleOpRewrite.DepositState end)
+    {
+            switch(init) {
+                case EXTENDED:
+                    switch(end) {
+                        case EXTENDED:
+
+                            return builder.createNew()
+                                    .build();
+                        case NORMAL:
+                            return builder.createNew()
+                                    .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                                    .build();
+                        case LEFT:
+                            return builder.createNew()
+                                    .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                                    .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
+                                    .delay(500)
+                                    .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                                    .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                                    .moduleAction(deposit,Deposit.FlipState.LEFT)
+                                    .delay(200)
+                                    .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                                    .build();
+
+                        case RIGHT:
+                            return builder.createNew()
+                                    .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                                    .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
+                                    .delay(500)
+                                    .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                                    .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                                    .moduleAction(deposit,Deposit.FlipState.RIGHT)
+                                    .delay(200)
+                                    .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                                    .build();
+                    }
+                case RIGHT:
+                    switch(end) {
+                        case EXTENDED:
+                            return builder.createNew()
+                                    .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                                    .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
+                                    .delay(1000)
+                                    .moduleAction(deposit, Deposit.WristState.HOVER)
+                                    .moduleAction(deposit,Deposit.FlipState.DOWN)
+                                    .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                                    .build();
+                        case NORMAL:
+                            return builder.createNew()
+                                    .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                                    .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
+                                    .delay(1000)
+                                    .moduleAction(deposit, Deposit.WristState.HOVER)
+                                    .moduleAction(deposit,Deposit.FlipState.DOWN)
+                                    .build();
+                        case LEFT:
+                            return builder.createNew()
+                                    .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                                    .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
+                                    .delay(500)
+                                    .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                                    .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                                    .moduleAction(deposit,Deposit.FlipState.LEFT)
+                                    .delay(200)
+                                    .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                                    .build();
+
+                        case RIGHT:
+
+                            return builder.createNew()
+                                    .build();
+                    }
+                case LEFT:
+                    switch(end) {
+                        case EXTENDED:
+                            return builder.createNew()
+                                    .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                                    .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
+                                    .delay(1000)
+                                    .moduleAction(deposit, Deposit.WristState.HOVER)
+                                    .moduleAction(deposit,Deposit.FlipState.DOWN)
+                                    .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                                    .build();
+                        case NORMAL:
+                            return builder.createNew()
+                                    .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                                    .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
+                                    .delay(1000)
+                                    .moduleAction(deposit, Deposit.WristState.HOVER)
+                                    .moduleAction(deposit,Deposit.FlipState.DOWN)
+                                    .build();
+                        case LEFT:
+
+                            return builder.createNew()
+                                    .build();
+                        case RIGHT:
+
+                            return builder.createNew()
+                                    .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                                    .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
+                                    .delay(500)
+                                    .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                                    .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                                    .moduleAction(deposit,Deposit.FlipState.RIGHT)
+                                    .delay(200)
+                                    .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                                    .build();
+                    }
+                case NORMAL:
+                    switch(end) {
+                    case EXTENDED:
+
+                        return builder.createNew()
+
+                                .moduleAction(deposit, Deposit.ExtensionState.DEPOSIT)
+                                .build();
+                        case NORMAL:
+                        return builder.createNew()
+                                .build();
+                    case LEFT:
+                        return builder.createNew()
+                                .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                                .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
+                                .delay(500)
+                                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                                .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                                .moduleAction(deposit,Deposit.FlipState.LEFT)
+                                .delay(200)
+                                .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                                .build();
+
+                    case RIGHT:
+                        return builder.createNew()
+                                .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                                .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
+                                .delay(500)
+                                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                                .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                                .moduleAction(deposit,Deposit.FlipState.RIGHT)
+                                .delay(200)
+                                .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                                .build();
+
+                }
+            }
+        return builder.createNew()
+                .build();
+    }
     public List<Task> slidesOnly(Slides.SlideState row, TeleOpRewrite.DepositState state)
     {
         if(slides.getState()==Slides.SlideState.GROUND)
@@ -117,13 +266,12 @@ public class RobotActions
                                 .delay(1000)
                                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                                 .delay(150)
-                                .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                                .moduleAction(deposit, Deposit.FlipState.DOWN)
                                 .delay(300)
                                 .moduleAction(slides, row)
                                 .moduleAction(deposit, Deposit.WristState.HOVER)
                                 .delay(400)
                                 //.await(()->slides.getStatus()==Module.Status.IDLE)
-                                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                                 .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                                 .delay(200)
                                 .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
@@ -176,13 +324,12 @@ public class RobotActions
                                 .delay(1000)
                                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                                 .delay(150)
-                                .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                                .moduleAction(deposit, Deposit.FlipState.DOWN)
                                 .delay(300)
                                 .moduleAction(slides, row)
                                 .moduleAction(deposit, Deposit.WristState.HOVER)
                                 .delay(400)
                                 //.await(()->slides.getStatus()==Module.Status.IDLE)
-                                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                                 .delay(200)
                                 .executeCode(()->slides.macroRunning=false)
                                 .build();
@@ -230,6 +377,7 @@ public class RobotActions
                 .executeCode(()->slides.macroRunning=false)
                 .build();
     }
+
     public List<Task> slidesOnly(Slides.SlideState row, boolean x)
     {
         if(slides.getState()==Slides.SlideState.GROUND)
@@ -391,19 +539,18 @@ public class RobotActions
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
                 .delay(300)
-
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
-                .delay(500)
                 .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                 .delay(500)
                 .moduleAction(deposit, Deposit.RotateState.ZERO)
-                .delay(200)
-                .moduleAction(deposit, Deposit.WristState.HOVER)
+                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+
+                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                .delay(800)
                 .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
                 .delay(200)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .delay(100)
-                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .await(()->slides.currentPosition()<150)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
@@ -444,7 +591,7 @@ public class RobotActions
     public List<Task> raiseIntake()
     {
         return builder.createNew()
-                .moduleAction(intake, Intake.PositionState.RAISED)
+                .moduleAction(intake, Intake.PositionState.MID)
                 .moduleAction(intake, Intake.SweeperState.ZERO)
                 .moduleAction(intake, Intake.PowerState.OFF)
                 .moduleAction(intake, Intake.ConveyorState.OFF)

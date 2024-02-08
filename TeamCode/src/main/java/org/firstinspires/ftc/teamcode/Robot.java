@@ -155,7 +155,6 @@ public class Robot extends MecanumDrive
         deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
         droneLauncher = new DroneLauncher(hardwareMap);
-
         hang = hardwareMap.get(DcMotor.class, "hang");
         intake.init();
         deposit.init();
@@ -350,7 +349,9 @@ public class Robot extends MecanumDrive
             update();
         else {
             updateDrivePowers();
-            hang.setPower(hangPower);
+            if(hang!=null) {
+                hang.setPower(hangPower);
+            }
         }
 
         if(timer.milliseconds()>500)

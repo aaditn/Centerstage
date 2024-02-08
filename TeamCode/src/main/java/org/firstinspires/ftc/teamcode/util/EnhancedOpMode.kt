@@ -85,7 +85,7 @@ abstract class EnhancedOpMode(): LinearOpMode ()
                 }
                 catch(e: Exception)
                 {
-                    error=e.toString();
+                    error=e.toString()+e.stackTraceToString();
                 }
             }
 
@@ -97,7 +97,7 @@ abstract class EnhancedOpMode(): LinearOpMode ()
             }
             catch(e: Exception)
             {
-                error=e.toString();
+                error=e.toString()+e.stackTraceToString();
             }
 
 
@@ -111,7 +111,7 @@ abstract class EnhancedOpMode(): LinearOpMode ()
                 }
                 catch(e: Exception)
                 {
-                    error=e.toString();
+                    error=e.toString()+e.stackTraceToString();
                 }
             }
 
@@ -123,7 +123,7 @@ abstract class EnhancedOpMode(): LinearOpMode ()
             }
             catch(e: Exception)
             {
-                error=e.toString();
+                error=e.toString()+e.stackTraceToString();
             }
         }
     }

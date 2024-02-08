@@ -88,7 +88,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
             if (intakeToggle.wasJustPressed()) {
                 intake.setOperationState(Module.OperationState.PRESET);
 
-                if (intake.getState(Intake.PositionState.class) == Intake.PositionState.RAISED) {
+                if (intake.getState(Intake.PositionState.class) == Intake.PositionState.MID||intake.getState(Intake.PositionState.class) == Intake.PositionState.RAISED) {
                     scheduler.scheduleTaskList(actions.lowerIntake());
                 } else if (intake.getState(Intake.PositionState.class) == Intake.PositionState.DOWN) {
                     scheduler.scheduleTaskList(actions.raiseIntake());
@@ -102,11 +102,16 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 intake.setState(sweeperPositions[sweeperCounter - 1]);
             }
             //INTAKE MANUAL POWER
-            if (Math.abs(gamepad2.right_stick_y) > 0.25 && Math.abs(gamepad2.right_stick_x) > .25) {
+            if (gamepad2.right_stick_y < -0.25) {
+                intake.setOperationState(Module.OperationState.MANUAL);
+                intake.manualChange(gamepad2.right_stick_y, 1);
+            }
+            else if(gamepad2.right_stick_y>.25&&Math.abs(gamepad2.right_stick_x)>.25){
 
                 intake.setOperationState(Module.OperationState.MANUAL);
                 intake.manualChange(gamepad2.right_stick_y, gamepad2.right_stick_x);
-            } else {
+            }
+            else {
                 //intake.setState(Intake.ConveyorState.OFF);
                 intake.setOperationState(Module.OperationState.PRESET);
             }
@@ -128,15 +133,27 @@ public class TeleOpRewrite extends EnhancedOpMode {
 //            }
 
             if (leftExtend.wasJustPressed()) {
+                if(slides.getState()!= Slides.SlideState.GROUND){
+                    scheduler.scheduleTaskList(actions.transitionDeposit(depositState,DepositState.LEFT));
+                }
                 depositState = DepositState.LEFT;
             } else if (rightExtend.wasJustPressed()) {
 
+                if(slides.getState()!= Slides.SlideState.GROUND){
+                    scheduler.scheduleTaskList(actions.transitionDeposit(depositState,DepositState.RIGHT));
+                }
                 depositState = DepositState.RIGHT;
             } else if (noExtend.wasJustPressed()) {
 
+                if(slides.getState()!= Slides.SlideState.GROUND){
+                    scheduler.scheduleTaskList(actions.transitionDeposit(depositState,DepositState.NORMAL));
+                }
                 depositState = DepositState.NORMAL;
             } else if (normalExtend.wasJustPressed()) {
 
+                if(slides.getState()!= Slides.SlideState.GROUND){
+                    scheduler.scheduleTaskList(actions.transitionDeposit(depositState,DepositState.EXTENDED));
+                }
                 depositState = DepositState.EXTENDED;
             }
             //SPIN THE ROTATE WRIST
@@ -268,6 +285,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 Deposit.RotateState.PLUS_NINETY,
                 Deposit.RotateState.PLUS_ONE_THREE_FIVE,
         };
+        intake.setState(Intake.PositionState.MID);
     }
 
     public void initLoop() {
@@ -277,6 +295,5 @@ public class TeleOpRewrite extends EnhancedOpMode {
     @Override
     public void primaryLoop() {
         robot.primaryLoop();
-        Tel.instance().addData("intake stick", "INTAKE: "+gamepad2.right_stick_y+ ", CONVEYOR: "+gamepad2.right_stick_x);
     }
 }

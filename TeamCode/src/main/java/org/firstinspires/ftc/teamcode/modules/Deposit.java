@@ -12,21 +12,22 @@ public class Deposit extends Module
     Servo leftArm, rightArm, wrist, rotatewrist, claw, extension;
 
     public static boolean telemetryToggle;
+    public static double offset = 0.01;
 
     public enum ExtensionState implements ModuleState
     {
         TRANSFER, DEPOSIT;
     }
-    public static double EXT_TRANSFER = .15, EXT_DEPOSIT = .5;
+    public static double EXT_TRANSFER = .1, EXT_DEPOSIT = .5;
     public static double[] extValues = {EXT_TRANSFER,EXT_DEPOSIT};
 
 
     public enum FlipState implements ModuleState
     {
-        TRANSFER, DEPOSIT,PRIMED, LEFT,RIGHT;
+        TRANSFER, DEPOSIT,PRIMED, LEFT,RIGHT, DOWN;
     }
-    public static double ROTATE_MOD = .0525;
-    public static double FLIP_TRANSFER =0.465, FLIP_DEPOSIT=0.535,FLIP_PRIMED = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.55;
+    public static double ROTATE_MOD = 0.05;
+    public static double FLIP_TRANSFER =0.4825, FLIP_DEPOSIT=0.555,FLIP_PRIMED = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.58;
     public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT,FLIP_PRIMED,FLIP_LEFT,FLIP_RIGHT,FLIP_DOWN};
 
 
@@ -34,7 +35,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE;
     }
-    public static double WRIST_TRANSFER=0.85, WRIST_DEPOSIT=0.2, WRIST_HOVER=0.53, WRIST_SCOPE=0.85;
+    public static double WRIST_TRANSFER=0.85, WRIST_DEPOSIT=0.2, WRIST_HOVER=0.5, WRIST_SCOPE=0.85;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE};
 
 
@@ -42,7 +43,7 @@ public class Deposit extends Module
     {
         OPEN, CLOSED_AUTO, CLOSED1, CLOSED2,PRIMED, HALF, CLOSED_EDGE;
     }
-    public static double CLAW_OPEN=0.72, CLAW_CLOSED_1=0.5, CLAW_CLOSED_2=0.16, CLOSED_AUTO=0.74, CLAW_PRIMED=0.72, CLAW_HALF = .68,CLOSED_EDGE = .11;
+    public static double CLAW_OPEN=1, CLAW_CLOSED_1=0.5+.3, CLAW_CLOSED_2=0.16+.2, CLOSED_AUTO=CLAW_CLOSED_2, CLAW_PRIMED=1, CLAW_HALF = .68+.3,CLOSED_EDGE = .11+.3;
     public static double[] clawValues={CLAW_OPEN, CLOSED_AUTO, CLAW_CLOSED_1, CLAW_CLOSED_2, CLAW_PRIMED, CLAW_HALF,CLOSED_EDGE};
 
 
@@ -91,13 +92,13 @@ extension = hardwareMap.get(Servo.class, "extension");
     {
         ModuleState state = getState(FlipState.class);
         if (state.equals(FlipState.LEFT)) {
-            flip1Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD;
+            flip1Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD-offset;
             flip2Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD;
         } else if (state.equals(FlipState.RIGHT)) {
-            flip1Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD;
+            flip1Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD-offset;
             flip2Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD;
         } else {
-            flip1Pos = converter.getOutput(getState(FlipState.class));
+            flip1Pos = converter.getOutput(getState(FlipState.class))-offset;
             flip2Pos = converter.getOutput(getState(FlipState.class));
         }
         wristPos=converter.getOutput(getState(WristState.class));

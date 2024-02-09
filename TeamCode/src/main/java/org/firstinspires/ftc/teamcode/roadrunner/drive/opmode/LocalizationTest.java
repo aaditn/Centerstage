@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.Tel;
 
 /**
@@ -19,12 +20,14 @@ import org.firstinspires.ftc.teamcode.util.Tel;
 public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        Context.opmode=this;
+        Context.dashTeleEnabled=false;
         Robot drive = new Robot(this);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
-drive.setYaw();
+        drive.setYaw();
         while (!isStopRequested()) {
             drive.setLocalDrivePowers(
                     new Pose2d(
@@ -34,12 +37,14 @@ drive.setYaw();
                     )
             );
 
-            drive.primaryLoop();
-drive.update();
+            drive.updateDrivePowers();
+            drive.update();
+
             Pose2d poseEstimate = drive.getPoseEstimate();
             Tel.instance().addData("x", poseEstimate.getX());
             Tel.instance().addData("y", poseEstimate.getY());
             Tel.instance().addData("heading", poseEstimate.getHeading());
+            Tel.instance().update();
         }
     }
 }

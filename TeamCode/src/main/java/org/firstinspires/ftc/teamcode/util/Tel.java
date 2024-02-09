@@ -3,9 +3,12 @@ package org.firstinspires.ftc.teamcode.util;
 import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.roadrunner.util.DashboardUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +60,12 @@ public class Tel
                     Log.d(entry.tag, entry.data.toString());
             }
             tel.addLine();
+        }
+
+        if(Context.dashTeleEnabled)
+        {
+            Canvas fieldOverlay=packet.fieldOverlay();
+            DashboardUtil.drawRobot(fieldOverlay, Robot.getInstance().getPoseEstimate());
         }
 
         tel.update();

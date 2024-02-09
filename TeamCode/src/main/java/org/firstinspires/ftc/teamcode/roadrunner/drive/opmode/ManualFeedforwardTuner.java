@@ -68,7 +68,6 @@ public class ManualFeedforwardTuner extends LinearOpMode {
     @Override
     public void runOpMode() {
         Context.opmode=this;
-        Context.dashTeleEnabled=false;
         if (RUN_USING_ENCODER) {
             RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
                     "when using the built-in drive motor velocity PID.");
@@ -78,6 +77,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
         robot = new Robot(this);
 
+        Context.dashTeleEnabled=false;
         final VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         mode = Mode.TUNING_MODE;

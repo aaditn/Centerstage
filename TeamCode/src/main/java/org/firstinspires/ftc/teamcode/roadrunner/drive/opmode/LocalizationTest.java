@@ -20,14 +20,15 @@ import org.firstinspires.ftc.teamcode.util.Tel;
 public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+
         Context.opmode=this;
         Context.dashTeleEnabled=false;
         Robot drive = new Robot(this);
 
+
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
-        drive.setYaw();
         while (!isStopRequested()) {
             drive.setLocalDrivePowers(
                     new Pose2d(
@@ -41,10 +42,10 @@ public class LocalizationTest extends LinearOpMode {
             drive.update();
 
             Pose2d poseEstimate = drive.getPoseEstimate();
-            Tel.instance().addData("x", poseEstimate.getX());
-            Tel.instance().addData("y", poseEstimate.getY());
-            Tel.instance().addData("heading", poseEstimate.getHeading());
-            Tel.instance().update();
+//            Tel.instance().addData("x", poseEstimate.getX());
+//            Tel.instance().addData("y", poseEstimate.getY());
+//            Tel.instance().addData("heading", poseEstimate.getHeading());
+//            Tel.instance().update();
         }
     }
 }

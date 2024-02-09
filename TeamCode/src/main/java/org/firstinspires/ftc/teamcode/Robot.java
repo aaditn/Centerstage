@@ -128,6 +128,7 @@ public class Robot extends MecanumDrive
     ColorRangeSensor cs3, cs2, cs1;
     static Robot robot;
     public TaskScheduler scheduler;
+    public static boolean dashTeleEnabled=true;
 
     public Robot(LinearOpMode l)
     {

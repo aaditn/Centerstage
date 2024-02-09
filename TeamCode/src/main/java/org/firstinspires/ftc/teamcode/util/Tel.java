@@ -16,8 +16,7 @@ import java.util.List;
 
 public class Tel
 {
-    FtcDashboard dashboard;
-    TelemetryPacket packet;
+    Telemetry dashboardTel;
     Telemetry tel;
     List<List<TelEntry>> entries;
     static Tel telWrapper;
@@ -25,8 +24,7 @@ public class Tel
 
     public Tel()
     {
-        packet=new TelemetryPacket();
-        dashboard=FtcDashboard.getInstance();
+        dashboardTel=FtcDashboard.getInstance().getTelemetry();
         tel=Context.opmode.telemetry;
         entries =new ArrayList<>();
 
@@ -55,22 +53,18 @@ public class Tel
             {
                 tel.addData(entry.tag, entry.data);
                 if(Context.dashTeleEnabled)
-                    packet.put(entry.tag, entry.data);
+                    dashboardTel.addData(entry.tag, entry.data);
                 if(entry.logged)
-                    Log.d(entry.tag, entry.data.toString());
+                    entry.log();
             }
             tel.addLine();
-        }
-
-        if(Context.dashTeleEnabled)
-        {
-            Canvas fieldOverlay=packet.fieldOverlay();
-            DashboardUtil.drawRobot(fieldOverlay, Robot.getInstance().getPoseEstimate());
+            if(Context.dashTeleEnabled)
+                dashboardTel.addLine();
         }
 
         tel.update();
         if(Context.dashTeleEnabled)
-            dashboard.sendTelemetryPacket(packet);
+            dashboardTel.update();
 
         for(List<TelEntry> list: entries)
         {
@@ -87,6 +81,10 @@ public class Tel
     public void addData(String tag, Object data, boolean logged)
     {
         this.entries.get(this.entries.size()-1).add(new TelEntry(tag, data, logged));
+    }
+    public void addData(String tag, Object data, boolean logged, int logTimer)
+    {
+        this.entries.get(this.entries.size()-1).add(new TelEntry(tag, data, logged, logTimer));
     }
     public void addData(String tag, Object data, int priority)
     {
@@ -106,5 +104,15 @@ public class Tel
             this.entries.get(0).add(new TelEntry(tag, data, logged));
         else
             this.entries.get(priority).add(new TelEntry(tag, data, logged));
+    }
+
+    public void addData(String tag, Object data, int priority, boolean logged, int logTimer)
+    {
+        if(priority>this.entries.size()-1)
+            this.entries.get(this.entries.size()-1).add(new TelEntry(tag, data, logged, logTimer));
+        else if(priority<0)
+            this.entries.get(0).add(new TelEntry(tag, data, logged, logTimer));
+        else
+            this.entries.get(priority).add(new TelEntry(tag, data, logged, logTimer));
     }
 }

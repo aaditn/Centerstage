@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import org.firstinspires.ftc.teamcode.Robot
 import org.firstinspires.ftc.teamcode.util.AutoSelector.CyclePixelCount
 import org.firstinspires.ftc.teamcode.util.enums.Dice
 
@@ -27,6 +28,7 @@ object Context
         {
             isTele=false
         }
+        dashTeleEnabled= Robot.dashTeleEnabled
     }
 
     @JvmStatic fun resetValues()

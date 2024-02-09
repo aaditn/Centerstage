@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.sequencesegm
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.sequencesegment.WaitSegment;
 import org.firstinspires.ftc.teamcode.roadrunner.util.DashboardUtil;
 import org.firstinspires.ftc.teamcode.roadrunner.util.LogFiles;
+import org.firstinspires.ftc.teamcode.util.Context;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -226,6 +227,7 @@ public class TrajectorySequenceRunner {
         packet.put("headingError (deg)", Math.toDegrees(getLastPoseError().getHeading()));
 
         draw(fieldOverlay, currentTrajectorySequence, currentSegment, targetPose, poseEstimate);
+
 
         dashboard.sendTelemetryPacket(packet);
 

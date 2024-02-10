@@ -19,8 +19,8 @@ public class AprilTagPipeline {
 
     VisionPortal visionPortal;
     private final boolean USE_EST_HEADING = true;
-double est_heading =0;
-List<Pose2d> detections = new ArrayList<>();
+    double est_heading =0;
+    List<Pose2d> detections = new ArrayList<>();
 
 
 public List<Pose2d> getPos(){
@@ -56,7 +56,7 @@ public List<Pose2d> getPos(){
 
         // Set the camera (webcam vs. built-in RC phone camera).
         if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+            builder.setCamera(hardwareMap.get(WebcamName.class, "backCamera"));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
@@ -94,7 +94,7 @@ public List<Pose2d> getPos(){
 
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
-        double backBoard=30;
+        double backBoard=8;
         double sideBackBoard = 22.5;
         double tag1 = 5.5 + 1.125;
         double tag2 = 5.5 + 1.125*3 + 3.5;

@@ -6,13 +6,17 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
+import org.firstinspires.ftc.teamcode.util.Tel;
+
 @Config
 public class Deposit extends Module
 {
     Servo leftArm, rightArm, wrist, rotatewrist, claw, extension;
 
     public static boolean telemetryToggle;
-    public static double offset = 0.015;
+    public static double transferOffset = 0.015;
+
+    public static double depositOffset = 0.015;
 
     public enum ExtensionState implements ModuleState
     {
@@ -27,7 +31,7 @@ public class Deposit extends Module
         TRANSFER, DEPOSIT,PRIMED, LEFT,RIGHT, DOWN;
     }
     public static double ROTATE_MOD = 0.05;
-    public static double FLIP_TRANSFER =0.4825, FLIP_DEPOSIT=0.555,FLIP_PRIMED = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.58;
+    public static double FLIP_TRANSFER =0.4825, FLIP_DEPOSIT=0.58,FLIP_PRIMED = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63;
     public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT,FLIP_PRIMED,FLIP_LEFT,FLIP_RIGHT,FLIP_DOWN};
 
 
@@ -69,7 +73,7 @@ public class Deposit extends Module
         super(false, telemetryToggle);
         leftArm=hardwareMap.get(Servo.class, "leftArm");
         rightArm=hardwareMap.get(Servo.class, "rightArm");
-        leftArm.setDirection(Servo.Direction.REVERSE);
+        rightArm.setDirection(Servo.Direction.REVERSE);
 extension = hardwareMap.get(Servo.class, "extension");
         wrist=hardwareMap.get(Servo.class, "wrist");
         rotatewrist=hardwareMap.get(Servo.class, "rotatewrist");
@@ -87,18 +91,31 @@ extension = hardwareMap.get(Servo.class, "extension");
         extension.setPosition(extPos);
     }
 
+    protected void telemetryUpdate()
+    {
+        super.telemetryUpdate();
+        Tel.instance().addData("Flip 1 Pos", flip1Pos, 0);
+        Tel.instance().addData("Flip 2 Pos", flip2Pos, 0);
+        Tel.instance().addData("Deposit Offset", depositOffset);
+        Tel.instance().addData("Transfer Offset", transferOffset);
+        Tel.instance().addData("Pos without offset", converter.getOutput(getState(FlipState.class)));
+    }
+
     @Override
     protected void internalUpdate()
     {
         ModuleState state = getState(FlipState.class);
         if (state.equals(FlipState.LEFT)) {
-            flip1Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD-offset;
+            flip1Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD- depositOffset;
             flip2Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD;
         } else if (state.equals(FlipState.RIGHT)) {
-            flip1Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD-offset;
+            flip1Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD- depositOffset;
             flip2Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD;
-        } else {
-            flip1Pos = converter.getOutput(getState(FlipState.class))-offset;
+        } else if(state.equals(FlipState.DEPOSIT)||state.equals(FlipState.DOWN)){
+            flip1Pos = converter.getOutput(getState(FlipState.class))- depositOffset;
+            flip2Pos = converter.getOutput(getState(FlipState.class));
+        }else{
+            flip1Pos = converter.getOutput(getState(FlipState.class))- transferOffset;
             flip2Pos = converter.getOutput(getState(FlipState.class));
         }
         wristPos=converter.getOutput(getState(WristState.class));

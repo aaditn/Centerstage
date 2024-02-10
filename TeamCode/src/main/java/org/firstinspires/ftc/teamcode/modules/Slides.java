@@ -206,6 +206,7 @@ public class Slides extends Module
         super.telemetryUpdate();
         Tel.instance().addData("Target Position", targetPosition);
         Tel.instance().addData("Attempted power", motorPower);
-        Tel.instance().addData("Slide 1", slide1.getCurrentPosition());
+        Tel.instance().addData("Slide 1", slide1.getCurrentPosition(), 2);
+        Tel.instance().addData("Slide 2", slide2.getCurrentPosition(), 2);
     }
 }

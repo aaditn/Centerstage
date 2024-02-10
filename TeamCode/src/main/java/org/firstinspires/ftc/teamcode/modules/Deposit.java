@@ -20,10 +20,10 @@ public class Deposit extends Module
 
     public enum ExtensionState implements ModuleState
     {
-        TRANSFER, DEPOSIT;
+        TRANSFER, DEPOSIT, TRANSFER_PARTIAL;
     }
-    public static double EXT_TRANSFER = .1, EXT_DEPOSIT = .5;
-    public static double[] extValues = {EXT_TRANSFER,EXT_DEPOSIT};
+    public static double EXT_TRANSFER = .1, EXT_DEPOSIT = .5, EXT_TRANSFER_PARTIAL=0.05;
+    public static double[] extValues = {EXT_TRANSFER,EXT_DEPOSIT, EXT_TRANSFER_PARTIAL};
 
 
     public enum FlipState implements ModuleState
@@ -31,23 +31,23 @@ public class Deposit extends Module
         TRANSFER, DEPOSIT,PRIMED, LEFT,RIGHT, DOWN;
     }
     public static double ROTATE_MOD = 0.05;
-    public static double FLIP_TRANSFER =0.4825, FLIP_DEPOSIT=0.58,FLIP_PRIMED = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63;
+    public static double FLIP_TRANSFER =0.4825, FLIP_DEPOSIT=0.55,FLIP_PRIMED = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63;
     public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT,FLIP_PRIMED,FLIP_LEFT,FLIP_RIGHT,FLIP_DOWN};
 
 
     public enum WristState implements ModuleState
     {
-        TRANSFER, DEPOSIT, HOVER, TELESCOPE;
+        TRANSFER, DEPOSIT, HOVER, TELESCOPE, PARTIAL, PARTIAL2;
     }
-    public static double WRIST_TRANSFER=0.88, WRIST_DEPOSIT=0.2, WRIST_HOVER=0.5, WRIST_SCOPE=0.88;
-    public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE};
+    public static double WRIST_TRANSFER=0.94, WRIST_DEPOSIT=0.2, WRIST_HOVER=0.5, WRIST_SCOPE=0.94, WRIST_PARTIAL=0.84, WRIST_PARTIAL2=0.88;
+    public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE, WRIST_PARTIAL, WRIST_PARTIAL2};
 
 
     public enum ClawState implements ModuleState
     {
         OPEN, CLOSED_AUTO, CLOSED1, CLOSED2,PRIMED, HALF, CLOSED_EDGE;
     }
-    public static double CLAW_OPEN=.65, CLAW_CLOSED_1=0.5+.3, CLAW_CLOSED_2=0.16+.2, CLOSED_AUTO=CLAW_CLOSED_2, CLAW_PRIMED=0.65, CLAW_HALF = .68+.3,CLOSED_EDGE = .11+.3;
+    public static double CLAW_OPEN=.70, CLAW_CLOSED_1=0.5+.3, CLAW_CLOSED_2=0.16+.2, CLOSED_AUTO=CLAW_CLOSED_2, CLAW_PRIMED=0.70, CLAW_HALF = .68+.3,CLOSED_EDGE = .11+.3;
     public static double[] clawValues={CLAW_OPEN, CLOSED_AUTO, CLAW_CLOSED_1, CLAW_CLOSED_2, CLAW_PRIMED, CLAW_HALF,CLOSED_EDGE};
 
 

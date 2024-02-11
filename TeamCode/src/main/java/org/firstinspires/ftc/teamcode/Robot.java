@@ -459,14 +459,6 @@ public class Robot extends MecanumDrive
         followTrajectoryAsync(trajectory);
         waitForIdle();
     }
-    public void followTrajectory(WhipTrajectory x) {
-        if(Context.opmode.opModeIsActive())
-        {
-            followTrajectorySequenceAsync(x.getTrajectory());
-            scheduler.scheduleTaskListBlocking(x.getTasks());
-            waitForIdle();
-        }
-    }
     public void run(String trajectory)
     {
         for(WhipTrajectory item : trajectories){

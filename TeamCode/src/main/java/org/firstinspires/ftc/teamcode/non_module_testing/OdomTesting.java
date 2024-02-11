@@ -39,10 +39,10 @@ public class OdomTesting extends EnhancedOpMode
     @Override
     public void primaryLoop()
     {
-        Tel.instance().addData("perpendicular encoder", frontRightEncoder.getCurrentPosition());
-        Tel.instance().addData("front left", frontLeftEncoder.getCurrentPosition());
+        Tel.instance().addData("front right", frontRightEncoder.getCurrentPosition());
+        Tel.instance().addData("back left", backLeftEncoder.getCurrentPosition());
         Tel.instance().addData("back right", backRightEncoder.getCurrentPosition());
-        Tel.instance().addData("parallel encoder", frontLeftEncoder.getCurrentPosition());
+        Tel.instance().addData("front left", frontLeftEncoder.getCurrentPosition());
         Tel.instance().update();
     }
 }

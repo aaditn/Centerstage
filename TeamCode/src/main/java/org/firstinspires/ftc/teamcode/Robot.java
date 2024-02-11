@@ -13,9 +13,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
@@ -82,7 +80,7 @@ public class Robot extends MecanumDrive
    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0,0,0);//8, 0, 1);
 
 
-    public static double LATERAL_MULTIPLIER = 2;
+    public static double LATERAL_MULTIPLIER = 2.3;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -106,6 +104,8 @@ public class Robot extends MecanumDrive
 
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
+
+    private List<Double> headingTrack = new ArrayList<>();
 
     List<LynxModule> modules;
 
@@ -584,7 +584,14 @@ public class Robot extends MecanumDrive
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) Math.toRadians(-navx.getRawGyroZ());
+        ElapsedTime x = new ElapsedTime();
+
+        headingTrack.add(Math.toRadians(-navx.getYaw()));
+        if(headingTrack.size()>1){
+            return (headingTrack.get(0)-headingTrack.get(1))/x.seconds();
+        }
+        x.reset();
+        return (double)0;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue2Plus4;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
@@ -9,7 +8,6 @@ import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
-import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
@@ -28,16 +26,16 @@ public class farBlue extends EnhancedOpMode
     {
 
         waitForStart();
-        drive.setPoseEstimate(farBlue2Plus4.blueFarStart);
+        drive.setPoseEstimate(org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue.blueFarStart);
 
-        delayLinear(Context.autoWaitTime*1000);
+        delayLinear(Context.autoWaitTime* 1000);
 
         switch(Context.dice)
         {
             case LEFT:
-                drive.followTrajectorySequence(farBlue2Plus4.leftPurple);
-            case RIGHT:
+                drive.followTrajectorySequence(org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue.leftPurple);
 
+            case RIGHT:
         }
     }
     public void initLoop()

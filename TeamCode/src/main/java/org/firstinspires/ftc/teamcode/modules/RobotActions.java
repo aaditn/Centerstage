@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
@@ -77,6 +78,58 @@ public class RobotActions
                 .moduleAction(intake, Intake.SweeperState.FOUR_SWEEP)
                 .delay(750)
                 .moduleAction(intake, Intake.SweeperState.FIVE_SWEEP)
+                .build();
+    }
+    public List<Task> deployPurple(double yPos){
+        return builder.createNew()
+                .delay(500)
+                .moduleAction(intake, Intake.PositionState.DOWN)
+                .await(()->Math.abs(robot.getPoseEstimate().getY())<yPos)
+                .moduleAction(intake, Intake.SweeperState.ONE_SWEEP)
+                .delay(500)
+                .moduleAction(intake,Intake.PositionState.MID)
+                .build();
+    }
+    public List<Task> yellowDrop(double xPos){
+        return builder.createNew()
+                .await(()->robot.getPoseEstimate().getX()>15)
+                .executeCode(()-> RobotLog.e("s"))
+                .executeCode(()->slides.macroRunning=true)
+                .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                .delay(1000)
+                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                .delay(150)
+                .moduleAction(deposit, Deposit.FlipState.DOWN)
+                .delay(300)
+                .moduleAction(slides, Slides.SlideState.AUTO_LOW)
+                .moduleAction(deposit, Deposit.WristState.HOVER)
+                .delay(400)
+                //.await(()->slides.getStatus()==Module.Status.IDLE)
+                .delay(200)
+                .executeCode(()->slides.macroRunning=false)
+                .await(()->robot.getPoseEstimate().getX()>xPos)
+
+                .executeCode(()->slides.macroRunning=true)
+                .moduleAction(deposit, Deposit.ClawState.OPEN)
+                .delay(300)
+                .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
+                .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                .delay(500)
+                .moduleAction(deposit, Deposit.RotateState.ZERO)
+                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                .moduleAction(deposit, Deposit.WristState.PARTIAL2)
+                .delay(800)
+                .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
+                .delay(200)
+                .moduleAction(slides, Slides.SlideState.GROUND)
+                .delay(100)
+                .await(()->slides.currentPosition()<150)
+                //.moduleAction(deposit, Deposit.WristState.PARTIAL2)
+                .moduleAction(deposit, Deposit.ClawState.OPEN)
+                .await(slides::isIdle)
+                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                .executeCode(()->slides.macroRunning=false)
                 .build();
     }
     public List<Task> runSweepersAuto(double xPos,boolean x, int sweeperIndex)

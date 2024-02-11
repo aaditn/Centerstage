@@ -42,6 +42,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -60,6 +61,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.Tel;
 import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -67,6 +69,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,8 +79,8 @@ public class Robot extends MecanumDrive
 
     //public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(9, 0, 1);
     //public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 1);
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0,0,0);//9, 0, 1);
-   public static PIDCoefficients HEADING_PID = new PIDCoefficients(0,0,0);//8, 0, 1);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(6,0,0);//9, 0, 1);
+   public static PIDCoefficients HEADING_PID = new PIDCoefficients(6,0,0);//8, 0, 1);
 
 
     public static double LATERAL_MULTIPLIER = 2.3;
@@ -491,7 +494,20 @@ public class Robot extends MecanumDrive
     public void waitForIdle() {
         while (!Thread.currentThread().isInterrupted() && isBusy() && Context.opmode.opModeIsActive())
         {
+            Method x =null;
+            try{
+                x= Context.opmode.getClass().getMethod("primaryLoop",(Class<?>[]) null);
+            }
+            catch(NoSuchMethodException ignored){
 
+        }
+            if(x==null){
+                RobotLog.e("yep");
+                update();
+                break;
+            }else {
+                RobotLog.e("nah");
+            }
         }
     }
 
@@ -588,7 +604,10 @@ public class Robot extends MecanumDrive
 
         headingTrack.add(Math.toRadians(-navx.getYaw()));
         if(headingTrack.size()>1){
-            return (headingTrack.get(0)-headingTrack.get(1))/x.seconds();
+            double k = headingTrack.get(0);
+            headingTrack.remove(0);
+            x.reset();
+            return (k-headingTrack.get(0))/x.seconds();
         }
         x.reset();
         return (double)0;

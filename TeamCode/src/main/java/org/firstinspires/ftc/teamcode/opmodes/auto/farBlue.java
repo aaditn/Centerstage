@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
@@ -10,7 +12,7 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-
+@Autonomous(name="Far Blue 2+0")
 public class farBlue extends EnhancedOpMode
 {
     Robot drive;
@@ -24,7 +26,6 @@ public class farBlue extends EnhancedOpMode
     @Override
     public void linearOpMode()
     {
-
         waitForStart();
         drive.setPoseEstimate(org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue.blueFarStart);
 
@@ -33,10 +34,32 @@ public class farBlue extends EnhancedOpMode
         switch(Context.dice)
         {
             case LEFT:
-                drive.followTrajectorySequence(org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue.leftPurple);
+                drive.followTrajectorySequence(org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue.leftPurple,actions.deployPurple(35));
+                break;
+            case MIDDLE:
+                drive.followTrajectorySequence(org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue.midPurple,actions.deployPurple(35));
 
+                break;
             case RIGHT:
+                drive.followTrajectorySequence(org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue.rightPurple,actions.deployPurple(47));
+
+                break;
         }
+        switch(Context.dice)
+        {
+            case LEFT:
+                drive.followTrajectorySequence(org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue.leftPurpleToBack,actions.yellowDrop(49));
+
+                break;
+            case MIDDLE:
+                drive.followTrajectorySequence(org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue.midPurpleToBack,actions.yellowDrop(49));
+
+                break;
+            case RIGHT:
+                drive.followTrajectorySequence(org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue.rightPurpleToBack ,actions.yellowDrop(49));
+                break;
+        }
+
     }
     public void initLoop()
     {

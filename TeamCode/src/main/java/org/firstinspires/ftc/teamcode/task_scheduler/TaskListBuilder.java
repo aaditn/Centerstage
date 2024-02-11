@@ -100,6 +100,10 @@ public class TaskListBuilder
             tasks.add(new AwaitTask(()->drive.getPoseEstimate().getX()<x));
         return this;
     }
+    public TaskListBuilder runTaskList(List<Task> x){
+        tasks.addAll(x);
+        return this;
+    }
 
     public TaskListBuilder awaitDtYPosition(double y, Compare c)
     {

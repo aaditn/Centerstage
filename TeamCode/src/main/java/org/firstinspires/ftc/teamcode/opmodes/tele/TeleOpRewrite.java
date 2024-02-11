@@ -297,7 +297,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 Deposit.RotateState.PLUS_NINETY,
                 Deposit.RotateState.PLUS_ONE_THREE_FIVE,
         };
-        intake.setState(Intake.PositionState.MID);
+        intake.setState(Intake.PositionState.RAISED);
     }
 
     public void initLoop() {

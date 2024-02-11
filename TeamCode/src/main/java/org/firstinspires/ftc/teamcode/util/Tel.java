@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -13,14 +15,17 @@ import org.firstinspires.ftc.teamcode.roadrunner.util.DashboardUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+@Config
 public class Tel
 {
     Telemetry dashboardTel;
     Telemetry tel;
     List<List<TelEntry>> entries;
     static Tel telWrapper;
-    static int totalLevels=6;
+    public static int totalLevels=6;
+    public static int logTimer=500;
+    private long lastTimeLogged;
+
 
     public Tel()
     {
@@ -47,6 +52,11 @@ public class Tel
 
     public void update()
     {
+        long currentTime=SystemClock.elapsedRealtime();
+        boolean logging=currentTime-lastTimeLogged>logTimer;
+        if(logging)
+            lastTimeLogged=currentTime;
+
         for(List<TelEntry> list: entries)
         {
             for(TelEntry entry: list)
@@ -54,8 +64,8 @@ public class Tel
                 tel.addData(entry.tag, entry.data);
                 if(Context.dashTeleEnabled)
                     dashboardTel.addData(entry.tag, entry.data);
-                if(entry.logged)
-                    entry.log();
+                if(entry.logged&&logging)
+                    Log.d(entry.tag, entry.data.toString());
             }
             tel.addLine();
             if(Context.dashTeleEnabled)
@@ -82,10 +92,6 @@ public class Tel
     {
         this.entries.get(this.entries.size()-1).add(new TelEntry(tag, data, logged));
     }
-    public void addData(String tag, Object data, boolean logged, int logTimer)
-    {
-        this.entries.get(this.entries.size()-1).add(new TelEntry(tag, data, logged, logTimer));
-    }
     public void addData(String tag, Object data, int priority)
     {
         if(priority>this.entries.size()-1)
@@ -104,15 +110,5 @@ public class Tel
             this.entries.get(0).add(new TelEntry(tag, data, logged));
         else
             this.entries.get(priority).add(new TelEntry(tag, data, logged));
-    }
-
-    public void addData(String tag, Object data, int priority, boolean logged, int logTimer)
-    {
-        if(priority>this.entries.size()-1)
-            this.entries.get(this.entries.size()-1).add(new TelEntry(tag, data, logged, logTimer));
-        else if(priority<0)
-            this.entries.get(0).add(new TelEntry(tag, data, logged, logTimer));
-        else
-            this.entries.get(priority).add(new TelEntry(tag, data, logged, logTimer));
     }
 }

@@ -462,8 +462,18 @@ public class Robot extends MecanumDrive
         followTrajectoryAsync(trajectory);
         waitForIdle();
     }
-    public void set(NamedTrajectory[] trajectories,List<Task>[] actions){
-            this.trajectories = map(trajectories, actions);
+    public void set(NamedTrajectory[][] trajectories,List<Task>[] actions){
+        switch (Context.dice){
+            default:
+            this.trajectories = map(trajectories[0], actions);
+break;
+            case MIDDLE:
+                this.trajectories = map(trajectories[1], actions);
+break;
+            case RIGHT:
+                this.trajectories = map(trajectories[2], actions);
+            break;
+        }
     }
     public void run(Paths trajectory)
     {

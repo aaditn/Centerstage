@@ -1,18 +1,21 @@
 package org.firstinspires.ftc.teamcode.auto_paths;
 
+import static org.firstinspires.ftc.teamcode.util.NamedTrajectory.map;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 
-public class farBlue
-{
+public class farBlue {
 
-    public static Pose2d blueFarStart = new Pose2d(-35 ,61,Math.toRadians(270));
+    public static Pose2d blueFarStart = new Pose2d(-35, 61, Math.toRadians(270));
     public static TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(blueFarStart)
             .splineToConstantHeading(new Vector2d(-46.5, 34), Math.toRadians(270))
             .build();
+
     public static TrajectorySequence leftPurpleToBack = Robot.trajectorySequenceBuilder(leftPurple.end())
             .setReversed(true)
             .lineTo(new Vector2d(-46.5, 37))
@@ -131,12 +134,23 @@ public class farBlue
             .splineToConstantHeading(new Vector2d(49, 38), Math.toRadians(0))
             .lineTo(new Vector2d(50.5, 38))
             .build();
+    public static String[] trajectoryNames = {
+            "Purple",
+            "Score Spike",
+            "Go To Stack",
+            "Score Cycle",
+            "Return to Stack",
+    };
 
-    public static TrajectorySequence[] leftTrajectories={leftPurple, leftPurpleToBack, leftBackToStack, stackToBack1, stackToBack2, backToStack1};
-    public static TrajectorySequence[] midTrajectories={midPurple,
-            midPurpleToBack, midBackToStack, stackToBack1, stackToBack2, backToStack1};
-    public static TrajectorySequence[] rightTrajectories={rightPurple, rightPurpleToBack,
-            rightBackToStack, stackToBack1, stackToBack2, backToStack1};
+    public static NamedTrajectory[] leftTrajectories = map(
+            new TrajectorySequence[]{leftPurple, leftPurpleToBack, leftBackToStack, stackToBack1, stackToBack2, backToStack1},
+                    trajectoryNames);
+    public static NamedTrajectory[] midTrajectories = map(
+            new TrajectorySequence[]{midPurple, midPurpleToBack, midBackToStack, stackToBack1, stackToBack2, backToStack1},
+                    trajectoryNames);
+    public static NamedTrajectory[] rightTrajectories = map(
+            new TrajectorySequence[]{rightPurple, rightPurpleToBack, rightBackToStack, stackToBack1, stackToBack2, backToStack1},
+                    trajectoryNames);
 
 
 }

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
+import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
 import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.blueFarStart;
 import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.leftTrajectories;
 import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.midTrajectories;
@@ -16,14 +17,11 @@ import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
-import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.WhipTrajectory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Autonomous(name = "Far Blue 2+0")
@@ -36,24 +34,33 @@ public class farBlue2p0 extends EnhancedOpMode {
     Slides slides;
     DroneLauncher drone;
 
+    List<WhipTrajectory> trajectories;
     @Override
     public void linearOpMode() {
         waitForStart();
         drive.setPoseEstimate(blueFarStart);
-        List<WhipTrajectory> trajectories;
         switch (Context.dice) {
             case MIDDLE:
-                trajectories = map(Arrays.asList(midTrajectories), getTaskList(35, 49));
+                drive.trajectories = map(midTrajectories, getTaskList(
+                        actions.deployPurple(35),
+                        actions.yellowDrop(49)
+                ));
                 break;
             case RIGHT:
-                trajectories = map(Arrays.asList(rightTrajectories), getTaskList(35, 49));
+                drive.trajectories = map(rightTrajectories, getTaskList(
+                        actions.deployPurple(35),
+                        actions.yellowDrop(49)
+                ));
                 break;
             default:
-                trajectories = map(Arrays.asList(leftTrajectories), getTaskList(35, 49));
+                drive.trajectories = map(leftTrajectories, getTaskList(
+                        actions.deployPurple(35),
+                        actions.yellowDrop(49)
+                ));
                 break;
         }
-        drive.followTrajectory(trajectories.get(0));
-        drive.followTrajectory(trajectories.get(1));
+        drive.run("Purple");
+        drive.run("Score Spike");
 
     }
 
@@ -62,6 +69,7 @@ public class farBlue2p0 extends EnhancedOpMode {
     }
 
     public void onStart() {
+
         drive.closeCameras();
     }
 
@@ -93,12 +101,5 @@ public class farBlue2p0 extends EnhancedOpMode {
         drive.primaryLoop();
     }
 
-    public List<List<Task>> getTaskList(double purpleYPos, double yellowXPos) {
-        return new ArrayList<List<Task>>() {
-            {
-                add(actions.deployPurple(purpleYPos));
-                add(actions.yellowDrop(yellowXPos));
-            }
-        };
-    }
+
 }

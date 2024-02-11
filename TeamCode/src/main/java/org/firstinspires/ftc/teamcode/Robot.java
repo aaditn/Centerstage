@@ -109,6 +109,7 @@ public class Robot extends MecanumDrive
     private List<Integer> lastEncVels = new ArrayList<>();
 
     private List<Double> headingTrack = new ArrayList<>();
+    public List<WhipTrajectory> trajectories;
 
     List<LynxModule> modules;
 
@@ -466,8 +467,26 @@ public class Robot extends MecanumDrive
             waitForIdle();
         }
     }
+    public void run(String trajectory)
+    {
+        for(WhipTrajectory item : trajectories){
+            if(item.getName().equals(trajectory)){
+                if(Context.opmode.opModeIsActive())
+                {
+                    followTrajectorySequenceAsync(item.getTrajectory());
+                    scheduler.scheduleTaskListBlocking(item.getTasks());
+                    waitForIdle();
+                }
+            }
+        }
+        RobotLog.e("WE DIDNT FIND THE TRAJECTORY BRO");
 
+    }
 
+    @SafeVarargs
+    public static List<List<Task>> getTaskList(List<Task>... tasks) {
+        return Arrays.asList(tasks);
+    }
     public void followTrajectorySequenceAsync(TrajectorySequence trajectorySequence) {
         trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence);
     }

@@ -33,6 +33,9 @@ public class TrajectorySequence {
 
         return total;
     }
+    public List<SequenceSegment> getList(){
+        return sequenceList;
+    }
 
     public SequenceSegment get(int i) {
         return sequenceList.get(i);

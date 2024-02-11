@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
 import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.blueFarStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.leftTrajectories;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.midTrajectories;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.rightTrajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.leftTrajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.midTrajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.rightTrajectories;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 

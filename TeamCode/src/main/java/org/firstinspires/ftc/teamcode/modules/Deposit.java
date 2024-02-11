@@ -16,7 +16,7 @@ public class Deposit extends Module
     public static boolean telemetryToggle;
     public static double transferOffset = 0.015;
 
-    public static double depositOffset = 0.015;
+    public static double depositOffset = -0.008;
 
     public enum ExtensionState implements ModuleState
     {
@@ -107,13 +107,13 @@ extension = hardwareMap.get(Servo.class, "extension");
         ModuleState state = getState(FlipState.class);
         if (state.equals(FlipState.LEFT)) {
             flip1Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD- depositOffset;
-            flip2Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD;
+            flip2Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD+ depositOffset;
         } else if (state.equals(FlipState.RIGHT)) {
             flip1Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD- depositOffset;
-            flip2Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD;
+            flip2Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD+ depositOffset;
         } else if(state.equals(FlipState.DEPOSIT)||state.equals(FlipState.DOWN)){
             flip1Pos = converter.getOutput(getState(FlipState.class))- depositOffset;
-            flip2Pos = converter.getOutput(getState(FlipState.class));
+            flip2Pos = converter.getOutput(getState(FlipState.class))+ depositOffset;
         }else{
             flip1Pos = converter.getOutput(getState(FlipState.class))- transferOffset;
             flip2Pos = converter.getOutput(getState(FlipState.class));

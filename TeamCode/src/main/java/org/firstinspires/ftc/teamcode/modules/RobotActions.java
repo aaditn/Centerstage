@@ -131,15 +131,37 @@ public class RobotActions
                 .moduleAction(intake, Intake.SweeperState.FIVE_SWEEP)
                 .build();
     }
-    public List<Task> deployPurple(double yPos){
-        return builder.createNew()
-                .delay(500)
-                .moduleAction(intake, Intake.PositionState.DOWN)
-                .await(()->Math.abs(robot.getPoseEstimate().getY())<yPos)
-                .moduleAction(intake, Intake.SweeperState.ONE_SWEEP)
-                .delay(500)
-                .moduleAction(intake,Intake.PositionState.MID)
-                .build();
+    public List<Task> deployPurple(double... yPos){
+        switch(Context.dice) {
+            default:
+            return builder.createNew()
+                    .delay(500)
+                    .moduleAction(intake, Intake.PositionState.DOWN)
+                    .await(() -> Math.abs(robot.getPoseEstimate().getY()) < yPos[0])
+                    .moduleAction(intake, Intake.SweeperState.ONE_SWEEP)
+                    .delay(500)
+                    .moduleAction(intake, Intake.PositionState.MID)
+                    .build();
+            case MIDDLE:
+                return builder.createNew()
+                        .delay(500)
+                        .moduleAction(intake, Intake.PositionState.DOWN)
+                        .await(() -> Math.abs(robot.getPoseEstimate().getY()) < yPos[1])
+                        .moduleAction(intake, Intake.SweeperState.ONE_SWEEP)
+                        .delay(500)
+                        .moduleAction(intake, Intake.PositionState.MID)
+                        .build();
+
+            case RIGHT:
+                return builder.createNew()
+                        .delay(500)
+                        .moduleAction(intake, Intake.PositionState.DOWN)
+                        .await(() -> Math.abs(robot.getPoseEstimate().getY()) < yPos[2])
+                        .moduleAction(intake, Intake.SweeperState.ONE_SWEEP)
+                        .delay(500)
+                        .moduleAction(intake, Intake.PositionState.MID)
+                        .build();
+        }
     }
     public List<Task> yellowDrop(double xPos){
         return builder.createNew()

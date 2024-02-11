@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.leftTrajectories;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.midTrajectories;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.redFarStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.rightTrajectories;
-
+import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.blueFarStart;
+import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.leftTrajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.midTrajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.rightTrajectories;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -19,14 +18,15 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
+import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 
-@Autonomous(name = "Far Red 2+4")
-public class farRed2p4 extends EnhancedOpMode {
+@Autonomous(name = "Far Blue")
+public class farBlue extends EnhancedOpMode {
     Robot drive;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -35,43 +35,37 @@ public class farRed2p4 extends EnhancedOpMode {
     Slides slides;
     DroneLauncher drone;
 
-    private List<Task>[] auto_tasks(double purple_y_pos){
+    private List<Task>[] auto_tasks() {
         return getTaskList(
-                actions.deployPurple(purple_y_pos),
-                actions.yellowDrop(49),
-                actions.lowerIntake(-50,-56.5,0),
+                actions.deployPurple(35, 46, 35),
+                actions.yellowDrop(32),
+                actions.lowerIntake(-50, -56.5, 0),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
-                actions.lowerIntake(-50,-56.5,1),
+                actions.lowerIntake(-50, -56.5, 1),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT)
         );
     }
     @Override
     public void linearOpMode() {
         waitForStart();
-        drive.setPoseEstimate(redFarStart);
-        switch (Context.dice) {
-            case MIDDLE:
-                drive.set(midTrajectories,auto_tasks(35));
-                break;
-            case RIGHT:
-                drive.set(rightTrajectories,auto_tasks(47));
-                break;
-            default:
-                drive.set(leftTrajectories,auto_tasks(35));
-                break;
-        }
+        drive.setPoseEstimate(blueFarStart);
+        delayLinear((long)Context.autoWaitTime*1000);
+        drive.set(trajectories,auto_tasks());
         drive.run(Paths.Purple);
         drive.run(Paths.Score_Spike);
         delayLinear(250);
-        drive.run(Paths.Go_To_Stack);
-        delayLinear(750);
-        drive.run(Paths.Score_First);
-        delayLinear(250);
-        drive.run(Paths.Return_to_Stack);
-        delayLinear(750);
-        drive.run(Paths.Score_Second);
+        if(Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
+            drive.run(Paths.Go_To_Stack);
+            delayLinear(750);
+            drive.run(Paths.Score_First);
+            delayLinear(250);
+            if(Context.autoState.equals(AutoSelector.CyclePixelCount.FOUR)) {
+                drive.run(Paths.Return_to_Stack);
+                delayLinear(750);
+                drive.run(Paths.Score_Second);
+            }
+        }
         waitForEnd();
-
     }
 
     public void initLoop() {

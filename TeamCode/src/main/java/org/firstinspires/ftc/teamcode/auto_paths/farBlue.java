@@ -147,6 +147,6 @@ public class farBlue {
     public static NamedTrajectory[] rightTrajectories = map(
             new TrajectorySequence[]{rightPurple, rightPurpleToBack, rightBackToStack, stackToBack1, stackToBack2, backToStack1},
                     trajectoryNames);
-
+public static NamedTrajectory[][] trajectories = {leftTrajectories,midTrajectories,rightTrajectories};
 
 }

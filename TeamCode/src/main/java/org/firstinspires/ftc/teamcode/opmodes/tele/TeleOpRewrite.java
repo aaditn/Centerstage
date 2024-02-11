@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -19,7 +20,6 @@ import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-import org.firstinspires.ftc.teamcode.util.Tel;
 
 @TeleOp(name = "A - Teleop")
 public class TeleOpRewrite extends EnhancedOpMode {
@@ -76,7 +76,19 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 robot.setLocalDrivePowers(new Pose2d(x, y, rx));
             }
 
+            //COASTING
+            if (gamepad1.right_trigger > 0.3) {
+                robot.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+            } else {
+                robot.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+            }
 
+//NINJA
+            if (gamepad1.left_trigger > 0.3) {
+                ninja = 0.5;
+            } else {
+                ninja = 1;
+            }
             //NINJA
             if (gamepad1.right_trigger > 0.3)
                 ninja = 0.5;

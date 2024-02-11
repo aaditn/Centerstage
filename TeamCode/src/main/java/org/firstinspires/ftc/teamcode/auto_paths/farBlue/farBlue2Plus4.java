@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.util.Context;
 public class farBlue2Plus4
 {
 
-    static Pose2d blueFarStart = new Pose2d(-35 ,61,Math.toRadians(270));
+    public static Pose2d blueFarStart = new Pose2d(-35 ,61,Math.toRadians(270));
     public static TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(blueFarStart)
             .splineToConstantHeading(new Vector2d(-46.5, 34), Math.toRadians(270))
             .build();

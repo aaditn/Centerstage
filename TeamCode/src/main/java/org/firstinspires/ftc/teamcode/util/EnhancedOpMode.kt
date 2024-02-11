@@ -7,7 +7,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.firstinspires.ftc.teamcode.Robot
 import org.firstinspires.ftc.teamcode.modules.RobotActions
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleStateConverter
@@ -66,6 +65,11 @@ abstract class EnhancedOpMode(): LinearOpMode ()
         while(linearElapsedTime?.milliseconds()!! < delay && opmode!!.opModeIsActive())
         {
 
+        }
+    }
+    fun waitForEnd()
+    {
+        while (!isStopRequested && opModeIsActive()) {
         }
     }
 

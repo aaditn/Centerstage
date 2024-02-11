@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.blueFarStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.leftTrajectories;
-import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.midTrajectories;
-import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.rightTrajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.farRed.*;
 import static org.firstinspires.ftc.teamcode.util.WhipTrajectory.map;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -17,16 +14,18 @@ import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
+import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.WhipTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 
-@Autonomous(name = "Far Blue 2+0")
-public class farBlue2p0 extends EnhancedOpMode {
+@Autonomous(name = "Far Red 2+0")
+public class farRed2p4 extends EnhancedOpMode {
     Robot drive;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -34,16 +33,22 @@ public class farBlue2p0 extends EnhancedOpMode {
     Intake intake;
     Slides slides;
     DroneLauncher drone;
+
+    List<WhipTrajectory> trajectories;
     public List<List<Task>> auto_tasks(double purple_y_pos){
         return getTaskList(
                 actions.deployPurple(purple_y_pos),
-                actions.yellowDrop(49)
+                actions.yellowDrop(49),
+                actions.lowerIntake(-50,-56.5,0),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
+                actions.lowerIntake(-50,-56.5,1),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT)
         );
     }
     @Override
     public void linearOpMode() {
         waitForStart();
-        drive.setPoseEstimate(blueFarStart);
+        drive.setPoseEstimate(redFarStart);
         switch (Context.dice) {
             case MIDDLE:
                 drive.trajectories = map(midTrajectories,auto_tasks(35));
@@ -56,8 +61,15 @@ public class farBlue2p0 extends EnhancedOpMode {
                 break;
         }
         drive.run(Paths.Purple);
-        delayLinear(750);
         drive.run(Paths.Score_Spike);
+        delayLinear(250);
+        drive.run(Paths.Go_To_Stack);
+        delayLinear(750);
+        drive.run(Paths.Score_First);
+        delayLinear(250);
+        drive.run(Paths.Return_to_Stack);
+        delayLinear(750);
+        drive.run(Paths.Score_Second);
         waitForEnd();
 
     }

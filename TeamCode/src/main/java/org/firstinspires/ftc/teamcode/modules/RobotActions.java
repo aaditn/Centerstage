@@ -30,7 +30,58 @@ public class RobotActions
         }
         return robotActions;
     }
+    public List<Task> raiseIntake(double xPos)
+    {
+        return builder.createNew()
+                .await(()->robot.getPoseEstimate().getX()<xPos)
+                .moduleAction(intake, Intake.PositionState.MID)
+                .moduleAction(intake, Intake.SweeperState.ZERO)
+                .moduleAction(intake, Intake.PowerState.OFF)
+                .moduleAction(intake, Intake.ConveyorState.OFF)
+                .build();
+    }
 
+    public List<Task> lowerIntake(double drop_x , double sweep_x,int cycle)
+    {
+        switch(cycle) {
+            case 0:
+                return builder.createNew()
+                        .await(() -> robot.getPoseEstimate().getX() < drop_x)
+                        .moduleAction(intake, Intake.PositionState.DOWN)
+                        .moduleAction(intake, Intake.PowerState.INTAKE)
+                        .moduleAction(intake, Intake.ConveyorState.INTAKE)
+                        .await(() -> robot.getPoseEstimate().getX() < sweep_x)
+                        .moduleAction(intake, Intake.SweeperState.TWO_SWEEP)
+                        .delay(750)
+                        .moduleAction(intake, Intake.SweeperState.THREE_SWEEP)
+                        .build();
+
+            case 1:
+                return builder.createNew()
+                        .await(() -> robot.getPoseEstimate().getX() < drop_x)
+                        .moduleAction(intake, Intake.PositionState.DOWN)
+                        .moduleAction(intake, Intake.PowerState.INTAKE)
+                        .moduleAction(intake, Intake.ConveyorState.INTAKE)
+                        .await(() -> robot.getPoseEstimate().getX() < sweep_x)
+                        .moduleAction(intake, Intake.SweeperState.FOUR_SWEEP)
+                        .delay(750)
+                        .moduleAction(intake, Intake.SweeperState.FIVE_SWEEP)
+                        .build();
+
+            case 2:
+                return builder.createNew()
+                        .await(() -> robot.getPoseEstimate().getX() < drop_x)
+                        .moduleAction(intake, Intake.PositionState.DOWN)
+                        .moduleAction(intake, Intake.PowerState.INTAKE)
+                        .moduleAction(intake, Intake.ConveyorState.INTAKE)
+                        .await(() -> robot.getPoseEstimate().getX() < sweep_x)
+                        .moduleAction(intake, Intake.SweeperState.SIX_SWEEP)
+                        .delay(750)
+                        .moduleAction(intake, Intake.SweeperState.SEVEN_SWEEP)
+                        .build();
+        }
+        return builder.createNew().build();
+    }
     public static void deleteInstance()
     {
         robotActions=null;
@@ -131,6 +182,104 @@ public class RobotActions
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                 .executeCode(()->slides.macroRunning=false)
                 .build();
+    }
+    public List<Task> scorePixels(double xPos, TeleOpRewrite.DepositState state){
+        switch(state) {
+            case LEFT:
+                return builder.createNew()
+                        .await(() -> robot.getPoseEstimate().getX() > 15)
+                        .executeCode(() -> RobotLog.e("s"))
+
+                        .executeCode(() -> slides.macroRunning = true)
+                        .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                        .delay(1000)
+                        .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                        .delay(150)
+                        .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                        .delay(300)
+                        .moduleAction(slides, Slides.SlideState.AUTO_TWO)
+                        .moduleAction(deposit, Deposit.WristState.HOVER)
+                        .delay(400)
+                        //.await(()->slides.getStatus()==Module.Status.IDLE)
+                        .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                        .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                        .moduleAction(deposit, Deposit.FlipState.LEFT)
+                        .delay(200)
+                        .moduleAction(deposit, Deposit.ExtensionState.DEPOSIT)
+                        .executeCode(() -> slides.macroRunning = false)
+                        .await(() -> robot.getPoseEstimate().getX() > xPos)
+
+                        .executeCode(() -> slides.macroRunning = true)
+                        .moduleAction(deposit, Deposit.ClawState.OPEN)
+                        .delay(300)
+                        .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
+                        .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                        .delay(500)
+                        .moduleAction(deposit, Deposit.RotateState.ZERO)
+                        .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                        .moduleAction(deposit, Deposit.WristState.PARTIAL2)
+                        .delay(800)
+                        .executeCode(() -> slides.setOperationState(Module.OperationState.PRESET))
+                        .delay(200)
+                        .moduleAction(slides, Slides.SlideState.GROUND)
+                        .delay(100)
+                        .await(() -> slides.currentPosition() < 150)
+                        //.moduleAction(deposit, Deposit.WristState.PARTIAL2)
+                        .moduleAction(deposit, Deposit.ClawState.OPEN)
+                        .await(slides::isIdle)
+                        .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                        .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                        .executeCode(() -> slides.macroRunning = false)
+                        .build();
+            case RIGHT:
+                return builder.createNew()
+                        .await(()->robot.getPoseEstimate().getX()>15)
+                        .executeCode(()-> RobotLog.e("s"))
+
+                        .executeCode(()->slides.macroRunning=true)
+                        .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                        .delay(1000)
+                        .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                        .delay(150)
+                        .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                        .delay(300)
+                        .moduleAction(slides, Slides.SlideState.AUTO_TWO)
+                        .moduleAction(deposit, Deposit.WristState.HOVER)
+                        .delay(400)
+                        //.await(()->slides.getStatus()==Module.Status.IDLE)
+                        .moduleAction(deposit, Deposit.WristState.DEPOSIT)
+                        .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                        .moduleAction(deposit,Deposit.FlipState.RIGHT)
+                        .delay(200)
+                        .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                        .executeCode(()->slides.macroRunning=false)
+                        .await(()->robot.getPoseEstimate().getX()>xPos)
+
+                        .executeCode(()->slides.macroRunning=true)
+                        .moduleAction(deposit, Deposit.ClawState.OPEN)
+                        .delay(300)
+                        .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
+                        .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                        .delay(500)
+                        .moduleAction(deposit, Deposit.RotateState.ZERO)
+                        .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                        .moduleAction(deposit, Deposit.WristState.PARTIAL2)
+                        .delay(800)
+                        .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
+                        .delay(200)
+                        .moduleAction(slides, Slides.SlideState.GROUND)
+                        .delay(100)
+                        .await(()->slides.currentPosition()<150)
+                        //.moduleAction(deposit, Deposit.WristState.PARTIAL2)
+                        .moduleAction(deposit, Deposit.ClawState.OPEN)
+                        .await(slides::isIdle)
+                        .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                        .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                        .executeCode(()->slides.macroRunning=false)
+                        .build();
+            default:
+                return builder.createNew().build();
+        }
     }
     public List<Task> runSweepersAuto(double xPos,boolean x, int sweeperIndex)
     {

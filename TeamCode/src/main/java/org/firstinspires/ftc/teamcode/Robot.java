@@ -63,6 +63,7 @@ import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.Tel;
 import org.firstinspires.ftc.teamcode.util.WhipTrajectory;
+import org.firstinspires.ftc.teamcode.util.enums.Paths;
 import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -459,10 +460,10 @@ public class Robot extends MecanumDrive
         followTrajectoryAsync(trajectory);
         waitForIdle();
     }
-    public void run(String trajectory)
+    public void run(Paths trajectory)
     {
         for(WhipTrajectory item : trajectories){
-            if(item.getName().equals(trajectory)){
+            if(item.getPath().equals(trajectory)){
                 if(Context.opmode.opModeIsActive())
                 {
                     followTrajectorySequenceAsync(item.getTrajectory());

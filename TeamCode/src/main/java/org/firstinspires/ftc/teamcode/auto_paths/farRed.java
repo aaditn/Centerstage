@@ -10,123 +10,139 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
-public class farBlue {
+public class farRed {
 
-    public static Pose2d blueFarStart = new Pose2d(-35, 61, Math.toRadians(270));
-    public static TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(blueFarStart)
-            .splineToConstantHeading(new Vector2d(-46.5, 34), Math.toRadians(270))
+    public static Pose2d redFarStart = new Pose2d(-35, -61, Math.toRadians(90)); // Flipped starting pose
+    public static TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(redFarStart)
+            .splineToConstantHeading(new Vector2d(-46.5, -34), Math.toRadians(90)) // Flipped waypoint
             .build();
 
     public static TrajectorySequence leftPurpleToBack = Robot.trajectorySequenceBuilder(leftPurple.end())
             .setReversed(true)
-            .lineTo(new Vector2d(-46.5, 37))
-            .splineToSplineHeading(new Pose2d(-34, 57, Math.toRadians(180)), Math.toRadians(0),
+            .lineTo(new Vector2d(-46.5, -37)) // Flipped waypoint
+            .splineToSplineHeading(new Pose2d(-34, -57, Math.toRadians(180)), Math.toRadians(0), // Flipped pose and heading
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(20, 57))
-            .splineToConstantHeading(new Vector2d(50.5, 26), Math.toRadians(0),
+            .lineToConstantHeading(new Vector2d(20, -57)) // Flipped waypoint
+            .splineToConstantHeading(new Vector2d(50.5, -26), Math.toRadians(0), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
+
     public static TrajectorySequence leftBackToStack = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(10, 58), Math.toRadians(180),
+            .splineToConstantHeading(new Vector2d(10, -58), Math.toRadians(180), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(60))
-            .lineToConstantHeading(new Vector2d(-28, 58))
-            .splineToConstantHeading(new Vector2d(-55, 33), Math.toRadians(180),
+            .lineToConstantHeading(new Vector2d(-28, -58)) // Flipped waypoint
+            .splineToConstantHeading(new Vector2d(-55, -33), Math.toRadians(180), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .lineToConstantHeading(new Vector2d(-58, 33),
+            .lineToConstantHeading(new Vector2d(-58, -33), // Flipped waypoint
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
-    public static TrajectorySequence midPurple = Robot.trajectorySequenceBuilder(blueFarStart)
-            .lineTo(new Vector2d(-36, 34))
+
+    public static TrajectorySequence midPurple = Robot.trajectorySequenceBuilder(redFarStart)
+            .lineTo(new Vector2d(-36, -34)) // Flipped waypoint
             .build();
+
     public static TrajectorySequence midPurpleToBack = Robot.trajectorySequenceBuilder(midPurple.end())
-            .lineTo(new Vector2d(-36, 35))
-            .splineToSplineHeading(new Pose2d(-29, 57, Math.toRadians(180)), Math.toRadians(0),
+            .lineTo(new Vector2d(-36, -35)) // Flipped waypoint
+            .splineToSplineHeading(new Pose2d(-29, -57, Math.toRadians(180)), Math.toRadians(0), // Flipped pose and heading
                     Robot.getVelocityConstraint(50, 2.4, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(20, 57))
-            .splineToConstantHeading(new Vector2d(49.5, 31), Math.toRadians(0),
+            .lineToConstantHeading(new Vector2d(20, -57)) // Flipped waypoint
+            .splineToConstantHeading(new Vector2d(49.5, -31), Math.toRadians(0), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(50, 2.4, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
+
     public static TrajectorySequence midBackToStack = Robot.trajectorySequenceBuilder(midPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(10, 58), Math.toRadians(180),
+            .splineToConstantHeading(new Vector2d(10, -58), Math.toRadians(180), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(60))
-            .lineToConstantHeading(new Vector2d(-28, 58))
-            .splineToConstantHeading(new Vector2d(-55, 33), Math.toRadians(180),
+            .lineToConstantHeading(new Vector2d(-28, -58)) // Flipped waypoint
+            .splineToConstantHeading(new Vector2d(-55, -33), Math.toRadians(180), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .lineToConstantHeading(new Vector2d(-58, 33),
+            .lineToConstantHeading(new Vector2d(-58, -33), // Flipped waypoint
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
-    public static TrajectorySequence rightPurple = Robot.trajectorySequenceBuilder(blueFarStart)
-            .lineTo(new Vector2d(-36, 45),
+
+    public static TrajectorySequence rightPurple = Robot.trajectorySequenceBuilder(redFarStart)
+            .lineTo(new Vector2d(-36, -45), // Flipped waypoint
                     Robot.getVelocityConstraint(40, 2.4, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .splineToSplineHeading(new Pose2d(-31, 36, Math.toRadians(-45)), Math.toRadians(-45),
+            .splineToSplineHeading(new Pose2d(-31, -36, Math.toRadians(45)), Math.toRadians(45), // Flipped pose and heading
                     Robot.getVelocityConstraint(40, 2.4, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
+
     public static TrajectorySequence rightPurpleToBack = Robot.trajectorySequenceBuilder(rightPurple.end())
-            .lineTo(new Vector2d(-32, 37),
+            .lineTo(new Vector2d(-32, -37), // Flipped waypoint
                     Robot.getVelocityConstraint(40, 2.4, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .splineToSplineHeading(new Pose2d(-32, 59, Math.toRadians(180)), Math.toRadians(0),
+            .splineToSplineHeading(new Pose2d(-32, -59, Math.toRadians(180)), Math.toRadians(0), // Flipped pose and heading
                     Robot.getVelocityConstraint(40, 2.4, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .lineToConstantHeading(new Vector2d(20, 59))
-            .splineToConstantHeading(new Vector2d(50, 38), Math.toRadians(0))
+            .lineToConstantHeading(new Vector2d(20, -59)) // Flipped waypoint
+            .splineToConstantHeading(new Vector2d(50, -38), Math.toRadians(0)) // Flipped waypoint
             .build();
+
     public static TrajectorySequence rightBackToStack = Robot.trajectorySequenceBuilder(rightPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(10, 58), Math.toRadians(180),
+            .splineToConstantHeading(new Vector2d(10, -58), Math.toRadians(180), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(60))
-            .lineToConstantHeading(new Vector2d(-28, 58))
-            .splineToConstantHeading(new Vector2d(-55, 33), Math.toRadians(180),
+            .lineToConstantHeading(new Vector2d(-28, -58)) // Flipped waypoint
+            .splineToConstantHeading(new Vector2d(-55, -33), Math.toRadians(180), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .lineToConstantHeading(new Vector2d(-58, 33),
+            .lineToConstantHeading(new Vector2d(-58, -33), // Flipped waypoint
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
 
     public static TrajectorySequence stackToBack1 = Robot.trajectorySequenceBuilder(leftBackToStack.end())
             .setReversed(true)
-            .splineToConstantHeading(new Vector2d(-36, 57), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(-36, -57), Math.toRadians(0), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(49, 57),
+            .lineToConstantHeading(new Vector2d(20, -57), // Flipped waypoint
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
+            .splineToConstantHeading(new Vector2d(49, -38), Math.toRadians(0), // Flipped waypoint and heading
+                    Robot.getVelocityConstraint(35, 2, 15.06),
+                    Robot.getAccelerationConstraint(40))
+            .lineTo(new Vector2d(51, -38)) // Flipped waypoint
             .build();
+
     public static TrajectorySequence backToStack1 = Robot.trajectorySequenceBuilder(stackToBack1.end())
 
             .setReversed(false)
-            .lineToConstantHeading(new Vector2d(-28, 57))
-            .splineToConstantHeading(new Vector2d(-53, 33), Math.toRadians(180),
+            .splineToConstantHeading(new Vector2d(25, -57), Math.toRadians(180), // Flipped waypoint and heading
+                    Robot.getVelocityConstraint(40, 2, 15.06),
+                    Robot.getAccelerationConstraint(45))
+            .lineToConstantHeading(new Vector2d(-28, -57)) // Flipped waypoint
+            .splineToConstantHeading(new Vector2d(-53, -33), Math.toRadians(180), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .lineToConstantHeading(new Vector2d(-57.5, 33),
+            .lineToConstantHeading(new Vector2d(-57.5, -33), // Flipped waypoint
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
+
     public static TrajectorySequence stackToBack2 = Robot.trajectorySequenceBuilder(backToStack1.end())
             .setReversed(true)
-            .splineToConstantHeading(new Vector2d(-36, 57), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(-36, -57), Math.toRadians(0), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(49, 57),
-                    Robot.getVelocityConstraint(40, 2, 15.06),
-                    Robot.getAccelerationConstraint(40))
+            .lineToConstantHeading(new Vector2d(20, -57)) // Flipped waypoint
+            .splineToConstantHeading(new Vector2d(49, -38), Math.toRadians(0)) // Flipped waypoint
+            .lineTo(new Vector2d(50.5, -38)) // Flipped waypoint
             .build();
 
     public static Paths[] trajectoryNames = {
@@ -134,19 +150,18 @@ public class farBlue {
             Paths.Score_Spike,
             Paths.Go_To_Stack,
             Paths.Score_First,
+            Paths.Return_to_Stack,
             Paths.Score_Second,
-            Paths.Return_to_Stack
     };
 
+
     public static NamedTrajectory[] leftTrajectories = map(
-            new TrajectorySequence[]{leftPurple, leftPurpleToBack, leftBackToStack, stackToBack1, stackToBack2, backToStack1},
-                    trajectoryNames);
+            new TrajectorySequence[]{leftPurple, leftPurpleToBack, leftBackToStack, stackToBack1, backToStack1, stackToBack2},
+            trajectoryNames);
     public static NamedTrajectory[] midTrajectories = map(
-            new TrajectorySequence[]{midPurple, midPurpleToBack, midBackToStack, stackToBack1, stackToBack2, backToStack1},
-                    trajectoryNames);
+            new TrajectorySequence[]{midPurple, midPurpleToBack, midBackToStack, stackToBack1, backToStack1, stackToBack2},
+            trajectoryNames);
     public static NamedTrajectory[] rightTrajectories = map(
-            new TrajectorySequence[]{rightPurple, rightPurpleToBack, rightBackToStack, stackToBack1, stackToBack2, backToStack1},
-                    trajectoryNames);
-
-
+            new TrajectorySequence[]{rightPurple, rightPurpleToBack, rightBackToStack, stackToBack1, backToStack1, stackToBack2},
+            trajectoryNames);
 }

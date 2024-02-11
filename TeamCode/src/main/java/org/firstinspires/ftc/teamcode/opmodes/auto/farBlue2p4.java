@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
+import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
@@ -25,8 +26,8 @@ import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 
-@Autonomous(name = "Far Blue 2+0")
-public class farBlue2p0 extends EnhancedOpMode {
+@Autonomous(name = "Far Blue 2+4")
+public class farBlue2p4 extends EnhancedOpMode {
     Robot drive;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -34,10 +35,15 @@ public class farBlue2p0 extends EnhancedOpMode {
     Intake intake;
     Slides slides;
     DroneLauncher drone;
+
     public List<List<Task>> auto_tasks(double purple_y_pos){
         return getTaskList(
                 actions.deployPurple(purple_y_pos),
-                actions.yellowDrop(49)
+                actions.yellowDrop(49),
+                actions.lowerIntake(-50,-56.5,0),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
+                actions.lowerIntake(-50,-56.5,1),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT)
         );
     }
     @Override
@@ -56,10 +62,16 @@ public class farBlue2p0 extends EnhancedOpMode {
                 break;
         }
         drive.run(Paths.Purple);
-        delayLinear(750);
         drive.run(Paths.Score_Spike);
+        delayLinear(250);
+        drive.run(Paths.Go_To_Stack);
+        delayLinear(750);
+        drive.run(Paths.Score_First);
+        delayLinear(250);
+        drive.run(Paths.Return_to_Stack);
+        delayLinear(750);
+        drive.run(Paths.Score_Second);
         waitForEnd();
-
     }
 
     public void initLoop() {

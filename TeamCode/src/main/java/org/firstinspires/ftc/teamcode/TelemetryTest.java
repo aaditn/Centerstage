@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.auto_paths.farBlue.farBlue;
+import org.firstinspires.ftc.teamcode.auto_paths.farBlue;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
@@ -31,9 +31,9 @@ public class TelemetryTest extends EnhancedOpMode
     {
         AutoSelector.getInstance().loop();
         tel.addData("Hi", "cry", 2, true);
-        for(int i = 0; i< farBlue.trajectorySequences.length; i++)
+        for(int i = 0; i< farBlue.leftTrajectories.length; i++)
         {
-            tel.addData("weeeeee" + i, farBlue.trajectorySequences[i].duration());
+            tel.addData("weeeeee" + i, farBlue.leftTrajectories[i].duration());
         }
         tel.update();
     }

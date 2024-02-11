@@ -3,10 +3,9 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
 import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.blueFarStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.leftTrajectories;
-import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.midTrajectories;
-import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.rightTrajectories;
-import static org.firstinspires.ftc.teamcode.util.WhipTrajectory.map;
+import static org.firstinspires.ftc.teamcode.auto_paths.farRed.leftTrajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.farRed.midTrajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.farRed.rightTrajectories;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -52,13 +51,13 @@ public class farBlue2p4 extends EnhancedOpMode {
         drive.setPoseEstimate(blueFarStart);
         switch (Context.dice) {
             case MIDDLE:
-                drive.trajectories = map(midTrajectories,auto_tasks(35));
+                drive.set(midTrajectories,auto_tasks(35));
                 break;
             case RIGHT:
-                drive.trajectories = map(rightTrajectories, auto_tasks(47));
+                drive.set(rightTrajectories,auto_tasks(47));
                 break;
             default:
-                drive.trajectories = map(leftTrajectories, auto_tasks(35));
+                drive.set(leftTrajectories,auto_tasks(35));
                 break;
         }
         drive.run(Paths.Purple);

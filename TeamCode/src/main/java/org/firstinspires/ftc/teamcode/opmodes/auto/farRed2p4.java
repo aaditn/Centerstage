@@ -6,7 +6,6 @@ import static org.firstinspires.ftc.teamcode.auto_paths.farRed.leftTrajectories;
 import static org.firstinspires.ftc.teamcode.auto_paths.farRed.midTrajectories;
 import static org.firstinspires.ftc.teamcode.auto_paths.farRed.redFarStart;
 import static org.firstinspires.ftc.teamcode.auto_paths.farRed.rightTrajectories;
-import static org.firstinspires.ftc.teamcode.util.WhipTrajectory.map;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -52,13 +51,13 @@ public class farRed2p4 extends EnhancedOpMode {
         drive.setPoseEstimate(redFarStart);
         switch (Context.dice) {
             case MIDDLE:
-                drive.trajectories = map(midTrajectories,auto_tasks(35));
+                drive.set(midTrajectories,auto_tasks(35));
                 break;
             case RIGHT:
-                drive.trajectories = map(rightTrajectories, auto_tasks(47));
+                drive.set(rightTrajectories,auto_tasks(47));
                 break;
             default:
-                drive.trajectories = map(leftTrajectories, auto_tasks(35));
+                drive.set(leftTrajectories,auto_tasks(35));
                 break;
         }
         drive.run(Paths.Purple);

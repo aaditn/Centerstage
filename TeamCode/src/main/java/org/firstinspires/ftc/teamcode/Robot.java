@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MOT
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.RUN_USING_ENCODER;
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.TRACK_WIDTH;
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.util.WhipTrajectory.map;
 
 import android.util.Log;
 
@@ -61,6 +62,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.Tel;
 import org.firstinspires.ftc.teamcode.util.WhipTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
@@ -110,7 +112,7 @@ public class Robot extends MecanumDrive
     private List<Integer> lastEncVels = new ArrayList<>();
 
     private List<Double> headingTrack = new ArrayList<>();
-    public List<WhipTrajectory> trajectories;
+    private List<WhipTrajectory> trajectories;
 
     List<LynxModule> modules;
 
@@ -459,6 +461,9 @@ public class Robot extends MecanumDrive
     public void followTrajectory(Trajectory trajectory) {
         followTrajectoryAsync(trajectory);
         waitForIdle();
+    }
+    public void set(NamedTrajectory[] trajectories,List<Task>[] actions){
+            this.trajectories = map(trajectories, actions);
     }
     public void run(Paths trajectory)
     {

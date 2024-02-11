@@ -61,8 +61,8 @@ import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
-import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.Tel;
+import org.firstinspires.ftc.teamcode.util.WhipTrajectory;
 import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -338,6 +338,9 @@ public class Robot extends MecanumDrive
     }
     public void setYaw(){
     }
+    public void setIntake(){
+        intake.setState(Intake.SweeperState.ONE_SWEEP);
+    }
     public void setHangPower(double power){
         hangPower = power;
     }
@@ -455,6 +458,15 @@ public class Robot extends MecanumDrive
         followTrajectoryAsync(trajectory);
         waitForIdle();
     }
+    public void followTrajectory(WhipTrajectory x) {
+        if(Context.opmode.opModeIsActive())
+        {
+            followTrajectorySequenceAsync(x.getTrajectory());
+            scheduler.scheduleTaskListBlocking(x.getTasks());
+            waitForIdle();
+        }
+    }
+
 
     public void followTrajectorySequenceAsync(TrajectorySequence trajectorySequence) {
         trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence);

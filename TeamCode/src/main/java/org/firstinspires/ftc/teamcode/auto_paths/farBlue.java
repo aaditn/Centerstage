@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto_paths.farBlue;
+package org.firstinspires.ftc.teamcode.auto_paths;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -131,7 +131,12 @@ public class farBlue
             .splineToConstantHeading(new Vector2d(49, 38), Math.toRadians(0))
             .lineTo(new Vector2d(50.5, 38))
             .build();
-    public static TrajectorySequence[] trajectorySequences={leftPurple, leftPurpleToBack, leftBackToStack, midPurple,
-    midPurpleToBack, midBackToStack, rightPurple, rightPurpleToBack, rightBackToStack, stackToBack1, stackToBack2, backToStack1};
+
+    public static TrajectorySequence[] leftTrajectories={leftPurple, leftPurpleToBack, leftBackToStack, stackToBack1, stackToBack2, backToStack1};
+    public static TrajectorySequence[] midTrajectories={midPurple,
+            midPurpleToBack, midBackToStack, stackToBack1, stackToBack2, backToStack1};
+    public static TrajectorySequence[] rightTrajectories={rightPurple, rightPurpleToBack,
+            rightBackToStack, stackToBack1, stackToBack2, backToStack1};
+
 
 }

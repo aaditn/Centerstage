@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto_paths.farBlue;
+package org.firstinspires.ftc.teamcode.auto_paths;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;

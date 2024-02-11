@@ -477,8 +477,8 @@ public class Robot extends MecanumDrive
     }
 
     @SafeVarargs
-    public static List<List<Task>> getTaskList(List<Task>... tasks) {
-        return Arrays.asList(tasks);
+    public static List<Task>[] getTaskList(List<Task>... tasks) {
+        return (tasks);
     }
     public void followTrajectorySequenceAsync(TrajectorySequence trajectorySequence) {
         trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence);

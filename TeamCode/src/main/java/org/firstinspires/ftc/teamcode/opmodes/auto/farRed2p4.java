@@ -2,7 +2,10 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.*;
+import static org.firstinspires.ftc.teamcode.auto_paths.farRed.leftTrajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.farRed.midTrajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.farRed.redFarStart;
+import static org.firstinspires.ftc.teamcode.auto_paths.farRed.rightTrajectories;
 import static org.firstinspires.ftc.teamcode.util.WhipTrajectory.map;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -19,12 +22,11 @@ import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-import org.firstinspires.ftc.teamcode.util.WhipTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 
-@Autonomous(name = "Far Red 2+0")
+@Autonomous(name = "Far Red 2+4")
 public class farRed2p4 extends EnhancedOpMode {
     Robot drive;
     TaskScheduler scheduler;
@@ -34,8 +36,7 @@ public class farRed2p4 extends EnhancedOpMode {
     Slides slides;
     DroneLauncher drone;
 
-    List<WhipTrajectory> trajectories;
-    public List<List<Task>> auto_tasks(double purple_y_pos){
+    public List<Task>[] auto_tasks(double purple_y_pos){
         return getTaskList(
                 actions.deployPurple(purple_y_pos),
                 actions.yellowDrop(49),

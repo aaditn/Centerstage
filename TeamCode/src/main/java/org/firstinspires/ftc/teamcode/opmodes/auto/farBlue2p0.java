@@ -34,7 +34,7 @@ public class farBlue2p0 extends EnhancedOpMode {
     Intake intake;
     Slides slides;
     DroneLauncher drone;
-    public List<List<Task>> auto_tasks(double purple_y_pos){
+    public List<Task>[] auto_tasks(double purple_y_pos){
         return getTaskList(
                 actions.deployPurple(purple_y_pos),
                 actions.yellowDrop(49)

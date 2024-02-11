@@ -25,11 +25,11 @@ public class WhipTrajectory {
     public Paths getPath(){
         return path;
     }
-    public static List<WhipTrajectory> map(NamedTrajectory[] trajs, List<List<Task>> taskLists){
+    public static List<WhipTrajectory> map(NamedTrajectory[] trajs, List<Task>[] taskLists){
         List<WhipTrajectory> added = new ArrayList<>();
         for(int i =0; i<trajs.length;i++){
-            if(i<taskLists.size()) {
-                added.add(new WhipTrajectory(trajs[i], taskLists.get(i)));
+            if(i<taskLists.length) {
+                added.add(new WhipTrajectory(trajs[i], taskLists[i]));
             }
             else added.add(new WhipTrajectory(trajs[i], new ArrayList<>()));
         }

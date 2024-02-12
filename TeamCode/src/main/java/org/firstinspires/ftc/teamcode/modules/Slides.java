@@ -31,7 +31,7 @@ public class Slides extends Module
     {
         GROUND, HALF, AUTO_LOW,AUTO_TWO, RAISED, ROW1, ROW2, ROW3;
     }
-    public static double GROUND=0, HALF=220, AUTO_LOW=350, AUTO_TWO=500, RAISED=300, ROW1=700, ROW2=1000, ROW3=1350;
+    public static double GROUND=0, HALF=220, AUTO_LOW=350, AUTO_TWO=500, RAISED=300, ROW1=700, ROW2=1000, ROW3=1200;
     public static double[] stateValues={GROUND, HALF, AUTO_LOW, AUTO_TWO, RAISED, ROW1, ROW2, ROW3};
     SlideState state;
 

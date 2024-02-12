@@ -335,9 +335,13 @@ public class Robot extends MecanumDrive
     {
         read();
         write();
-        tel.update();
         if(!Context.isTele)
+        {
             AutoSelector.getInstance().loop();
+            Tel.instance().addData("Vision Zone", Context.dice, 0);
+        }
+        tel.update();
+
         //loop whatever else u want
     }
     public void setYaw(){

@@ -3,7 +3,6 @@ package com.example.meepmeeptesting.weirdStuff;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.core.colorscheme.ColorScheme;
-import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeBlueLight;
 import com.noahbres.meepmeep.roadrunner.Constraints;
 import com.noahbres.meepmeep.roadrunner.DriveTrainType;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -27,22 +26,23 @@ public class BotBuilder {
 
     private double width = 18.0;
     private double height = 18.0;
-    private ColorScheme colorScheme = new ColorSchemeBlueLight();
+    private ColorScheme colorScheme;
     private double  opacity = 0.8;
 
     private DriveTrainType driveTrainType = DriveTrainType.MECANUM;
 
-    public BotBuilder(MeepMeep meepmeep) {
+    public BotBuilder(MeepMeep meepmeep, ColorScheme colorScheme) {
         this.meepMeep = meepmeep;
+        this.colorScheme = colorScheme;
     }
-    public RoadRunnerBotEntity followTrajectorySequence(TrajectorySequence[] trajectorySequence) {
+    public RoadRunnerBotEntity followTrajectorySequence(NamedTrajectory[] trajectorySequence) {
         TrajectorySequence seq = makeListToSequence(trajectorySequence);
         RoadRunnerBotEntity bot = this.build(seq.start());
         bot.followTrajectorySequence(seq);
         return bot;
     }
 
-    public static TrajectorySequence makeListToSequence(TrajectorySequence[] sequence) {
+    public static TrajectorySequence makeListToSequence(NamedTrajectory[] sequence) {
         ArrayList<SequenceSegment> segmentList = new ArrayList<>();
         for (int i = 0; i < sequence.length; i++) {
             for (int j = 0; j < sequence[i].size(); j++) {

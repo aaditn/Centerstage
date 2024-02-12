@@ -1,4 +1,4 @@
-package com.example.meepmeeptesting.weirdStuff;
+package com.example.meepmeeptesting.notWeirdStuff;
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SampleMecanumDrive {
+public class Robot {
 
     public static double MAX_VEL = 55;
     public static double MAX_ACCEL = 45;
@@ -39,7 +39,7 @@ public class SampleMecanumDrive {
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
 
-    public SampleMecanumDrive() {
+    public Robot() {
 
     }
 

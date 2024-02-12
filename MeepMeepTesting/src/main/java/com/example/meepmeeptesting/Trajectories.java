@@ -1,19 +1,27 @@
 package com.example.meepmeeptesting;
 
-import static com.example.meepmeeptesting.weirdStuff.NamedTrajectory.map;
+import static com.example.meepmeeptesting.notWeirdStuff.NamedTrajectory.map;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.example.meepmeeptesting.weirdStuff.NamedTrajectory;
-import com.example.meepmeeptesting.weirdStuff.Paths;
-import com.example.meepmeeptesting.weirdStuff.SampleMecanumDrive;
+import com.example.meepmeeptesting.notWeirdStuff.NamedTrajectory;
+import com.example.meepmeeptesting.notWeirdStuff.Paths;
+import com.example.meepmeeptesting.notWeirdStuff.Robot;
 import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
 
 public class Trajectories {
-    public static SampleMecanumDrive Robot = new SampleMecanumDrive();
+    public static com.example.meepmeeptesting.notWeirdStuff.Robot Robot = new Robot();
 
 
-    // change it up
+    // please don't delete me,
+    // I am here to serve the purpose of telling you don't delete me,
+    // I am here to serve the purpose of telling you don't delete me,
+    // I am here to serve the purpose of telling you don't delete me,
+    // ehh im gonna loop it
+    // while (true) {
+    //     I am here to serve the purpose of telling you don't delete me,
+    // }
+
     public static Pose2d blueCloseStart = new Pose2d(12,61,Math.toRadians(270));
     public static  TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(blueCloseStart)
             .lineTo(new Vector2d(13, 60),

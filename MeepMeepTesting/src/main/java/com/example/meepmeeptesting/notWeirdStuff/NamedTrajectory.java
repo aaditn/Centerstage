@@ -1,4 +1,4 @@
-package com.example.meepmeeptesting.weirdStuff;
+package com.example.meepmeeptesting.notWeirdStuff;
 
 
 import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;

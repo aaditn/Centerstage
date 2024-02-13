@@ -4,10 +4,6 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
 import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.blueFarStart;
 import static org.firstinspires.ftc.teamcode.auto_paths.farBlue.trajectories;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.leftTrajectories;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.midTrajectories;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.rightTrajectories;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -56,12 +52,12 @@ public class farBlue extends EnhancedOpMode {
         drive.run(Paths.Purple);
         drive.run(Paths.Score_Spike);
         delayLinear(250);
-        if(Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
+        if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
             drive.run(Paths.Go_To_Stack);
             delayLinear(750);
             drive.run(Paths.Score_First);
             delayLinear(250);
-            if(Context.autoState.equals(AutoSelector.CyclePixelCount.FOUR)) {
+            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
                 drive.run(Paths.Return_to_Stack);
                 delayLinear(750);
                 drive.run(Paths.Score_Second);

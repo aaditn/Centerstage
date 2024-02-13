@@ -2,9 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.redFarStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.farRed.trajectories;
-
+import static org.firstinspires.ftc.teamcode.auto_paths.closeBlue.blueCloseStart;
+import static org.firstinspires.ftc.teamcode.auto_paths.closeBlue.trajectories;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -24,8 +23,8 @@ import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 
-@Autonomous(name = "Far Red")
-public class farRed extends EnhancedOpMode {
+@Autonomous(name = "Close Blue")
+public class closeBlue extends EnhancedOpMode {
     Robot drive;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -47,7 +46,8 @@ public class farRed extends EnhancedOpMode {
     @Override
     public void linearOpMode() {
         waitForStart();
-        drive.setPoseEstimate(redFarStart); delayLinear((long)Context.autoWaitTime*1000);
+        drive.setPoseEstimate(blueCloseStart);
+        delayLinear((long)Context.autoWaitTime*1000);
         drive.set(trajectories,auto_tasks());
         drive.run(Paths.Purple);
         drive.run(Paths.Score_Spike);
@@ -65,6 +65,7 @@ public class farRed extends EnhancedOpMode {
         }
         waitForEnd();
     }
+
     public void initLoop() {
         drive.initLoop();
     }
@@ -79,7 +80,7 @@ public class farRed extends EnhancedOpMode {
         this.setLoopTimes(10);
         drive = Robot.getInstance();
 
-        Context.isTeamRed = true;
+        Context.isTeamRed = false;
         scheduler = new TaskScheduler();
         actions = RobotActions.getInstance();
         deposit = drive.deposit;

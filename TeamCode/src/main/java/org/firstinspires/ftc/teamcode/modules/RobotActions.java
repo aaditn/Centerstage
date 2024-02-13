@@ -600,6 +600,14 @@ public class RobotActions
                 .build();
     }
 
+    public List<Task> multiTest()
+    {
+        return builder.createNew()
+                .addTaskList(scorePixels())
+                .addTaskList(lowerSlides())
+                .build();
+    }
+
     public List<Task> slidesOnly(Slides.SlideState row, boolean x)
     {
         if(slides.getState()==Slides.SlideState.GROUND)

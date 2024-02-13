@@ -14,7 +14,7 @@ public class Deposit extends Module
     Servo leftArm, rightArm, wrist, rotatewrist, claw, extension;
 
     public static boolean telemetryToggle;
-    public static double transferOffset = 0.015;
+    public static double transferOffset = 0.004;
 
     public static double depositOffset = 0.015;
 
@@ -94,8 +94,8 @@ extension = hardwareMap.get(Servo.class, "extension");
     protected void telemetryUpdate()
     {
         super.telemetryUpdate();
-        Tel.instance().addData("Flip 1 Pos", flip1Pos, 0);
-        Tel.instance().addData("Flip 2 Pos", flip2Pos, 0);
+        Tel.instance().addData("Flip 1 Pos", leftArm.getPosition(), 0);
+        Tel.instance().addData("Flip 2 Pos", rightArm.getPosition(), 0);
         Tel.instance().addData("Deposit Offset", depositOffset);
         Tel.instance().addData("Transfer Offset", transferOffset);
         Tel.instance().addData("Pos without offset", converter.getOutput(getState(FlipState.class)));
@@ -106,13 +106,13 @@ extension = hardwareMap.get(Servo.class, "extension");
     {
         ModuleState state = getState(FlipState.class);
         if (state.equals(FlipState.LEFT)) {
-            flip1Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD- depositOffset;
+            flip1Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD + depositOffset - transferOffset;
             flip2Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD;
         } else if (state.equals(FlipState.RIGHT)) {
-            flip1Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD- depositOffset;
+            flip1Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD + depositOffset - transferOffset;
             flip2Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD;
         } else if(state.equals(FlipState.DEPOSIT)||state.equals(FlipState.DOWN)){
-            flip1Pos = converter.getOutput(getState(FlipState.class))- depositOffset;
+            flip1Pos = converter.getOutput(getState(FlipState.class))+ depositOffset - transferOffset;
             flip2Pos = converter.getOutput(getState(FlipState.class));
         }else{
             flip1Pos = converter.getOutput(getState(FlipState.class))- transferOffset;

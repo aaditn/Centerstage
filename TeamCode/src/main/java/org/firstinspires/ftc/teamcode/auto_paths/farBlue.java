@@ -10,9 +10,6 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class farBlue {
 
     public static Pose2d blueFarStart = new Pose2d(-35, 61, Math.toRadians(270));
@@ -142,13 +139,13 @@ public class farBlue {
     };
 
     public static NamedTrajectory[] leftTrajectories = map(
-            new TrajectorySequence[]{leftPurple, leftPurpleToBack, leftBackToStack, stackToBack1, stackToBack2, backToStack1},
+            new TrajectorySequence[]{leftPurple, leftPurpleToBack, leftBackToStack,  stackToBack1, backToStack1,stackToBack2},
                     trajectoryNames);
     public static NamedTrajectory[] midTrajectories = map(
-            new TrajectorySequence[]{midPurple, midPurpleToBack, midBackToStack, stackToBack1, stackToBack2, backToStack1},
+            new TrajectorySequence[]{midPurple, midPurpleToBack, midBackToStack,  stackToBack1, backToStack1,stackToBack2},
                     trajectoryNames);
     public static NamedTrajectory[] rightTrajectories = map(
-            new TrajectorySequence[]{rightPurple, rightPurpleToBack, rightBackToStack, stackToBack1, stackToBack2, backToStack1},
+            new TrajectorySequence[]{rightPurple, rightPurpleToBack, rightBackToStack,  stackToBack1, backToStack1,stackToBack2},
                     trajectoryNames);
     public static NamedTrajectory[][] trajectories = {leftTrajectories,midTrajectories,rightTrajectories};
 

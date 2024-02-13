@@ -131,13 +131,13 @@ public class RobotActions
                 .moduleAction(intake, Intake.SweeperState.FIVE_SWEEP)
                 .build();
     }
-    public List<Task> deployPurple(double... yPos){
+    public List<Task> deployPurple(double yLeft, double yMid, double yRight){
         switch(Context.dice) {
             default:
             return builder.createNew()
                     .delay(500)
                     .moduleAction(intake, Intake.PositionState.DOWN)
-                    .await(() -> Math.abs(robot.getPoseEstimate().getY()) < yPos[0])
+                    .await(() -> Math.abs(robot.getPoseEstimate().getY()) < yLeft)
                     .moduleAction(intake, Intake.SweeperState.ONE_SWEEP)
                     .delay(500)
                     .moduleAction(intake, Intake.PositionState.MID)
@@ -146,7 +146,7 @@ public class RobotActions
                 return builder.createNew()
                         .delay(500)
                         .moduleAction(intake, Intake.PositionState.DOWN)
-                        .await(() -> Math.abs(robot.getPoseEstimate().getY()) < yPos[1])
+                        .await(() -> Math.abs(robot.getPoseEstimate().getY()) < yMid)
                         .moduleAction(intake, Intake.SweeperState.ONE_SWEEP)
                         .delay(500)
                         .moduleAction(intake, Intake.PositionState.MID)
@@ -156,7 +156,7 @@ public class RobotActions
                 return builder.createNew()
                         .delay(500)
                         .moduleAction(intake, Intake.PositionState.DOWN)
-                        .await(() -> Math.abs(robot.getPoseEstimate().getY()) < yPos[2])
+                        .await(() -> Math.abs(robot.getPoseEstimate().getY()) < yRight)
                         .moduleAction(intake, Intake.SweeperState.ONE_SWEEP)
                         .delay(500)
                         .moduleAction(intake, Intake.PositionState.MID)
@@ -165,15 +165,13 @@ public class RobotActions
     }
     public List<Task> yellowDrop(double xPos){
         return builder.createNew()
-                .await(()->robot.getPoseEstimate().getX()>15)
+                .await(()->robot.getPoseEstimate().getX()>-10)
                 .executeCode(()-> RobotLog.e("s"))
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.CLOSED2)
-                .delay(1000)
-                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                .delay(150)
-                .moduleAction(deposit, Deposit.FlipState.DOWN)
                 .delay(300)
+                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                .moduleAction(deposit, Deposit.FlipState.DOWN)
                 .moduleAction(slides, Slides.SlideState.AUTO_LOW)
                 .moduleAction(deposit, Deposit.WristState.HOVER)
                 .delay(400)
@@ -181,7 +179,7 @@ public class RobotActions
                 .delay(200)
                 .executeCode(()->slides.macroRunning=false)
                 .await(()->robot.getPoseEstimate().getX()>xPos)
-
+                .delay(400)
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
                 .delay(300)
@@ -204,6 +202,9 @@ public class RobotActions
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                 .executeCode(()->slides.macroRunning=false)
                 .build();
+    }
+    public List<Task> empty(){
+        return builder.createNew().build();
     }
     public List<Task> scorePixels(double xPos, TeleOpRewrite.DepositState state){
         switch(state) {

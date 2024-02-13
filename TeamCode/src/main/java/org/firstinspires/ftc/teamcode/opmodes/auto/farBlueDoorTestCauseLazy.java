@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
 import static org.firstinspires.ftc.teamcode.auto_paths.farBlueDoor.blueFarStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.farBlueDoor.trajectories;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
@@ -17,15 +17,14 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
-import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-import org.firstinspires.ftc.teamcode.util.enums.Paths;
+import org.firstinspires.ftc.teamcode.auto_paths.farBlueDoor;
 
 import java.util.List;
 
-@Autonomous(name = "Far Blue Door")
-public class farBlueDoor extends EnhancedOpMode {
+@Autonomous(name = "Far Blue Door Test Cause Lazy")
+public class farBlueDoorTestCauseLazy extends EnhancedOpMode {
     Robot drive;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -36,12 +35,12 @@ public class farBlueDoor extends EnhancedOpMode {
 
     private List<Task>[] auto_tasks() {
         return getTaskList(
-                actions.deployPurple(35, 46, 23),
-                actions.yellowDrop(47),
+                actions.deployPurple(35, 46, 35),
+                actions.yellowDrop(32),
                 actions.lowerIntake(-50, -56.5, 0),
-                actions.scorePixels(47, TeleOpRewrite.DepositState.LEFT),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
                 actions.lowerIntake(-50, -56.5, 1),
-                actions.scorePixels(47, TeleOpRewrite.DepositState.LEFT)
+                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT)
         );
     }
     @Override
@@ -49,23 +48,19 @@ public class farBlueDoor extends EnhancedOpMode {
 
         waitForStart();
         drive.setPoseEstimate(blueFarStart);
-        delayLinear((long)Context.autoWaitTime*1000);
-        drive.set(trajectories,auto_tasks());
-        drive.run(Paths.Purple);
-        drive.run(Paths.Score_Spike);
-        delayLinear(250);
-        if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
-            drive.run(Paths.Go_To_Stack);
-            delayLinear(750);
-            drive.run(Paths.Score_First);
-            delayLinear(250);
-            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
-                drive.run(Paths.Return_to_Stack);
-                delayLinear(750);
-                drive.run(Paths.Score_Second);
-            }
-        }
-        waitForEnd();
+        drive.followTrajectorySequenceAsync(farBlueDoor.midPurple);
+        wait (1000);
+        drive.followTrajectorySequence(farBlueDoor.midPurpleToBack);
+        wait (1000);
+        drive.followTrajectorySequence(farBlueDoor.midBackToStack);
+        wait (1000);
+        drive.followTrajectorySequence(farBlueDoor.stackToBack1);
+        wait (1000);
+        drive.followTrajectorySequence(farBlueDoor.backToStack1);
+        wait (1000);
+        drive.followTrajectorySequence(farBlueDoor.stackToBack2);
+        wait (1000);
+
     }
 
     public void initLoop() {
@@ -103,6 +98,12 @@ public class farBlueDoor extends EnhancedOpMode {
     @Override
     public void primaryLoop() {
         drive.primaryLoop();
+    }
+
+    public void wait(int mill) {
+        while (drive.isBusy() && !isStopRequested()) {}
+        ElapsedTime timer = new ElapsedTime();
+        while (timer.milliseconds() < mill) {}
     }
 
 

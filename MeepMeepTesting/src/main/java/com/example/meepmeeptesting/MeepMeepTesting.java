@@ -13,15 +13,33 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(700);
 
-        RoadRunnerBotEntity myCOOLBot = new BotBuilder(meepMeep, new ColorSchemeBlueLight())
-                .followTrajectorySequence(Trajectories.rightTrajectories);
+        RoadRunnerBotEntity leftRedFar = new BotBuilder(meepMeep, new ColorSchemeBlueLight())
+                .followTrajectorySequence(TrajectoriesRedFar.leftTrajectories);
+        RoadRunnerBotEntity midRedFar = new BotBuilder(meepMeep, new ColorSchemeBlueLight())
+                .followTrajectorySequence(TrajectoriesRedFar.midTrajectories);
+        RoadRunnerBotEntity rightRedFar = new BotBuilder(meepMeep, new ColorSchemeBlueLight())
+                .followTrajectorySequence(TrajectoriesRedFar.rightTrajectories);
 
-        RoadRunnerBotEntity myLameBot = new DefaultBotBuilder(meepMeep)
+
+        RoadRunnerBotEntity WHYAMIHERE = new DefaultBotBuilder(meepMeep)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
                                 .forward(30)
+                                .back(60)
+                                .forward(60)
+                                .back(60)
+                                .forward(60)
+                                .back(60)
+                                .forward(60)
+                                .back(60)
+                                .forward(60)
+                                .back(60)
+                                .forward(60)
+                                .back(60)
+                                .forward(60)
+
                                 .build()
                 );
 
@@ -30,8 +48,10 @@ public class MeepMeepTesting {
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(myCOOLBot)
-                .addEntity(myLameBot)
+               // .addEntity(leftRedFar)
+               //.addEntity(midRedFar)
+               .addEntity(rightRedFar)
+                //  .addEntity(WHYAMIHERE)
                 .start();
     }
 

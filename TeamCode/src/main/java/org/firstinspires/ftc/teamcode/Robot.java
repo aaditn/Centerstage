@@ -486,7 +486,7 @@ break;
                 if(Context.opmode.opModeIsActive())
                 {
                     followTrajectorySequenceAsync(item.getTrajectory());
-                    scheduler.scheduleTaskListBlocking(item.getTasks());
+                    scheduler.scheduleTaskList(item.getTasks());
                     waitForIdle();
                 }
             }

@@ -42,12 +42,14 @@ public class BotBuilder {
         return bot;
     }
 
+
     public static TrajectorySequence makeListToSequence(NamedTrajectory[] sequence) {
         ArrayList<SequenceSegment> segmentList = new ArrayList<>();
         for (int i = 0; i < sequence.length; i++) {
             for (int j = 0; j < sequence[i].size(); j++) {
                 segmentList.add(sequence[i].get(j));
             }
+            //segmentList.add(wait);
         }
         return new TrajectorySequence(segmentList);
     }

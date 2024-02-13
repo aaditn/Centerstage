@@ -161,11 +161,11 @@ public class TeamElementDetection extends OpenCvPipeline{
 
             //TODO change what the if/elses are
             if(centerY<0)
-                Context.dice=Dice.LEFT;
-            else if(centerY<107)
-                Context.dice=Dice.MIDDLE;
-            else
                 Context.dice=Dice.RIGHT;
+            else if(centerY<107)
+                Context.dice=Dice.LEFT;
+            else
+                Context.dice=Dice.MIDDLE;
 
             return mat;
         //}

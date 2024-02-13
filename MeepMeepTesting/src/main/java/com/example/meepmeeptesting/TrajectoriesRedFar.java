@@ -29,15 +29,19 @@ public class TrajectoriesRedFar {
 
     public static TrajectorySequence leftPurpleToBack = Robot.trajectorySequenceBuilder(leftPurple.end())
             .setReversed(true)
-            .splineTo(new Vector2d(-39,40),Math.toRadians(180))
-            .splineTo(new Vector2d(-29,11),Math.toRadians(0))
-            .lineTo(new Vector2d(25,11))
-            .splineToConstantHeading(new Vector2d(50,38), Math.toRadians(0))
+            .splineTo(new Vector2d(-40,38),Math.toRadians(180))
+            .splineTo(new Vector2d(-29,9),Math.toRadians(0))
+            .lineTo(new Vector2d(25,9))
+            .splineToConstantHeading(new Vector2d(48,40), Math.toRadians(0))
             .build();
     public static TrajectorySequence leftBackToStack = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(25,11), Math.toRadians(-180))
-            .lineTo(new Vector2d(-60,11))
+            .splineToConstantHeading(new Vector2d(25,8), Math.toRadians(-180))
+
+            .lineTo(new Vector2d(-52,8))
+            .lineTo(new Vector2d(-57.5,8),
+                    Robot.getVelocityConstraint(55, 2, 15.06),
+                    Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence midPurple = Robot.trajectorySequenceBuilder(blueFarStart)
             .lineToLinearHeading(new Pose2d(-38, 14, Math.toRadians(90)))

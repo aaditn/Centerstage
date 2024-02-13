@@ -48,7 +48,7 @@ public class Intake extends Module {
     {
         ZERO, INIT, ONE_SWEEP, TWO_SWEEP, THREE_SWEEP,FOUR_SWEEP,FIVE_SWEEP,SIX_SWEEP,SEVEN_SWEEP;
     }
-    public static double SWEEPER_ZERO=0.05, SWEEPER_INIT=0.05, SWEEPER_ONE=0.165, SWEEPER_TWO=0.28, SWEEPER_THREE=0.395, SWEEPER_FOUR=0.51,SWEEPER_FIVE=.605,SWEEPER_SIX=.705,SWEEPER_SEVEN = .79;
+    public static double SWEEPER_ZERO=0.1, SWEEPER_INIT=0.17, SWEEPER_ONE=0.215, SWEEPER_TWO=0.33, SWEEPER_THREE=0.445, SWEEPER_FOUR=0.56,SWEEPER_FIVE=.655,SWEEPER_SIX=.755,SWEEPER_SEVEN = .84;
     public static double[] sweeperValues={SWEEPER_ZERO, SWEEPER_INIT, SWEEPER_ONE, SWEEPER_TWO, SWEEPER_THREE, SWEEPER_FOUR,SWEEPER_FIVE,SWEEPER_SIX,SWEEPER_SEVEN};
 
 
@@ -138,7 +138,7 @@ public class Intake extends Module {
 
         anglerRight.setPosition(currentPosition);
 
-        sweeperLeft.setPosition(sweeperPos*.94);
+        sweeperLeft.setPosition(sweeperPos);
         sweeperRight.setPosition(sweeperPos+sweeperOffset);
 
         conveyorLeft.setPower(conveyorPower);

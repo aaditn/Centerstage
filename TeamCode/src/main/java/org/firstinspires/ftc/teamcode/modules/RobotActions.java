@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 @Config
@@ -178,7 +179,7 @@ public class RobotActions
                 //.await(()->slides.getStatus()==Module.Status.IDLE)
                 .delay(200)
                 .executeCode(()->slides.macroRunning=false)
-                .await(()->robot.getPoseEstimate().getX()>xPos)
+                .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_Spike||robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                 .delay(400)
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
@@ -215,17 +216,18 @@ public class RobotActions
 
                         .executeCode(() -> slides.macroRunning = true)
                         .moduleAction(deposit, Deposit.ClawState.CLOSED2)
-                        .delay(1000)
-                        .moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                        .delay(150)
-                        .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                         .delay(300)
+                        .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                        .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                         .moduleAction(slides, Slides.SlideState.AUTO_TWO)
+                        .delay(400)
                         .moduleAction(deposit, Deposit.WristState.HOVER)
                         .delay(400)
+
                         //.await(()->slides.getStatus()==Module.Status.IDLE)
                         .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                         .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                        .moduleAction(deposit, Deposit.FlipState.LEFT)
                         .delay(200)
                         .moduleAction(deposit, Deposit.ExtensionState.DEPOSIT)
                         .executeCode(() -> slides.macroRunning = false)
@@ -235,11 +237,11 @@ public class RobotActions
                         .moduleAction(deposit, Deposit.ClawState.OPEN)
                         .delay(300)
                         .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
-                        .delay(500)
+                        .delay(800)
                         .moduleAction(deposit, Deposit.RotateState.ZERO)
                         .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                         .moduleAction(deposit, Deposit.WristState.PARTIAL2)
-                        .delay(800)
+                        .delay(500)
                         .executeCode(() -> slides.setOperationState(Module.OperationState.PRESET))
                         .delay(200)
                         .moduleAction(slides, Slides.SlideState.GROUND)
@@ -259,12 +261,11 @@ public class RobotActions
 
                         .executeCode(()->slides.macroRunning=true)
                         .moduleAction(deposit, Deposit.ClawState.CLOSED2)
-                        .delay(1000)
-                        .moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                        .delay(150)
-                        .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                         .delay(300)
+                        .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                        .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                         .moduleAction(slides, Slides.SlideState.AUTO_TWO)
+                        .delay(400)
                         .moduleAction(deposit, Deposit.WristState.HOVER)
                         .delay(400)
                         //.await(()->slides.getStatus()==Module.Status.IDLE)

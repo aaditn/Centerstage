@@ -118,6 +118,7 @@ public class Robot extends MecanumDrive
 
     LinearOpMode l;
     HardwareMap hardwareMap;
+    public Paths k = Paths.Score_Third;
     Tel tel;
     public Slides slides;
     public Deposit deposit;
@@ -485,6 +486,7 @@ break;
             if(item.getPath().equals(trajectory)){
                 if(Context.opmode.opModeIsActive())
                 {
+                    k = trajectory;
                     followTrajectorySequenceAsync(item.getTrajectory());
                     scheduler.scheduleTaskList(item.getTasks());
                     waitForIdle();

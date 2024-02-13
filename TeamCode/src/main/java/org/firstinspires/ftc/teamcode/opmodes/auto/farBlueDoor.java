@@ -36,12 +36,12 @@ public class farBlueDoor extends EnhancedOpMode {
 
     private List<Task>[] auto_tasks() {
         return getTaskList(
-                actions.deployPurple(35, 46, 23),
+                actions.deployPurple(39, 46, 23),
                 actions.yellowDrop(47),
-                actions.lowerIntake(-50, -56.5, 0),
-                actions.scorePixels(47, TeleOpRewrite.DepositState.LEFT),
-                actions.lowerIntake(-50, -56.5, 1),
-                actions.scorePixels(47, TeleOpRewrite.DepositState.LEFT)
+                actions.lowerIntake(-46, -56.5, 0),
+                actions.scorePixels(46, TeleOpRewrite.DepositState.LEFT),
+                actions.lowerIntake(-46, -56.5, 1),
+                actions.scorePixels(46, TeleOpRewrite.DepositState.LEFT)
         );
     }
     @Override

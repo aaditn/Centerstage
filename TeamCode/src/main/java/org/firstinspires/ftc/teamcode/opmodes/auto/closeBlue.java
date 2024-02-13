@@ -93,7 +93,7 @@ public class closeBlue extends EnhancedOpMode {
         slides.init();
         drone.init();
         intake.setOperationState(Module.OperationState.PRESET);
-        intake.setState(Intake.SweeperState.INIT);
+        intake.setState(Intake.SweeperState.ZERO);
         deposit.setState(Deposit.FlipState.TRANSFER);
         deposit.setState(Deposit.ClawState.CLOSED1);
     }

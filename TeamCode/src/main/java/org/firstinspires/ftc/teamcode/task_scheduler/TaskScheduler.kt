@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.task_scheduler
 
+import android.os.SystemClock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -48,6 +49,30 @@ class TaskScheduler
                 if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java)
                 {
                     job.join()
+                }
+            }
+        }
+    }
+
+    fun scheduleTaskListBlocking(t: List<Task>, timeout: Long): Unit
+    {
+        val startTime: Long = SystemClock.elapsedRealtime()
+        val taskList: List<Task> = t
+        GlobalScope.launch(Dispatchers.Default)
+        {
+            for(task in taskList)
+            {
+                if(SystemClock.elapsedRealtime()-startTime>timeout)
+                    break
+
+                val job = async(Dispatchers.Default){task.execute()}
+                if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java)
+                {
+                    while(!job.isCompleted)
+                    {
+                        if(SystemClock.elapsedRealtime()-startTime>timeout)
+                            job.cancel()
+                    }
                 }
             }
         }

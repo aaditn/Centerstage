@@ -490,7 +490,7 @@ public class RobotActions
                                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                                 .delay(150)
                                 .moduleAction(deposit, Deposit.FlipState.DOWN)
-                                .delay(300)
+                                .delay(100)
                                 .moduleAction(slides, row)
                                 .moduleAction(deposit, Deposit.WristState.HOVER)
                                 .delay(400)
@@ -508,7 +508,7 @@ public class RobotActions
                                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                                 .delay(150)
                                 .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
-                                .delay(300)
+                                .delay(100)
                                 .moduleAction(slides, row)
                                 .moduleAction(deposit, Deposit.WristState.HOVER)
                                 .delay(400)
@@ -528,7 +528,7 @@ public class RobotActions
                                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                                 .delay(150)
                                 .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
-                                .delay(300)
+                                .delay(100)
                                 .moduleAction(slides, row)
                                 .moduleAction(deposit, Deposit.WristState.HOVER)
                                 .delay(400)
@@ -548,7 +548,7 @@ public class RobotActions
                                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                                 .delay(150)
                                 .moduleAction(deposit, Deposit.FlipState.DOWN)
-                                .delay(300)
+                                .delay(100)
                                 .moduleAction(slides, row)
                                 .moduleAction(deposit, Deposit.WristState.HOVER)
                                 .delay(400)
@@ -598,6 +598,14 @@ public class RobotActions
                 .moduleAction(slides, row)
                 .awaitPreviousModuleActionCompletion()
                 .executeCode(()->slides.macroRunning=false)
+                .build();
+    }
+
+    public List<Task> multiTest()
+    {
+        return builder.createNew()
+                .addTaskList(scorePixels())
+                .addTaskList(lowerSlides())
                 .build();
     }
 
@@ -714,9 +722,9 @@ public class RobotActions
                     .executeCode(()->slides.macroRunning=true)
                     .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                     .delay(150)
-                    .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
-                    .delay(50)
                     .moduleAction(slides, row)
+                    .delay(100)
+                    .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                     //.delay(50)
                     .delay(300)
                     .moduleAction(deposit, Deposit.WristState.HOVER)
@@ -773,11 +781,10 @@ public class RobotActions
                 .delay(200)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .delay(100)
-                .await(()->slides.currentPosition()<150)
+                .await(()->slides.currentPosition()<180)
                 //.moduleAction(deposit, Deposit.WristState.PARTIAL2)
-                .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .await(slides::isIdle)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                .await(slides::isIdle)
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                 .executeCode(()->slides.macroRunning=false)
                 .build();

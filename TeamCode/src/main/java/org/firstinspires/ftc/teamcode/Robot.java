@@ -165,40 +165,13 @@ public class Robot extends MecanumDrive
         intake=new Intake(hardwareMap);
         droneLauncher = new DroneLauncher(hardwareMap);
         hang = hardwareMap.get(DcMotor.class, "hang");
-        intake.init();
-        deposit.init();
-        droneLauncher.init();
 
-        scheduler=new TaskScheduler();
-    }
-    public Robot(LinearOpMode l, boolean noHWInit)
-    {
-
-        super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
-        this.l=l;
-        tel = Tel.instance();
-        Context.resetValues();
-        if(Context.opmode!=null)
+        if(!Context.noHwInit)
         {
-            Context.updateValues();
+            intake.init();
+            deposit.init();
+            droneLauncher.init();
         }
-
-        hardwareMap=l.hardwareMap;
-        timer=new ElapsedTime();
-
-        if(!Context.isTele)
-        {
-            cameraInit();
-        }
-        //teamElementDetector=new TeamElementDetection(l.telemetry);
-
-        slides=new Slides(hardwareMap);
-        deposit=new Deposit(hardwareMap);
-        intake=new Intake(hardwareMap);
-        droneLauncher = new DroneLauncher(hardwareMap);
-        hang = hardwareMap.get(DcMotor.class, "hang");
-
-        dtInit();
 
         scheduler=new TaskScheduler();
     }

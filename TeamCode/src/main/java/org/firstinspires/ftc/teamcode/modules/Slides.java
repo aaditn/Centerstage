@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.*;
 import org.firstinspires.ftc.teamcode.util.BPIDFController;
 import org.firstinspires.ftc.teamcode.util.Tel;
@@ -13,9 +15,9 @@ import org.firstinspires.ftc.teamcode.util.Tel;
 @Config
 public class Slides extends Module
 {
-    DcMotorEx slide1;
-    DcMotorEx slide2;
-
+    public DcMotorEx slide1;
+    public DcMotorEx slide2;
+    public TouchSensor slidesLimit;
     BPIDFController controller;
     public double targetPosition, motorPower;
     public double debugValue=0;
@@ -53,6 +55,8 @@ public class Slides extends Module
         slide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        slidesLimit=hardwareMap.get(TouchSensor.class, "slidesLimit");
+
         /*standardcoeff =new PIDCoefficients(kp, ki, kd);
         closecoeff =new PIDCoefficients(kp2, ki2, kd2);
         downcoeff=new PIDCoefficients(kp3, ki3, kd3);
@@ -73,6 +77,14 @@ public class Slides extends Module
     }
 
 
+    public void reset(){
+
+        slide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    }
     @Override
     public void internalUpdate()
     {
@@ -81,6 +93,9 @@ public class Slides extends Module
         if(targetPosition>slideCap)
         {
             targetPosition=slideCap;
+        }
+        if(slidesLimit.isPressed() && slide1.getCurrentPosition() > 10){
+            reset();
         }
 
         /*if(Math.abs(targetPosition-slide1.getCurrentPosition())<10)
@@ -110,6 +125,9 @@ public class Slides extends Module
         if(targetPosition>slideCap)
         {
             targetPosition=slideCap;
+        }
+        if(slidesLimit.isPressed() && slide1.getCurrentPosition() > 10){
+            reset();
         }
 
         /*if(Math.abs(targetPosition-slide1.getCurrentPosition())<10)

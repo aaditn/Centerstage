@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.Tel;
 
 @TeleOp(name = "A - Teleop")
 public class TeleOpRewrite extends EnhancedOpMode {
@@ -210,6 +211,14 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 //slides.setOperationState(Module.OperationState.PRESET);
                 scheduler.scheduleTaskList(actions.scorePixels());
                 wristRotateCounter = 4;
+                Tel.instance().addData("slidesLimit", slides.slidesLimit, 0);
+                while(!slides.slidesLimit.isPressed()){
+                    if(slides.slide1.getCurrentPosition() < 10) {
+                        slides.targetPosition -= 10;
+                    }
+                }
+                slides.targetPosition=0;
+                slides.reset();
             }
 //            //SLIDE RESET
 //            if (rightExtend.wasJustReleased()) {

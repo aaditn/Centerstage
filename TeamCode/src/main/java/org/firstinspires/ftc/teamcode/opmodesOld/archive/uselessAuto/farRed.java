@@ -104,7 +104,7 @@ public class farRed extends EnhancedOpMode {
         die(500);
 
         drive.followTrajectorySequence(prepTressFar);
-        scheduler.scheduleTaskList(actions.autoRaiseSlides(0, Slides.SlideState.AUTO_LOW, Deposit.RotateState.PLUS_ONE_EIGHTY));
+        //scheduler.scheduleTaskList(actions.autoRaiseSlides(0, Slides.SlideState.AUTO_LOW, Deposit.RotateState.PLUS_ONE_EIGHTY));
         drive.followTrajectorySequence(goBackboard);
 
         while(slides.isBusy())

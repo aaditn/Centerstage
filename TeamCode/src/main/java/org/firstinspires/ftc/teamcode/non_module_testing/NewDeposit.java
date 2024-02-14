@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
-import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
+import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
@@ -38,7 +38,7 @@ public class NewDeposit extends EnhancedOpMode
     CRServo conveyorLeft, conveyorRight;
     //wrist 0:
 
-    TaskListBuilder builder;
+    Builder builder;
     TaskScheduler scheduler;
 
     List<Task> slideup, slidedown;
@@ -143,7 +143,7 @@ public class NewDeposit extends EnhancedOpMode
 
         slides=new Slides(hardwareMap);
 
-        builder=new TaskListBuilder(this);
+        builder=new Builder(this);
         scheduler=new TaskScheduler();
 
         GamepadEx g1=new GamepadEx(gamepad1);

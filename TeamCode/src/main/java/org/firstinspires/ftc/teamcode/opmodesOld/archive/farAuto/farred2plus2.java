@@ -74,11 +74,11 @@ public class farred2plus2 extends EnhancedOpMode {
                         drive.getVelocityConstraint(40, 2, 15.06),
                         drive.getAccelerationConstraint(40))
                 .addSpatialMarker(new Vector2d(-10, -57), () ->  {
-                    scheduler.scheduleTaskList(actions.autoRaiseSlides(Slides.SlideState.HALF));
+                    scheduler.scheduleTaskList(actions.OLD_autoRaiseSlides(Slides.SlideState.HALF));
                     intake.setState(Intake.ConveyorState.OFF);
                 })
                 .addSpatialMarker(new Vector2d(47,-26),()->{
-                    scheduler.scheduleTaskList(actions.scorePixelDelay());
+                    scheduler.scheduleTaskList(actions.OLD_scorePixelDelay());
                 })
                 .addTemporalMarker(1, () ->  {intake.setState(Intake.PositionState.RAISED);})
                 .build();
@@ -98,7 +98,7 @@ public class farred2plus2 extends EnhancedOpMode {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
-                    scheduler.scheduleTaskList(actions.runSweepersAuto(-56.5));
+                    scheduler.scheduleTaskList(actions.OLD_runSweepersAuto(-56.5));
                 })
                 .build();
 
@@ -123,12 +123,12 @@ public class farred2plus2 extends EnhancedOpMode {
                         drive.getVelocityConstraint(50, 2.4, 15.06),
                         drive.getAccelerationConstraint(40))
                 .addSpatialMarker(new Vector2d(-10, -57), () ->  {
-                    scheduler.scheduleTaskList(actions.autoRaiseSlides(Slides.SlideState.HALF));
+                    scheduler.scheduleTaskList(actions.OLD_autoRaiseSlides(Slides.SlideState.HALF));
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
                 })
                 .addSpatialMarker(new Vector2d(47,-31),()->{
-                    scheduler.scheduleTaskList(actions.scorePixelDelay());
+                    scheduler.scheduleTaskList(actions.OLD_scorePixelDelay());
                 })
                 .addTemporalMarker(1, () ->  {intake.setState(Intake.PositionState.RAISED);})
                 .build();
@@ -149,7 +149,7 @@ public class farred2plus2 extends EnhancedOpMode {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
-                    scheduler.scheduleTaskList(actions.runSweepersAuto(-56.5));
+                    scheduler.scheduleTaskList(actions.OLD_runSweepersAuto(-56.5));
                 })
                 .build();
 
@@ -175,12 +175,12 @@ public class farred2plus2 extends EnhancedOpMode {
                 .lineToConstantHeading(new Vector2d(20,-59))
                 .splineToConstantHeading(new Vector2d(50.5, -39), Math.toRadians(0))
                 .addSpatialMarker(new Vector2d(-10, -57), () ->  {
-                    scheduler.scheduleTaskList(actions.autoRaiseSlides(Slides.SlideState.HALF));
+                    scheduler.scheduleTaskList(actions.OLD_autoRaiseSlides(Slides.SlideState.HALF));
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
                 })
                 .addSpatialMarker(new Vector2d(47,-26),()->{
-                    scheduler.scheduleTaskList(actions.scorePixelDelay());
+                    scheduler.scheduleTaskList(actions.OLD_scorePixelDelay());
                 })
                 .build();
         TrajectorySequence rightBackToStack = drive.trajectorySequenceBuilder(rightPurpleToBack.end())
@@ -199,7 +199,7 @@ public class farred2plus2 extends EnhancedOpMode {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
-                    scheduler.scheduleTaskList(actions.runSweepersAuto(-56.5));
+                    scheduler.scheduleTaskList(actions.OLD_runSweepersAuto(-56.5));
                 })
                 .build();
         TrajectorySequence stackToBack1 = drive.trajectorySequenceBuilder(leftBackToStack.end())
@@ -221,7 +221,7 @@ public class farred2plus2 extends EnhancedOpMode {
                 })
 
                 .addSpatialMarker(new Vector2d(49,-41),()->{
-                    scheduler.scheduleTaskList(actions.scorePixelDelay());
+                    scheduler.scheduleTaskList(actions.OLD_scorePixelDelay());
                 })
                 .addSpatialMarker(new Vector2d(20, -57), () -> {
                     intake.setState(Intake.ConveyorState.OFF);
@@ -244,7 +244,7 @@ public class farred2plus2 extends EnhancedOpMode {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
-                    scheduler.scheduleTaskList(actions.runSweepersAuto(-56,true));
+                    scheduler.scheduleTaskList(actions.OLD_runSweepersAuto(-56,true));
                 })
                 .build();
         TrajectorySequence  stackToBack2 = drive.trajectorySequenceBuilder(leftBackToStack.end())
@@ -261,7 +261,7 @@ public class farred2plus2 extends EnhancedOpMode {
                 })
 
                 .addSpatialMarker(new Vector2d(49,-41),()->{
-                    scheduler.scheduleTaskList(actions.scorePixelDelay());
+                    scheduler.scheduleTaskList(actions.OLD_scorePixelDelay());
                 })
                 .addSpatialMarker(new Vector2d(20, -57), () -> {
                     intake.setState(Intake.ConveyorState.OFF);

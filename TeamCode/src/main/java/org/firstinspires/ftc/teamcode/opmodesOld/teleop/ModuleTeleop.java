@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
-import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
+import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
@@ -38,7 +38,7 @@ public class ModuleTeleop extends EnhancedOpMode
     Slides slides;
     DroneLauncher droneLauncher;
 
-    TaskListBuilder builder;
+    Builder builder;
     List<Task> testTaskList;
     TaskScheduler scheduler;
 
@@ -348,7 +348,7 @@ public class ModuleTeleop extends EnhancedOpMode
         hang=hardwareMap.get(DcMotor.class, "hang");
 
         robot=new Robot(this);
-        builder=new TaskListBuilder(this);
+        builder=new Builder(this);
         scheduler=new TaskScheduler();
 
         //deposit=robot.deposit;

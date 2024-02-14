@@ -32,7 +32,6 @@ public class TelemetryTest extends EnhancedOpMode
         Context.dashTeleEnabled=dashEnabled;
         tel=Tel.instance();
         this.setLoopTimes(1);
-        test=RobotActions.getInstance().multiTest();
     }
     public void initLoop()
     {

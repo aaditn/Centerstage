@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.modules.modulesOld.HangExample;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
-import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
+import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
@@ -24,7 +24,7 @@ public class TestOpMode2 extends EnhancedOpMode
     ElapsedTime linearTimer;
     ElapsedTime coroutineTimer;
 
-    TaskListBuilder builder;
+    Builder builder;
     List<Task> testTaskList;
     TaskScheduler scheduler;
 
@@ -56,7 +56,7 @@ public class TestOpMode2 extends EnhancedOpMode
         linearTimer=new ElapsedTime();
         coroutineTimer=new ElapsedTime();
 
-        builder=new TaskListBuilder(this);
+        builder=new Builder(this);
         scheduler=new TaskScheduler();
 
         Hang=new HangExample(hardwareMap, Context.tel);

@@ -7,7 +7,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.modulesOld.SampleModule;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
-import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
+import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class TestOpMode extends EnhancedOpMode
 {
     SampleModule m;
-    TaskListBuilder builder;
+    Builder builder;
     List<Task> testTaskList;
     TaskScheduler scheduler;
 
@@ -49,7 +49,7 @@ public class TestOpMode extends EnhancedOpMode
     public void initialize()
     {
         this.setLoopTimes(10);
-        builder=new TaskListBuilder(this);
+        builder=new Builder(this);
         r=new Robot(this);
     }
 

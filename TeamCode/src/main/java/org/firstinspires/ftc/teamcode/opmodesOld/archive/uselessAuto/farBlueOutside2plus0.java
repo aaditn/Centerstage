@@ -71,7 +71,7 @@ public class farBlueOutside2plus0 extends EnhancedOpMode {
         TrajectorySequence rightPurpleToBack = drive.trajectorySequenceBuilder(rightPurpleToTurn.end())
                 .lineToConstantHeading(new Vector2d(20,12))
                 .addSpatialMarker(new Vector2d(-20, 57), () ->  {
-                    scheduler.scheduleTaskList(actions.autoRaiseSlides(Slides.SlideState.AUTO_LOW));
+                    scheduler.scheduleTaskList(actions.OLD_autoRaiseSlides(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
                 })
@@ -97,7 +97,7 @@ public class farBlueOutside2plus0 extends EnhancedOpMode {
         TrajectorySequence leftPurpleToBack = drive.trajectorySequenceBuilder(leftPurpleToTurn.end())
                 .lineToConstantHeading(new Vector2d(20,57))
                 .addSpatialMarker(new Vector2d(-20, 57), () ->  {
-                    scheduler.scheduleTaskList(actions.autoRaiseSlides(Slides.SlideState.AUTO_LOW));
+                    scheduler.scheduleTaskList(actions.OLD_autoRaiseSlides(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
                 })
@@ -125,7 +125,7 @@ public class farBlueOutside2plus0 extends EnhancedOpMode {
                         drive.getVelocityConstraint(50, 2.4, 15.06),
                         drive.getAccelerationConstraint(40))
                 .addSpatialMarker(new Vector2d(-20, 57), () ->  {
-                    scheduler.scheduleTaskList(actions.autoRaiseSlides(Slides.SlideState.AUTO_LOW));
+                    scheduler.scheduleTaskList(actions.OLD_autoRaiseSlides(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
                 })

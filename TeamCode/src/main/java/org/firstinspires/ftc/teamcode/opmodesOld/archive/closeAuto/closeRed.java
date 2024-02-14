@@ -117,7 +117,7 @@ int dice;
         intake.setState(Intake.PositionState.DOWN);
         intake.setState(Intake.SweeperState.ONE_SWEEP);
         die(1000);
-        scheduler.scheduleTaskList(actions.autoRaiseSlides(Slides.SlideState.AUTO_LOW));
+        scheduler.scheduleTaskList(actions.OLD_autoRaiseSlides(Slides.SlideState.AUTO_LOW));
         intake.setState(Intake.PositionState.RAISED);
         die(1000);
         switch(dice){

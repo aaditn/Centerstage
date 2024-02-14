@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
-import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
+import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
@@ -37,7 +37,7 @@ public class TeleOp extends EnhancedOpMode
     boolean threshold2 = false;
     DepositOld deposit;
     //Slides slides;
-    TaskListBuilder builder;
+    Builder builder;
     List<Task> testTaskList;
     TaskScheduler scheduler;
 
@@ -119,7 +119,7 @@ public class TeleOp extends EnhancedOpMode
         Context.tel=new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
         this.setLoopTimes(0);
-        builder=new TaskListBuilder(this);
+        builder=new Builder(this);
         deposit=new DepositOld(hardwareMap);
         intake=new Intake(hardwareMap);
         //droneLauncher=new DroneLauncher(hardwareMap);

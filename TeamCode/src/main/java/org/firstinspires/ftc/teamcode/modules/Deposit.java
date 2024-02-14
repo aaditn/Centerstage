@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -69,15 +70,22 @@ public class Deposit extends Module
     ClawState cstate;
 
     ExtensionState estate;
-    public Deposit(HardwareMap hardwareMap) {
+    public Deposit(HardwareMap hardwareMap)
+    {
         super(false, telemetryToggle);
         leftArm=hardwareMap.get(Servo.class, "leftArm");
         rightArm=hardwareMap.get(Servo.class, "rightArm");
         rightArm.setDirection(Servo.Direction.REVERSE);
-extension = hardwareMap.get(Servo.class, "extension");
+        extension = hardwareMap.get(Servo.class, "extension");
         wrist=hardwareMap.get(Servo.class, "wrist");
         rotatewrist=hardwareMap.get(Servo.class, "rotatewrist");
         claw=hardwareMap.get(Servo.class, "claw");
+
+        leftArm.getController().pwmEnable();
+        rightArm.getController().pwmEnable();
+        extension.getController().pwmEnable();
+        wrist.getController().pwmEnable();
+        rotatewrist.getController().pwmEnable();
     }
 
     @Override
@@ -148,5 +156,14 @@ extension = hardwareMap.get(Servo.class, "extension");
         converter.add(ClawState.values(), clawValues);
         converter.add(RotateState.values(), rotateValues);
         converter.add(ExtensionState.values(), extValues);
+    }
+
+    public void onDeath()
+    {
+        leftArm.getController().pwmDisable();
+        rightArm.getController().pwmDisable();
+        extension.getController().pwmDisable();
+        wrist.getController().pwmDisable();
+        rotatewrist.getController().pwmDisable();
     }
 }

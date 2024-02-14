@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
-import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
+import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
@@ -31,7 +31,7 @@ public class  FarBlueWait extends EnhancedOpMode {
     Slides slides;
     Pose2d startPos = new Pose2d(-36,61,Math.toRadians(270));
     TaskScheduler scheduler;
-    TaskListBuilder builder;
+    Builder builder;
     int elementPos;
 
     List<Task> slideupbase;
@@ -223,7 +223,7 @@ public class  FarBlueWait extends EnhancedOpMode {
 
         robot=new Robot(this);
         Context.isTeamRed=false;
-        builder=new TaskListBuilder(this);
+        builder=new Builder(this);
         scheduler=new TaskScheduler();
 
         //deposit=robot.deposit;

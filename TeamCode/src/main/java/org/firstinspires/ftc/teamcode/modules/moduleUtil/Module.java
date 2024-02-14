@@ -213,7 +213,7 @@ public abstract class Module
         stateChanged=true;
     }
 
-
+    public void onDeath() {}
 
     //write implementation for updating internally(setting powers to something)
     protected abstract void internalUpdate();

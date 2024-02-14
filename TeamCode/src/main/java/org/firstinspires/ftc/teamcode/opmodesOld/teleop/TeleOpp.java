@@ -153,22 +153,22 @@ public class TeleOpp extends EnhancedOpMode
             if(slidesBottomRow.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.RAISED));
+                scheduler.scheduleTaskList(actions.OLD_raiseSlides(Slides.SlideState.RAISED));
             }
             else if(slidesSetLine1.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.ROW1));
+                scheduler.scheduleTaskList(actions.OLD_raiseSlides(Slides.SlideState.ROW1));
             }
             else if(slidesSetLine2.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.ROW2));
+                scheduler.scheduleTaskList(actions.OLD_raiseSlides(Slides.SlideState.ROW2));
             }
             else if(slidesSetLine3.wasJustPressed()&&!slides.macroRunning)
             {
                 slides.setOperationState(Module.OperationState.PRESET);
-                scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.ROW3));
+                scheduler.scheduleTaskList(actions.OLD_raiseSlides(Slides.SlideState.ROW3));
             }
             //SLIDES MANUAL
             if(slides.getState()!=Slides.SlideState.GROUND&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)

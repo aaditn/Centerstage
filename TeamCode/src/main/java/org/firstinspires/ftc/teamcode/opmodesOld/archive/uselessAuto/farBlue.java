@@ -56,7 +56,7 @@ boolean offset;
                 .build();
         TrajectorySequence leftBackFromStack = drive.trajectorySequenceBuilder(leftToStack0.end())
                 .addSpatialMarker(new Vector2d(-10, 57), () ->  {
-                    scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.AUTO_LOW));
+                    scheduler.scheduleTaskList(actions.OLD_raiseSlides(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
                 })
@@ -110,7 +110,7 @@ boolean offset;
         TrajectorySequence midBackFromStack = drive.trajectorySequenceBuilder(midToStack0.end())
                 .addSpatialMarker(new Vector2d(0, 57), () ->  deposit.setState(Deposit.ClawState.CLOSED2))
                 .addSpatialMarker(new Vector2d(20, 57), () ->  {
-                    scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.AUTO_LOW));
+                    scheduler.scheduleTaskList(actions.OLD_raiseSlides(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
                 })
@@ -148,7 +148,7 @@ boolean offset;
         TrajectorySequence rightBackFromStack = drive.trajectorySequenceBuilder(rightToStack0.end())
                 .addSpatialMarker(new Vector2d(0, 57), () ->  deposit.setState(Deposit.ClawState.CLOSED2))
                 .addSpatialMarker(new Vector2d(20, 57), () ->  {
-                    scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.AUTO_LOW));
+                    scheduler.scheduleTaskList(actions.OLD_raiseSlides(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
                 })

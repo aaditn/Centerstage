@@ -67,7 +67,7 @@ int dice;
         TrajectorySequence rightYellow = drive.trajectorySequenceBuilder(rightPurple.end())
                 .lineToLinearHeading(new Pose2d(51, 27, Math.toRadians(180)))
                 .addSpatialMarker(new Vector2d(47,26),()->{
-                    scheduler.scheduleTaskList(actions.scorePixelDelay());
+                    scheduler.scheduleTaskList(actions.OLD_scorePixelDelay());
                 })
 
                 .addTemporalMarker(0.5, () ->  {intake.setState(Intake.PositionState.RAISED);})
@@ -83,7 +83,7 @@ int dice;
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
-                    scheduler.scheduleTaskList(actions.runSweepersAuto(-56));
+                    scheduler.scheduleTaskList(actions.OLD_runSweepersAuto(-56));
                 })
                 .build();
         TrajectorySequence midPurple = drive.trajectorySequenceBuilder(blueCloseStart)
@@ -106,7 +106,7 @@ int dice;
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
-                    scheduler.scheduleTaskList(actions.runSweepersAuto(-56));
+                    scheduler.scheduleTaskList(actions.OLD_runSweepersAuto(-56));
                 })
                 .build();
         TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(blueCloseStart)
@@ -128,7 +128,7 @@ int dice;
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
-                    scheduler.scheduleTaskList(actions.runSweepersAuto(-56));
+                    scheduler.scheduleTaskList(actions.OLD_runSweepersAuto(-56));
                 })
                 .build();
         TrajectorySequence stackToBack1 = drive.trajectorySequenceBuilder(leftBackToStack.end())
@@ -143,7 +143,7 @@ int dice;
                 })
 
                 .addSpatialMarker(new Vector2d(49,26),()->{
-                    scheduler.scheduleTaskList(actions.scorePixelDelay());
+                    scheduler.scheduleTaskList(actions.OLD_scorePixelDelay());
                 })
                 .addSpatialMarker(new Vector2d(20, 11), () -> {
                     intake.setState(Intake.ConveyorState.OFF);
@@ -175,7 +175,7 @@ int dice;
                 })
 
                 .addSpatialMarker(new Vector2d(49,26),()->{
-                    scheduler.scheduleTaskList(actions.scorePixelDelay());
+                    scheduler.scheduleTaskList(actions.OLD_scorePixelDelay());
                 })
                 .addSpatialMarker(new Vector2d(20, 11), () -> {
                     intake.setState(Intake.ConveyorState.OFF);
@@ -193,7 +193,7 @@ int dice;
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
-                    scheduler.scheduleTaskList(actions.runSweepersAuto(-56,true,true));
+                    scheduler.scheduleTaskList(actions.OLD_runSweepersAuto(-56,true,true));
                 })
                 .build();
 
@@ -210,7 +210,7 @@ int dice;
             case 3:
                 drive.followTrajectorySequence(rightPurple);
         }
-        scheduler.scheduleTaskList(actions.autoRaiseSlides(Slides.SlideState.AUTO_LOW));
+        scheduler.scheduleTaskList(actions.OLD_autoRaiseSlides(Slides.SlideState.AUTO_LOW));
         switch(dice){
             case 1:
                 drive.followTrajectorySequence(leftYellow);

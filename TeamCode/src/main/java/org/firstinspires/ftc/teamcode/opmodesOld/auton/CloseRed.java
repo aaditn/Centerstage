@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.modulesOld.DepositOld;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
-import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
+import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.Tel;
@@ -31,7 +31,7 @@ public class CloseRed extends EnhancedOpMode {
     Slides slides;
     Pose2d startPos = new Pose2d(20,-56,Math.toRadians(90));
     TaskScheduler scheduler;
-    TaskListBuilder builder;
+    Builder builder;
     int elementPos;
 
     List<Task> slideupbase;
@@ -185,7 +185,7 @@ public class CloseRed extends EnhancedOpMode {
         this.setLoopTimes(10);
 
         robot=new Robot(this);
-        builder=new TaskListBuilder(this);
+        builder=new Builder(this);
         scheduler=new TaskScheduler();
 
         //deposit=robot.deposit;

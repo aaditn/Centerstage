@@ -175,7 +175,7 @@ if(pickOne.wasJustPressed()){
                 slides.setOperationState(Module.OperationState.PRESET);
                 if(pickState){
 
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED,true));
+                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED));
                 }
                 else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED));
             }
@@ -184,7 +184,7 @@ if(pickOne.wasJustPressed()){
                 slides.setOperationState(Module.OperationState.PRESET);
                 if(pickState){
 
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1,true));
+                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1));
                 }
                 else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1));
             }
@@ -193,7 +193,7 @@ if(pickOne.wasJustPressed()){
                 slides.setOperationState(Module.OperationState.PRESET);
                 if(pickState){
 
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2,true));
+                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2));
                 }
                 else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2));
             }
@@ -202,7 +202,7 @@ if(pickOne.wasJustPressed()){
                 slides.setOperationState(Module.OperationState.PRESET);
                 if(pickState){
 
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3,true));
+                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3));
                 }
                 else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3));
             }

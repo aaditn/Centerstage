@@ -5,7 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
-import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
+import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
@@ -20,7 +20,7 @@ public class TestOpMode3 extends EnhancedOpMode
     ModuleTest test;
     boolean help=false;
 
-    TaskListBuilder builder;
+    Builder builder;
     List<Task> testTaskList;
 
 
@@ -62,7 +62,7 @@ public class TestOpMode3 extends EnhancedOpMode
         test=new ModuleTest(hardwareMap);
 
         scheduler=new TaskScheduler();
-        builder=new TaskListBuilder(this);
+        builder=new Builder(this);
     }
 
     @Override

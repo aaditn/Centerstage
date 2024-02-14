@@ -7,13 +7,14 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.enums.Compare;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class TaskListBuilder
+public class Builder
 {
     List<Task> tasks=new ArrayList<Task>();
     Module lastModuleCalled;
@@ -22,30 +23,39 @@ public class TaskListBuilder
 
     Robot drive;
 
-    public TaskListBuilder(LinearOpMode l)
+    public Builder(LinearOpMode l)
     {
         this.l=l;
     }
 
-    public TaskListBuilder(LinearOpMode l, Robot drive)
+    public Builder(LinearOpMode l, Robot drive)
     {
         this.l=l;
         this.drive=drive;
     }
 
-    public TaskListBuilder createNew()
+    public Builder createNew()
     {
-        tasks=new ArrayList<Task>();
+        tasks=new ArrayList<>();
         return this;
     }
 
-    public TaskListBuilder executeCode(codeExecutable task)
+    public static Builder create()
+    {
+        return new Builder(Context.opmode, Robot.getInstance());
+    }
+    public static Builder create(LinearOpMode l, Robot drive)
+    {
+        return new Builder(l, drive);
+    }
+
+    public Builder executeCode(codeExecutable task)
     {
         tasks.add(new ExecutionTask(task));
         return this;
     }
 
-    public TaskListBuilder moduleAction(Module m, ModuleState s)
+    public Builder moduleAction(Module m, ModuleState s)
     {
         tasks.add(new ExecutionTask(()->m.setState(s)));
         lastModuleCalled=m;
@@ -53,7 +63,7 @@ public class TaskListBuilder
         return this;
     }
 
-    public TaskListBuilder moduleAction(Module m, ModuleState s, int timeout)
+    public Builder moduleAction(Module m, ModuleState s, int timeout)
     {
 
         tasks.add(new ExecutionTask(()->m.setState(s, timeout)));
@@ -62,37 +72,37 @@ public class TaskListBuilder
         return this;
     }
 
-    public TaskListBuilder await(Callable<Boolean> runCondition)
+    public Builder await(Callable<Boolean> runCondition)
     {
         tasks.add(new AwaitTask(runCondition));
         return this;
     }
 
-    public TaskListBuilder awaitPreviousModuleActionCompletion()
+    public Builder awaitPreviousModuleActionCompletion()
     {
         tasks.add(new AwaitTask(()->!lastModuleCalled.isBusy()/*&&lastModuleCalled.getState()==lastModuleStateCalled*/));
         return this;
     }
 
-    public TaskListBuilder delay(long delay)
+    public Builder delay(long delay)
     {
         tasks.add(new DelayTask(delay));
         return this;
     }
 
-    public TaskListBuilder awaitButtonPress(ButtonReader b)
+    public Builder awaitButtonPress(ButtonReader b)
     {
         tasks.add(new AwaitTask(()->b.wasJustPressed()));
         return this;
     }
 
-    public TaskListBuilder executeBlockingCode(codeExecutable code)
+    public Builder executeBlockingCode(codeExecutable code)
     {
         tasks.add(new BlockingTask(code));
         return this;
     }
 
-    public TaskListBuilder awaitDtXPosition(double x, Compare c)
+    public Builder awaitDtXPosition(double x, Compare c)
     {
         if(c==Compare.GREATER)
             tasks.add(new AwaitTask(()->drive.getPoseEstimate().getX()>x));
@@ -100,12 +110,12 @@ public class TaskListBuilder
             tasks.add(new AwaitTask(()->drive.getPoseEstimate().getX()<x));
         return this;
     }
-    public TaskListBuilder runTaskList(List<Task> x){
+    public Builder runTaskList(List<Task> x){
         tasks.addAll(x);
         return this;
     }
 
-    public TaskListBuilder awaitDtYPosition(double y, Compare c)
+    public Builder awaitDtYPosition(double y, Compare c)
     {
         if(c==Compare.GREATER)
             tasks.add(new AwaitTask(()->drive.getPoseEstimate().getY()>y));
@@ -114,31 +124,31 @@ public class TaskListBuilder
         return this;
     }
 
-    public TaskListBuilder awaitDtXWithin(double x, double threshold)
+    public Builder awaitDtXWithin(double x, double threshold)
     {
         tasks.add(new AwaitTask(()->Math.abs(drive.getPoseEstimate().getX()-x)<threshold));
         return this;
     }
 
-    public TaskListBuilder awaitDtYWithin(double y, double threshold)
+    public Builder awaitDtYWithin(double y, double threshold)
     {
         tasks.add(new AwaitTask(()->Math.abs(drive.getPoseEstimate().getY()-y)<threshold));
         return this;
     }
 
-    public TaskListBuilder driveTrajAsync(TrajectorySequence sequence)
+    public Builder driveTrajAsync(TrajectorySequence sequence)
     {
         tasks.add(new ExecutionTask(()->drive.followTrajectorySequenceAsync(sequence)));
         return this;
     }
 
-    public TaskListBuilder awaitDrivetrainCompletion()
+    public Builder awaitDrivetrainCompletion()
     {
         tasks.add(new AwaitTask(()->!drive.isBusy()));
         return this;
     }
 
-    public TaskListBuilder addTaskList(List<Task> task)
+    public Builder addTaskList(List<Task> task)
     {
         for(Task t: task)
         {
@@ -147,7 +157,7 @@ public class TaskListBuilder
         return this;
     }
 
-    public TaskListBuilder addTask(Task t)
+    public Builder addTask(Task t)
     {
         tasks.add(t);
         return this;

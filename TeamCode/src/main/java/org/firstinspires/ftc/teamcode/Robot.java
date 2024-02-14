@@ -214,6 +214,9 @@ public class Robot extends MecanumDrive
 
     public static void destroyInstance()
     {
+        if(robot!=null)
+            robot.deposit.onDeath();
+
         robot=null;
     }
 
@@ -471,10 +474,10 @@ public class Robot extends MecanumDrive
         switch (Context.dice){
             default:
             this.trajectories = map(trajectories[0], actions);
-break;
+            break;
             case MIDDLE:
                 this.trajectories = map(trajectories[1], actions);
-break;
+            break;
             case RIGHT:
                 this.trajectories = map(trajectories[2], actions);
             break;

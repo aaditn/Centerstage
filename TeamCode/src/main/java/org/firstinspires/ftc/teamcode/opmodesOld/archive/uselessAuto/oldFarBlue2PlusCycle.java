@@ -76,12 +76,12 @@ public class oldFarBlue2PlusCycle extends EnhancedOpMode {
                 .lineToConstantHeading(new Vector2d(20,57))
                 .splineToConstantHeading(new Vector2d(49, 26), Math.toRadians(0))
                 .addSpatialMarker(new Vector2d(-10, 57), () ->  {
-                    scheduler.scheduleTaskList(actions.autoRaiseSlides(Slides.SlideState.AUTO_LOW));
+                    scheduler.scheduleTaskList(actions.OLD_autoRaiseSlides(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
                 })
                 .addSpatialMarker(new Vector2d(47,26),()->{
-                    scheduler.scheduleTaskList(actions.scorePixelDelay());
+                    scheduler.scheduleTaskList(actions.OLD_scorePixelDelay());
                 })
                 .build();
         TrajectorySequence rightBackToTurn = drive.trajectorySequenceBuilder(rightPurpleToBack.end())
@@ -98,7 +98,7 @@ public class oldFarBlue2PlusCycle extends EnhancedOpMode {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
-                    scheduler.scheduleTaskList(actions.runSweepersAuto(-56.5));
+                    scheduler.scheduleTaskList(actions.OLD_runSweepersAuto(-56.5));
                 })
                 .build();
 
@@ -114,7 +114,7 @@ public class oldFarBlue2PlusCycle extends EnhancedOpMode {
                 .splineToConstantHeading(new Vector2d(49, 34), Math.toRadians(0))
                 .lineTo(new Vector2d(51, 34))
                 .addSpatialMarker(new Vector2d(-20, 57), () -> {
-                    scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.AUTO_LOW));
+                    scheduler.scheduleTaskList(actions.OLD_raiseSlides(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PositionState.RAISED);
                 })
                 .addSpatialMarker(new Vector2d(20, 57), () -> {
@@ -148,12 +148,12 @@ public class oldFarBlue2PlusCycle extends EnhancedOpMode {
                 .lineToConstantHeading(new Vector2d(20,57))
                 .splineToConstantHeading(new Vector2d(50, 38), Math.toRadians(0))
                 .addSpatialMarker(new Vector2d(-10, 57), () ->  {
-                    scheduler.scheduleTaskList(actions.autoRaiseSlides(Slides.SlideState.AUTO_LOW));
+                    scheduler.scheduleTaskList(actions.OLD_autoRaiseSlides(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
                 })
                 .addSpatialMarker(new Vector2d(47,26),()->{
-                    scheduler.scheduleTaskList(actions.scorePixelDelay());
+                    scheduler.scheduleTaskList(actions.OLD_scorePixelDelay());
                 })
                 .build();
 
@@ -172,7 +172,7 @@ public class oldFarBlue2PlusCycle extends EnhancedOpMode {
                     intake.setState(Intake.PositionState.DOWN);
                     intake.setState(Intake.PowerState.INTAKE_AUTO);
                     intake.setState(Intake.ConveyorState.INTAKE);
-                    scheduler.scheduleTaskList(actions.runSweepersAuto(-56.5));
+                    scheduler.scheduleTaskList(actions.OLD_runSweepersAuto(-56.5));
                 })
                 .build();
 
@@ -194,7 +194,7 @@ public class oldFarBlue2PlusCycle extends EnhancedOpMode {
                         drive.getVelocityConstraint(50, 2.4, 15.06),
                         drive.getAccelerationConstraint(40))
                 .addSpatialMarker(new Vector2d(-20, 57), () ->  {
-                    scheduler.scheduleTaskList(actions.raiseSlides(Slides.SlideState.AUTO_LOW));
+                    scheduler.scheduleTaskList(actions.OLD_raiseSlides(Slides.SlideState.AUTO_LOW));
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
                 })

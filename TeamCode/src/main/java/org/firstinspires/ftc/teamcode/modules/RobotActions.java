@@ -6,9 +6,11 @@ import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
+import org.firstinspires.ftc.teamcode.task_scheduler.AwaitTask;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskListBuilder;
 import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.enums.Compare;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
@@ -165,43 +167,28 @@ public class RobotActions
         }
     }
     public List<Task> yellowDrop(double xPos){
+        List<Task> scorePixels=scorePixels();
+        List<Task> raiseSlides=slidesOnly(Slides.SlideState.AUTO_LOW);
+
         return builder.createNew()
-                .await(()->robot.getPoseEstimate().getX()>-10)
-                .executeCode(()-> RobotLog.e("s"))
-                .executeCode(()->slides.macroRunning=true)
-                .moduleAction(deposit, Deposit.ClawState.CLOSED2)
-                .delay(300)
-                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                .moduleAction(deposit, Deposit.FlipState.DOWN)
-                .moduleAction(slides, Slides.SlideState.AUTO_LOW)
-                .moduleAction(deposit, Deposit.WristState.HOVER)
-                .delay(400)
-                //.await(()->slides.getStatus()==Module.Status.IDLE)
-                .delay(200)
+                .addTaskList(raiseSlides)
                 .executeCode(()->slides.macroRunning=false)
                 .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_Spike||robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                 .delay(400)
-                .executeCode(()->slides.macroRunning=true)
-                .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .delay(300)
-                .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
-                .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
-                .delay(500)
-                .moduleAction(deposit, Deposit.RotateState.ZERO)
-                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
-                .moduleAction(deposit, Deposit.WristState.PARTIAL2)
-                .delay(800)
-                .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
-                .delay(200)
-                .moduleAction(slides, Slides.SlideState.GROUND)
-                .delay(100)
-                .await(()->slides.currentPosition()<150)
-                //.moduleAction(deposit, Deposit.WristState.PARTIAL2)
-                .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .await(slides::isIdle)
-                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
-                .executeCode(()->slides.macroRunning=false)
+                .addTaskList(scorePixels)
+                .build();
+    }
+
+    public List<Task> yellowDrop(double xPos, double yPos){
+        List<Task> scorePixels=scorePixels();
+        List<Task> raiseSlides=slidesOnly(Slides.SlideState.AUTO_LOW);
+
+        return builder.createNew()
+
+                .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_Spike||robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                .awaitDtYWithin(yPos, 5)
+                .delay(400)
+                .addTaskList(scorePixels)
                 .build();
     }
     public List<Task> empty(){

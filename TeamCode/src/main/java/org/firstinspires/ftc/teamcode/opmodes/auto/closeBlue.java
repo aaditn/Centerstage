@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.enums.Dice;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
@@ -35,8 +36,8 @@ public class closeBlue extends EnhancedOpMode {
 
     private List<Task>[] auto_tasks() {
         return getTaskList(
-                actions.deployPurple(35, 46, 35),
-                actions.yellowDrop(32),
+                actions.deployPurple(39, 46, 39),
+                actions.yellowDrop(48, Context.dice== Dice.LEFT?48:Context.dice==Dice.MIDDLE?36:24),
                 actions.lowerIntake(-50, -56.5, 0),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
                 actions.lowerIntake(-50, -56.5, 1),
@@ -93,7 +94,7 @@ public class closeBlue extends EnhancedOpMode {
         slides.init();
         drone.init();
         intake.setOperationState(Module.OperationState.PRESET);
-        intake.setState(Intake.SweeperState.ZERO);
+        intake.setState(Intake.SweeperState.INIT);
         deposit.setState(Deposit.FlipState.TRANSFER);
         deposit.setState(Deposit.ClawState.CLOSED1);
     }

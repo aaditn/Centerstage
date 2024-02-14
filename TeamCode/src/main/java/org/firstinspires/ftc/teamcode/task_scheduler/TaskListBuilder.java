@@ -114,6 +114,18 @@ public class TaskListBuilder
         return this;
     }
 
+    public TaskListBuilder awaitDtXWithin(double x, double threshold)
+    {
+        tasks.add(new AwaitTask(()->Math.abs(drive.getPoseEstimate().getX()-x)<threshold));
+        return this;
+    }
+
+    public TaskListBuilder awaitDtYWithin(double y, double threshold)
+    {
+        tasks.add(new AwaitTask(()->Math.abs(drive.getPoseEstimate().getY()-y)<threshold));
+        return this;
+    }
+
     public TaskListBuilder driveTrajAsync(TrajectorySequence sequence)
     {
         tasks.add(new ExecutionTask(()->drive.followTrajectorySequenceAsync(sequence)));
@@ -130,7 +142,7 @@ public class TaskListBuilder
     {
         for(Task t: task)
         {
-            tasks.add(t);
+            addTask(t);
         }
         return this;
     }

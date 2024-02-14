@@ -302,7 +302,7 @@ public class RobotActions
                         return Builder.create()
                                 .executeCode(()->slides.macroRunning=true)
                                 .moduleAction(deposit, Deposit.ClawState.CLOSED2)
-                                .delay(1000)
+                                .delay(500)
                                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                                 .delay(150)
                                 .moduleAction(deposit, Deposit.FlipState.DOWN)

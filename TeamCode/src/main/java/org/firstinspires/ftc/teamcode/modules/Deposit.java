@@ -17,7 +17,7 @@ public class Deposit extends Module
     public static boolean telemetryToggle;
     public static double transferOffset = 0.004;
 
-    public static double depositOffset = -0.008;
+    public static double depositOffset = 0.01;
 
     public enum ExtensionState implements ModuleState
     {

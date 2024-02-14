@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.Tel;
 import org.firstinspires.ftc.teamcode.vision.AprilTagPipeline;
 
@@ -29,7 +30,8 @@ public class SuitedLocalizationTest extends LinearOpMode {
     @Override
 
     public void runOpMode() throws InterruptedException {
-        Robot drive = new Robot(this, true);
+        Context.noHwInit=true;
+        Robot drive = new Robot(this);
 
         vision.initAprilTag(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

@@ -21,6 +21,7 @@ object Context
     @JvmField var trajStatus: String = "Not Loaded"
     @JvmField var dice: Dice = Dice.UNINITIALIZED
     @JvmField var dashTeleEnabled: Boolean = true
+    @JvmField var noHwInit: Boolean=false
 
     @JvmStatic fun updateValues()
     {
@@ -44,6 +45,7 @@ object Context
         trajStatus="Not Loaded"
         dice= Dice.UNINITIALIZED
         dashTeleEnabled=true
+        noHwInit=false
     }
     @JvmStatic fun clearValues()
     {
@@ -59,5 +61,6 @@ object Context
         trajStatus="Not Loaded"
         dice= Dice.UNINITIALIZED
         dashTeleEnabled=true
+        noHwInit=false
     }
 }

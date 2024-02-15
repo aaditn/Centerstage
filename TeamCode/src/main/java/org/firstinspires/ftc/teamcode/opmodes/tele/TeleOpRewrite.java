@@ -6,7 +6,9 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
+import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -38,11 +40,13 @@ public class TeleOpRewrite extends EnhancedOpMode {
     KeyReader[] keyReaders;
     ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesBottomRow, slidesSetLine1, slidesSetLine2,
             slidesSetLine3, rightExtend, depositMacro, normalExtend, leftExtend, CCW45, CW45, clawManual, noExtend;
+    TriggerReader slidesReset;
     double ninja;
     int sweeperCounter;
     int wristRotateCounter = 2;
 
-    public enum DepositState {
+    public enum DepositState
+    {
         LEFT, RIGHT, NORMAL, EXTENDED
     }
 
@@ -60,9 +64,9 @@ public class TeleOpRewrite extends EnhancedOpMode {
             }
 
             //HANG
-            if (gamepad2.left_trigger > 0.5)
+            if (gamepad1.dpad_up)
                 robot.setHangPower(1);
-            else if (gamepad2.right_trigger > 0.5)
+            else if (gamepad1.dpad_down)
                 robot.setHangPower(-1);
             else
               robot.setHangPower(0);
@@ -188,7 +192,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3, depositState));
             }
             //SLIDES MANUAL
-            if ((slides.getState() != Slides.SlideState.GROUND || rightExtend.isDown()) && !slides.macroRunning && Math.abs(gamepad2.left_stick_y) > 0.3) {
+            if ((slides.getState() != Slides.SlideState.GROUND || slidesReset.isDown()) && !slides.macroRunning && Math.abs(gamepad2.left_stick_y) > 0.3) {
                 slides.setOperationState(Module.OperationState.MANUAL);
 
                 if (slidesTimer.milliseconds() > 30) {
@@ -208,13 +212,13 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 wristRotateCounter = 4;
             }
 //            //SLIDE RESET
-//            if (rightExtend.wasJustReleased()) {
-//                slides.setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            } else if (slides.getMotorRunMode() == DcMotor.RunMode.STOP_AND_RESET_ENCODER) {
-//                slides.setState(Slides.SlideState.GROUND);
-//                slides.setOperationState(Module.OperationState.PRESET);
-//                slides.setMotorRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            }
+            if (slidesReset.wasJustReleased()) {
+               slides.setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            } else if (slides.getMotorRunMode() == DcMotor.RunMode.STOP_AND_RESET_ENCODER) {
+                slides.setState(Slides.SlideState.GROUND);
+                slides.setOperationState(Module.OperationState.PRESET);
+                slides.setMotorRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
 
 
             //DRONE
@@ -276,6 +280,8 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 rightExtend = new ToggleButtonReader(g2, GamepadKeys.Button.B),
                 noExtend = new ToggleButtonReader(g2, GamepadKeys.Button.A),
                 leftExtend = new ToggleButtonReader(g2, GamepadKeys.Button.X),
+                slidesReset =new TriggerReader(g2, GamepadKeys.Trigger.RIGHT_TRIGGER)
+
         };
 
         sweeperPositions = new Intake.SweeperState[]{

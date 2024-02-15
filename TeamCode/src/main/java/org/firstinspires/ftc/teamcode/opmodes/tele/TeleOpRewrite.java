@@ -40,7 +40,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
             slidesSetLine3, rightExtend, depositMacro, normalExtend, leftExtend, CCW45, CW45, clawManual, noExtend;
     double ninja;
     int sweeperCounter;
-    int wristRotateCounter = 4;
+    int wristRotateCounter = 2;
 
     public enum DepositState {
         LEFT, RIGHT, NORMAL, EXTENDED
@@ -84,14 +84,9 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 robot.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
             }
 
-//NINJA
-            if (gamepad1.left_trigger > 0.3) {
-                ninja = 0.5;
-            } else {
-                ninja = 1;
-            }
+
             //NINJA
-            if (gamepad1.right_trigger > 0.3)
+            if (gamepad1.left_trigger > 0.3)
                 ninja = 0.5;
             else
                 ninja = 1;
@@ -146,25 +141,25 @@ public class TeleOpRewrite extends EnhancedOpMode {
 //            }
 
             if (leftExtend.wasJustPressed()) {
-                if(slides.getState()!= Slides.SlideState.GROUND){
+                if(slides.getState()!= Slides.SlideState.GROUND && slides.getState()!=Slides.SlideState.GROUND_UNTIL_LIMIT){
                     scheduler.scheduleTaskList(actions.transitionDeposit(depositState,DepositState.LEFT));
                 }
                 depositState = DepositState.LEFT;
             } else if (rightExtend.wasJustPressed()) {
 
-                if(slides.getState()!= Slides.SlideState.GROUND){
+                if(slides.getState()!= Slides.SlideState.GROUND && slides.getState()!=Slides.SlideState.GROUND_UNTIL_LIMIT){
                     scheduler.scheduleTaskList(actions.transitionDeposit(depositState,DepositState.RIGHT));
                 }
                 depositState = DepositState.RIGHT;
             } else if (noExtend.wasJustPressed()) {
 
-                if(slides.getState()!= Slides.SlideState.GROUND){
+                if(slides.getState()!= Slides.SlideState.GROUND && slides.getState()!=Slides.SlideState.GROUND_UNTIL_LIMIT){
                     scheduler.scheduleTaskList(actions.transitionDeposit(depositState,DepositState.NORMAL));
                 }
                 depositState = DepositState.NORMAL;
             } else if (normalExtend.wasJustPressed()) {
 
-                if(slides.getState()!= Slides.SlideState.GROUND){
+                if(slides.getState()!= Slides.SlideState.GROUND && slides.getState()!=Slides.SlideState.GROUND_UNTIL_LIMIT){
                     scheduler.scheduleTaskList(actions.transitionDeposit(depositState,DepositState.EXTENDED));
                 }
                 depositState = DepositState.EXTENDED;
@@ -207,7 +202,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 }
             }
             //DEPOSIT AND RESET
-            if (( depositMacro.wasJustPressed()) && !slides.macroRunning && slides.getState() != Slides.SlideState.GROUND) {
+            if (( depositMacro.wasJustPressed()) && !slides.macroRunning && slides.getState() != Slides.SlideState.GROUND && slides.getState()!=Slides.SlideState.GROUND_UNTIL_LIMIT) {
                 //slides.setOperationState(Module.OperationState.PRESET);
                 scheduler.scheduleTaskList(actions.scorePixels());
                 wristRotateCounter = 4;
@@ -289,8 +284,6 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 Intake.SweeperState.THREE_SWEEP
         };
         wristRotatePositions = new Deposit.RotateState[]{
-                Deposit.RotateState.MINUS_ONE_EIGHTY,
-                Deposit.RotateState.MINUS_ONE_THREE_FIVE,
                 Deposit.RotateState.MINUS_NINETY,
                 Deposit.RotateState.MINUS_FOURTY_FIVE,
                 Deposit.RotateState.ZERO,

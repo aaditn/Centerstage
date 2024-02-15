@@ -295,7 +295,7 @@ public class RobotActions
     }
     public List<Task> slidesOnly(Slides.SlideState row, TeleOpRewrite.DepositState state)
     {
-        if(slides.getState()==Slides.SlideState.GROUND)
+        if(slides.getState()==Slides.SlideState.GROUND || slides.getState()==Slides.SlideState.GROUND_UNTIL_LIMIT)
         {
                 switch(state) {
                     case EXTENDED:
@@ -362,18 +362,19 @@ public class RobotActions
 
     public List<Task> slidesOnly(Slides.SlideState row)
     {
-        if(slides.getState()==Slides.SlideState.GROUND)
+        if(slides.getState()==Slides.SlideState.GROUND|| slides.getState()==Slides.SlideState.GROUND_UNTIL_LIMIT)
         {
             return Builder.create()
                     .executeCode(()->slides.macroRunning=true)
                     .moduleAction(deposit, Deposit.ClawState.CLOSED2)
-                    .delay(1000)
+                    .delay(500)
                     .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                     .delay(150)
                     .moduleAction(deposit, Deposit.FlipState.DOWN)
                     .delay(100)
                     .moduleAction(slides, row)
                     .moduleAction(deposit, Deposit.WristState.HOVER)
+                    .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                     .delay(400)
                     //.await(()->slides.getStatus()==Module.Status.IDLE)
                     .delay(200)
@@ -401,9 +402,9 @@ public class RobotActions
                 .moduleAction(deposit, Deposit.RotateState.ZERO)
                 .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.PARTIAL)
-                .delay(800)
+                .delay(300)
                 .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
-                .delay(200)
+//                .delay(200)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .delay(100)
                 .await(()->slides.currentPosition()<180)

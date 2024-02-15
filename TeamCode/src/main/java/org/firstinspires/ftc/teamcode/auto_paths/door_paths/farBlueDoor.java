@@ -19,7 +19,6 @@ public class farBlueDoor {
 
     public static TrajectorySequence leftPurpleToBack = Robot.trajectorySequenceBuilder(leftPurple.end())
             .setReversed(true)
-            //      .splineTo(new Vector2d(-40,38),Math.toRadians(180))
             .splineTo(new Vector2d(-29,9),Math.toRadians(0))
             .lineTo(new Vector2d(20,9))
             .splineToConstantHeading(new Vector2d(48,40), Math.toRadians(0))
@@ -61,7 +60,7 @@ public class farBlueDoor {
             .build();
     public static TrajectorySequence rightPurpleToBack = Robot.trajectorySequenceBuilder(rightPurple.end())
             .setReversed(true)
-            .lineTo(new Vector2d(-35, 17))
+
             .splineToSplineHeading(new Pose2d(-12, 8, Math.toRadians(180)), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))

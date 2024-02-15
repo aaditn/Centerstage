@@ -13,12 +13,8 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(700);
 
-        RoadRunnerBotEntity leftRedFar = new BotBuilder(meepMeep, new ColorSchemeBlueLight())
-                .followTrajectorySequence(TrajectoriesRedFar.leftTrajectories);
-        RoadRunnerBotEntity midRedFar = new BotBuilder(meepMeep, new ColorSchemeBlueLight())
-                .followTrajectorySequence(TrajectoriesRedFar.midTrajectories);
         RoadRunnerBotEntity rightRedFar = new BotBuilder(meepMeep, new ColorSchemeBlueLight())
-                .followTrajectorySequence(TrajectoriesRedFar.leftTrajectories);
+                .followTrajectorySequence(BigT_AKA_Trajectory.rightTrajectories);
 
 
         RoadRunnerBotEntity WHYAMIHERE = new DefaultBotBuilder(meepMeep)

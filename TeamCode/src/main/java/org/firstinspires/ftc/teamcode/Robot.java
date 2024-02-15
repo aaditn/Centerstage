@@ -29,8 +29,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.kauailabs.navx.ftc.AHRS;
-import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -39,6 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.LynxModuleImuType;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
@@ -51,6 +50,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
+import org.firstinspires.ftc.teamcode.modules.NavxWrapper;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.TwoWheelTrackingLocalizer;
@@ -63,6 +63,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
+import org.firstinspires.ftc.teamcode.util.ReadTimer;
 import org.firstinspires.ftc.teamcode.util.Tel;
 import org.firstinspires.ftc.teamcode.util.WhipTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
@@ -130,13 +131,17 @@ public class Robot extends MecanumDrive
     public TeamElementDetection teamElementDetector;
     Pose2d localDrivePowers;
     ElapsedTime timer;
-    AHRS navx;
     public boolean waitingForCS=false;
     public boolean tapeDetected=false;
     ColorRangeSensor cs3, cs2, cs1;
     static Robot robot;
     public TaskScheduler scheduler;
     public static boolean dashTeleEnabled=true;
+    private LynxModule controlHub;
+    private LynxModule expansionHub;
+    NavxWrapper navxWrapper;
+    ReadTimer chub, ehub, navx;
+
 
     public Robot(LinearOpMode l)
     {
@@ -153,6 +158,27 @@ public class Robot extends MecanumDrive
         hardwareMap=l.hardwareMap;
         timer=new ElapsedTime();
 
+        modules=new ArrayList<>();
+
+        try {
+            for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+                modules.add(module);
+            }
+
+            for(LynxModule module: modules)
+            {
+                if(module.getImuType()== LynxModuleImuType.BHI260)
+                    controlHub=module;
+                else if(module.getImuType() == LynxModuleImuType.BNO055)
+                    expansionHub=module;
+            }
+
+            //controlHub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+            //expansionHub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("One or more of the REV hubs could not be found. More info: " + e);
+        }
+
         if(!Context.isTele)
         {
             cameraInit();
@@ -166,6 +192,7 @@ public class Robot extends MecanumDrive
         droneLauncher = new DroneLauncher(hardwareMap);
         hang = hardwareMap.get(DcMotor.class, "hang");
 
+
         if(!Context.noHwInit)
         {
             intake.init();
@@ -174,6 +201,10 @@ public class Robot extends MecanumDrive
         }
 
         scheduler=new TaskScheduler();
+
+        //navx=new ReadTimer(navxWrapper::update, 20);
+        //chub=new ReadTimer(this::cHubUpdate);
+        //ehub=new ReadTimer(this::eHubUpdate, 50);
     }
 
     public static Robot getInstance()
@@ -248,9 +279,8 @@ public class Robot extends MecanumDrive
 
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        navx = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
-                AHRS.DeviceDataType.kProcessedData,
-                NAVX_DEVICE_UPDATE_RATE_HZ);
+        navxWrapper =new NavxWrapper(hardwareMap);
+
 //        imu = hardwareMap.get(IMU.class, "imu");
 //        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
 //                new Orientation(
@@ -312,32 +342,37 @@ public class Robot extends MecanumDrive
     {
         read();
         write();
+        //modulesUpdate();
+
         if(!Context.isTele)
         {
             AutoSelector.getInstance().loop();
             Tel.instance().addData("Vision Zone", Context.dice, 0);
+            navxWrapper.update();
         }
         tel.update();
-
+        //telemetryUpdate();
         //loop whatever else u want
     }
-    public void setYaw(){
-    }
-    public void setIntake(){
-        intake.setState(Intake.SweeperState.ONE_SWEEP);
+    public void setYaw()
+    {
     }
     public void setHangPower(double power){
         hangPower = power;
     }
     public void primaryLoop()
     {
-        tel.update();
+        //modulesUpdate();
+
         read();
         write();
 
 
         if(isBusy()||!Context.isTele)
+        {
             update();
+            navxWrapper.update();
+        }
         else {
             updateDrivePowers();
             if(hang!=null) {
@@ -351,6 +386,58 @@ public class Robot extends MecanumDrive
             timer.reset();
         }
         Tel.instance().addData("debug", Context.debug);
+        //telemetryUpdate();
+        tel.update();
+    }
+
+    private void modulesUpdate()
+    {
+        chub.update();
+        ehub.update();
+        if(!Context.isTele)
+            navx.update();
+    }
+
+    private void cHubUpdate()
+    {
+        controlHub.getBulkData();
+
+        if(l.isStarted())
+        {
+            if((isBusy()||!Context.isTele))
+                update();
+            else {
+                updateDrivePowers();
+            }
+        }
+
+        deposit.updateLoop();
+        deposit.writeLoop();
+    }
+
+    private void eHubUpdate()
+    {
+        expansionHub.getBulkData();
+
+        if(l.isStarted() && hang!=null && Context.isTele) {
+            hang.setPower(hangPower);
+        }
+
+        slides.updateLoop();
+        droneLauncher.updateLoop();
+        intake.updateLoop();
+        slides.writeLoop();
+        droneLauncher.writeLoop();
+        intake.writeLoop();
+    }
+
+    private void telemetryUpdate()
+    {
+        slides.telemetryUpdateExternal();
+        deposit.telemetryUpdateExternal();
+        intake.telemetryUpdateExternal();
+        droneLauncher.telemetryUpdateExternal();
+        tel.update();
     }
 
     public void read()
@@ -616,22 +703,13 @@ public class Robot extends MecanumDrive
     @Override
     public double getRawExternalHeading() {
 //        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        return Math.toRadians(-navx.getYaw());
+        return Math.toRadians(navxWrapper.getHeading());
     }
 
     @Override
-    public Double getExternalHeadingVelocity() {
-        ElapsedTime x = new ElapsedTime();
-
-        headingTrack.add(Math.toRadians(-navx.getYaw()));
-        if(headingTrack.size()>1){
-            double k = headingTrack.get(0);
-            headingTrack.remove(0);
-            x.reset();
-            return (k-headingTrack.get(0))/x.seconds();
-        }
-        x.reset();
-        return (double)0;
+    public Double getExternalHeadingVelocity()
+    {
+        return navxWrapper.getVelocity();
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

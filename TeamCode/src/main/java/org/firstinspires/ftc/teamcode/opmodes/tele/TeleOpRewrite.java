@@ -211,14 +211,6 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 //slides.setOperationState(Module.OperationState.PRESET);
                 scheduler.scheduleTaskList(actions.scorePixels());
                 wristRotateCounter = 4;
-                Tel.instance().addData("slidesLimit", slides.slidesLimit, 0);
-                while(!slides.slidesLimit.isPressed()){
-                    if(slides.slide1.getCurrentPosition() < 10) {
-                        slides.targetPosition -= 10;
-                    }
-                }
-                slides.targetPosition=0;
-                slides.reset();
             }
 //            //SLIDE RESET
 //            if (rightExtend.wasJustReleased()) {

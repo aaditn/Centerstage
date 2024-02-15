@@ -32,6 +32,7 @@ public abstract class Module
 
     protected Status status=Status.IDLE;
     protected OperationState opstate=OperationState.PRESET;
+    boolean telemetryUpdateExternal=false;
 
     //constructor. gives module all information to do tasks. constantUpdate is used for modules with PID
     // or some other controller that needs constant updating
@@ -44,6 +45,7 @@ public abstract class Module
         initInternalStates();
         telIdentifier=this.getClass().toString().substring(this.getClass().toString().lastIndexOf('.')+1);
         telemetryToggle=true;
+        telemetryUpdateExternal=false;
     }
     public Module(boolean constantUpdate, boolean telemetryToggle)
     {
@@ -139,7 +141,8 @@ public abstract class Module
         stateChanged();
 
         updateInternalStatus();
-        telemetryUpdate();
+        if(!telemetryUpdateExternal)
+            telemetryUpdate();
     }
 
     //way to call update loop from opMode
@@ -158,7 +161,8 @@ public abstract class Module
             readUpdateChecker=true;
         }
         updateInternalStatus();
-        telemetryUpdate();
+        if(!telemetryUpdateExternal)
+            telemetryUpdate();
     }
 
     //way to call writes from opMode. Separate from update to make write calls all at the same time.
@@ -211,6 +215,12 @@ public abstract class Module
     {
         timer.reset();
         stateChanged=true;
+    }
+
+    public void telemetryUpdateExternal()
+    {
+        telemetryUpdate();
+        telemetryUpdateExternal=true;
     }
 
     public void onDeath() {}

@@ -81,11 +81,11 @@ public class Deposit extends Module
         rotatewrist=hardwareMap.get(Servo.class, "rotatewrist");
         claw=hardwareMap.get(Servo.class, "claw");
 
-        leftArm.getController().pwmEnable();
+        /*leftArm.getController().pwmEnable();
         rightArm.getController().pwmEnable();
         extension.getController().pwmEnable();
         wrist.getController().pwmEnable();
-        rotatewrist.getController().pwmEnable();
+        rotatewrist.getController().pwmEnable();*/
     }
 
     @Override
@@ -160,10 +160,10 @@ public class Deposit extends Module
 
     public void onDeath()
     {
-        leftArm.getController().pwmDisable();
+        /*leftArm.getController().pwmDisable();
         rightArm.getController().pwmDisable();
         extension.getController().pwmDisable();
         wrist.getController().pwmDisable();
-        rotatewrist.getController().pwmDisable();
+        rotatewrist.getController().pwmDisable();*/
     }
 }

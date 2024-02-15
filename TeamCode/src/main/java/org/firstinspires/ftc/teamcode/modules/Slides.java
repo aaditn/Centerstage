@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -22,20 +24,20 @@ public class Slides extends Module
     public double targetPosition, motorPower;
     public double debugValue=0;
     public static double slideCap=1400;
-    public static double kp=0.007, ki=0, kd=0.0003;
-    public static double kp2=0.0005, ki2=0, kd2=0.0001;
-    public static double kp3=0.002, ki3, kd3=0.0001;
+    public static double limitTimeout=500;
     public static boolean telemetryToggle=false;
-
+    private boolean resetRequired;
 
     PIDCoefficients standardcoeff, closecoeff, downcoeff;
     public enum SlideState implements ModuleState
     {
-        GROUND, HALF, AUTO_LOW,AUTO_TWO, RAISED, ROW1, ROW2, ROW3;
+        GROUND_UNTIL_LIMIT, GROUND, HALF, AUTO_LOW,AUTO_TWO, RAISED, ROW1, ROW2, ROW3;
     }
-    public static double GROUND=0, HALF=220, AUTO_LOW=350, AUTO_TWO=500, RAISED=300, ROW1=700, ROW2=1000, ROW3=1200;
-    public static double[] stateValues={GROUND, HALF, AUTO_LOW, AUTO_TWO, RAISED, ROW1, ROW2, ROW3};
+    public static double GROUND_UNTIL_LIMIT=-200, GROUND=0, HALF=220, AUTO_LOW=350, AUTO_TWO=500, RAISED=300, ROW1=700, ROW2=1000, ROW3=1200;
+    public static double[] stateValues={GROUND_UNTIL_LIMIT, GROUND, HALF, AUTO_LOW, AUTO_TWO, RAISED, ROW1, ROW2, ROW3};
     SlideState state;
+
+
 
     public Slides(HardwareMap hardwareMap)
     {   
@@ -54,6 +56,7 @@ public class Slides extends Module
         //slide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        resetRequired=false;
 
         slidesLimit=hardwareMap.get(TouchSensor.class, "slidesLimit");
 
@@ -67,6 +70,16 @@ public class Slides extends Module
     @Override
     protected void write()
     {
+        if(resetRequired)
+        {
+            Log.d("Limit Switch", "Reset Triggered");
+            slide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            slide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            resetRequired=false;
+        }
         //slide1.setPower(motorPower);
         //slide2.setPower(motorPower);
         slide1.setTargetPosition((int) targetPosition);
@@ -75,29 +88,21 @@ public class Slides extends Module
         slide2.setPower(1);
         //actually write the powers to the motor
     }
-
-
-    public void reset(){
-
-        slide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-    }
     @Override
     public void internalUpdate()
     {
+        if(getState()==SlideState.GROUND_UNTIL_LIMIT&&(slidesLimit.isPressed()||timeSpentInState()>limitTimeout))
+        {
+            resetRequired=true;
+            setState(SlideState.GROUND);
+        }
+
         targetPosition=converter.getOutput(getState());
 
         if(targetPosition>slideCap)
         {
             targetPosition=slideCap;
         }
-        if(slidesLimit.isPressed() && slide1.getCurrentPosition() > 10){
-            reset();
-        }
-
         /*if(Math.abs(targetPosition-slide1.getCurrentPosition())<10)
         {
             controller.gainSchedule(closecoeff);
@@ -126,10 +131,6 @@ public class Slides extends Module
         {
             targetPosition=slideCap;
         }
-        if(slidesLimit.isPressed() && slide1.getCurrentPosition() > 10){
-            reset();
-        }
-
         /*if(Math.abs(targetPosition-slide1.getCurrentPosition())<10)
         {
             controller.gainSchedule(closecoeff);

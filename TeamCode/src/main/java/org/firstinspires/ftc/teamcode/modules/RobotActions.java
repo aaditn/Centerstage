@@ -410,6 +410,8 @@ public class RobotActions
                 //.moduleAction(deposit, Deposit.WristState.PARTIAL2)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .await(slides::isIdle)
+                .moduleAction(slides, Slides.SlideState.GROUND_UNTIL_LIMIT)
+                .await(slides::isIdle)
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                 .executeCode(()->slides.macroRunning=false)
                 .build();

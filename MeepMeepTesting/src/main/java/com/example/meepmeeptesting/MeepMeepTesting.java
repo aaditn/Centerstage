@@ -18,7 +18,7 @@ public class MeepMeepTesting {
         RoadRunnerBotEntity midRedFar = new BotBuilder(meepMeep, new ColorSchemeBlueLight())
                 .followTrajectorySequence(TrajectoriesRedFar.midTrajectories);
         RoadRunnerBotEntity rightRedFar = new BotBuilder(meepMeep, new ColorSchemeBlueLight())
-                .followTrajectorySequence(TrajectoriesRedFar.rightTrajectories);
+                .followTrajectorySequence(TrajectoriesRedFar.leftTrajectories);
 
 
         RoadRunnerBotEntity WHYAMIHERE = new DefaultBotBuilder(meepMeep)
@@ -48,9 +48,9 @@ public class MeepMeepTesting {
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(leftRedFar)
-               //.addEntity(midRedFar)
-             //  .addEntity(rightRedFar)
+               // .addEntity(leftRedFar)
+              // .addEntity(midRedFar)
+              .addEntity(rightRedFar)
                 //  .addEntity(WHYAMIHERE)
                 .start();
     }

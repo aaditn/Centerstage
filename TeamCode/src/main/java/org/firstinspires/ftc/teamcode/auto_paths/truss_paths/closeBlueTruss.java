@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto_paths;
+package org.firstinspires.ftc.teamcode.auto_paths.truss_paths;
 
 import static org.firstinspires.ftc.teamcode.util.NamedTrajectory.map;
 
@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
-public class closeBlue {
+public class closeBlueTruss {
     public static Pose2d blueCloseStart = new Pose2d(12,61,Math.toRadians(270));
     public static  TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(blueCloseStart)
             .lineTo(new Vector2d(13, 60),

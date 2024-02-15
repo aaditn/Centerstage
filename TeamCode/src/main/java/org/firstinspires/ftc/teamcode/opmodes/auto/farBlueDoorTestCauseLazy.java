@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.farBlueDoor.blueFarStart;
+import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor.blueFarStart;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
-import org.firstinspires.ftc.teamcode.auto_paths.farBlueDoor;
+import org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor;
 
 import java.util.List;
 

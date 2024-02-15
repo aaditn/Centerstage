@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.closeBlue.blueCloseStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.closeBlue.trajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.closeBlueTruss.blueCloseStart;
+import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.closeBlueTruss.trajectories;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Robot;

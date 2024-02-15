@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.farBlueDoor.blueFarStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.farBlueDoor.trajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor.blueFarStart;
+import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor.trajectories;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 

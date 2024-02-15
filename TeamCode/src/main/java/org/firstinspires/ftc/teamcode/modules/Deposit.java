@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -18,6 +17,7 @@ public class Deposit extends Module
     public static double transferOffset = 0.004;
 
     public static double depositOffset = 0.01;
+    public static double sideOffset = -0.004;
 
     public enum ExtensionState implements ModuleState
     {
@@ -32,7 +32,7 @@ public class Deposit extends Module
         TRANSFER, DEPOSIT,PRIMED, LEFT,RIGHT, DOWN;
     }
     public static double ROTATE_MOD = 0.05;
-    public static double FLIP_TRANSFER =0.4875, FLIP_DEPOSIT=0.55,FLIP_PRIMED = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63;
+    public static double FLIP_TRANSFER =0.4875, FLIP_DEPOSIT=0.565,FLIP_PRIMED = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63;
     public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT,FLIP_PRIMED,FLIP_LEFT,FLIP_RIGHT,FLIP_DOWN};
 
 
@@ -40,7 +40,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE, PARTIAL;
     }
-    public static double WRIST_TRANSFER=0.92, WRIST_DEPOSIT=0.28, WRIST_HOVER=0.6, WRIST_SCOPE=0.92, WRIST_PARTIAL=0.88;
+    public static double WRIST_TRANSFER=0.92+.08, WRIST_DEPOSIT=0.35+.08, WRIST_HOVER=0.6+.08, WRIST_SCOPE=0.92+.08, WRIST_PARTIAL=0.88+.08;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE, WRIST_PARTIAL};
 
 
@@ -114,11 +114,11 @@ public class Deposit extends Module
     {
         ModuleState state = getState(FlipState.class);
         if (state.equals(FlipState.LEFT)) {
-            flip1Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD + depositOffset - transferOffset;
-            flip2Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD;
+            flip1Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD + depositOffset - transferOffset+ sideOffset;
+            flip2Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD-sideOffset;
         } else if (state.equals(FlipState.RIGHT)) {
-            flip1Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD + depositOffset - transferOffset;
-            flip2Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD;
+            flip1Pos = converter.getOutput(getState(FlipState.class)) - ROTATE_MOD + depositOffset - transferOffset+sideOffset;
+            flip2Pos = converter.getOutput(getState(FlipState.class)) + ROTATE_MOD-sideOffset;
         } else if(state.equals(FlipState.DEPOSIT)||state.equals(FlipState.DOWN)){
             flip1Pos = converter.getOutput(getState(FlipState.class))+ depositOffset - transferOffset;
             flip2Pos = converter.getOutput(getState(FlipState.class));

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto_paths;
+package org.firstinspires.ftc.teamcode.auto_paths.truss_paths;
 
 import static org.firstinspires.ftc.teamcode.util.NamedTrajectory.map;
 
@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
-public class farRed {
+public class farRedTruss {
 
     public static Pose2d redFarStart = new Pose2d(-35, -61, Math.toRadians(90)); // Flipped starting pose
     public static TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(redFarStart)
@@ -44,11 +44,11 @@ public class farRed {
             .build();
 
     public static TrajectorySequence midPurple = Robot.trajectorySequenceBuilder(redFarStart)
-            .lineTo(new Vector2d(-36, -34)) // Flipped waypoint
+            .lineTo(new Vector2d(-35, -34)) // Flipped waypoint
             .build();
 
     public static TrajectorySequence midPurpleToBack = Robot.trajectorySequenceBuilder(midPurple.end())
-            .lineTo(new Vector2d(-36, -35)) // Flipped waypoint
+            .lineTo(new Vector2d(-35, -35)) // Flipped waypoint
             .splineToSplineHeading(new Pose2d(-29, -57, Math.toRadians(180)), Math.toRadians(0), // Flipped pose and heading
                     Robot.getVelocityConstraint(50, 2.4, 15.06),
                     Robot.getAccelerationConstraint(40))
@@ -73,10 +73,10 @@ public class farRed {
             .build();
 
     public static TrajectorySequence rightPurple = Robot.trajectorySequenceBuilder(redFarStart)
-            .lineTo(new Vector2d(-36, -45), // Flipped waypoint
+            .lineTo(new Vector2d(-35, -45), // Flipped waypoint
                     Robot.getVelocityConstraint(40, 2.4, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .splineToSplineHeading(new Pose2d(-31, -36, Math.toRadians(45)), Math.toRadians(45), // Flipped pose and heading
+            .splineToSplineHeading(new Pose2d(-31, -35, Math.toRadians(45)), Math.toRadians(45), // Flipped pose and heading
                     Robot.getVelocityConstraint(40, 2.4, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
@@ -108,7 +108,7 @@ public class farRed {
 
     public static TrajectorySequence stackToBack1 = Robot.trajectorySequenceBuilder(leftBackToStack.end())
             .setReversed(true)
-            .splineToConstantHeading(new Vector2d(-36, -57), Math.toRadians(0), // Flipped waypoint and heading
+            .splineToConstantHeading(new Vector2d(-35, -57), Math.toRadians(0), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, -57), // Flipped waypoint
@@ -137,7 +137,7 @@ public class farRed {
 
     public static TrajectorySequence stackToBack2 = Robot.trajectorySequenceBuilder(backToStack1.end())
             .setReversed(true)
-            .splineToConstantHeading(new Vector2d(-36, -57), Math.toRadians(0), // Flipped waypoint and heading
+            .splineToConstantHeading(new Vector2d(-35, -57), Math.toRadians(0), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, -57)) // Flipped waypoint

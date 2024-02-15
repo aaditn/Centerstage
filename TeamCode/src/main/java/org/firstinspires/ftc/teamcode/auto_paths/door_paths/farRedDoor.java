@@ -1,26 +1,16 @@
-package com.example.meepmeeptesting;
+package org.firstinspires.ftc.teamcode.auto_paths.door_paths;
 
-import static com.example.meepmeeptesting.notWeirdStuff.NamedTrajectory.map;
+import static org.firstinspires.ftc.teamcode.util.NamedTrajectory.map;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.example.meepmeeptesting.notWeirdStuff.NamedTrajectory;
-import com.example.meepmeeptesting.notWeirdStuff.Paths;
-import com.example.meepmeeptesting.notWeirdStuff.Robot;
-import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
 
-public class TrajectoriesRedFar {
-    public static com.example.meepmeeptesting.notWeirdStuff.Robot Robot = new Robot();
+import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
+import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
-
-    // please don't delete me,
-    // I am here to serve the purpose of telling you don't delete me,
-    // I am here to serve the purpose of telling you don't delete me,
-    // I am here to serve the purpose of telling you don't delete me,
-    // ehh im gonna loop it
-    // while (true) {
-    //     I am here to serve the purpose of telling you don't delete me,
-    // }
+public class farRedDoor {
 
     public static Pose2d redFarStart = new Pose2d(-36, -61, Math.toRadians(90));
     public static TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(redFarStart)
@@ -44,7 +34,7 @@ public class TrajectoriesRedFar {
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence midPurple = Robot.trajectorySequenceBuilder(redFarStart)
-            .lineToLinearHeading(new Pose2d(-38, -12, Math.toRadians(270.1)))
+            .lineToLinearHeading(new Pose2d(-38, -12, Math.toRadians(270)))
             .build();
     public static TrajectorySequence midPurpleToBack = Robot.trajectorySequenceBuilder(midPurple.end())
             .lineTo(new Vector2d(-38, -11.5))
@@ -130,9 +120,6 @@ public class TrajectoriesRedFar {
             new TrajectorySequence[]{rightPurple, rightPurpleToBack, rightBackToStack, stackToBack1, backToStack1,stackToBack2},
             trajectoryNames);
     public static NamedTrajectory[][] trajectories = {leftTrajectories,midTrajectories,rightTrajectories};
-
-
-
 
 
 }

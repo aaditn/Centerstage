@@ -9,7 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.*;
 import org.firstinspires.ftc.teamcode.util.BPIDFController;
 import org.firstinspires.ftc.teamcode.util.Tel;
@@ -25,7 +27,7 @@ public class Slides extends Module
     public double debugValue=0;
     public static double slideCap=1400;
     public static double limitTimeout=500;
-    public static boolean telemetryToggle=false;
+    public static boolean telemetryToggle=true;
     private boolean resetRequired;
 
     PIDCoefficients standardcoeff, closecoeff, downcoeff;
@@ -42,7 +44,7 @@ public class Slides extends Module
     public Slides(HardwareMap hardwareMap)
     {   
         //super(true);
-        super(false, telemetryToggle);
+        super(true, telemetryToggle);
         slide1 =hardwareMap.get(DcMotorEx.class, "slide1");
         slide2 =hardwareMap.get(DcMotorEx.class, "slide2");
         slide1.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -82,16 +84,19 @@ public class Slides extends Module
         }
         //slide1.setPower(motorPower);
         //slide2.setPower(motorPower);
+            slide1.setPower(1);
+            slide2.setPower(1);
         slide1.setTargetPosition((int) targetPosition);
         slide2.setTargetPosition((int) targetPosition);
-        slide1.setPower(1);
-        slide2.setPower(1);
+
         //actually write the powers to the motor
     }
     @Override
     public void internalUpdate()
     {
-        if(getState()==SlideState.GROUND_UNTIL_LIMIT&&(slidesLimit.isPressed()||timeSpentInState()>limitTimeout))
+
+        RobotLog.e("cancer");
+        if(getState()==SlideState.GROUND_UNTIL_LIMIT&&(slidesLimit.isPressed()||super.timeSpentInState()>limitTimeout))
         {
             resetRequired=true;
             setState(SlideState.GROUND);
@@ -131,6 +136,7 @@ public class Slides extends Module
         {
             targetPosition=slideCap;
         }
+        RobotLog.e("cancer");
         /*if(Math.abs(targetPosition-slide1.getCurrentPosition())<10)
         {
             controller.gainSchedule(closecoeff);
@@ -223,9 +229,16 @@ public class Slides extends Module
     public void telemetryUpdate()
     {
         super.telemetryUpdate();
-        Tel.instance().addData("Target Position", targetPosition);
+        Tel.instance().addData("Target Position", slide1.getTargetPosition());
         Tel.instance().addData("Attempted power", motorPower);
         Tel.instance().addData("Slide 1", slide1.getCurrentPosition(), 2);
         Tel.instance().addData("Slide 2", slide2.getCurrentPosition(), 2);
+
+        Tel.instance().addData("Slide 1",  slide2.getCurrent(CurrentUnit.AMPS), 2);
+        Tel.instance().addData("Slide 2 amps", slide2.getCurrent(CurrentUnit.AMPS), 2);
+        Tel.instance().addData("Limit", slidesLimit.isPressed());
+        Tel.instance().addData("matthew", resetRequired);
+        Tel.instance().addData("timelocal",super.timeSpentInState() );
+        Tel.instance().addData("boolean", slidesLimit.isPressed()||super.timeSpentInState()>limitTimeout);
     }
 }

@@ -48,7 +48,7 @@ public class Deposit extends Module
     {
         OPEN, CLOSED_AUTO, CLOSED1, CLOSED2;
     }
-    public static double CLAW_OPEN=.70, CLAW_CLOSED_1=0.33, CLAW_CLOSED_2=0.16+.2, CLOSED_AUTO=CLAW_CLOSED_2;
+    public static double CLAW_OPEN=.70, CLAW_CLOSED_1=0.08, CLAW_CLOSED_2=0.16+.2, CLOSED_AUTO=CLAW_CLOSED_2;
     public static double[] clawValues={CLAW_OPEN, CLOSED_AUTO, CLAW_CLOSED_1, CLAW_CLOSED_2};
 
 

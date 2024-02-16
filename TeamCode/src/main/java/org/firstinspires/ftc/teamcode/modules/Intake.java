@@ -18,7 +18,7 @@ public class Intake extends Module {
     Servo  anglerRight, sweeperLeft, sweeperRight;
     CRServo conveyorLeft, conveyorRight;
     ColorRangeSensor cs1, cs2, cs3;
-    public static boolean telemetryToggle=true;
+    public static boolean telemetryToggle=false;
 
     public enum PowerState implements ModuleState
     {

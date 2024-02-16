@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor.b
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor.trajectories;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
@@ -37,32 +38,40 @@ public class farBlueDoor extends EnhancedOpMode {
     private List<Task>[] auto_tasks() {
         return getTaskList(
                 actions.deployPurple(39, 46, 23),
-                actions.yellowDrop(47),
-                actions.lowerIntake(-46, -56.5, 0),
-                actions.scorePixels(46, TeleOpRewrite.DepositState.LEFT),
-                actions.lowerIntake(-46, -56.5, 1),
-                actions.scorePixels(46, TeleOpRewrite.DepositState.LEFT)
+                actions.yellowDrop(49),
+                actions.lowerIntake(0, -52.5, 0),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT),
+                actions.lowerIntake(0, -52.5, 1),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT)
         );
     }
     @Override
     public void linearOpMode() {
+        while(trajectories == null){
+            if(blueFarStart == null){
+                RobotLog.e("cancer 3");
+            }
+            RobotLog.e("Cancer 2");
+        }
 
+        RobotLog.e("ITS A CANCER MODE MAN");
         waitForStart();
         drive.setPoseEstimate(blueFarStart);
         delayLinear((long)Context.autoWaitTime*1000);
         drive.set(trajectories,auto_tasks());
         drive.run(Paths.Purple);
         drive.run(Paths.Score_Spike);
-        delayLinear(250);
+        delayLinear(550);
         if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
             drive.run(Paths.Go_To_Stack);
             delayLinear(750);
             drive.run(Paths.Score_First);
-            delayLinear(250);
+            delayLinear(550);
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
                 drive.run(Paths.Return_to_Stack);
                 delayLinear(750);
                 drive.run(Paths.Score_Second);
+
             }
         }
         waitForEnd();
@@ -98,6 +107,7 @@ public class farBlueDoor extends EnhancedOpMode {
         intake.setState(Intake.SweeperState.INIT);
         deposit.setState(Deposit.FlipState.TRANSFER);
         deposit.setState(Deposit.ClawState.CLOSED1);
+        RobotLog.e("ROLLIT HAHAHAHAHAHAHAHAHAHAHAHA");
     }
 
     @Override

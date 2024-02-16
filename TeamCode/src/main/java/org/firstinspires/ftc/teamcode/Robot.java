@@ -29,6 +29,8 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.kauailabs.navx.ftc.AHRS;
+import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -140,7 +142,8 @@ public class Robot extends MecanumDrive
     private LynxModule controlHub;
     private LynxModule expansionHub;
     NavxWrapper navxWrapper;
-    ReadTimer chub, ehub, navx;
+    private AHRS navx;
+    ReadTimer chub, ehub;
 
 
     public Robot(LinearOpMode l)
@@ -279,7 +282,9 @@ public class Robot extends MecanumDrive
 
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        navxWrapper =new NavxWrapper(hardwareMap);
+       navx =  AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
+                AHRS.DeviceDataType.kProcessedData,
+                NAVX_DEVICE_UPDATE_RATE_HZ);
 
 //        imu = hardwareMap.get(IMU.class, "imu");
 //        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -343,12 +348,12 @@ public class Robot extends MecanumDrive
         read();
         write();
         //modulesUpdate();
-
+    /**/    //navxWrapper.update();
         if(!Context.isTele)
         {
             AutoSelector.getInstance().loop();
             Tel.instance().addData("Vision Zone", Context.dice, 0);
-            navxWrapper.update();
+
         }
         tel.update();
         //telemetryUpdate();
@@ -368,10 +373,10 @@ public class Robot extends MecanumDrive
         write();
 
 
+//        navxWrapper.update();
         if(isBusy()||!Context.isTele)
         {
             update();
-            navxWrapper.update();
         }
         else {
             updateDrivePowers();
@@ -394,8 +399,7 @@ public class Robot extends MecanumDrive
     {
         chub.update();
         ehub.update();
-        if(!Context.isTele)
-            navx.update();
+        if(!Context.isTele){}
     }
 
     private void cHubUpdate()
@@ -703,13 +707,13 @@ public class Robot extends MecanumDrive
     @Override
     public double getRawExternalHeading() {
 //        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        return Math.toRadians(navxWrapper.getHeading());
+        return Math.toRadians(-navx.getYaw());
     }
 
     @Override
     public Double getExternalHeadingVelocity()
     {
-        return navxWrapper.getVelocity();
+        return (Double)0.0;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

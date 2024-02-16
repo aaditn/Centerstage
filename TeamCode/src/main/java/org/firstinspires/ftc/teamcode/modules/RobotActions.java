@@ -106,20 +106,22 @@ public class RobotActions
 
     public List<Task> yellowDrop(double xPos){
         return Builder.create()
-                .addTaskList(slidesOnly(Slides.SlideState.AUTO_LOW))
+                .awaitDtXWithin(-15,4)
+                .addTaskList(slidesOnlyAutonomousProgrammingVersionForAutomatedControl(Slides.SlideState.AUTO_LOW))
                 .executeCode(()->slides.macroRunning=false)
                 .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_Spike||robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                .delay(400)
+                .delay(900)
                 .addTaskList(scorePixels())
                 .build();
     }
 
     public List<Task> yellowDrop(double xPos, double yPos){
         return Builder.create()
-                .addTaskList(slidesOnly(Slides.SlideState.AUTO_LOW))
+                .awaitDtXWithin(0,4)
+                .addTaskList(slidesOnlyAutonomousProgrammingVersionForAutomatedControl(Slides.SlideState.AUTO_LOW))
                 .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_Spike||robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                 .awaitDtYWithin(yPos, 5)
-                .delay(400)
+                .delay(900)
                 .addTaskList(scorePixels())
                 .build();
     }
@@ -127,18 +129,20 @@ public class RobotActions
         switch(state) {
             case LEFT:
                 return Builder.create()
-                        .await(() -> robot.getPoseEstimate().getX() > 15)
+                        .await(() -> robot.getPoseEstimate().getX() > -10)
                         .executeCode(() -> RobotLog.e("s"))
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
                         .await(() -> robot.getPoseEstimate().getX() > xPos)
+                        .delay(900)
                         .addTaskList(scorePixels())
                         .build();
             case RIGHT:
                 return Builder.create()
-                        .await(()->robot.getPoseEstimate().getX()>15)
+                        .await(()->robot.getPoseEstimate().getX()>-10)
                         .executeCode(()-> RobotLog.e("s"))
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX()>xPos)
+                        .delay(900)
                         .addTaskList(scorePixels())
                         .build();
             default:
@@ -389,6 +393,35 @@ public class RobotActions
                 .executeCode(()->slides.macroRunning=false)
                 .build();
     }
+    public List<Task> slidesOnlyAutonomousProgrammingVersionForAutomatedControl(Slides.SlideState row)
+    {
+        if(slides.getState()==Slides.SlideState.GROUND|| slides.getState()==Slides.SlideState.GROUND_UNTIL_LIMIT)
+        {
+            return Builder.create()
+                    .executeCode(()->slides.macroRunning=true)
+                    .moduleAction(deposit, Deposit.ClawState.CLOSED1)
+                    .delay(500)
+                    .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                    .delay(150)
+                    .moduleAction(deposit, Deposit.FlipState.DOWN)
+                    .delay(100)
+                    .moduleAction(slides, row)
+                    .moduleAction(deposit, Deposit.WristState.HOVER)
+                    .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                    .delay(400)
+                    //.await(()->slides.getStatus()==Module.Status.IDLE)
+                    .delay(200)
+                    .executeCode(()->slides.macroRunning=false)
+                    .build();
+        }
+
+        return Builder.create()
+                .executeCode(()->slides.macroRunning=true)
+                .moduleAction(slides, row)
+                .awaitPreviousModuleActionCompletion()
+                .executeCode(()->slides.macroRunning=false)
+                .build();
+    }
 
     public List<Task> scorePixels()
     {
@@ -410,9 +443,9 @@ public class RobotActions
                 .await(()->slides.currentPosition()<180)
                 //.moduleAction(deposit, Deposit.WristState.PARTIAL2)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                .await(slides::isIdle)
-                .moduleAction(slides, Slides.SlideState.GROUND_UNTIL_LIMIT)
-                .await(slides::isIdle)
+//                .await(slides::isIdle)
+//                .moduleAction(slides, Slides.SlideState.GROUND_UNTIL_LIMIT)
+//                .await(slides::isIdle)
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                 .executeCode(()->slides.macroRunning=false)
                 .build();

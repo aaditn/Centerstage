@@ -48,28 +48,33 @@ public class farBlueDoor extends EnhancedOpMode {
     @Override
     public void linearOpMode() {
         waitForStart();
-        drive.setPoseEstimate(blueFarStart);
-        delayLinear((long)Context.autoWaitTime*1000);
-        drive.set(trajectories,auto_tasks());
-        drive.run(Paths.Purple);
-        drive.run(Paths.Score_Spike);
-        delayLinear(550);
-        if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
-            drive.run(Paths.Go_To_Stack);
-            delayLinear(750);
-            drive.run(Paths.Score_First);
-            delayLinear(550);
-            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
-                drive.run(Paths.Return_to_Stack);
-                delayLinear(750);
-                drive.run(Paths.Score_Second);
 
+        if(opModeIsActive())
+        {
+            drive.setPoseEstimate(blueFarStart);
+            delayLinear((long)Context.autoWaitTime*1000);
+            drive.set(trajectories,auto_tasks());
+            drive.run(Paths.Purple);
+            drive.run(Paths.Score_Spike);
+            delayLinear(550);
+            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
+                drive.run(Paths.Go_To_Stack);
+                delayLinear(750);
+                drive.run(Paths.Score_First);
+                delayLinear(550);
+                if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
+                    drive.run(Paths.Return_to_Stack);
+                    delayLinear(750);
+                    drive.run(Paths.Score_Second);
+
+                }
             }
+            waitForEnd();
         }
-        waitForEnd();
     }
 
-    public void initLoop() {
+    public void initLoop()
+    {
         drive.initLoop();
     }
 

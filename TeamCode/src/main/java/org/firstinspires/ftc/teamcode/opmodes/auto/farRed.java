@@ -47,23 +47,27 @@ public class farRed extends EnhancedOpMode {
     @Override
     public void linearOpMode() {
         waitForStart();
-        drive.setPoseEstimate(redFarStart); delayLinear((long)Context.autoWaitTime*1000);
-        drive.set(trajectories,auto_tasks());
-        drive.run(Paths.Purple);
-        drive.run(Paths.Score_Spike);
-        delayLinear(250);
-        if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
-            drive.run(Paths.Go_To_Stack);
-            delayLinear(750);
-            drive.run(Paths.Score_First);
+
+        if(opModeIsActive())
+        {
+            drive.setPoseEstimate(redFarStart); delayLinear((long)Context.autoWaitTime*1000);
+            drive.set(trajectories,auto_tasks());
+            drive.run(Paths.Purple);
+            drive.run(Paths.Score_Spike);
             delayLinear(250);
-            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
-                drive.run(Paths.Return_to_Stack);
+            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
+                drive.run(Paths.Go_To_Stack);
                 delayLinear(750);
-                drive.run(Paths.Score_Second);
+                drive.run(Paths.Score_First);
+                delayLinear(250);
+                if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
+                    drive.run(Paths.Return_to_Stack);
+                    delayLinear(750);
+                    drive.run(Paths.Score_Second);
+                }
             }
+            waitForEnd();
         }
-        waitForEnd();
     }
     public void initLoop() {
         drive.initLoop();

@@ -39,8 +39,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
     ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesBottomRow, slidesSetLine1, slidesSetLine2,
-            slidesSetLine3, rightExtend, depositMacro, normalExtend, leftExtend, CCW45, CW45, clawManual, noExtend;
-    TriggerReader slidesReset;
+            slidesSetLine3, rightExtend, depositMacro, normalExtend, leftExtend, CCW45, CW45, clawManual, slidesReset;
     double ninja;
     int sweeperCounter;
     int wristRotateCounter = 2;
@@ -64,9 +63,9 @@ public class TeleOpRewrite extends EnhancedOpMode {
             }
 
             //HANG
-            if (gamepad1.dpad_up)
+            if (gamepad2.right_trigger > 0.3)
                 robot.setHangPower(1);
-            else if (gamepad1.dpad_down)
+            else if (gamepad2.left_trigger > 0.3)
                 robot.setHangPower(-1);
             else
               robot.setHangPower(0);
@@ -155,7 +154,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
                     scheduler.scheduleTaskList(actions.transitionDeposit(depositState,DepositState.RIGHT));
                 }
                 depositState = DepositState.RIGHT;
-            } else if (noExtend.wasJustPressed()) {
+            } else if (normalExtend.wasJustPressed() && depositState==DepositState.EXTENDED) {
 
                 if(slides.getState()!= Slides.SlideState.GROUND && slides.getState()!=Slides.SlideState.GROUND_UNTIL_LIMIT){
                     scheduler.scheduleTaskList(actions.transitionDeposit(depositState,DepositState.NORMAL));
@@ -278,16 +277,20 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 clawManual = new ToggleButtonReader(g1, GamepadKeys.Button.X),
                 normalExtend = new ToggleButtonReader(g2, GamepadKeys.Button.Y),
                 rightExtend = new ToggleButtonReader(g2, GamepadKeys.Button.B),
-                noExtend = new ToggleButtonReader(g2, GamepadKeys.Button.A),
                 leftExtend = new ToggleButtonReader(g2, GamepadKeys.Button.X),
-                slidesReset =new TriggerReader(g2, GamepadKeys.Trigger.RIGHT_TRIGGER)
+                slidesReset =new ToggleButtonReader(g2, GamepadKeys.Button.A)
 
         };
 
         sweeperPositions = new Intake.SweeperState[]{
                 Intake.SweeperState.ONE_SWEEP,
                 Intake.SweeperState.TWO_SWEEP,
-                Intake.SweeperState.THREE_SWEEP
+                Intake.SweeperState.THREE_SWEEP,
+                Intake.SweeperState.FOUR_SWEEP,
+                Intake.SweeperState.FIVE_SWEEP,
+                Intake.SweeperState.SIX_SWEEP,
+                Intake.SweeperState.SEVEN_SWEEP,
+                Intake.SweeperState.EIGHT_SWEEP
         };
         wristRotatePositions = new Deposit.RotateState[]{
                 Deposit.RotateState.MINUS_NINETY,

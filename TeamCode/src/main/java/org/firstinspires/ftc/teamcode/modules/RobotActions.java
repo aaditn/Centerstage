@@ -378,6 +378,7 @@ public class RobotActions
                     .delay(100)
                     .moduleAction(slides, row)
                     .moduleAction(deposit, Deposit.WristState.HOVER)
+                    .delay(100)
                     .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                     .delay(400)
                     //.await(()->slides.getStatus()==Module.Status.IDLE)

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto_paths;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
 import org.firstinspires.ftc.teamcode.auto_paths.door_paths.closeBlueDoor;
 import org.firstinspires.ftc.teamcode.auto_paths.door_paths.closeRedDoor;
 import org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor;
@@ -25,5 +27,16 @@ public class Batch {
             add(closeRedDoor.trajectories);
             add(closeBlueDoor.trajectories);
         }
+    };
+    public static List<Pose2d> allStarts = new ArrayList<Pose2d>(){{
+        add(farRedTruss.redFarStart);
+        add(farBlueTruss.blueFarStart);
+        add(closeRedTruss.redCloseStart);
+        add(closeBlueTruss.blueCloseStart);
+        add(farRedDoor.redFarStart);
+        add(farBlueDoor.blueFarStart);
+        add(closeRedDoor.redCloseStart);
+        add(closeBlueDoor.blueCloseStart);
+    }
     };
 }

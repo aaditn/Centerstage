@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.content.Context;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,9 +19,13 @@ public class staticCreate implements OpModeManagerImpl.Notifications {
     @OnCreate
     public static void start(Context context) {
         ElapsedTime timeToInit = new ElapsedTime();
-        RobotLog.e("kai was here");
+        RobotLog.e("Static Force Initialization Begins");
         List<NamedTrajectory[][]> batchInit  = Batch.allTrajectories;
-        RobotLog.e(batchInit.toString()+ timeToInit.seconds());
+        RobotLog.e("All Trajectories Loaded in: "+ timeToInit.seconds()
+                +", Mark: " + batchInit.toString());
+        List<Pose2d> batchInitPT2 = Batch.allStarts;
+        RobotLog.e("All Start Pos Loaded in: "+timeToInit.seconds()+", Mark: " +batchInitPT2.toString());
+
     }
 
     @Override

@@ -47,14 +47,6 @@ public class farBlueDoor extends EnhancedOpMode {
     }
     @Override
     public void linearOpMode() {
-        while(trajectories == null){
-            if(blueFarStart == null){
-                RobotLog.e("cancer 3");
-            }
-            RobotLog.e("Cancer 2");
-        }
-
-        RobotLog.e("ITS A CANCER MODE MAN");
         waitForStart();
         drive.setPoseEstimate(blueFarStart);
         delayLinear((long)Context.autoWaitTime*1000);

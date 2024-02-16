@@ -136,7 +136,6 @@ public class Slides extends Module
         {
             targetPosition=slideCap;
         }
-        RobotLog.e("cancer");
         /*if(Math.abs(targetPosition-slide1.getCurrentPosition())<10)
         {
             controller.gainSchedule(closecoeff);

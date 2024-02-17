@@ -57,7 +57,7 @@ public class Intake extends Module {
         ZERO, ONE, TWO
     }
 
-    double currentPower, currentPosition, conveyorPower, sweeperPos;
+    double currentPower, currentPosition, conveyorLeftPower,conveyorRightPower, conveyorPower, sweeperPos;
     int s1Alpha = 1500, s1Dist = 75, s2Alpha = 1500, s2Dist = 75;
 
     PowerState pwstate;
@@ -122,13 +122,25 @@ public class Intake extends Module {
         super.manualChange(power);
         currentPower=power;
         conveyorPower=Math.signum(power);
+        conveyorLeftPower=0;
+        conveyorRightPower=0;
     }
 
-    public void manualChange(double power,double conveyer)
+    public void manualChange(double power,double conveyerP)
     {
         super.manualChange(Math.signum(power));
         currentPower=Math.signum(power);
-        conveyorPower=Math.signum(-conveyer);
+        conveyorPower=Math.signum(conveyerP);
+        conveyorLeftPower = 0;
+        conveyorRightPower = 0;
+    }
+    public void manualChange(double power,double conveyerP, boolean disable)
+    {
+        super.manualChange(Math.signum(power));
+        currentPower=Math.signum(power);
+        conveyorPower=Math.signum(conveyerP);
+        conveyorLeftPower = 0;
+        conveyorRightPower = 1.5;
     }
 
     @Override

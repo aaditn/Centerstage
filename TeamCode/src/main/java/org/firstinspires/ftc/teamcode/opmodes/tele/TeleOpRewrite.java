@@ -111,12 +111,15 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 intake.setState(sweeperPositions[sweeperCounter - 1]);
             }
             //INTAKE MANUAL POWER
-            if (gamepad2.right_stick_y < -0.25) {
+            if (gamepad2.right_stick_y < -0.25 && gamepad2.right_stick_x > 0.25) {
                 intake.setOperationState(Module.OperationState.MANUAL);
-                intake.manualChange(gamepad2.right_stick_y, 1);
+                intake.manualChange(gamepad2.right_stick_y, -1);
             }
-            else if(gamepad2.right_stick_y>.25&&Math.abs(gamepad2.right_stick_x)>.25){
-
+            else if(gamepad2.right_stick_y < -0.25 && gamepad2.right_stick_x < -0.25) {
+                intake.setOperationState(Module.OperationState.MANUAL);
+                intake.manualChange(gamepad2.right_stick_y, -1, true);
+            }
+            else if(gamepad2.right_stick_y > 0.25 && Math.abs(gamepad2.right_stick_x) > 0.25){
                 intake.setOperationState(Module.OperationState.MANUAL);
                 intake.manualChange(gamepad2.right_stick_y, gamepad2.right_stick_x);
             }

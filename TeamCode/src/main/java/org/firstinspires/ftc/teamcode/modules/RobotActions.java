@@ -414,8 +414,10 @@ public class RobotActions
 
     public List<Task> scorePixels()
     {
-        long delay = deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.LEFT? 600:
-                deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.RIGHT? 600: 300;
+        long delay = deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.LEFT? 700:
+                deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.RIGHT? 500: 200;
+        delay += slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW3? 0:
+                slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW2? 0: 100;
 
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)

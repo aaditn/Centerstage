@@ -11,17 +11,16 @@ import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 public class farBlueDoor {
-
     public static Pose2d blueFarStart = new Pose2d(-35, 61, Math.toRadians(270));
     public static TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(blueFarStart)
-            .splineToLinearHeading(new Pose2d(-34,27,Math.toRadians(30)),Math.toRadians(30))
+            .splineToLinearHeading(new Pose2d(-35,27,Math.toRadians(30)),Math.toRadians(30))
             .build();
 
     public static TrajectorySequence leftPurpleToBack = Robot.trajectorySequenceBuilder(leftPurple.end())
             .setReversed(true)
             .splineTo(new Vector2d(-29,9),Math.toRadians(0))
             .lineTo(new Vector2d(20,9))
-            .splineToConstantHeading(new Vector2d(49.5,40), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(49.5,41), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -29,7 +28,7 @@ public class farBlueDoor {
             .setReversed(false)
             .splineToConstantHeading(new Vector2d(20,10), Math.toRadians(-180),
                     Robot.getVelocityConstraint(40, 2, 15.06),
-                            Robot.getAccelerationConstraint(40))
+                    Robot.getAccelerationConstraint(40))
 
             .lineTo(new Vector2d(-40,10))
             .lineTo(new Vector2d(-53.5,10),
@@ -37,15 +36,16 @@ public class farBlueDoor {
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence midPurple = Robot.trajectorySequenceBuilder(blueFarStart)
-            .lineToLinearHeading(new Pose2d(-38, 12, Math.toRadians(90)))
+            .splineToSplineHeading(new Pose2d(-41, 40, Math.toRadians(0)), Math.toRadians(270))
+            .splineToSplineHeading(new Pose2d(-30,  11, Math.toRadians(120)), Math.toRadians(0))
             .build();
     public static TrajectorySequence midPurpleToBack = Robot.trajectorySequenceBuilder(midPurple.end())
-            .lineTo(new Vector2d(-38, 11.5))
+            .lineTo(new Vector2d(-29, 8))
             .splineToSplineHeading(new Pose2d(-26, 6, Math.toRadians(180)), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, 6))
-            .splineToConstantHeading(new Vector2d(49.5, 32), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(49.5, 35), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -59,8 +59,8 @@ public class farBlueDoor {
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence rightPurple = Robot.trajectorySequenceBuilder(blueFarStart)
-            .lineTo(new Vector2d(-35,40.5))
-            .lineToSplineHeading(new Pose2d(-35, 20,Math.toRadians(135)))
+            .splineToConstantHeading(new Vector2d(-36, 40), Math.toRadians(270))
+            .splineToSplineHeading(new Pose2d(-33, 14, Math.toRadians(135)), Math.toRadians(0))
             .build();
     public static TrajectorySequence rightPurpleToBack = Robot.trajectorySequenceBuilder(rightPurple.end())
             .setReversed(true)
@@ -69,7 +69,7 @@ public class farBlueDoor {
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, 8))
-            .splineToConstantHeading(new Vector2d(49.5, 26), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(49.5, 30), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();

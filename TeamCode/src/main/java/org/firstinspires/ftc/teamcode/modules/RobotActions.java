@@ -65,9 +65,27 @@ public class RobotActions
         double y = Context.dice == Dice.MIDDLE?yMid: Context.dice == Dice.RIGHT?yRight: yLeft;
 
         return Builder.create()
-                .delay(500)
+                .delay(50)
+                .moduleAction(intake, Intake.PositionState.AUTO)
+                .delay(50)
+                .await(() -> ((Math.abs(robot.getPoseEstimate().getHeading() - robot.get(0).getTrajectory().end().getHeading())<Math.toRadians(8))||robot.k!=Paths.Purple) &&
+                        (Math.abs(robot.getPoseEstimate().getY() - robot.get(0).getTrajectory().end().getY())<2))
                 .moduleAction(intake, Intake.PositionState.DOWN)
-                .await(() -> Math.abs(robot.getPoseEstimate().getY()) < y)
+                .delay(300)
+                .moduleAction(intake, Intake.SweeperState.ZERO)
+                .delay(300)
+                .moduleAction(intake, Intake.PositionState.MID)
+                .build();
+    }
+
+    public List<Task> deployPurple(double yLeft, double yMid, double yRight, long waitTime)
+    {
+        double y = Context.dice == Dice.MIDDLE?yMid: Context.dice == Dice.RIGHT?yRight: yLeft;
+
+        return Builder.create()
+                .delay(waitTime)
+                .moduleAction(intake, Intake.PositionState.DOWN)
+                .delay(500)
                 .moduleAction(intake, Intake.SweeperState.ONE_SWEEP)
                 .delay(500)
                 .moduleAction(intake, Intake.PositionState.MID)
@@ -396,17 +414,20 @@ public class RobotActions
 
     public List<Task> scorePixels()
     {
+        long delay = deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.LEFT? 600:
+                deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.RIGHT? 600: 300;
+
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .delay(300)
+                .delay(Context.isTele?300:700)
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                 .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
                 .delay(500)
                 .moduleAction(deposit, Deposit.RotateState.ZERO)
                 .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.PARTIAL)
-                .delay(300)
+                .delay(delay)
                 .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
 //                .delay(200)
                 .moduleAction(slides, Slides.SlideState.GROUND)
@@ -414,9 +435,9 @@ public class RobotActions
                 .await(()->slides.currentPosition()<180)
                 //.moduleAction(deposit, Deposit.WristState.PARTIAL2)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                .await(slides::isIdle)
-                .moduleAction(slides, Slides.SlideState.GROUND_UNTIL_LIMIT)
-                .await(slides::isIdle)
+                //.await(slides::isIdle)
+                //.moduleAction(slides, Slides.SlideState.GROUND_UNTIL_LIMIT)
+                //.await(slides::isIdle)
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                 .executeCode(()->slides.macroRunning=false)
                 .build();

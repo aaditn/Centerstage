@@ -307,9 +307,9 @@ public class Robot extends MecanumDrive
         leftRear = hardwareMap.get(DcMotorEx.class, "bl");
         rightRear = hardwareMap.get(DcMotorEx.class, "br");
         rightFront = hardwareMap.get(DcMotorEx.class, "fr");
-        cs3 = hardwareMap.get(ColorRangeSensor .class, "cs3");
-        cs2 = hardwareMap.get(ColorRangeSensor.class, "cs2");
-        cs1 = hardwareMap.get(ColorRangeSensor.class, "cs1");
+//        cs3 = hardwareMap.get(ColorRangeSensor .class, "cs3");
+//        cs2 = hardwareMap.get(ColorRangeSensor.class, "cs2");
+//        cs1 = hardwareMap.get(ColorRangeSensor.class, "cs1");
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
@@ -537,6 +537,9 @@ public class Robot extends MecanumDrive
     public void followTrajectory(Trajectory trajectory) {
         followTrajectoryAsync(trajectory);
         waitForIdle();
+    }
+    public  WhipTrajectory get (int index){
+        return this.trajectories.get(index);
     }
     public void set(NamedTrajectory[][] trajectories,List<Task>[] actions){
         switch (Context.dice){

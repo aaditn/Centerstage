@@ -46,9 +46,9 @@ public class Deposit extends Module
 
     public enum ClawState implements ModuleState
     {
-        OPEN, CLOSED_AUTO, CLOSED1, CLOSED2;
+        OPEN, CLOSED_AUTO, CLOSED1, CLOSED2; // 0.515
     }
-    public static double CLAW_OPEN=.70, CLAW_CLOSED_1=0.08, CLAW_CLOSED_2=0.16+.2, CLOSED_AUTO=CLAW_CLOSED_2;
+    public static double CLAW_OPEN=.8, CLAW_CLOSED_1=0.495, CLAW_CLOSED_2=0.6, CLOSED_AUTO=CLAW_CLOSED_2;
     public static double[] clawValues={CLAW_OPEN, CLOSED_AUTO, CLAW_CLOSED_1, CLAW_CLOSED_2};
 
 

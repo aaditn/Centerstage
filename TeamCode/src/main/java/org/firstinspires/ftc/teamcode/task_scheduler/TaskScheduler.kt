@@ -31,7 +31,11 @@ class TaskScheduler
                     val job = async(Dispatchers.Default){task.execute()}
                     if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java)
                     {
-                        job.join()
+                        while(!job.isCompleted)
+                        {
+                            if(!Context.opmode!!.opModeIsActive())
+                                job.cancel()
+                        }
                     }
                 }
             }
@@ -48,7 +52,11 @@ class TaskScheduler
                 val job = async(Dispatchers.Default){task.execute()}
                 if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java)
                 {
-                    job.join()
+                    while(!job.isCompleted)
+                    {
+                        if(!Context.opmode!!.opModeIsActive())
+                            job.cancel()
+                    }
                 }
             }
         }
@@ -58,7 +66,7 @@ class TaskScheduler
     {
         val startTime: Long = SystemClock.elapsedRealtime()
         val taskList: List<Task> = t
-        GlobalScope.launch(Dispatchers.Default)
+        val coroutineJob = GlobalScope.launch(Dispatchers.Default)
         {
             for(task in taskList)
             {
@@ -70,11 +78,17 @@ class TaskScheduler
                 {
                     while(!job.isCompleted)
                     {
-                        if(SystemClock.elapsedRealtime()-startTime>timeout)
+                        if(!Context.opmode!!.opModeIsActive())
                             job.cancel()
                     }
                 }
             }
+        }
+
+        while(!coroutineJob.isCompleted)
+        {
+            if(SystemClock.elapsedRealtime()-startTime>timeout || !Context.opmode!!.opModeIsActive())
+                coroutineJob.cancel()
         }
     }
 }

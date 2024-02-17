@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
 import org.firstinspires.ftc.teamcode.util.Context;
+import org.firstinspires.ftc.teamcode.util.enums.Dice;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
@@ -44,56 +45,25 @@ public class RobotActions
 
     public List<Task> lowerIntake(double drop_x , double sweep_x,int cycle)
     {
-        switch(cycle) {
-            case 0:
-                return Builder.create()
-                        .addTaskList(sweepySweep(drop_x, sweep_x, Intake.SweeperState.TWO_SWEEP, Intake.SweeperState.THREE_SWEEP))
-                        .build();
-            case 1:
-                return Builder.create()
-                        .addTaskList(sweepySweep(drop_x, sweep_x, Intake.SweeperState.FOUR_SWEEP, Intake.SweeperState.FIVE_SWEEP))
-                        .build();
+        Intake.SweeperState sweep1 = cycle==0?Intake.SweeperState.TWO_SWEEP: cycle==1?Intake.SweeperState.FOUR_SWEEP: Intake.SweeperState.SIX_SWEEP;
+        Intake.SweeperState sweep2 = cycle==0?Intake.SweeperState.THREE_SWEEP: cycle==1?Intake.SweeperState.FIVE_SWEEP: Intake.SweeperState.SEVEN_SWEEP;
 
-            case 2:
-                return Builder.create()
-                        .addTaskList(sweepySweep(drop_x, sweep_x, Intake.SweeperState.SIX_SWEEP, Intake.SweeperState.SEVEN_SWEEP))
-                        .build();
-        }
-        return Builder.create().build();
-    }
-    private List<Task> sweepySweep(double drop_x, double sweep_x, Intake.SweeperState sweep1, Intake.SweeperState sweep2)
-    {
         return Builder.create()
-                .await(() -> robot.getPoseEstimate().getX() < drop_x)
-                .moduleAction(intake, Intake.PositionState.DOWN)
-                .moduleAction(intake, Intake.PowerState.INTAKE)
-                .moduleAction(intake, Intake.ConveyorState.INTAKE)
-                .await(() -> robot.getPoseEstimate().getX() < sweep_x)
-                .moduleAction(intake, sweep1)
-                .delay(750)
-                .moduleAction(intake, sweep2)
-                .build();
+            .await(() -> robot.getPoseEstimate().getX() < drop_x)
+            .moduleAction(intake, Intake.PositionState.DOWN)
+            .moduleAction(intake, Intake.PowerState.INTAKE)
+            .moduleAction(intake, Intake.ConveyorState.INTAKE)
+            .await(() -> robot.getPoseEstimate().getX() < sweep_x)
+            .moduleAction(intake, sweep1)
+            .delay(750)
+            .moduleAction(intake, sweep2)
+            .build();
     }
 
-    public List<Task> deployPurple(double yLeft, double yMid, double yRight){
-        switch(Context.dice) {
-
-            case MIDDLE:
-                return Builder.create()
-                        .addTaskList(deployPurple(yMid))
-                        .build();
-            case RIGHT:
-                return Builder.create()
-                        .addTaskList(deployPurple(yRight))
-                        .build();
-            default:
-                return Builder.create()
-                        .addTaskList(deployPurple(yLeft))
-                        .build();
-        }
-    }
-    public List<Task> deployPurple(double y)
+    public List<Task> deployPurple(double yLeft, double yMid, double yRight)
     {
+        double y = Context.dice == Dice.MIDDLE?yMid: Context.dice == Dice.RIGHT?yRight: yLeft;
+
         return Builder.create()
                 .delay(500)
                 .moduleAction(intake, Intake.PositionState.DOWN)
@@ -444,9 +414,9 @@ public class RobotActions
                 .await(()->slides.currentPosition()<180)
                 //.moduleAction(deposit, Deposit.WristState.PARTIAL2)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
-//                .await(slides::isIdle)
-//                .moduleAction(slides, Slides.SlideState.GROUND_UNTIL_LIMIT)
-//                .await(slides::isIdle)
+                .await(slides::isIdle)
+                .moduleAction(slides, Slides.SlideState.GROUND_UNTIL_LIMIT)
+                .await(slides::isIdle)
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                 .executeCode(()->slides.macroRunning=false)
                 .build();

@@ -56,6 +56,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     private Encoder parallelEncoder, perpendicularEncoder;
 
     private Robot drive;
+    Pose2d relocalizePose;
+    boolean relocalizeRequired=false;
 
     public TwoWheelTrackingLocalizer(HardwareMap hardwareMap, SampleMecanumDrive drive) {
         super(Arrays.asList(
@@ -103,11 +105,23 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
             return inches * TICKS_PER_REV_THROUGHBORE / WHEEL_RADIUS_THROUGHBORE / 2 / Math.PI / GEAR_RATIO;
         }
     }
+
+    public void triggerRelocalize(Pose2d pose)
+    {
+        relocalizePose=pose;
+        relocalizeRequired=true;
+    }
+
     @Override
     public void update()
     {
-        super.update();
+        /*if(relocalizeRequired)
+        {
+            setPoseEstimate(relocalizePose);
+            relocalizeRequired=false;
+        }*/
 
+        super.update();
     }
 
     @Override

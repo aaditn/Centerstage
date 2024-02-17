@@ -26,7 +26,7 @@ public class Slides extends Module
     public double targetPosition, motorPower;
     public double debugValue=0;
     public static double slideCap=1400;
-    public static double limitTimeout=500;
+    public static double limitTimeout=300;
     public static boolean telemetryToggle=true;
     private boolean resetRequired;
 
@@ -84,8 +84,16 @@ public class Slides extends Module
         }
         //slide1.setPower(motorPower);
         //slide2.setPower(motorPower);
+        if(getState() == SlideState.GROUND_UNTIL_LIMIT)
+        {
+            slide1.setPower(0.5);
+            slide2.setPower(0.5);
+        }
+        else
+        {
             slide1.setPower(1);
             slide2.setPower(1);
+        }
         slide1.setTargetPosition((int) targetPosition);
         slide2.setTargetPosition((int) targetPosition);
 

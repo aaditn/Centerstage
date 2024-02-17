@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 public class AprilTagTestOpMode extends EnhancedOpMode
 {
     OpenCvWebcam camera;
-    AprilTagTestPipeline pipeline;
+    //AprilTagTestPipeline pipeline;
     public static int cameraWidth=240, cameraHeight=180;
     @Override
     public void linearOpMode() {
@@ -34,8 +34,8 @@ public class AprilTagTestOpMode extends EnhancedOpMode
     public void initialize() {
         int monitorID=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "camera"), monitorID);
-        pipeline=new AprilTagTestPipeline();
-        camera.setPipeline(pipeline);
+        //pipeline=new AprilTagTestPipeline();
+        //camera.setPipeline(pipeline);
         //FtcDashboard.getInstance().startCameraStream(camera, 0);
         camera.setMillisecondsPermissionTimeout(5000);
 
@@ -43,7 +43,7 @@ public class AprilTagTestOpMode extends EnhancedOpMode
             @Override
             public void onOpened()
             {
-                camera.startStreaming(CameraConstants.width, CameraConstants.height, OpenCvCameraRotation.UPRIGHT);
+                //camera.startStreaming(CameraConstants.width, CameraConstants.height, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -57,10 +57,10 @@ public class AprilTagTestOpMode extends EnhancedOpMode
         //Tel.instance().addData("Loop Time", test.loopTime);
 
         Tel.instance().update();
-        Tel.instance().addData("Detection Count", pipeline.getDetections().size());
-        Tel.instance().addData("FPS", pipeline.FPS);
-        Tel.instance().addData("Loop Time", pipeline.loopTime);
-        Tel.instance().addData("Running", pipeline.running);
+        //Tel.instance().addData("Detection Count", pipeline.getDetections().size());
+        //Tel.instance().addData("FPS", pipeline.FPS);
+        //Tel.instance().addData("Loop Time", pipeline.loopTime);
+        //Tel.instance().addData("Running", pipeline.running);
         Tel.instance().addData("Camera FPS", camera.getFps());
     }
 

@@ -144,6 +144,8 @@ public class Robot extends MecanumDrive
     NavxWrapper navxWrapper;
     private AHRS navx;
     ReadTimer chub, ehub;
+    public TwoWheelTrackingLocalizer localizer;
+
 
 
     public Robot(LinearOpMode l)
@@ -333,8 +335,9 @@ public class Robot extends MecanumDrive
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
+        localizer = new TwoWheelTrackingLocalizer(hardwareMap, this);
         // TODO: if desired, use setLocalizer() to change the localization method
-        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
+        setLocalizer(localizer);
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
@@ -459,6 +462,8 @@ public class Robot extends MecanumDrive
         droneLauncher.writeLoop();
     }
 
+
+
     public void onEnd()
     {
         Context.resetValues();
@@ -557,6 +562,8 @@ public class Robot extends MecanumDrive
                     scheduler.scheduleTaskList(item.getTasks());
                     waitForIdle();
                 }
+                else
+                    break;
             }
         }
         RobotLog.e("WE DIDNT FIND THE TRAJECTORY BRO");
@@ -586,7 +593,7 @@ public class Robot extends MecanumDrive
         {
             followTrajectorySequenceAsync(trajectorySequence);
             //maybe make it not blocking? or terminate after
-            scheduler.scheduleTaskListBlocking(taskList);
+            scheduler.scheduleTaskList(taskList);
             waitForIdle();
         }
     }

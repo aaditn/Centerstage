@@ -73,7 +73,7 @@ public class RobotActions
                 .moduleAction(intake, Intake.PositionState.DOWN)
                 .delay(300)
                 .moduleAction(intake, Intake.SweeperState.ZERO)
-                .delay(300)
+                .delay(200)
                 .moduleAction(intake, Intake.PositionState.MID)
                 .build();
     }
@@ -97,8 +97,8 @@ public class RobotActions
                 .awaitDtXWithin(-15,4)
                 .addTaskList(slidesOnlyAutonomousProgrammingVersionForAutomatedControl(Slides.SlideState.AUTO_LOW))
                 .executeCode(()->slides.macroRunning=false)
-                .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_Spike||robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                .delay(900)
+                .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                .delay(1200)
                 .addTaskList(scorePixels())
                 .build();
     }
@@ -117,7 +117,7 @@ public class RobotActions
         switch(state) {
             case LEFT:
                 return Builder.create()
-                        .await(() -> robot.getPoseEstimate().getX() > -10)
+                        .await(() -> robot.getPoseEstimate().getX() > -19)
                         .executeCode(() -> RobotLog.e("s"))
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
                         .await(() -> robot.getPoseEstimate().getX() > xPos)
@@ -126,7 +126,7 @@ public class RobotActions
                         .build();
             case RIGHT:
                 return Builder.create()
-                        .await(()->robot.getPoseEstimate().getX()>-10)
+                        .await(()->robot.getPoseEstimate().getX()>-19)
                         .executeCode(()-> RobotLog.e("s"))
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX()>xPos)
@@ -301,10 +301,9 @@ public class RobotActions
                                 .delay(100)
                                 .moduleAction(slides, row)
                                 .moduleAction(deposit, Deposit.WristState.HOVER)
-                                .delay(400)
+                                .delay(800)
                                 //.await(()->slides.getStatus()==Module.Status.IDLE)
                                 .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
-                                .delay(200)
                                 .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
                                 .executeCode(()->slides.macroRunning=false)
                                 .build();
@@ -334,7 +333,7 @@ public class RobotActions
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.CLOSED2)
-                .delay(1000)
+                .delay(500)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .delay(150)
                 .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
@@ -395,7 +394,7 @@ public class RobotActions
                     .moduleAction(deposit, Deposit.FlipState.DOWN)
                     .delay(100)
                     .moduleAction(slides, row)
-                    .moduleAction(deposit, Deposit.WristState.HOVER)
+                    .moduleAction(deposit, Deposit.WristState.DOWN)
                     .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                     .delay(400)
                     //.await(()->slides.getStatus()==Module.Status.IDLE)
@@ -414,10 +413,10 @@ public class RobotActions
 
     public List<Task> scorePixels()
     {
-        long delay = deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.LEFT? 700:
+        long delay = deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.LEFT? 800:
                 deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.RIGHT? 500: 200;
         delay += slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW3? 0:
-                slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW2? 0: 100;
+                slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW2? 0: 350;
 
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)

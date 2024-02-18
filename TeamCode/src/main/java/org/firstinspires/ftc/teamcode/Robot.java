@@ -44,7 +44,6 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -569,7 +568,7 @@ public class Robot extends MecanumDrive
                     break;
             }
         }
-        RobotLog.e("WE DIDNT FIND THE TRAJECTORY BRO");
+        //RobotLog.e("WE DIDNT FIND THE TRAJECTORY BRO");
 
     }
 
@@ -623,11 +622,11 @@ public class Robot extends MecanumDrive
 
         }
             if(x==null){
-                RobotLog.e("yep");
+                //RobotLog.e("yep");
                 update();
                 break;
             }else {
-                RobotLog.e("nah");
+                //RobotLog.e("nah");
             }
         }
     }

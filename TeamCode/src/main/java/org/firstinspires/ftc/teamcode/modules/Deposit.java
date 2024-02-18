@@ -38,17 +38,17 @@ public class Deposit extends Module
 
     public enum WristState implements ModuleState
     {
-        TRANSFER, DEPOSIT, HOVER, TELESCOPE, PARTIAL;
+        TRANSFER, DEPOSIT, HOVER, TELESCOPE, PARTIAL, DOWN;
     }
-    public static double WRIST_TRANSFER=0.83, WRIST_DEPOSIT=0.21, WRIST_HOVER=0.46, WRIST_SCOPE=0.83, WRIST_PARTIAL=0.74;
-    public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE, WRIST_PARTIAL};
+    public static double WRIST_TRANSFER=0.83, WRIST_DEPOSIT=0.21, WRIST_HOVER=0.46, WRIST_SCOPE=0.83, WRIST_PARTIAL=0.74, WRIST_DEPOSIT_DOWN=0.45;
+    public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE, WRIST_PARTIAL, WRIST_DEPOSIT_DOWN};
 
 
     public enum ClawState implements ModuleState
     {
         OPEN, CLOSED_AUTO, CLOSED1, CLOSED2; // 0.515
     }
-    public static double CLAW_OPEN=.8, CLAW_CLOSED_1=0.495, CLAW_CLOSED_2=0.6, CLOSED_AUTO=CLAW_CLOSED_2;
+    public static double CLAW_OPEN=.8, CLAW_CLOSED_1=0.495, CLAW_CLOSED_2=0.57, CLOSED_AUTO=CLAW_CLOSED_2;
     public static double[] clawValues={CLAW_OPEN, CLOSED_AUTO, CLAW_CLOSED_1, CLAW_CLOSED_2};
 
 

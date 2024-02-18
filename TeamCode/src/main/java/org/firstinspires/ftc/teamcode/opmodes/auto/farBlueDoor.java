@@ -5,10 +5,13 @@ import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor.blueFarStart;
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor.trajectories;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.auto_paths.Batch;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
@@ -21,6 +24,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
@@ -47,6 +51,13 @@ public class farBlueDoor extends EnhancedOpMode {
     }
     @Override
     public void linearOpMode() {
+        ElapsedTime timeToInit3 = new ElapsedTime();
+        RobotLog.e("Static Force Initialization Begins");
+        List<NamedTrajectory[][]> batchInit6  = Batch.allTrajectories;
+        RobotLog.e("All Trajectories Loaded in: "+ timeToInit3.seconds()
+                +", Mark: " + batchInit6.toString());
+        List<Pose2d> batchInitPT26 = Batch.allStarts;
+        RobotLog.e("All Start Pos Loaded in: "+timeToInit3.seconds()+", Mark: " +batchInitPT26.toString());
         waitForStart();
 
         if(opModeIsActive())
@@ -54,9 +65,13 @@ public class farBlueDoor extends EnhancedOpMode {
             drive.setPoseEstimate(blueFarStart);
             delayLinear((long)Context.autoWaitTime*1000);
             drive.set(trajectories,auto_tasks());
+            RobotLog.e("things mapped");
             drive.run(Paths.Purple);
+            RobotLog.e("purple");
             drive.run(Paths.Score_Spike);
+            RobotLog.e("yellow");
             delayLinear(550);
+            RobotLog.e("delaying");
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
                 drive.run(Paths.Go_To_Stack);
                 delayLinear(750);
@@ -70,6 +85,7 @@ public class farBlueDoor extends EnhancedOpMode {
                 }
             }
             waitForEnd();
+            RobotLog.e("end");
         }
     }
 
@@ -104,7 +120,7 @@ public class farBlueDoor extends EnhancedOpMode {
         intake.setState(Intake.SweeperState.INIT);
         deposit.setState(Deposit.FlipState.TRANSFER);
         deposit.setState(Deposit.ClawState.CLOSED1);
-        RobotLog.e("ROLLIT HAHAHAHAHAHAHAHAHAHAHAHA");
+        //RobotLog.e("ROLLIT HAHAHAHAHAHAHAHAHAHAHAHA");
     }
 
     @Override

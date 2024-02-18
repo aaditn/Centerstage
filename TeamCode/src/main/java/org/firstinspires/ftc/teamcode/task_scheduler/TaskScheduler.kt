@@ -31,11 +31,7 @@ class TaskScheduler
                     val job = async(Dispatchers.Default){task.execute()}
                     if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java)
                     {
-                        while(!job.isCompleted)
-                        {
-                            if(!Context.opmode!!.opModeIsActive())
-                                job.cancel()
-                        }
+                        job.join()
                     }
                 }
             }

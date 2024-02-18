@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.modules.moduleUtil.*;
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 import org.firstinspires.ftc.teamcode.util.BPIDFController;
 import org.firstinspires.ftc.teamcode.util.Tel;
 
@@ -103,7 +103,7 @@ public class Slides extends Module
     public void internalUpdate()
     {
 
-        RobotLog.e("cancer");
+        //RobotLog.e("cancer");
         if(getState()==SlideState.GROUND_UNTIL_LIMIT&&(slidesLimit.isPressed()||super.timeSpentInState()>limitTimeout))
         {
             resetRequired=true;

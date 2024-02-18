@@ -49,7 +49,7 @@ object Context
     }
     @JvmStatic fun clearValues()
     {
-        opmode=null;
+        //opmode=null;
         tel=null;
         isTeamRed=true;
         isTele=true;

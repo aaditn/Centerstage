@@ -48,12 +48,11 @@ public class BigT_AKA_Trajectory {
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence midPurple = Robot.trajectorySequenceBuilder(blueFarStart)
-            .splineToSplineHeading(new Pose2d(-41, 40, Math.toRadians(0)), Math.toRadians(270))
-            .splineToSplineHeading(new Pose2d(-29, 13, Math.toRadians(120)), Math.toRadians(0))
+            .lineToLinearHeading(new Pose2d(-37, 11, Math.toRadians(90)))
             .build();
     public static TrajectorySequence midPurpleToBack = Robot.trajectorySequenceBuilder(midPurple.end())
-            .lineTo(new Vector2d(-29, 8))
-            .splineToSplineHeading(new Pose2d(-26, 6, Math.toRadians(180)), Math.toRadians(0),
+            .lineTo(new Vector2d(-37, 10.9))
+            .splineToSplineHeading(new Pose2d(-18, 6, Math.toRadians(180)), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, 6))
@@ -71,8 +70,8 @@ public class BigT_AKA_Trajectory {
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence rightPurple = Robot.trajectorySequenceBuilder(blueFarStart)
-            .splineToConstantHeading(new Vector2d(-36, 40), Math.toRadians(270))
-            .splineToSplineHeading(new Pose2d(-33, 14, Math.toRadians(135)), Math.toRadians(0))
+            .splineToConstantHeading(new Vector2d(-39, 40), Math.toRadians(270))
+            .lineToSplineHeading(new Pose2d(-39, 18, Math.toRadians(150)))
             .build();
     public static TrajectorySequence rightPurpleToBack = Robot.trajectorySequenceBuilder(rightPurple.end())
             .setReversed(true)

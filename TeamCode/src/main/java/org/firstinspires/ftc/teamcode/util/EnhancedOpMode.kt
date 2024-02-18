@@ -33,7 +33,7 @@ abstract class EnhancedOpMode(): LinearOpMode ()
         initialize()
         startCoroutine()
         linearOpMode()
-        while(!isStopRequested)
+        while(opModeIsActive())
         {
 
         }

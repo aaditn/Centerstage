@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.ftccommon.external.OnCreate;
 import org.firstinspires.ftc.ftccommon.external.OnDestroy;
+import org.firstinspires.ftc.robotcore.internal.opmode.AnnotatedOpModeClassFilter;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.auto_paths.Batch;
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
@@ -25,6 +26,10 @@ public class staticCreate {
     private static final BroadcastReceiver fastReloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            while(getResultCode()!=1)
+            {
+                RobotLog.e("waiting");
+            }
             malding=true;
             suffering.reset();
         }
@@ -51,7 +56,7 @@ public class staticCreate {
                 {
                     RobotLog.e("Running in bg" + malding);
 
-                        if(malding &&suffering.milliseconds()>10000){
+                        if(malding && suffering.milliseconds()>10000){
                         ElapsedTime timeToInit3 = new ElapsedTime();
                         RobotLog.e("Static Force Initialization Begins");
                         List<NamedTrajectory[][]> batchInit6  = Batch.allTrajectories;

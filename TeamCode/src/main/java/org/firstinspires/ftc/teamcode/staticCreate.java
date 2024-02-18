@@ -61,9 +61,9 @@ public class staticCreate {
                         RobotLog.e("Static Force Initialization Begins");
                         List<NamedTrajectory[][]> batchInit6  = Batch.allTrajectories;
                         RobotLog.e("All Trajectories Loaded in: "+ timeToInit3.seconds()
-                                +", Mark: " + batchInit.toString());
+                                +", Mark: " + batchInit6.toString());
                         List<Pose2d> batchInitPT26 = Batch.allStarts;
-                        RobotLog.e("All Start Pos Loaded in: "+timeToInit3.seconds()+", Mark: " +batchInitPT2.toString());
+                        RobotLog.e("All Start Pos Loaded in: "+timeToInit3.seconds()+", Mark: " +batchInitPT26.toString());
                         malding=false;
                         }
                     try {

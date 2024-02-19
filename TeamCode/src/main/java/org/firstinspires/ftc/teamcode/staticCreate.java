@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.ftccommon.external.OnCreate;
 import org.firstinspires.ftc.ftccommon.external.OnDestroy;
-import org.firstinspires.ftc.robotcore.internal.opmode.AnnotatedOpModeClassFilter;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.auto_paths.Batch;
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
@@ -26,12 +25,12 @@ public class staticCreate {
     private static final BroadcastReceiver fastReloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            while(getResultCode()!=1)
+            if(getResultCode()==1)
             {
-                RobotLog.e("waiting");
+                malding=true;
+                suffering.reset();
+                RobotLog.e("wee woo");
             }
-            malding=true;
-            suffering.reset();
         }
     };
     @OnCreate
@@ -44,9 +43,12 @@ public class staticCreate {
                 +", Mark: " + batchInit.toString());
         List<Pose2d> batchInitPT2 = Batch.allStarts;
         RobotLog.e("All Start Pos Loaded in: "+timeToInit.seconds()+", Mark: " +batchInitPT2.toString());
-        AppUtil.getDefContext().registerReceiver(fastReloadReceiver, new IntentFilter("team11260.RELOAD_FAST_LOAD"));
-        //RegisteredOpModes.getInstance().register("Z", RegistrationOpModeTest.class);
+        IntentFilter filter = new IntentFilter("team11260.RELOAD_FAST_LOAD");
+        filter.setPriority(-50);
+        AppUtil.getDefContext().registerReceiver(fastReloadReceiver, filter);
+        //fastReloadReceiver.set
 
+        //RegisteredOpModes.getInstance().register("Z", RegistrationOpModeTest.class);
         (new Thread()
         {
             @Override public void run()
@@ -56,21 +58,28 @@ public class staticCreate {
                 {
                     RobotLog.e("Running in bg" + malding);
 
-                        if(malding && suffering.milliseconds()>10000){
-                        ElapsedTime timeToInit3 = new ElapsedTime();
-                        RobotLog.e("Static Force Initialization Begins");
-                        List<NamedTrajectory[][]> batchInit6  = Batch.allTrajectories;
-                        RobotLog.e("All Trajectories Loaded in: "+ timeToInit3.seconds()
-                                +", Mark: " + batchInit6.toString());
-                        List<Pose2d> batchInitPT26 = Batch.allStarts;
-                        RobotLog.e("All Start Pos Loaded in: "+timeToInit3.seconds()+", Mark: " +batchInitPT26.toString());
-                        malding=false;
+                        if(malding)
+                        {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            ElapsedTime timeToInit3 = new ElapsedTime();
+                            RobotLog.e("Static Force Initialization Begins");
+                            List<NamedTrajectory[][]> batchInit6  = Batch.allTrajectories;
+                            RobotLog.e("All Trajectories Loaded in: "+ timeToInit3.seconds()
+                                    +", Mark: " + batchInit6.toString());
+                            List<Pose2d> batchInitPT26 = Batch.allStarts;
+                            RobotLog.e("All Start Pos Loaded in: "+timeToInit3.seconds()+", Mark: " +batchInitPT26.toString());
+                            malding=false;
                         }
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
 
                 }
             }

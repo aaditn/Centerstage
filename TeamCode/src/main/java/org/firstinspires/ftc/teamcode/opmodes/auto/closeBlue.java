@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.Tel;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
@@ -106,6 +107,7 @@ public class closeBlue extends EnhancedOpMode {
     @Override
     public void primaryLoop() {
         drive.primaryLoop();
+        Tel.instance().addData("Pos", drive.getPoseEstimate().getX(), true);
     }
 
 

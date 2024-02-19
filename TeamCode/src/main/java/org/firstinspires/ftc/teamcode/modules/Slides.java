@@ -25,7 +25,7 @@ public class Slides extends Module
     BPIDFController controller;
     public double targetPosition, motorPower;
     public double debugValue=0;
-    public static double slideCap=1400;
+    public static double slideCap=1550;
     public static double limitTimeout=300;
     public static boolean telemetryToggle=true;
     private boolean resetRequired;

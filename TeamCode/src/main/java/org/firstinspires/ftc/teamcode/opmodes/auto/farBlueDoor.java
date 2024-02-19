@@ -46,7 +46,7 @@ public class farBlueDoor extends EnhancedOpMode {
                 actions.lowerIntake(0, -52.5, 0),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT),
                 actions.lowerIntake(0, -52.5, 1),
-                actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT)
+                actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT, true)
         );
     }
     @Override
@@ -55,7 +55,7 @@ public class farBlueDoor extends EnhancedOpMode {
         RobotLog.e("Static Force Initialization Begins");
         List<NamedTrajectory[][]> batchInit6  = Batch.allTrajectories;
         RobotLog.e("All Trajectories Loaded in: "+ timeToInit3.seconds()
-                +", Mark: " + batchInit6.toString());
+                +", Mark: " + batchInit6.toString() +",Key: "+batchInit6.get(0)[0][0].getName());
         List<Pose2d> batchInitPT26 = Batch.allStarts;
         RobotLog.e("All Start Pos Loaded in: "+timeToInit3.seconds()+", Mark: " +batchInitPT26.toString());
         waitForStart();
@@ -76,7 +76,7 @@ public class farBlueDoor extends EnhancedOpMode {
                 drive.run(Paths.Go_To_Stack);
                 delayLinear(750);
                 drive.run(Paths.Score_First);
-                delayLinear(550);
+                delayLinear(330);
                 if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
                     drive.run(Paths.Return_to_Stack);
                     delayLinear(750);

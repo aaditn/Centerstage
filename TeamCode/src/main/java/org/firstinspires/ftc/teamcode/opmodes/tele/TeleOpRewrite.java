@@ -40,7 +40,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
             slidesSetLine3, rightExtend, depositMacro, normalExtend, leftExtend, CCW45, CW45, clawManual, slidesReset;
     double ninja;
     int sweeperCounter;
-    int wristRotateCounter = 2;
+    int wristRotateCounter = 3;
 
     public enum DepositState
     {
@@ -294,6 +294,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 Intake.SweeperState.EIGHT_SWEEP
         };
         wristRotatePositions = new Deposit.RotateState[]{
+                Deposit.RotateState.MINUS_ONE_THREE_FIVE,
                 Deposit.RotateState.MINUS_NINETY,
                 Deposit.RotateState.MINUS_FOURTY_FIVE,
                 Deposit.RotateState.ZERO,

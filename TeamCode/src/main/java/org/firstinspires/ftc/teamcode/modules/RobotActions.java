@@ -98,9 +98,9 @@ public class RobotActions
                 .addTaskList(slidesOnlyAutonomousProgrammingVersionForAutomatedControl(Slides.SlideState.AUTO_TWO))
                 .executeCode(()->slides.macroRunning=false)
                 .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                .delay(700)
+                .delay(1200)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .delay(1100)
+                .delay(800)
                 .addTaskList(resetOnly())
                 .build();
     }

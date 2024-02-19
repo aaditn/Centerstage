@@ -53,8 +53,7 @@ public class RobotActions
             .moduleAction(intake, Intake.PositionState.DOWN)
             .moduleAction(intake, Intake.PowerState.INTAKE)
             .moduleAction(intake, Intake.ConveyorState.INTAKE)
-            .await(() -> robot.getPoseEstimate().getX() < sweep_x)
-                .delay(300)
+            .awaitDtXWithin(-57, 4)
             .moduleAction(intake, sweep1)
             .delay(750)
             .moduleAction(intake, sweep2)
@@ -93,15 +92,28 @@ public class RobotActions
                 .build();
     }
 
-    public List<Task> yellowDrop(double xPos){
+    public List<Task> yellowDrop(double xPos, double startSlides){
         return Builder.create()
-                .awaitDtXWithin(-15,4)
+                .awaitDtXWithin(startSlides,4)
+                .addTaskList(slidesOnlyAutonomousProgrammingVersionForAutomatedControl(Slides.SlideState.AUTO_TWO))
+                .executeCode(()->slides.macroRunning=false)
+                .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                .delay(700)
+                .moduleAction(deposit, Deposit.ClawState.OPEN)
+                .delay(1100)
+                .addTaskList(resetOnly())
+                .build();
+    }
+
+    public List<Task> yellowDrop(double xPos, double startSlides, boolean first){
+        return Builder.create()
+                .awaitDtXWithin(startSlides,4)
                 .addTaskList(slidesOnlyAutonomousProgrammingVersionForAutomatedControl(Slides.SlideState.AUTO_LOW))
                 .executeCode(()->slides.macroRunning=false)
                 .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                .delay(1200)
-                .moduleAction(deposit, Deposit.ClawState.OPEN)
                 .delay(700)
+                .moduleAction(deposit, Deposit.ClawState.OPEN)
+                .delay(1100)
                 .addTaskList(resetOnly())
                 .build();
     }
@@ -147,7 +159,7 @@ public class RobotActions
                         .executeCode(()-> RobotLog.e("s"))
                         .addTaskList(slidesSide(Slides.SlideState.ROW1, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                        .delay(900)
+                        .delay(300)
                         .addTaskList(scorePixelsAuto())
                         .build();
             default:
@@ -170,7 +182,7 @@ public class RobotActions
                             return Builder.create()
                                     .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                                     .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
-                                    .delay(500)
+                                    .delay(800)
                                     .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                                     .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                                     .moduleAction(deposit,Deposit.FlipState.LEFT)
@@ -182,7 +194,7 @@ public class RobotActions
                             return Builder.create()
                                     .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                                     .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
-                                    .delay(500)
+                                    .delay(800)
                                     .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                                     .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                                     .moduleAction(deposit,Deposit.FlipState.RIGHT)
@@ -213,7 +225,7 @@ public class RobotActions
                             return Builder.create()
                                     .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                                     .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
-                                    .delay(500)
+                                    .delay(800)
                                     .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                                     .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                                     .moduleAction(deposit,Deposit.FlipState.LEFT)
@@ -254,7 +266,7 @@ public class RobotActions
                             return Builder.create()
                                     .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                                     .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
-                                    .delay(500)
+                                    .delay(800)
                                     .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                                     .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                                     .moduleAction(deposit,Deposit.FlipState.RIGHT)
@@ -277,7 +289,7 @@ public class RobotActions
                         return Builder.create()
                                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                                 .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
-                                .delay(500)
+                                .delay(800)
                                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                                 .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                                 .moduleAction(deposit,Deposit.FlipState.LEFT)
@@ -289,7 +301,7 @@ public class RobotActions
                         return Builder.create()
                                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                                 .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
-                                .delay(500)
+                                .delay(800)
                                 .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                                 .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                                 .moduleAction(deposit,Deposit.FlipState.RIGHT)
@@ -411,7 +423,7 @@ public class RobotActions
                     .moduleAction(deposit, Deposit.FlipState.DOWN)
                     .delay(100)
                     .moduleAction(slides, row)
-                    .moduleAction(deposit, Deposit.WristState.DOWN)
+                    .moduleAction(deposit, Deposit.WristState.HOVER)
                     .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                     .delay(400)
                     //.await(()->slides.getStatus()==Module.Status.IDLE)
@@ -433,7 +445,7 @@ public class RobotActions
         long delay = deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.LEFT? 800:
                 deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.RIGHT? 800: 50;
         delay += slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW3? 0:
-                slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW2? 0: 550;
+                slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW2? 300: 550;
 
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
@@ -445,14 +457,14 @@ public class RobotActions
                 .moduleAction(deposit, Deposit.RotateState.ZERO)
                 .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.PARTIAL)
-                .delay(400)
+                .delay(600)
                 .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
+                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
 //                .delay(200)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .delay(100)
                 .await(()->slides.currentPosition()<180)
-                //.moduleAction(deposit, Deposit.WristState.PARTIAL2)
-                .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                //.moduleAction(deposit, Deposit.WristState.PARTIAL2
                 //.await(slides::isIdle)
                 //.moduleAction(slides, Slides.SlideState.GROUND_UNTIL_LIMIT)
                 //.await(slides::isIdle)

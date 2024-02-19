@@ -16,7 +16,7 @@ public class Deposit extends Module
     public static boolean telemetryToggle;
     public static double transferOffset = 0.004;
 
-    public static double depositOffset = 0.01;
+    public static double depositOffset = -0.02;
     public static double sideOffset = -0.004;
 
     public enum ExtensionState implements ModuleState
@@ -40,7 +40,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE, PARTIAL, DOWN, DEPOSIT_SIDE;
     }
-    public static double WRIST_TRANSFER=0.8, WRIST_DEPOSIT=0.17, WRIST_HOVER=0.42, WRIST_SCOPE=0.77, WRIST_PARTIAL=0.68, WRIST_DEPOSIT_DOWN=0.39, WRIST_DEPOSIT_SIDE=0.15;
+    public static double WRIST_TRANSFER=0.8, WRIST_DEPOSIT=0.17, WRIST_HOVER=0.42, WRIST_SCOPE=0.77, WRIST_PARTIAL=0.68, WRIST_DEPOSIT_DOWN=WRIST_DEPOSIT, WRIST_DEPOSIT_SIDE=0.15;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE, WRIST_PARTIAL, WRIST_DEPOSIT_DOWN, WRIST_DEPOSIT_SIDE};
 
 

@@ -30,7 +30,7 @@ public class farBlueTruss {
                     Robot.getVelocityConstraint(40, 2.4, 15.06),
                     Robot.getAccelerationConstraint(35))
             .lineToConstantHeading(new Vector2d(20, 59))
-            .splineToConstantHeading(new Vector2d(50, 38), Math.toRadians(0))
+            .splineToConstantHeading(new Vector2d(45.5, 38), Math.toRadians(0))
             .build();
     public static TrajectorySequence leftBackToStack = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
             .setReversed(false)
@@ -54,7 +54,7 @@ public class farBlueTruss {
                     Robot.getVelocityConstraint(50, 2.4, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, 57))
-            .splineToConstantHeading(new Vector2d(49.5, 31), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(43.5, 31), Math.toRadians(0),
                     Robot.getVelocityConstraint(50, 2.4, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -72,16 +72,16 @@ public class farBlueTruss {
                     Robot.getAccelerationConstraint(35))
             .build();
     public static TrajectorySequence rightPurple = Robot.trajectorySequenceBuilder(blueFarStart)
-            .splineToConstantHeading(new Vector2d(-46.5, 34), Math.toRadians(270))
+            .splineToConstantHeading(new Vector2d(-46.5, 38), Math.toRadians(270))
             .build();
     public static TrajectorySequence rightPurpleToBack = Robot.trajectorySequenceBuilder(rightPurple.end())
             .setReversed(true)
-            .lineTo(new Vector2d(-46.5, 37))
+            .lineTo(new Vector2d(-46.5, 40))
             .splineToSplineHeading(new Pose2d(-34, 57, Math.toRadians(180)), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, 57))
-            .splineToConstantHeading(new Vector2d(50.5, 26), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(43.5, 26), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -91,10 +91,10 @@ public class farBlueTruss {
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(60))
             .lineToConstantHeading(new Vector2d(-28, 58))
-            .splineToConstantHeading(new Vector2d(-55, 33), Math.toRadians(180),
+            .splineToConstantHeading(new Vector2d(-55, 31.5), Math.toRadians(180),
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .lineToConstantHeading(new Vector2d(-58, 33),
+            .lineToConstantHeading(new Vector2d(-57.5, 31.5),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
@@ -104,7 +104,8 @@ public class farBlueTruss {
             .splineToConstantHeading(new Vector2d(-35, 57), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(49, 57),
+            .lineToConstantHeading(new Vector2d(30, 57))
+            .splineToConstantHeading(new Vector2d(48.5, 48), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -124,7 +125,7 @@ public class farBlueTruss {
             .splineToConstantHeading(new Vector2d(-35, 57), Math.toRadians(0),
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(49, 57),
+            .lineToConstantHeading(new Vector2d(43.5, 57),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();

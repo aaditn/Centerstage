@@ -36,7 +36,7 @@ public class closeRed extends EnhancedOpMode {
     private List<Task>[] auto_tasks() {
         return getTaskList(
                 actions.deployPurple(-35, -46, -35),
-                actions.yellowDrop(32),
+                actions.yellowDrop(47, 30),
                 actions.lowerIntake(-50, -56.5, 0),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
                 actions.lowerIntake(-50, -56.5, 1),

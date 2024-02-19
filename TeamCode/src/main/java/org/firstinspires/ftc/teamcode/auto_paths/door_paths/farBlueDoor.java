@@ -20,7 +20,7 @@ public class farBlueDoor {
             .setReversed(true)
             .splineTo(new Vector2d(-29,9.5),Math.toRadians(0))
             .lineTo(new Vector2d(20,9.5))
-            .splineToConstantHeading(new Vector2d(48,43), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(47,43), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -44,7 +44,7 @@ public class farBlueDoor {
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, 7))
-            .splineToConstantHeading(new Vector2d(47.5, 36), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(46.5, 36), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -68,7 +68,7 @@ public class farBlueDoor {
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, 8))
-            .splineToConstantHeading(new Vector2d(48.5, 29), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(47, 29), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -85,7 +85,7 @@ public class farBlueDoor {
     public static TrajectorySequence stackToBack1 = Robot.trajectorySequenceBuilder(leftBackToStack.end())
             .setReversed(true)
             .lineTo(new Vector2d(25,12))
-            .splineToConstantHeading(new Vector2d(52.5,19), Math.toRadians(0))
+            .splineToConstantHeading(new Vector2d(51,19), Math.toRadians(0))
             .build();
     public static TrajectorySequence backToStack1 = Robot.trajectorySequenceBuilder(stackToBack1.end())
 
@@ -100,7 +100,7 @@ public class farBlueDoor {
     public static TrajectorySequence stackToBack2 = Robot.trajectorySequenceBuilder(backToStack1.end())
             .setReversed(true)
             .lineTo(new Vector2d(25,12))
-            .splineToConstantHeading(new Vector2d(51.5,19), Math.toRadians(0))
+            .splineToConstantHeading(new Vector2d(50.5,19), Math.toRadians(0))
             .build();
 
     public static Paths[] trajectoryNames = {

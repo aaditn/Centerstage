@@ -22,12 +22,10 @@ public class BigT_AKA_Trajectory {
     //     I am here to serve the purpose of telling you don't delete me,
     // }
 
-
-    public static Pose2d redFarStart = new Pose2d(-35, -61, Math.toRadians(90));
-
+    public static Pose2d redFarStart = new Pose2d(-32.5, -61, Math.toRadians(90));
     public static TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(redFarStart)
-            .splineToConstantHeading(new Vector2d(-37, -40), Math.toRadians(90))
-            .lineToSplineHeading(new Pose2d(-37, -18, Math.toRadians(225)))
+            .splineToConstantHeading(new Vector2d(-35.5, -40), Math.toRadians(90))
+            .lineToSplineHeading(new Pose2d(-35.5, -18, Math.toRadians(225)))
             .build();
     public static TrajectorySequence leftPurpleToBack = Robot.trajectorySequenceBuilder(leftPurple.end())
             .setReversed(true)
@@ -36,7 +34,7 @@ public class BigT_AKA_Trajectory {
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, -8))
-            .splineToConstantHeading(new Vector2d(49.5, -29), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(47, -29), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -45,53 +43,52 @@ public class BigT_AKA_Trajectory {
             .splineToConstantHeading(new Vector2d(20,-9), Math.toRadians(180))
 
             .lineTo(new Vector2d(-52,-9))
-            .lineTo(new Vector2d(-56.5,-9),
+            .lineTo(new Vector2d(-55,-9),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence midPurple = Robot.trajectorySequenceBuilder(redFarStart)
-            .lineToLinearHeading(new Pose2d(-37, -10, Math.toRadians(270.01)))
+            .lineToLinearHeading(new Pose2d(-37, -9, Math.toRadians(270.01)))
             .build();
     public static TrajectorySequence midPurpleToBack = Robot.trajectorySequenceBuilder(midPurple.end())
-            .lineTo(new Vector2d(-37, -9.9))
-            .splineToSplineHeading(new Pose2d(-18, -7.5, Math.toRadians(180)), Math.toRadians(0),
+            .lineTo(new Vector2d(-37, -8.9))
+            .splineToSplineHeading(new Pose2d(-18, -7, Math.toRadians(180)), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(20, -7.5))
-            .splineToConstantHeading(new Vector2d(49.5, -37), Math.toRadians(0),
+            .lineToConstantHeading(new Vector2d(20, -7))
+            .splineToConstantHeading(new Vector2d(46, -36), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence midBackToStack = Robot.trajectorySequenceBuilder(midPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(20,-8), Math.toRadians(180))
+            .splineToConstantHeading(new Vector2d(20,-9), Math.toRadians(180))
 
-            .lineTo(new Vector2d(-52,-8))
-            .lineTo(new Vector2d(-55.5,-8),
+            .lineTo(new Vector2d(-52,-9))
+            .lineTo(new Vector2d(-55,-9),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
-
     public static TrajectorySequence rightPurple = Robot.trajectorySequenceBuilder(redFarStart)
             .splineToLinearHeading(new Pose2d(-36,-26,Math.toRadians(-25)),Math.toRadians(-25))
             .build();
 
     public static TrajectorySequence rightPurpleToBack = Robot.trajectorySequenceBuilder(rightPurple.end())
             .setReversed(true)
-            .splineTo(new Vector2d(-29,-9),Math.toRadians(0))
-            .lineTo(new Vector2d(20,-9))
-            .splineToConstantHeading(new Vector2d(48.5,-43), Math.toRadians(0),
+            .splineTo(new Vector2d(-29,-9.5),Math.toRadians(0))
+            .lineTo(new Vector2d(20,-9.5))
+            .splineToConstantHeading(new Vector2d(46.5,-43), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence rightBackToStack = Robot.trajectorySequenceBuilder(rightPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(20,-9), Math.toRadians(180),
+            .splineToConstantHeading(new Vector2d(20,-9.5), Math.toRadians(180),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
 
-            .lineTo(new Vector2d(-40,-9))
-            .lineTo(new Vector2d(-57,-9),
+            .lineTo(new Vector2d(-40,-9.5))
+            .lineTo(new Vector2d(-55,-9.5),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -106,15 +103,15 @@ public class BigT_AKA_Trajectory {
             .setReversed(false)
             .splineToConstantHeading(new Vector2d(25,-10), Math.toRadians(180))
 
-            .lineTo(new Vector2d(-40,-10))
-            .lineTo(new Vector2d(-53.5,-10),
+            .lineTo(new Vector2d(-40,-9))
+            .lineTo(new Vector2d(-57.5,-9),
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence stackToBack2 = Robot.trajectorySequenceBuilder(backToStack1.end())
             .setReversed(true)
-            .lineTo(new Vector2d(25,-10))
-            .splineToConstantHeading(new Vector2d(51,-16), Math.toRadians(0))
+            .lineTo(new Vector2d(25,-12))
+            .splineToConstantHeading(new Vector2d(51,-19), Math.toRadians(0))
             .build();
 
     public static Paths[] trajectoryNames = {
@@ -136,8 +133,4 @@ public class BigT_AKA_Trajectory {
             new TrajectorySequence[]{rightPurple, rightPurpleToBack, rightBackToStack, stackToBack1, backToStack1,stackToBack2},
             trajectoryNames);
     public static NamedTrajectory[][] trajectories = {leftTrajectories,midTrajectories,rightTrajectories};
-
-
-
-
 }

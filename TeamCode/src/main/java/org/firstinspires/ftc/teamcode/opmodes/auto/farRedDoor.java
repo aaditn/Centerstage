@@ -2,12 +2,16 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farRedTruss.redFarStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farRedTruss.trajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farRedDoor.redFarStart;
+import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farRedDoor.trajectories;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.auto_paths.Batch;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
@@ -20,12 +24,13 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
+import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 
-@Autonomous(name = "Far Red")
-public class farRed extends EnhancedOpMode {
+@Autonomous(name = "Far Red Door")
+public class farRedDoor extends EnhancedOpMode {
     Robot drive;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -36,40 +41,56 @@ public class farRed extends EnhancedOpMode {
 
     private List<Task>[] auto_tasks() {
         return getTaskList(
-                actions.deployPurple(35, 46, 35),
-                actions.yellowDrop(32),
-                actions.lowerIntake(-50, -56.5, 0),
+                actions.deployPurple(39, 11, 23),
+                actions.yellowDrop(49, -15),
+                actions.lowerIntake(0, -52.5, 0),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
-                actions.lowerIntake(-50, -56.5, 1),
-                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT)
+                actions.lowerIntake(0, -52.5, 1),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT, true)
         );
     }
     @Override
     public void linearOpMode() {
+        ElapsedTime timeToInit3 = new ElapsedTime();
+        RobotLog.e("Static Force Initialization Begins");
+        List<NamedTrajectory[][]> batchInit6  = Batch.allTrajectories;
+        RobotLog.e("All Trajectories Loaded in: "+ timeToInit3.seconds()
+                +", Mark: " + batchInit6.toString() +",Key: "+batchInit6.get(0)[0][0].getName());
+        List<Pose2d> batchInitPT26 = Batch.allStarts;
+        RobotLog.e("All Start Pos Loaded in: "+timeToInit3.seconds()+", Mark: " +batchInitPT26.toString());
         waitForStart();
 
         if(opModeIsActive())
         {
-            drive.setPoseEstimate(redFarStart); delayLinear((long)Context.autoWaitTime*1000);
+            drive.setPoseEstimate(redFarStart);
+            delayLinear((long)Context.autoWaitTime*1000);
             drive.set(trajectories,auto_tasks());
+            RobotLog.e("things mapped");
             drive.run(Paths.Purple);
+            RobotLog.e("purple");
             drive.run(Paths.Score_Spike);
-            delayLinear(250);
+            RobotLog.e("yellow");
+            delayLinear(550);
+            RobotLog.e("delaying");
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
                 drive.run(Paths.Go_To_Stack);
                 delayLinear(750);
                 drive.run(Paths.Score_First);
-                delayLinear(250);
+                delayLinear(330);
                 if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
                     drive.run(Paths.Return_to_Stack);
                     delayLinear(750);
                     drive.run(Paths.Score_Second);
+
                 }
             }
             waitForEnd();
+            RobotLog.e("end");
         }
     }
-    public void initLoop() {
+
+    public void initLoop()
+    {
         drive.initLoop();
     }
 
@@ -99,6 +120,7 @@ public class farRed extends EnhancedOpMode {
         intake.setState(Intake.SweeperState.INIT);
         deposit.setState(Deposit.FlipState.TRANSFER);
         deposit.setState(Deposit.ClawState.CLOSED1);
+        //RobotLog.e("ROLLIT HAHAHAHAHAHAHAHAHAHAHAHA");
     }
 
     @Override

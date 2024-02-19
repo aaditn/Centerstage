@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 
-@Autonomous(name = "Far Blue")
-public class farBlue extends EnhancedOpMode {
+@Autonomous(name = "Far Blue Truss")
+public class farBlueTruss extends EnhancedOpMode {
     Robot drive;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -36,11 +36,11 @@ public class farBlue extends EnhancedOpMode {
     private List<Task>[] auto_tasks() {
         return getTaskList(
                 actions.deployPurple(39, 46, 39),
-                actions.yellowDrop(47),
-                actions.lowerIntake(-50, -56.5, 0),
-                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
+                actions.yellowDrop(47, -15),
+                actions.lowerIntake(-40, -56.5, 0),
+                actions.scorePixels(47, TeleOpRewrite.DepositState.RIGHT),
                 actions.lowerIntake(-50, -56.5, 1),
-                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT)
+                actions.scorePixels(47, TeleOpRewrite.DepositState.RIGHT)
         );
     }
     @Override
@@ -61,6 +61,7 @@ public class farBlue extends EnhancedOpMode {
                 drive.run(Paths.Score_First);
                 delayLinear(250);
                 if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
+                    delayLinear(750);
                     drive.run(Paths.Return_to_Stack);
                     delayLinear(750);
                     drive.run(Paths.Score_Second);

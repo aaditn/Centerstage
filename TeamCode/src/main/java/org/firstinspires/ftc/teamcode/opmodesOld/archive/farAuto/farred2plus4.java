@@ -340,7 +340,7 @@ public class farred2plus4 extends EnhancedOpMode {
         drone.init();
         intake.setOperationState(Module.OperationState.PRESET);
         intake.setState(Intake.SweeperState.INIT);
-        deposit.setState(Deposit.FlipState.PRIMED);
+        deposit.setState(Deposit.FlipState.PRIMED_OLD);
         deposit.setState(Deposit.ClawState.CLOSED1);
     }
 }

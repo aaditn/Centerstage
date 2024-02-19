@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.closeBlueTru
 import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.closeBlueTruss.trajectories;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
@@ -56,7 +57,9 @@ public class closeBlue extends EnhancedOpMode {
             drive.set(trajectories,auto_tasks());
             drive.run(Paths.Purple);
             drive.run(Paths.Score_Spike);
+            RobotLog.e("yellow");
             delayLinear(250);
+            RobotLog.e("delaying");
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
                 drive.run(Paths.Go_To_Stack);
                 delayLinear(750);

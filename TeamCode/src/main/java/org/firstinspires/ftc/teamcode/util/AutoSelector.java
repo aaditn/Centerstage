@@ -6,10 +6,12 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 
+import org.firstinspires.ftc.teamcode.modules.Slides;
+
 public class AutoSelector
 {
     KeyReader[] keyReaders;
-    ButtonReader increase, decrease, swapLeft, swapRight;
+    ButtonReader increase, decrease, swapLeft, swapRight, parkLeft, parkRight, slideLow, slideTwo, slideOne;
     GamepadEx g1;
     static AutoSelector selector;
     int localAutoState;
@@ -23,7 +25,12 @@ public class AutoSelector
                 increase=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_UP),
                 decrease=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_DOWN),
                 swapLeft=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT),
-                swapRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_RIGHT)
+                swapRight=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_RIGHT),
+                parkLeft=new ToggleButtonReader(g1, GamepadKeys.Button.LEFT_BUMPER),
+                parkRight=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
+                slideLow=new ToggleButtonReader(g1, GamepadKeys.Button.A),
+                slideOne=new ToggleButtonReader(g1, GamepadKeys.Button.B),
+                slideTwo=new ToggleButtonReader(g1, GamepadKeys.Button.Y)
         };
     }
 
@@ -68,12 +75,41 @@ public class AutoSelector
         }
         Context.autoState=states[localAutoState];
 
-        Tel.instance().addData("Auto Wait Time", Context.autoWaitTime, 1);
-        Tel.instance().addData("Auto State Thing", Context.autoState, 1);
+        if(parkLeft.wasJustPressed())
+        {
+            Context.parkSide=ParkSide.LEFT;
+        }
+        else if(parkRight.wasJustPressed())
+        {
+            Context.parkSide=ParkSide.RIGHT;
+        }
+
+        if(slideOne.wasJustPressed())
+        {
+            Context.autonYellowHeight=Slides.SlideState.AUTO_LOW;
+        }
+        else if(slideTwo.wasJustPressed())
+        {
+            Context.autonYellowHeight=Slides.SlideState.AUTO_TWO;
+        }
+        else if(slideLow.wasJustPressed())
+        {
+            Context.autonYellowHeight=Slides.SlideState.HALF;
+        }
+
+        Tel.instance().addData("Auto Wait Time", Context.autoWaitTime, 0);
+        Tel.instance().addData("Auto State Thing", Context.autoState, 0);
+        Tel.instance().addData("Auto Yellow Height", Context.autonYellowHeight, 0);
+        Tel.instance().addData("Auto Park Side", Context.parkSide, 0);
     }
 
     public enum CyclePixelCount
     {
         ZERO, TWO, FOUR, FIVE, SIX
+    }
+
+    public enum ParkSide
+    {
+        LEFT, RIGHT
     }
 }

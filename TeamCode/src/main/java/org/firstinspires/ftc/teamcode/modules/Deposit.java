@@ -38,10 +38,10 @@ public class Deposit extends Module
 
     public enum WristState implements ModuleState
     {
-        TRANSFER, DEPOSIT, HOVER, TELESCOPE, PARTIAL, DOWN, DEPOSIT_SIDE;
+        TRANSFER, DEPOSIT, HOVER, TELESCOPE, PARTIAL, DOWN, DEPOSIT_SIDE, YELLOW_HOVER;
     }
-    public static double WRIST_TRANSFER=0.69, WRIST_DEPOSIT=0.17, WRIST_HOVER=0.42, WRIST_SCOPE=0.59, WRIST_PARTIAL=0.57, WRIST_DEPOSIT_DOWN=WRIST_DEPOSIT, WRIST_DEPOSIT_SIDE=0.15;
-    public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE, WRIST_PARTIAL, WRIST_DEPOSIT_DOWN, WRIST_DEPOSIT_SIDE};
+    public static double WRIST_TRANSFER=0.65, WRIST_DEPOSIT=0.07, WRIST_HOVER=0.38, WRIST_SCOPE=0.55, WRIST_PARTIAL=0.53, WRIST_DEPOSIT_DOWN=WRIST_DEPOSIT, WRIST_DEPOSIT_SIDE=WRIST_DEPOSIT, WRIST_YELLOW_HOVER=0.29;
+    public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE, WRIST_PARTIAL, WRIST_DEPOSIT_DOWN, WRIST_DEPOSIT_SIDE, WRIST_YELLOW_HOVER};
 
 
     public enum ClawState implements ModuleState
@@ -102,8 +102,8 @@ public class Deposit extends Module
     protected void telemetryUpdate()
     {
         super.telemetryUpdate();
-        Tel.instance().addData("Flip 1 Pos", leftArm.getPosition(), 0);
-        Tel.instance().addData("Flip 2 Pos", rightArm.getPosition(), 0);
+        Tel.instance().addData("Flip 1 Pos", leftArm.getPosition(), 1);
+        Tel.instance().addData("Flip 2 Pos", rightArm.getPosition(), 1);
         Tel.instance().addData("Deposit Offset", depositOffset);
         Tel.instance().addData("Transfer Offset", transferOffset);
         Tel.instance().addData("Pos without offset", converter.getOutput(getState(FlipState.class)));

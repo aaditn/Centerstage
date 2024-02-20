@@ -42,7 +42,7 @@ public class farRedDoor extends EnhancedOpMode {
     private List<Task>[] auto_tasks() {
         return getTaskList(
                 actions.deployPurple(39, 11, 23),
-                actions.yellowDrop(49, -15),
+                actions.yellowDrop(49, -15, Context.autonYellowHeight),
                 actions.lowerIntake(0, -52.5, 0),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
                 actions.lowerIntake(0, -52.5, 1),
@@ -83,6 +83,13 @@ public class farRedDoor extends EnhancedOpMode {
                     drive.run(Paths.Score_Second);
 
                 }
+            }
+            delayLinear(100);
+            if (Context.parkSide.equals(AutoSelector.ParkSide.LEFT))
+            {
+                drive.run(Paths.ParkLeft);
+            } else if (Context.parkSide.equals(AutoSelector.ParkSide.RIGHT)) {
+                drive.run(Paths.ParkRight);
             }
             waitForEnd();
             RobotLog.e("end");

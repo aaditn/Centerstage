@@ -353,8 +353,8 @@ public class Robot extends MecanumDrive
     /**/    //navxWrapper.update();
         if(!Context.isTele)
         {
-            AutoSelector.getInstance().loop();
             Tel.instance().addData("Vision Zone", Context.dice, 0);
+            AutoSelector.getInstance().loop();
         }
         tel.update();
         //telemetryUpdate();

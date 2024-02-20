@@ -20,9 +20,12 @@ public class farBlueDoor {
             .setReversed(true)
             .splineTo(new Vector2d(-29,9.5),Math.toRadians(0))
             .lineTo(new Vector2d(20,9.5))
-            .splineToConstantHeading(new Vector2d(47,43), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(40,43), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
+            .lineTo(new Vector2d(47, 43),
+                    Robot.getVelocityConstraint(15, 2, 15.06),
+                    Robot.getAccelerationConstraint(15))
             .build();
     public static TrajectorySequence leftBackToStack = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
             .setReversed(false)
@@ -44,9 +47,12 @@ public class farBlueDoor {
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, 7))
-            .splineToConstantHeading(new Vector2d(46.5, 36), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(40.5, 35), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
+            .lineTo(new Vector2d(47, 35),
+                    Robot.getVelocityConstraint(15, 2, 15.06),
+                    Robot.getAccelerationConstraint(15))
             .build();
     public static TrajectorySequence midBackToStack = Robot.trajectorySequenceBuilder(midPurpleToBack.end())
             .setReversed(false)
@@ -58,8 +64,8 @@ public class farBlueDoor {
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence rightPurple = Robot.trajectorySequenceBuilder(blueFarStart)
-            .splineToConstantHeading(new Vector2d(-37, 40), Math.toRadians(270))
-            .lineToSplineHeading(new Pose2d(-37, 18, Math.toRadians(135)))
+            .splineToConstantHeading(new Vector2d(-35, 40), Math.toRadians(270))
+            .lineToSplineHeading(new Pose2d(-35, 18, Math.toRadians(135)))
             .build();
     public static TrajectorySequence rightPurpleToBack = Robot.trajectorySequenceBuilder(rightPurple.end())
             .setReversed(true)
@@ -68,9 +74,12 @@ public class farBlueDoor {
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, 8))
-            .splineToConstantHeading(new Vector2d(48, 29), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(40, 29), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
+            .lineTo(new Vector2d(47, 29),
+                    Robot.getVelocityConstraint(15, 2, 15.06),
+                    Robot.getAccelerationConstraint(15))
             .build();
     public static TrajectorySequence rightBackToStack = Robot.trajectorySequenceBuilder(rightPurpleToBack.end())
             .setReversed(false)
@@ -103,23 +112,37 @@ public class farBlueDoor {
             .splineToConstantHeading(new Vector2d(50.5,19), Math.toRadians(0))
             .build();
 
+
+    public static TrajectorySequence parkLeft = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
+            .lineToConstantHeading(new Vector2d(52, 55),
+                    Robot.getVelocityConstraint(40, 2, 15.06),
+                    Robot.getAccelerationConstraint(40))
+            .build();
+    public static TrajectorySequence parkRight = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
+            .lineToConstantHeading(new Vector2d(52, 25),
+                    Robot.getVelocityConstraint(40, 2, 15.06),
+                    Robot.getAccelerationConstraint(40))
+            .build();
+
     public static Paths[] trajectoryNames = {
             Paths.Purple,
             Paths.Score_Spike,
             Paths.Go_To_Stack,
             Paths.Score_First,
             Paths.Return_to_Stack,
-            Paths.Score_Second
+            Paths.Score_Second,
+            Paths.ParkLeft,
+            Paths.ParkRight
     };
 
     public static NamedTrajectory[] leftTrajectories = map(
-            new TrajectorySequence[]{leftPurple, leftPurpleToBack, leftBackToStack,stackToBack1, backToStack1,stackToBack2},
+            new TrajectorySequence[]{leftPurple, leftPurpleToBack, leftBackToStack,stackToBack1, backToStack1,stackToBack2, parkLeft, parkRight},
             trajectoryNames);
     public static NamedTrajectory[] midTrajectories = map(
-            new TrajectorySequence[]{midPurple, midPurpleToBack, midBackToStack,stackToBack1, backToStack1,stackToBack2},
+            new TrajectorySequence[]{midPurple, midPurpleToBack, midBackToStack,stackToBack1, backToStack1,stackToBack2, parkLeft, parkRight},
             trajectoryNames);
     public static NamedTrajectory[] rightTrajectories = map(
-            new TrajectorySequence[]{rightPurple, rightPurpleToBack, rightBackToStack, stackToBack1, backToStack1,stackToBack2},
+            new TrajectorySequence[]{rightPurple, rightPurpleToBack, rightBackToStack, stackToBack1, backToStack1,stackToBack2, parkLeft, parkRight},
             trajectoryNames);
     public static NamedTrajectory[][] trajectories = {leftTrajectories,midTrajectories,rightTrajectories};
 

@@ -115,7 +115,7 @@ public class closeBlueDoor {
             Paths.Go_To_Stack,
             Paths.Score_First,
             Paths.Score_Second,
-            Paths.Return_to_Stack
+            Paths.Return_to_Stack,
     };
 
     public static NamedTrajectory[] leftTrajectories = map(

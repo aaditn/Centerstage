@@ -16,8 +16,8 @@ public class Deposit extends Module
     public static boolean telemetryToggle;
     public static double transferOffset = 0.004;
 
-    public static double depositOffset = -0.02;
-    public static double sideOffset = -0.004;
+    public static double depositOffset = -0.005;
+    public static double sideOffset = -0.003;
 
     public enum ExtensionState implements ModuleState
     {
@@ -32,7 +32,7 @@ public class Deposit extends Module
         TRANSFER, DEPOSIT, PRIMED_OLD, LEFT,RIGHT, DOWN;
     }
     public static double ROTATE_MOD = 0.05;
-    public static double FLIP_TRANSFER =0.4875, FLIP_DEPOSIT=0.56,FLIP_PRIMED_OLD = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63;
+    public static double FLIP_TRANSFER =0.4875, FLIP_DEPOSIT=.58,FLIP_PRIMED_OLD = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63;
     public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT,FLIP_PRIMED_OLD,FLIP_LEFT,FLIP_RIGHT,FLIP_DOWN};
 
 

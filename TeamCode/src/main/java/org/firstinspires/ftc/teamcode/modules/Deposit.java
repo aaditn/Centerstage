@@ -15,6 +15,7 @@ public class Deposit extends Module
 
     public static boolean telemetryToggle;
     public static double transferOffset = 0.004;
+    //public static double offset = 0.005;
 
     public static double depositOffset = -0.005;
     public static double sideOffset = -0.003;
@@ -32,7 +33,7 @@ public class Deposit extends Module
         TRANSFER, DEPOSIT, PRIMED_OLD, LEFT,RIGHT, DOWN;
     }
     public static double ROTATE_MOD = 0.05;
-    public static double FLIP_TRANSFER =0.4875, FLIP_DEPOSIT=.58,FLIP_PRIMED_OLD = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63;
+    public static double FLIP_TRANSFER =0.4875, FLIP_DEPOSIT=0.57,FLIP_PRIMED_OLD = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63;
     public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT,FLIP_PRIMED_OLD,FLIP_LEFT,FLIP_RIGHT,FLIP_DOWN};
 
 
@@ -40,7 +41,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE, PARTIAL, DOWN, DEPOSIT_SIDE, YELLOW_HOVER;
     }
-    public static double WRIST_TRANSFER=0.61, WRIST_DEPOSIT=0.03, WRIST_HOVER=0.38, WRIST_SCOPE=0.55, WRIST_PARTIAL=0.53, WRIST_DEPOSIT_DOWN=WRIST_DEPOSIT, WRIST_DEPOSIT_SIDE=WRIST_DEPOSIT, WRIST_YELLOW_HOVER=0.29;
+    public static double WRIST_TRANSFER=0.58, WRIST_DEPOSIT=0.03, WRIST_HOVER=0.38, WRIST_SCOPE=WRIST_TRANSFER, WRIST_PARTIAL=0.3, WRIST_DEPOSIT_DOWN=WRIST_DEPOSIT, WRIST_DEPOSIT_SIDE=WRIST_DEPOSIT, WRIST_YELLOW_HOVER=0.29;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE, WRIST_PARTIAL, WRIST_DEPOSIT_DOWN, WRIST_DEPOSIT_SIDE, WRIST_YELLOW_HOVER};
 
 

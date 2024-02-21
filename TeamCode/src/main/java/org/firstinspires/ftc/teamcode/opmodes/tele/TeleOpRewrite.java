@@ -209,7 +209,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
             if (( depositMacro.wasJustPressed()) && !slides.macroRunning && slides.getState() != Slides.SlideState.GROUND && slides.getState()!=Slides.SlideState.GROUND_UNTIL_LIMIT) {
                 //slides.setOperationState(Module.OperationState.PRESET);
                 scheduler.scheduleTaskList(actions.scorePixels());
-                wristRotateCounter = 4;
+                wristRotateCounter = 3;
             }
 //            //SLIDE RESET
             if (slidesReset.wasJustReleased()) {

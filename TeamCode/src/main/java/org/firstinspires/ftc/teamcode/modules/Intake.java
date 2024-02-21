@@ -17,7 +17,7 @@ public class Intake extends Module {
     DcMotorEx intake;
     Servo  anglerRight, sweeperLeft, sweeperRight;
     CRServo conveyorLeft, conveyorRight;
-    ColorRangeSensor cs1, cs2, cs3;
+    ColorRangeSensor cs1;
     public static boolean telemetryToggle=false;
 
     public enum PowerState implements ModuleState
@@ -54,11 +54,6 @@ public class Intake extends Module {
             SWEEPER_FOUR,SWEEPER_FIVE,SWEEPER_SIX,SWEEPER_SEVEN,SWEEPER_EIGHT};
 
 
-    public enum ColorSensorState
-    {
-        ZERO, ONE, TWO
-    }
-
     double currentPower, currentPosition, conveyorLeftPower,conveyorRightPower, conveyorPower, sweeperPos;
     int s1Alpha = 1500, s1Dist = 75, s2Alpha = 1500, s2Dist = 75;
 
@@ -66,7 +61,6 @@ public class Intake extends Module {
     PositionState poState;
     ConveyorState cstate;
     SweeperState sstate;
-    ColorSensorState csstate;
     public static double sweeperOffset=0.06;
 
 
@@ -87,35 +81,27 @@ public class Intake extends Module {
         anglerRight = hardwareMap.get(Servo.class, "anglerRight");
         anglerRight.setDirection(Servo.Direction.REVERSE);
 
+        cs1 = hardwareMap.get(ColorRangeSensor.class, "cs1");
+
 //        cs1 = hardwareMap.get(ColorRangeSensor.class, "cs1");
 //        cs2 = hardwareMap.get(ColorRangeSensor.class, "cs2");
 //        cs3 = hardwareMap.get(ColorRangeSensor.class, "cs3");
     }
 
-    public void colorSensorUpdate()
-    {
-        //TODO(this is just copy pasted lmao)
 
-        boolean pixel1 = cs1.getDistance(MM) < s1Dist && cs1.alpha() > s1Alpha;
-        boolean pixel2 = cs2.getDistance(MM) < s2Dist && cs2.alpha() > s2Alpha;
 
-        if(pixel1&&pixel2)
-            csstate=ColorSensorState.TWO;
-        else if(pixel1||pixel2)
-            csstate=ColorSensorState.ONE;
-        else
-            csstate=ColorSensorState.ZERO;
-    }
-    public void closeColorSensors()
+    public boolean pixelsPresent()
     {
-        cs1.close();
-        cs2.close();
-        cs3.close();
+        if(cs1.alpha()>s1Alpha)
+        {
+            return true;
+        }
+        return false;
     }
 
-    public ColorSensorState getColorSensorState()
+    public ColorRangeSensor getCs()
     {
-        return csstate;
+        return cs1;
     }
 
     @Override
@@ -183,7 +169,6 @@ public class Intake extends Module {
         pwstate=PowerState.OFF;
         cstate=ConveyorState.OFF;
         sstate=SweeperState.ZERO;
-        csstate=ColorSensorState.ZERO;
         setInternalStates(poState, pwstate, cstate, sstate);
     }
 

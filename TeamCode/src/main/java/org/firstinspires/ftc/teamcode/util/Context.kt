@@ -25,7 +25,7 @@ object Context
     @JvmField var dashTeleEnabled: Boolean = true
     @JvmField var noHwInit: Boolean=false
     @JvmField var parkSide: ParkSide = ParkSide.LEFT
-    @JvmField var autonYellowHeight: SlideState = SlideState.AUTO_TWO
+    @JvmField var autonYellowHeight: SlideState = SlideState.AUTO_LOW
 
     @JvmStatic fun updateValues()
     {
@@ -51,7 +51,7 @@ object Context
         dashTeleEnabled=true
         noHwInit=false
         parkSide=ParkSide.LEFT
-        autonYellowHeight=SlideState.AUTO_TWO
+        autonYellowHeight=SlideState.AUTO_LOW
     }
     @JvmStatic fun clearValues()
     {
@@ -69,6 +69,6 @@ object Context
         dashTeleEnabled=true
         noHwInit=false
         parkSide=ParkSide.LEFT;
-        autonYellowHeight=SlideState.AUTO_TWO
+        autonYellowHeight=SlideState.AUTO_LOW
     }
 }

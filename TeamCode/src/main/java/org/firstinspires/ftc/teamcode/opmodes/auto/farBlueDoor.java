@@ -73,11 +73,13 @@ public class farBlueDoor extends EnhancedOpMode {
             delayLinear(550);
             RobotLog.e("delaying");
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO) && !intake.pixelsPresent()) {
+                RobotLog.e("color sensor "+intake.pixelsPresent());
                 drive.run(Paths.Go_To_Stack);
                 delayLinear(750);
                 drive.run(Paths.Score_First);
                 delayLinear(330);
                 if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO) && !intake.pixelsPresent()) {
+                    RobotLog.e("color sensor "+intake.pixelsPresent());
                     drive.run(Paths.Return_to_Stack);
                     delayLinear(750);
                     drive.run(Paths.Score_Second);

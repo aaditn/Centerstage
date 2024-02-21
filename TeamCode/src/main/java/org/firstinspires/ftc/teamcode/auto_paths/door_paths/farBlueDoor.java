@@ -55,10 +55,10 @@ public class farBlueDoor {
             .build();
     public static TrajectorySequence midBackToStack = Robot.trajectorySequenceBuilder(midPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(20,9), Math.toRadians(-180))
+            .splineToConstantHeading(new Vector2d(20,9.5), Math.toRadians(-180))
 
-            .lineTo(new Vector2d(-35,9))
-            .lineTo(new Vector2d(-56.5,9),
+            .lineTo(new Vector2d(-35,9.5))
+            .lineTo(new Vector2d(-56.5,9.5),
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -82,11 +82,11 @@ public class farBlueDoor {
             .build();
     public static TrajectorySequence rightBackToStack = Robot.trajectorySequenceBuilder(rightPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(20,9), Math.toRadians(-180),
+            .splineToConstantHeading(new Vector2d(20,9.5), Math.toRadians(-180),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
-            .lineTo(new Vector2d(-35,9))
-            .lineTo(new Vector2d(-56.5,9),
+            .lineTo(new Vector2d(-35,9.5))
+            .lineTo(new Vector2d(-56.5,9.5),
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -99,10 +99,10 @@ public class farBlueDoor {
     public static TrajectorySequence backToStack1 = Robot.trajectorySequenceBuilder(stackToBack1.end())
 
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(25,10), Math.toRadians(-180))
+            .splineToConstantHeading(new Vector2d(25,9.5), Math.toRadians(-180))
 
-            .lineTo(new Vector2d(-35,10))
-            .lineTo(new Vector2d(-56,10),
+            .lineTo(new Vector2d(-35,9.5))
+            .lineTo(new Vector2d(-56,9.5),
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
             .build();

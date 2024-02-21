@@ -14,8 +14,7 @@ public class Deposit extends Module
     Servo leftArm, rightArm, wrist, rotatewrist, claw, extension;
 
     public static boolean telemetryToggle;
-    public static double transferOffset = 0.004;
-    //public static double offset = 0.005;
+    public static double transferOffset = 0.01;    //public static double offset = 0.005;
 
     public static double depositOffset = -0.005;
     public static double sideOffset = -0.003;
@@ -41,7 +40,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE, PARTIAL, DOWN, DEPOSIT_SIDE, YELLOW_HOVER;
     }
-    public static double WRIST_TRANSFER=0.56, WRIST_DEPOSIT=0.03, WRIST_HOVER=0.25, WRIST_SCOPE=WRIST_TRANSFER, WRIST_PARTIAL=0.46, WRIST_DEPOSIT_DOWN=WRIST_DEPOSIT, WRIST_DEPOSIT_SIDE=WRIST_DEPOSIT, WRIST_YELLOW_HOVER=0.29;
+    public static double WRIST_TRANSFER=0.55, WRIST_DEPOSIT=0.03, WRIST_HOVER=0.25, WRIST_SCOPE=WRIST_TRANSFER, WRIST_PARTIAL=0.46, WRIST_DEPOSIT_DOWN=WRIST_DEPOSIT, WRIST_DEPOSIT_SIDE=WRIST_DEPOSIT, WRIST_YELLOW_HOVER=0.29;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE, WRIST_PARTIAL, WRIST_DEPOSIT_DOWN, WRIST_DEPOSIT_SIDE, WRIST_YELLOW_HOVER};
 
 

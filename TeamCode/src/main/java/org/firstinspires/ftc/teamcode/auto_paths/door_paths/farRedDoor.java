@@ -23,17 +23,20 @@ public class farRedDoor {
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, -8))
-            .splineToConstantHeading(new Vector2d(46.5, -29), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(40, -29), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
+            .lineTo(new Vector2d(46.5, -29),
+                    Robot.getVelocityConstraint(15, 2, 15.06),
+                    Robot.getAccelerationConstraint(20))
             .build();
     public static TrajectorySequence leftBackToStack = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
             .setReversed(false)
             .splineToConstantHeading(new Vector2d(20,-9), Math.toRadians(180))
 
-            .lineTo(new Vector2d(-52,-9))
+            .lineTo(new Vector2d(-35,-9))
             .lineTo(new Vector2d(-55,-9),
-                    Robot.getVelocityConstraint(40, 2, 15.06),
+                    Robot.getVelocityConstraint(25, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence midPurple = Robot.trajectorySequenceBuilder(redFarStart)
@@ -45,9 +48,12 @@ public class farRedDoor {
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, -7))
-            .splineToConstantHeading(new Vector2d(46.5, -36), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(40, -36), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
+            .lineTo(new Vector2d(46.5, -36),
+                    Robot.getVelocityConstraint(15, 2, 15.06),
+                    Robot.getAccelerationConstraint(20))
             .build();
     public static TrajectorySequence midBackToStack = Robot.trajectorySequenceBuilder(midPurpleToBack.end())
             .setReversed(false)
@@ -66,9 +72,12 @@ public class farRedDoor {
             .setReversed(true)
             .splineTo(new Vector2d(-29,-9.5),Math.toRadians(0))
             .lineTo(new Vector2d(20,-9.5))
-            .splineToConstantHeading(new Vector2d(46.5,-43), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(40, -43), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
+            .lineTo(new Vector2d(46.5, -43),
+                    Robot.getVelocityConstraint(15, 2, 15.06),
+                    Robot.getAccelerationConstraint(20))
             .build();
     public static TrajectorySequence rightBackToStack = Robot.trajectorySequenceBuilder(rightPurpleToBack.end())
             .setReversed(false)
@@ -76,9 +85,9 @@ public class farRedDoor {
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
 
-            .lineTo(new Vector2d(-40,-9.5))
+            .lineTo(new Vector2d(-35,-9.5))
             .lineTo(new Vector2d(-55,-9.5),
-                    Robot.getVelocityConstraint(40, 2, 15.06),
+                    Robot.getVelocityConstraint(25, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
 
@@ -92,9 +101,9 @@ public class farRedDoor {
             .setReversed(false)
             .splineToConstantHeading(new Vector2d(25,-9), Math.toRadians(180))
 
-            .lineTo(new Vector2d(-40,-9))
+            .lineTo(new Vector2d(-35,-9))
             .lineTo(new Vector2d(-57.5,-9),
-                    Robot.getVelocityConstraint(35, 2, 15.06),
+                    Robot.getVelocityConstraint(25, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence stackToBack2 = Robot.trajectorySequenceBuilder(backToStack1.end())

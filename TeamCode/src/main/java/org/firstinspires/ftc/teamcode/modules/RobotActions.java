@@ -494,7 +494,7 @@ public class RobotActions
                     .moduleAction(deposit, Deposit.FlipState.DOWN)
                     .delay(200)
                     .moduleAction(slides, row)
-                    .delay(200)
+                    .delay(600)
                     .moduleAction(deposit, Deposit.WristState.HOVER)
                     .delay(100)
                     .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)

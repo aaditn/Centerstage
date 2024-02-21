@@ -112,7 +112,7 @@ public class RobotActions
                 .addTaskList(slidesOnlyAutonomousProgrammingVersionForAutomatedControl(height))
                 .executeCode(()->slides.macroRunning=false)
                 .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                .delay(1200)
+                .delay(1400)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
                 .delay(600)
                 .addTaskList(resetOnly())
@@ -145,11 +145,11 @@ public class RobotActions
                         .build();
             case RIGHT:
                 return Builder.create()
-                        .await(()->robot.getPoseEstimate().getX()>-19)
+                        .await(()->robot.getPoseEstimate().getX()>-40)
                         .executeCode(()-> RobotLog.e("s"))
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                        .delay(900)
+                        .delay(300)
                         .addTaskList(scorePixels(state))
                         .build();
             default:
@@ -172,7 +172,6 @@ public class RobotActions
         TeleOpRewrite.DepositState init = depositIsLeft? TeleOpRewrite.DepositState.LEFT: depositIsRight? TeleOpRewrite.DepositState.RIGHT:
                 depositIsExtended? TeleOpRewrite.DepositState.EXTENDED: TeleOpRewrite.DepositState.NORMAL;
 
-
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
@@ -184,12 +183,12 @@ public class RobotActions
                 .delay(200)
                 .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.PARTIAL)
-                .delay(600)
+                .delay(300)
                 .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
                 //.moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .delay(200)
                 .moduleAction(slides, Slides.SlideState.GROUND)
-                .await(()->slides.currentPosition()<100)
+                .await(()->slides.currentPosition()<200)
                 .moduleAction(deposit, Deposit.WristState.TRANSFER)
                 //.moduleAction(deposit, Deposit.WristState.PARTIAL2
                 //.await(slides::isIdle)
@@ -212,7 +211,7 @@ public class RobotActions
                         .build();
             case RIGHT:
                 return Builder.create()
-                        .await(()->robot.getPoseEstimate().getX()>-19)
+                        .await(()->robot.getPoseEstimate().getX()>-40)
                         .executeCode(()-> RobotLog.e("s"))
                         .addTaskList(slidesSide(Slides.SlideState.ROW1, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
@@ -389,7 +388,7 @@ public class RobotActions
                         return Builder.create()
                                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                                 .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
-                                .delay(300)
+                                .delay(500)
                                 .moduleAction(deposit, Deposit.WristState.HOVER)
                                 //.moduleAction(deposit,Deposit.FlipState.DOWN)
                                 .build();
@@ -400,7 +399,7 @@ public class RobotActions
                         return Builder.create()
                                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                                 .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
-                                .delay(300)
+                                .delay(500)
                                 .moduleAction(deposit, Deposit.WristState.HOVER)
                                 //.moduleAction(deposit,Deposit.FlipState.DOWN)
                                 .build();
@@ -472,7 +471,7 @@ public class RobotActions
                 .moduleAction(deposit, Deposit.WristState.HOVER)
                 .delay(600)
                 //.await(()->slides.getStatus()==Module.Status.IDLE)
-                .moduleAction(deposit, Deposit.WristState.DEPOSIT_SIDE)
+                .moduleAction(deposit, Deposit.WristState.DEPOSIT)
                 .moduleAction(deposit, flip)
                 .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                 .delay(200)
@@ -491,10 +490,12 @@ public class RobotActions
                     .delay(500)
                     .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                     .delay(150)
-                    .moduleAction(deposit, Deposit.FlipState.DOWN)
+                    .moduleAction(deposit, Deposit.FlipState.PARTIAL)
                     .delay(200)
                     .moduleAction(slides, row)
-                    .delay(600)
+                    .delay(400)
+                    .moduleAction(deposit, Deposit.FlipState.DOWN)
+                    .delay(200)
                     .moduleAction(deposit, Deposit.WristState.HOVER)
                     .delay(100)
                     .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
@@ -575,7 +576,7 @@ public class RobotActions
                 //.moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .delay(200)
                 .moduleAction(slides, Slides.SlideState.GROUND)
-                .await(()->slides.currentPosition()<100)
+                .await(()->slides.currentPosition()<200)
                 .moduleAction(deposit, Deposit.WristState.TRANSFER)
                 //.moduleAction(deposit, Deposit.WristState.PARTIAL2
                 //.await(slides::isIdle)

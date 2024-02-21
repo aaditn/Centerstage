@@ -72,16 +72,18 @@ public class farRedDoor extends EnhancedOpMode {
             RobotLog.e("yellow");
             delayLinear(550);
             RobotLog.e("delaying");
-            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
+            boolean pixelsPresent = intake.pixelsPresentBlocking();
+            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO) && !pixelsPresent) {
                 drive.run(Paths.Go_To_Stack);
                 delayLinear(750);
                 drive.run(Paths.Score_First);
                 delayLinear(330);
-                if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
+
+                pixelsPresent = intake.pixelsPresentBlocking();
+                if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO) &&!pixelsPresent) {
                     drive.run(Paths.Return_to_Stack);
                     delayLinear(750);
                     drive.run(Paths.Score_Second);
-
                 }
             }
             delayLinear(100);

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.modules;
 
-import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.MM;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -9,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
@@ -92,11 +91,38 @@ public class Intake extends Module {
 
     public boolean pixelsPresent()
     {
-        if(cs1.alpha() > s1Alpha)
+        double colorSensorAlpha=cs1.alpha();
+        RobotLog.e("cs alpha: "+ colorSensorAlpha);
+        if(colorSensorAlpha > s1Alpha)
         {
             return true;
         }
         return false;
+    }
+
+    public boolean pixelsPresentBlocking()
+    {
+        double presentCounter=0;
+        double absentCounter=0;
+
+        for(int i=0; i<10; i++)
+        {
+            if(pixelsPresent())
+            {
+                presentCounter++;
+            }
+            else
+            {
+                absentCounter++;
+            }
+        }
+        RobotLog.e("Present Counter " +presentCounter);
+        RobotLog.e("Absent Counter "+ absentCounter);
+
+        if(presentCounter>absentCounter)
+            return true;
+        else
+            return false;
     }
 
     public ColorRangeSensor getCs()

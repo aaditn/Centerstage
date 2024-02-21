@@ -56,7 +56,7 @@ public class staticCreate {
                 OpModeManagerImpl thing = OpModeManagerImpl.getOpModeManagerOfActivity(AppUtil.getInstance().getRootActivity());
                 while(!isInterrupted())
                 {
-                    RobotLog.e("Running in bg" + malding);
+                    //RobotLog.e("Running in bg" + malding);
 
                         if(malding)
                         {

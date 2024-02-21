@@ -24,7 +24,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, TRANSFER_PARTIAL;
     }
-    public static double EXT_TRANSFER = .1, EXT_DEPOSIT = .5, EXT_TRANSFER_PARTIAL=0.05;
+    public static double EXT_TRANSFER = .05, EXT_DEPOSIT = .5, EXT_TRANSFER_PARTIAL=0.05;
     public static double[] extValues = {EXT_TRANSFER,EXT_DEPOSIT, EXT_TRANSFER_PARTIAL};
 
 
@@ -41,7 +41,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE, PARTIAL, DOWN, DEPOSIT_SIDE, YELLOW_HOVER;
     }
-    public static double WRIST_TRANSFER=0.58, WRIST_DEPOSIT=0.03, WRIST_HOVER=0.38, WRIST_SCOPE=WRIST_TRANSFER, WRIST_PARTIAL=0.3, WRIST_DEPOSIT_DOWN=WRIST_DEPOSIT, WRIST_DEPOSIT_SIDE=WRIST_DEPOSIT, WRIST_YELLOW_HOVER=0.29;
+    public static double WRIST_TRANSFER=0.5255, WRIST_DEPOSIT=0.03, WRIST_HOVER=0.38, WRIST_SCOPE=WRIST_TRANSFER, WRIST_PARTIAL=0.3, WRIST_DEPOSIT_DOWN=WRIST_DEPOSIT, WRIST_DEPOSIT_SIDE=WRIST_DEPOSIT, WRIST_YELLOW_HOVER=0.29;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE, WRIST_PARTIAL, WRIST_DEPOSIT_DOWN, WRIST_DEPOSIT_SIDE, WRIST_YELLOW_HOVER};
 
 
@@ -49,7 +49,7 @@ public class Deposit extends Module
     {
         OPEN, CLOSED1, CLOSED2;
     }
-    public static double CLAW_OPEN=.86, CLAW_CLOSED_1=0.495, CLAW_CLOSED_2=0.57;
+    public static double CLAW_OPEN=.88, CLAW_CLOSED_1=0.495, CLAW_CLOSED_2=0.57;
     public static double[] clawValues={CLAW_OPEN, CLAW_CLOSED_1, CLAW_CLOSED_2};
 
 
@@ -57,7 +57,7 @@ public class Deposit extends Module
         ZERO, PLUS_FOURTY_FIVE, PLUS_NINETY, PLUS_ONE_THREE_FIVE, PLUS_ONE_EIGHTY, PLUS_TWO_TWO_FIVE, PLUS_TWO_SEVENTY,
         MINUS_FOURTY_FIVE, MINUS_NINETY, MINUS_ONE_THREE_FIVE, MINUS_ONE_EIGHTY, MINUS_TWO_TWO_FIVE, MINUS_TWO_SEVENTY
     }
-    public static double ROTATE_0=.49, ROTATE_PLUS_45=0.66, ROTATE_PLUS_90=.83, ROTATE_PLUS_135=1, /*UNUSED*/ROTATE_PLUS_180=0.5475, ROTATE_PLUS_225=0.5775, ROTATE_PLUS_270=0.6075;
+    public static double ROTATE_0=.52, ROTATE_PLUS_45=0.66, ROTATE_PLUS_90=.83, ROTATE_PLUS_135=1, /*UNUSED*/ROTATE_PLUS_180=0.5475, ROTATE_PLUS_225=0.5775, ROTATE_PLUS_270=0.6075;
     public static double ROTATE_MINUS_45=0.32, ROTATE_MINUS_90=0.15, ROTATE_MINUS_135=0.0/*UNUSED*/, ROTATE_MINUS_180=0.3233, ROTATE_MINUS_225 =0.2955, ROTATE_MINUS_270=0.2677;
 
     public static double[] rotateValues={ROTATE_0, ROTATE_PLUS_45, ROTATE_PLUS_90, ROTATE_PLUS_135, ROTATE_PLUS_180, ROTATE_PLUS_225, ROTATE_PLUS_270,
@@ -81,6 +81,7 @@ public class Deposit extends Module
         wrist=hardwareMap.get(Servo.class, "wrist");
         rotatewrist=hardwareMap.get(Servo.class, "rotatewrist");
         claw=hardwareMap.get(Servo.class, "claw");
+        claw.setDirection(Servo.Direction.REVERSE);
 
         /*leftArm.getController().pwmEnable();
         rightArm.getController().pwmEnable();

@@ -522,16 +522,14 @@ public class RobotActions
                     .delay(500)
                     .moduleAction(deposit, Deposit.WristState.TRANSFER)
                     .moduleAction(slides, row)
-                    .delay(150)
+                    .delay(300)
                     .moduleAction(deposit, Deposit.FlipState.DOWN)
                     .delay(300)
-                    .moduleAction(deposit, Deposit.WristState.PARTIAL)
-                    .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
-                    .delay(400)
-
+                    //.moduleAction(deposit, Deposit.WristState.PARTIAL)
                     .moduleAction(deposit, Deposit.WristState.YELLOW_HOVER)
-                    //.await(()->slides.getStatus()==Module.Status.IDLE)
-                    .delay(200)
+                    .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                    //.moduleAction(deposit, Deposit.WristState.YELLOW_HOVER)
+                    .await(slides::isIdle)
                     .executeCode(()->slides.macroRunning=false)
                     .build();
         }

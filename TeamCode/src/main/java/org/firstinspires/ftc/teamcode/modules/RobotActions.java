@@ -141,7 +141,7 @@ public class RobotActions
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
                         .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
-                        .addTaskList(scorePixelsAuto())
+                        .addTaskList(scorePixels())
                         .build();
             case RIGHT:
                 return Builder.create()
@@ -150,7 +150,7 @@ public class RobotActions
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(900)
-                        .addTaskList(scorePixelsAuto())
+                        .addTaskList(scorePixels())
                         .build();
             default:
                 return Builder.create().build();
@@ -165,7 +165,7 @@ public class RobotActions
                         .addTaskList(slidesSide(Slides.SlideState.ROW1, Deposit.FlipState.LEFT))
                         .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
-                        .addTaskList(scorePixelsAuto())
+                        .addTaskList(scorePixels())
                         .build();
             case RIGHT:
                 return Builder.create()
@@ -174,7 +174,7 @@ public class RobotActions
                         .addTaskList(slidesSide(Slides.SlideState.ROW1, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
-                        .addTaskList(scorePixelsAuto())
+                        .addTaskList(scorePixels())
                         .build();
             default:
                 return Builder.create().build();

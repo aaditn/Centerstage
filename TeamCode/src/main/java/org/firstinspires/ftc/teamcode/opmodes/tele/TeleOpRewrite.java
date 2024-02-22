@@ -40,7 +40,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
             slidesSetLine3, rightExtend, depositMacro, normalExtend, leftExtend, CCW45, CW45, clawManual, slidesReset;
     double ninja;
     int sweeperCounter;
-    int wristRotateCounter = 3;
+    int wristRotateCounter = 5; //PLUS_NINETY
 
     public enum DepositState
     {
@@ -209,7 +209,7 @@ public class TeleOpRewrite extends EnhancedOpMode {
             if (( depositMacro.wasJustPressed()) && !slides.macroRunning && slides.getState() != Slides.SlideState.GROUND && slides.getState()!=Slides.SlideState.GROUND_UNTIL_LIMIT) {
                 //slides.setOperationState(Module.OperationState.PRESET);
                 scheduler.scheduleTaskList(actions.scorePixels());
-                wristRotateCounter = 3;
+                wristRotateCounter = 5; //PLUS_NINETY
             }
 //            //SLIDE RESET
             if (slidesReset.wasJustReleased()) {

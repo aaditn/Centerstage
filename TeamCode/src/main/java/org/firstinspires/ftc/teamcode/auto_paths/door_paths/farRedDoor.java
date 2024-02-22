@@ -87,7 +87,7 @@ public class farRedDoor {
             .lineTo(new Vector2d(-35,-9.5),
                     Robot.getVelocityConstraint(45, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineTo(new Vector2d(-56.5,-9.5),
+            .lineTo(new Vector2d(-54,-9.5),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();

@@ -54,7 +54,8 @@ public class RobotActions
             .moduleAction(intake, Intake.PositionState.DOWN)
             .moduleAction(intake, Intake.PowerState.INTAKE)
             .moduleAction(intake, Intake.ConveyorState.INTAKE)
-            .awaitDtXWithin(-56.5, 4)
+            .await(() -> robot.getPoseEstimate().getX() < -51.5 || (robot.k!=Paths.Return_to_Stack && robot.k!=Paths.Go_To_Stack))
+//            .awaitDtXWithin(-56.5, 4)
             .moduleAction(intake, sweep1)
             .delay(750)
             .moduleAction(intake, sweep2)
@@ -114,7 +115,8 @@ public class RobotActions
                 .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                 .delay(1400)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .delay(600)
+                .delay(300)
+                .moduleAction(deposit, Deposit.RotateState.ZERO)
                 .addTaskList(resetOnly())
                 .build();
     }
@@ -552,10 +554,8 @@ public class RobotActions
         boolean depositIsExtended = state==Deposit.FlipState.DOWN && extensionState ==Deposit.ExtensionState.DEPOSIT;
         boolean depositIsNormal = state==Deposit.FlipState.DOWN && extensionState != Deposit.ExtensionState.DEPOSIT;
 
-        long delay = deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.LEFT? 1300:
-                deposit.getState(Deposit.FlipState.class) == Deposit.FlipState.RIGHT? 800: 50;
-        delay += slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW3? 0:
-                slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW2? 300: 550;
+        long delay = slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW3? 0:
+                slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW2? 500: 700;
 
         TeleOpRewrite.DepositState init = depositIsLeft? TeleOpRewrite.DepositState.LEFT: depositIsRight? TeleOpRewrite.DepositState.RIGHT:
                 depositIsExtended? TeleOpRewrite.DepositState.EXTENDED: TeleOpRewrite.DepositState.NORMAL;
@@ -566,15 +566,14 @@ public class RobotActions
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
                 .delay(600)
                 .addTaskList(transitionDepositModified(init, TeleOpRewrite.DepositState.NORMAL))
-                //.delay(depositIsLeft? 300: 0)
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                 .moduleAction(deposit, Deposit.RotateState.ZERO)
                 .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.PARTIAL)
-                .delay(300)
+//                .delay(300)
                 .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
                 //.moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                .delay(200)
+                .delay(delay)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .await(()->slides.currentPosition()<600)
                 .moduleAction(deposit, Deposit.WristState.TRANSFER)
@@ -591,12 +590,13 @@ public class RobotActions
 
         return Builder.create()
                 //.executeCode(()->slides.macroRunning=true)
+
+                .moduleAction(deposit, Deposit.RotateState.ZERO)
                 //.moduleAction(deposit, Deposit.ClawState.OPEN)
                 //.delay(600)
                 .addTaskList(transitionDepositModified(TeleOpRewrite.DepositState.NORMAL, TeleOpRewrite.DepositState.NORMAL))
                 //.delay(depositIsLeft? 300: 0)
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
-                .moduleAction(deposit, Deposit.RotateState.ZERO)
                 .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.PARTIAL)
                 .delay(300)

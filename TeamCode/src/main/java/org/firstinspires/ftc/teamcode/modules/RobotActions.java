@@ -54,7 +54,7 @@ public class RobotActions
             .moduleAction(intake, Intake.PositionState.DOWN)
             .moduleAction(intake, Intake.PowerState.INTAKE)
             .moduleAction(intake, Intake.ConveyorState.INTAKE)
-            .awaitDtXWithin(-57, 4)
+            .awaitDtXWithin(-56.5, 4)
             .moduleAction(intake, sweep1)
             .delay(750)
             .moduleAction(intake, sweep2)
@@ -188,7 +188,7 @@ public class RobotActions
                 //.moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .delay(200)
                 .moduleAction(slides, Slides.SlideState.GROUND)
-                .await(()->slides.currentPosition()<200)
+                .await(()->slides.currentPosition()<600)
                 .moduleAction(deposit, Deposit.WristState.TRANSFER)
                 //.moduleAction(deposit, Deposit.WristState.PARTIAL2
                 //.await(slides::isIdle)
@@ -388,7 +388,7 @@ public class RobotActions
                         return Builder.create()
                                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                                 .moduleAction(deposit,Deposit.FlipState.DEPOSIT)
-                                .delay(500)
+                                .delay(650)
                                 .moduleAction(deposit, Deposit.WristState.HOVER)
                                 //.moduleAction(deposit,Deposit.FlipState.DOWN)
                                 .build();
@@ -576,7 +576,7 @@ public class RobotActions
                 //.moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .delay(200)
                 .moduleAction(slides, Slides.SlideState.GROUND)
-                .await(()->slides.currentPosition()<200)
+                .await(()->slides.currentPosition()<600)
                 .moduleAction(deposit, Deposit.WristState.TRANSFER)
                 //.moduleAction(deposit, Deposit.WristState.PARTIAL2
                 //.await(slides::isIdle)

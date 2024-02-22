@@ -48,7 +48,7 @@ public class Deposit extends Module
     {
         OPEN, CLOSED1, CLOSED2;
     }
-    public static double CLAW_OPEN=.92, CLAW_CLOSED_1=0.585, CLAW_CLOSED_2=0.66;
+    public static double CLAW_OPEN=.86, CLAW_CLOSED_1=0.495, CLAW_CLOSED_2=0.57;
     public static double[] clawValues={CLAW_OPEN, CLAW_CLOSED_1, CLAW_CLOSED_2};
 
 
@@ -80,7 +80,6 @@ public class Deposit extends Module
         wrist=hardwareMap.get(Servo.class, "wrist");
         rotatewrist=hardwareMap.get(Servo.class, "rotatewrist");
         claw=hardwareMap.get(Servo.class, "claw");
-        claw.setDirection(Servo.Direction.REVERSE);
 
         /*leftArm.getController().pwmEnable();
         rightArm.getController().pwmEnable();

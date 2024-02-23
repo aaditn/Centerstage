@@ -31,7 +31,7 @@ public class Intake extends Module {
     {
         RAISED, MID, DOWN, AUTO;
     }
-    public static double POSITION_RAISED=0,  POSITION_MID=0.13, POSITION_DOWN=0.27, AUTO=POSITION_DOWN;
+    public static double POSITION_RAISED=0,  POSITION_MID=0.13, POSITION_DOWN=0.28, AUTO=POSITION_DOWN;
     public static double[] positionValues={POSITION_RAISED, POSITION_MID, POSITION_DOWN, AUTO};
 
 
@@ -47,7 +47,7 @@ public class Intake extends Module {
     {
         ZERO, INIT, ONE_SWEEP, TWO_SWEEP, THREE_SWEEP,FOUR_SWEEP,FIVE_SWEEP,SIX_SWEEP,SEVEN_SWEEP,EIGHT_SWEEP;
     }
-    public static double SWEEPER_ZERO=0.1, SWEEPER_INIT=SWEEPER_ZERO, SWEEPER_ONE=0.215, SWEEPER_TWO=0.33,
+    public static double SWEEPER_ZERO=0.1, SWEEPER_INIT=.1625, SWEEPER_ONE=0.215, SWEEPER_TWO=0.33,
             SWEEPER_THREE=0.445, SWEEPER_FOUR=0.56,SWEEPER_FIVE=.655,SWEEPER_SIX=.755,SWEEPER_SEVEN = .84,SWEEPER_EIGHT=.955;
     public static double[] sweeperValues={SWEEPER_ZERO, SWEEPER_INIT, SWEEPER_ONE, SWEEPER_TWO, SWEEPER_THREE,
             SWEEPER_FOUR,SWEEPER_FIVE,SWEEPER_SIX,SWEEPER_SEVEN,SWEEPER_EIGHT};
@@ -55,7 +55,7 @@ public class Intake extends Module {
 
     double currentPower, currentPosition, conveyorLeftPower,conveyorRightPower, conveyorPower, sweeperPos;
     int s1Alpha = 1000, s1Dist = 75, s2Alpha = 1500, s2Dist = 75;
-public static double initOffset = 0.03;
+public static double initOffset = 0.06;
     PowerState pwstate;
     PositionState poState;
     ConveyorState cstate;
@@ -163,7 +163,7 @@ public static double initOffset = 0.03;
         intake.setPower(currentPower);
 
         anglerRight.setPosition(currentPosition);
-if(getState().equals(SweeperState.INIT)){
+if(getState(SweeperState.class).equals(SweeperState.INIT)){
 
     sweeperLeft.setPosition(sweeperPos+initOffset);
     sweeperRight.setPosition(sweeperPos+sweeperOffset-initOffset);

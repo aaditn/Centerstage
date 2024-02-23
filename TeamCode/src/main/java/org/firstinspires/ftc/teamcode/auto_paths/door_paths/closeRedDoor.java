@@ -42,7 +42,7 @@ public class closeRedDoor {
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence midPurpleToBack = Robot.trajectorySequenceBuilder(midPurple.end())
-            .lineToLinearHeading(new Pose2d(52, -33, Math.toRadians(-180)),
+            .lineToLinearHeading(new Pose2d(50, -33, Math.toRadians(-180)),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();

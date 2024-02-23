@@ -591,7 +591,7 @@ public class RobotActions
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .delay(600)
+                .delay(200)
                 .addTaskList(transitionDepositModified(init, TeleOpRewrite.DepositState.NORMAL))
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                 .moduleAction(deposit, Deposit.RotateState.ZERO)

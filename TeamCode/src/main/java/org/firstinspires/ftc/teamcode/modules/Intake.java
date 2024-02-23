@@ -55,7 +55,7 @@ public class Intake extends Module {
 
     double currentPower, currentPosition, conveyorLeftPower,conveyorRightPower, conveyorPower, sweeperPos;
     int s1Alpha = 1000, s1Dist = 75, s2Alpha = 1500, s2Dist = 75;
-public static double initOffset = 0.06;
+public static double initOffset = 0.0175;
     PowerState pwstate;
     PositionState poState;
     ConveyorState cstate;

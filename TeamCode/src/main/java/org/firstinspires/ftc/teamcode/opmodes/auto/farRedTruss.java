@@ -37,11 +37,11 @@ public class farRedTruss extends EnhancedOpMode {
     private List<Task>[] auto_tasks() {
         return getTaskList(
                 actions.deployPurple(35, 46, 35),
-                actions.yellowDrop(47, -15),
-                actions.lowerIntake(-50, -56.5, 0),
-                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
-                actions.lowerIntake(-50, -56.5, 1),
-                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT)
+                actions.yellowDrop(47, -15, Context.autonYellowHeight),
+                actions.lowerIntake(-0, -51.5, 0),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT),
+                actions.lowerIntake(-0, -51.5, 1),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT)
         );
     }
     @Override
@@ -55,15 +55,22 @@ public class farRedTruss extends EnhancedOpMode {
             drive.run(Paths.Purple);
             drive.run(Paths.Score_Spike);
             delayLinear(250);
-            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
+            boolean pixelsPresent = intake.pixelsPresentBlocking();
+            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO) &&!pixelsPresent) {
                 drive.run(Paths.Go_To_Stack);
                 delayLinear(750);
                 drive.run(Paths.Score_First);
                 delayLinear(250);
-                if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
+
+                pixelsPresent = intake.pixelsPresentBlocking();
+                if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO) &&!pixelsPresent) {
                     drive.run(Paths.Return_to_Stack);
                     delayLinear(750);
                     drive.run(Paths.Score_Second);
+                }
+                else if(pixelsPresent)
+                {
+                    drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailed(49, TeleOpRewrite.DepositState.LEFT));
                 }
             }
             waitForEnd();

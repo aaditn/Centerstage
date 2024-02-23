@@ -14,7 +14,7 @@ public class MeepMeepTesting {
         MeepMeep meepMeep = new MeepMeep(700);
 
         RoadRunnerBotEntity rightRedFar = new BotBuilder(meepMeep, new ColorSchemeBlueLight())
-                .followTrajectorySequence(BigT_AKA_Trajectory.leftTrajectories);
+                .followTrajectorySequence(BigT_AKA_Trajectory.rightTrajectories);
 
 
         RoadRunnerBotEntity WHYAMIHERE = new DefaultBotBuilder(meepMeep)

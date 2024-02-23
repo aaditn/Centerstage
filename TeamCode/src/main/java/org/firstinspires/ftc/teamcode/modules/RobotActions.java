@@ -54,7 +54,7 @@ public class RobotActions
             .moduleAction(intake, Intake.PositionState.DOWN)
             .moduleAction(intake, Intake.PowerState.INTAKE)
             .moduleAction(intake, Intake.ConveyorState.INTAKE)
-            .await(() -> robot.getPoseEstimate().getX() < -51.5 || (robot.k!=Paths.Return_to_Stack && robot.k!=Paths.Go_To_Stack))
+            .await(() -> robot.getPoseEstimate().getX() < sweep_x || (robot.k!=Paths.Return_to_Stack && robot.k!=Paths.Go_To_Stack))
 //            .awaitDtXWithin(-56.5, 4)
             .moduleAction(intake, sweep1)
             .delay(750)
@@ -153,6 +153,33 @@ public class RobotActions
                         .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
                         .addTaskList(scorePixels(state))
+                        .build();
+            default:
+                return Builder.create().build();
+        }
+    }
+
+    public List<Task> scorePixelsFailed(double xPos, TeleOpRewrite.DepositState state){
+        switch(state) {
+            case LEFT:
+                return Builder.create()
+                        .delay(2000)
+                        .await(() -> robot.getPoseEstimate().getX() > -19)
+                        .executeCode(() -> RobotLog.e("s"))
+                        .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
+                        .delay(1500)
+                        .addTaskList(scorePixels(state))
+                        .delay(1000)
+                        .build();
+            case RIGHT:
+                return Builder.create()
+                        .delay(3000)
+                        .await(()->robot.getPoseEstimate().getX()>-40)
+                        .executeCode(()-> RobotLog.e("s"))
+                        .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
+                        .delay(2500)
+                        .addTaskList(scorePixels(state))
+                        .delay(1000)
                         .build();
             default:
                 return Builder.create().build();
@@ -599,7 +626,7 @@ public class RobotActions
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                 .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.PARTIAL)
-                .delay(300)
+                .delay(1200)
                 .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
                 //.moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .delay(200)

@@ -29,7 +29,11 @@ public class Tel
 
     public Tel()
     {
-        dashboardTel=FtcDashboard.getInstance().getTelemetry();
+        if(Context.dashTeleEnabled)
+        {
+            dashboardTel=FtcDashboard.getInstance().getTelemetry();
+        }
+
         tel=Context.opmode.telemetry;
         entries =new ArrayList<>();
 

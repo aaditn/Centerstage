@@ -169,10 +169,10 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 depositState = DepositState.EXTENDED;
             }
             //SPIN THE ROTATE WRIST
-            if (CW45.wasJustPressed() && wristRotateCounter < wristRotatePositions.length - 1) {
+            if (CW45.wasJustPressed() && wristRotateCounter < wristRotatePositions.length - 1 && slides.getState() !=Slides.SlideState.GROUND) {
                 wristRotateCounter++;
                 deposit.setState(wristRotatePositions[wristRotateCounter]);
-            } else if (CCW45.wasJustPressed() && wristRotateCounter > 0) {
+            } else if (CCW45.wasJustPressed() && wristRotateCounter > 0 && slides.getState() !=Slides.SlideState.GROUND) {
                 wristRotateCounter--;
                 deposit.setState(wristRotatePositions[wristRotateCounter]);
             }

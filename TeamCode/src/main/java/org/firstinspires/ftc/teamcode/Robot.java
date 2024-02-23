@@ -157,12 +157,13 @@ public class Robot extends MecanumDrive
 
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         this.l=l;
-        tel = Tel.instance();
 
         if(Context.opmode!=null)
         {
             Context.updateValues();
         }
+
+        tel = Tel.instance();
 
         hardwareMap=l.hardwareMap;
         timer=new ElapsedTime();

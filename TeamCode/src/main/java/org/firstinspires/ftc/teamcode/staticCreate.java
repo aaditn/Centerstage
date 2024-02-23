@@ -38,9 +38,17 @@ public class staticCreate {
         ElapsedTime timeToInit = new ElapsedTime();
         suffering=new ElapsedTime();
         RobotLog.e("Static Force Initialization Begins");
-        List<NamedTrajectory[][]> batchInit  = Batch.allTrajectories;
-        RobotLog.e("All Trajectories Loaded in: "+ timeToInit.seconds()
-                +", Mark: " + batchInit.toString());
+        List<NamedTrajectory[][]> batchInit;
+        try
+        {
+            batchInit= Batch.allTrajectories;
+            RobotLog.e("All Trajectories Loaded in: "+ timeToInit.seconds()
+                    +", Mark: " + batchInit.toString());
+        }
+        catch(Exception e)
+        {
+            RobotLog.e("Static Fail " + e.getStackTrace());
+        }
         List<Pose2d> batchInitPT2 = Batch.allStarts;
         RobotLog.e("All Start Pos Loaded in: "+timeToInit.seconds()+", Mark: " +batchInitPT2.toString());
         IntentFilter filter = new IntentFilter("team11260.RELOAD_FAST_LOAD");

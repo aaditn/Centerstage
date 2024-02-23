@@ -19,7 +19,7 @@ public class farRedTruss {
     public static TrajectorySequence leftPurpleToBack = Robot.trajectorySequenceBuilder(leftPurple.end())
             .setReversed(true)
             .lineTo(new Vector2d(-46.5, -37)) // Flipped waypoint
-            .splineToSplineHeading(new Pose2d(-34, -57, Math.toRadians(180)), Math.toRadians(0), // Flipped pose and heading
+            .splineToSplineHeading(new Pose2d(-28, -57, Math.toRadians(180)), Math.toRadians(0), // Flipped pose and heading
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .lineToConstantHeading(new Vector2d(20, -57),
@@ -28,7 +28,7 @@ public class farRedTruss {
             .splineToConstantHeading(new Vector2d(42.5, -26), Math.toRadians(0), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(50.5, -26),
+            .lineToConstantHeading(new Vector2d(48.5, -26),
                     Robot.getVelocityConstraint(15, 2, 15.06),
                     Robot.getAccelerationConstraint(20))
 
@@ -100,13 +100,13 @@ public class farRedTruss {
             .splineToSplineHeading(new Pose2d(-40, -57, Math.toRadians(180)), Math.toRadians(0), // Flipped pose and heading
                     Robot.getVelocityConstraint(40, 2.4, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .splineToConstantHeading(new Vector2d(20, -59), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(14, -59), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))/// Flipped waypoint
-            .splineToConstantHeading(new Vector2d(42.5, -42.5), Math.toRadians(0), // Flipped waypoint and heading
-                    Robot.getVelocityConstraint(40, 2, 15.06),
+            .splineToConstantHeading(new Vector2d(40, -40.5), Math.toRadians(0), // Flipped waypoint and heading
+                    Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(51.5, -42.5),
+            .lineToConstantHeading(new Vector2d(48.5, -40.5),
                     Robot.getVelocityConstraint(15, 2, 15.06),
                     Robot.getAccelerationConstraint(20)) // Flipped waypoint
             .build();
@@ -119,10 +119,10 @@ public class farRedTruss {
             .lineToConstantHeading(new Vector2d(-28, -58),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))/// Flipped waypoint
-            .splineToConstantHeading(new Vector2d(-45, -33), Math.toRadians(180), // Flipped waypoint and heading
-                    Robot.getVelocityConstraint(35, 2, 15.06),
+            .splineToConstantHeading(new Vector2d(-40, -33), Math.toRadians(180), // Flipped waypoint and heading
+                    Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .lineToConstantHeading(new Vector2d(-52.5, -33), // Flipped waypoint
+            .lineToConstantHeading(new Vector2d(-55.5, -33), // Flipped waypoint
                     Robot.getVelocityConstraint(25, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
@@ -136,10 +136,10 @@ public class farRedTruss {
             .lineToConstantHeading(new Vector2d(20, -57), // Flipped waypoint
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .splineToConstantHeading(new Vector2d(49, -44), Math.toRadians(0), // Flipped waypoint and heading
+            .splineToConstantHeading(new Vector2d(45, -50), Math.toRadians(0), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineTo(new Vector2d(49, -44),
+            .lineTo(new Vector2d(50.5, -50),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))/// Flipped waypoint
             .build();
@@ -148,15 +148,18 @@ public class farRedTruss {
 
             .setReversed(false)
             .splineToConstantHeading(new Vector2d(25, -57), Math.toRadians(180), // Flipped waypoint and heading
-                    Robot.getVelocityConstraint(40, 2, 15.06),
-                    Robot.getAccelerationConstraint(45))
+                    Robot.getVelocityConstraint(25, 2, 15.06),
+                    Robot.getAccelerationConstraint(40))
+            .lineToConstantHeading(new Vector2d(0, -57),
+                    Robot.getVelocityConstraint(30, 2, 15.06),
+                    Robot.getAccelerationConstraint(40))/// Flipped
             .lineToConstantHeading(new Vector2d(-28, -57),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))/// Flipped waypoint
-            .splineToConstantHeading(new Vector2d(-45, -33), Math.toRadians(180), // Flipped waypoint and heading
-                    Robot.getVelocityConstraint(35, 2, 15.06),
+            .splineToConstantHeading(new Vector2d(-45, -31.5), Math.toRadians(180), // Flipped waypoint and heading
+                    Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
-            .lineToConstantHeading(new Vector2d(-52.5, -33), // Flipped waypoint
+            .lineToConstantHeading(new Vector2d(-55.5, -31.5), // Flipped waypoint
                     Robot.getVelocityConstraint(25, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
@@ -164,16 +167,16 @@ public class farRedTruss {
     public static TrajectorySequence stackToBack2 = Robot.trajectorySequenceBuilder(backToStack1.end())
             .setReversed(true)
             .lineTo(new Vector2d(-50, -33))
-            .splineToConstantHeading(new Vector2d(-35, -57), Math.toRadians(0), // Flipped waypoint and heading
+            .splineToConstantHeading(new Vector2d(-35, -56), Math.toRadians(0), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(20, -57),
+            .lineToConstantHeading(new Vector2d(20, -56),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))/// Flipped waypoint
-            .splineToConstantHeading(new Vector2d(49, -44), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(45, -50), Math.toRadians(0),
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(40))/// Flipped waypoint
-            .lineTo(new Vector2d(49, -44),
+            .lineTo(new Vector2d(50.5, -50),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))/// Flipped waypoint
             .build();

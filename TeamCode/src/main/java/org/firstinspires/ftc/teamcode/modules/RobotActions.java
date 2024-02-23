@@ -138,7 +138,7 @@ public class RobotActions
         switch(state) {
             case LEFT:
                 return Builder.create()
-                        .await(() -> robot.getPoseEstimate().getX() > -19)
+                        .await(() -> robot.getPoseEstimate().getX() > -30)
                         .executeCode(() -> RobotLog.e("s"))
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
                         .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
@@ -626,12 +626,11 @@ public class RobotActions
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                 .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.PARTIAL)
-                .delay(1200)
                 .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
                 //.moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                .delay(200)
+                .delay(800)
                 .moduleAction(slides, Slides.SlideState.GROUND)
-                .await(()->slides.currentPosition()<100)
+                .await(()->slides.currentPosition()<600)
                 .moduleAction(deposit, Deposit.WristState.TRANSFER)
                 //.moduleAction(deposit, Deposit.WristState.PARTIAL2
                 //.await(slides::isIdle)

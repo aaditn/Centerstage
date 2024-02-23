@@ -54,18 +54,18 @@ public class farRedTruss extends EnhancedOpMode {
             drive.set(trajectories,auto_tasks());
             drive.run(Paths.Purple);
             drive.run(Paths.Score_Spike);
-            delayLinear(250);
+           // delayLinear(250);
             boolean pixelsPresent = intake.pixelsPresentBlocking();
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO) &&!pixelsPresent) {
                 drive.run(Paths.Go_To_Stack);
-                delayLinear(750);
+                delayLinear(500);
                 drive.run(Paths.Score_First);
-                delayLinear(250);
+               // delayLinear(250);
 
                 pixelsPresent = intake.pixelsPresentBlocking();
                 if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO) &&!pixelsPresent) {
                     drive.run(Paths.Return_to_Stack);
-                    delayLinear(750);
+                    delayLinear(500);
                     drive.run(Paths.Score_Second);
                 }
                 else if(pixelsPresent)

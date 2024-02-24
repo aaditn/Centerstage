@@ -4,9 +4,12 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
 import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farBlueTruss.blueFarStart;
 import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farBlueTruss.trajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farRedTruss.redFarStart;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farRedTruss;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
@@ -35,12 +38,12 @@ public class farBlueTruss extends EnhancedOpMode {
 
     private List<Task>[] auto_tasks() {
         return getTaskList(
-                actions.deployPurple(39, 46, 39),
-                actions.yellowDrop(47, -15),
-                actions.lowerIntake(-40, -56.5, 0),
-                actions.scorePixels(47, TeleOpRewrite.DepositState.RIGHT),
-                actions.lowerIntake(-50, -56.5, 1),
-                actions.scorePixels(47, TeleOpRewrite.DepositState.RIGHT)
+                actions.deployPurple(35, 46, 35),
+                actions.yellowDrop(47, -15, Context.autonYellowHeight),
+                actions.lowerIntake(-0, -51.5, 0),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
+                actions.lowerIntake(-0, -51.5, 1),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT)
         );
     }
     @Override
@@ -49,22 +52,27 @@ public class farBlueTruss extends EnhancedOpMode {
 
         if(opModeIsActive())
         {
-            drive.setPoseEstimate(blueFarStart);
-            delayLinear((long)Context.autoWaitTime*1000);
-            drive.set(trajectories,auto_tasks());
+            drive.setPoseEstimate(redFarStart); delayLinear((long)Context.autoWaitTime*1000);
+            drive.set(farRedTruss.trajectories,auto_tasks());
             drive.run(Paths.Purple);
             drive.run(Paths.Score_Spike);
-            delayLinear(250);
-            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
+            // delayLinear(250);
+            boolean pixelsPresent = intake.pixelsPresentBlocking();
+            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO) &&!pixelsPresent) {
                 drive.run(Paths.Go_To_Stack);
-                delayLinear(750);
+                delayLinear(500);
                 drive.run(Paths.Score_First);
-                delayLinear(250);
-                if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {
-                    delayLinear(750);
+                // delayLinear(250);
+
+                pixelsPresent = intake.pixelsPresentBlocking();
+                if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO) &&!pixelsPresent) {
                     drive.run(Paths.Return_to_Stack);
-                    delayLinear(750);
+                    delayLinear(500);
                     drive.run(Paths.Score_Second);
+                }
+                else if(pixelsPresent)
+                {
+                    drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailed(49, TeleOpRewrite.DepositState.LEFT));
                 }
             }
             waitForEnd();

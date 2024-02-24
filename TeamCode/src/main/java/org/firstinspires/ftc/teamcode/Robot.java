@@ -277,7 +277,7 @@ public class Robot extends MecanumDrive
     {
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
-                new Pose2d(0.5, 0.5, Math.toRadians(5.0)), .3);
+                new Pose2d(3, 3, Math.toRadians(10)), 0);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
@@ -384,6 +384,7 @@ public class Robot extends MecanumDrive
         if(isBusy()||!Context.isTele)
         {
             update();
+            Tel.instance().addData("DT Vel", getPoseVelocity(), 1);
         }
         else {
             updateDrivePowers();

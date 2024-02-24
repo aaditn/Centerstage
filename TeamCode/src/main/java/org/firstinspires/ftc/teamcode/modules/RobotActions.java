@@ -57,9 +57,26 @@ public class RobotActions
             .await(() -> robot.getPoseEstimate().getX() < sweep_x || (robot.k!=Paths.Return_to_Stack && robot.k!=Paths.Go_To_Stack))
 //            .awaitDtXWithin(-56.5, 4)
             .moduleAction(intake, sweep1)
-            .delay(750)
             .moduleAction(intake, sweep2)
             .build();
+    }
+    public List<Task> lowerIntake(double drop_x , double sweep_x,int cycle, boolean x)
+    {
+        Intake.SweeperState sweep1 = cycle==0?Intake.SweeperState.ONE_SWEEP: cycle==1?Intake.SweeperState.THREE_SWEEP: Intake.SweeperState.FIVE_SWEEP;
+        Intake.SweeperState sweep2 = cycle==0?Intake.SweeperState.TWO_SWEEP: cycle==1?Intake.SweeperState.FOUR_SWEEP: Intake.SweeperState.SIX_SWEEP;
+
+        return Builder.create()
+                .await(() -> robot.getPoseEstimate().getX() < drop_x)
+                .addTaskList(quickReset())
+                .moduleAction(intake, Intake.PositionState.DOWN)
+                .moduleAction(intake, Intake.PowerState.INTAKE)
+                .moduleAction(intake, Intake.ConveyorState.INTAKE)
+                .await(() -> robot.getPoseEstimate().getX() < sweep_x || (robot.k!=Paths.Return_to_Stack && robot.k!=Paths.Go_To_Stack))
+//            .awaitDtXWithin(-56.5, 4)
+                .moduleAction(intake, sweep1)
+                .delay(750)
+                .moduleAction(intake, sweep2)
+                .build();
     }
 
     public List<Task> deployPurple(double yLeft, double yMid, double yRight)
@@ -120,6 +137,19 @@ public class RobotActions
                 .addTaskList(resetOnly())
                 .build();
     }
+    public List<Task> yellowDropTruss(double xPos, double startSlides, Slides.SlideState height){
+        return Builder.create()
+                .awaitDtXWithin(startSlides,4)
+                .addTaskList(slidesOnlyAutonomousProgrammingVersionForAutomatedControl(height,true))
+                .executeCode(()->slides.macroRunning=false)
+                .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                .delay(1400)
+                .moduleAction(deposit, Deposit.ClawState.OPEN)
+                .delay(300)
+                .moduleAction(deposit, Deposit.RotateState.ZERO)
+                .addTaskList(resetOnly())
+                .build();
+    }
 
     public List<Task> yellowDrop(double xPos, double startSlides, boolean first){
         return Builder.create()
@@ -158,6 +188,31 @@ public class RobotActions
                 return Builder.create().build();
         }
     }
+    public List<Task> scorePixels(double xPos, TeleOpRewrite.DepositState state,double xPos2){
+        switch(state) {
+            case LEFT:
+                return Builder.create()
+                        .await(() -> robot.getPoseEstimate().getX() > xPos2)
+                        .executeCode(() -> RobotLog.e("s"))
+                        .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
+                        .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                        .delay(300)
+                        .addTaskList(scorePixels(state))
+                        .build();
+            case RIGHT:
+                return Builder.create()
+                        .await(()->robot.getPoseEstimate().getX()>xPos2)
+                        .executeCode(()-> RobotLog.e("s"))
+                        .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
+                        .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                        .delay(300)
+                        .addTaskList(scorePixels(state))
+                        .build();
+            default:
+                return Builder.create().build();
+        }
+    }
+
 
     public List<Task> scorePixelsFailed(double xPos, TeleOpRewrite.DepositState state){
         switch(state) {
@@ -529,20 +584,18 @@ public List<Task> quickReset(){
                     .executeCode(()->slides.macroRunning=true)
                     .moduleAction(deposit, Deposit.ClawState.CLOSED2)
                     .delay(500)
-                    .moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                    .delay(150)
                     .moduleAction(deposit, Deposit.FlipState.PARTIAL)
-                    .delay(200)
+                    .delay(250)
                     .moduleAction(slides, row)
-                    .delay(400)
+                    .delay(200)
+                    .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                    .delay(200)
                     .moduleAction(deposit, Deposit.FlipState.DOWN)
-                    .delay(200)
                     .moduleAction(deposit, Deposit.WristState.HOVER)
-                    .delay(100)
+                    .delay(300)
                     .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
-                    .delay(400)
+                    .await(slides::isIdle)
                     //.await(()->slides.getStatus()==Module.Status.IDLE)
-                    .delay(200)
                     .executeCode(()->slides.macroRunning=false)
                     .build();
         }
@@ -582,7 +635,36 @@ public List<Task> quickReset(){
                 .awaitPreviousModuleActionCompletion()
                 .executeCode(()->slides.macroRunning=false)
                 .build();
+    } public List<Task> slidesOnlyAutonomousProgrammingVersionForAutomatedControl(Slides.SlideState row,boolean x)
+{
+    if(slides.getState()==Slides.SlideState.GROUND|| slides.getState()==Slides.SlideState.GROUND_UNTIL_LIMIT)
+    {
+        return Builder.create()
+                .executeCode(()->slides.macroRunning=true)
+                .moduleAction(deposit, Deposit.ClawState.CLOSED1)
+                .delay(500)
+                .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                .moduleAction(slides, row)
+                .delay(300)
+                .moduleAction(deposit, Deposit.FlipState.DOWN)
+                .delay(300)
+                //.moduleAction(deposit, Deposit.WristState.PARTIAL)
+                .moduleAction(deposit, Deposit.WristState.YELLOW_HOVER)
+                .moduleAction(deposit,Deposit.ExtensionState.DEPOSIT)
+                .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
+                //.moduleAction(deposit, Deposit.WristState.YELLOW_HOVER)
+                .await(slides::isIdle)
+                .executeCode(()->slides.macroRunning=false)
+                .build();
     }
+
+    return Builder.create()
+            .executeCode(()->slides.macroRunning=true)
+            .moduleAction(slides, row)
+            .awaitPreviousModuleActionCompletion()
+            .executeCode(()->slides.macroRunning=false)
+            .build();
+}
 
     public List<Task> scorePixels()
     {
@@ -604,6 +686,8 @@ public List<Task> quickReset(){
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
                 .delay(400)
+                .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
+                .delay(depositIsExtended? 300: 0)
                 .addTaskList(transitionDepositModified(init, TeleOpRewrite.DepositState.NORMAL))
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                 .moduleAction(deposit, Deposit.RotateState.ZERO)
@@ -636,11 +720,12 @@ public List<Task> quickReset(){
                 .addTaskList(transitionDepositModified(TeleOpRewrite.DepositState.NORMAL, TeleOpRewrite.DepositState.NORMAL))
                 //.delay(depositIsLeft? 300: 0)
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
+                .delay(500)
                 .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.PARTIAL)
+                .delay(400)
                 .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
                 //.moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                .delay(800)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .await(()->slides.currentPosition()<600)
                 .moduleAction(deposit, Deposit.WristState.TRANSFER)

@@ -98,8 +98,8 @@ public class farRedDoor {
 
     public static TrajectorySequence stackToBack1 = Robot.trajectorySequenceBuilder(leftBackToStack.end())
             .setReversed(true)
-            .lineTo(new Vector2d(25,-14))
-            .splineToConstantHeading(new Vector2d(52.5,-14), Math.toRadians(0))
+            .lineTo(new Vector2d(25,-10))
+            .splineToConstantHeading(new Vector2d(52.5,-18), Math.toRadians(0))
             .build();
     public static TrajectorySequence backToStack1 = Robot.trajectorySequenceBuilder(stackToBack1.end())
 
@@ -115,8 +115,8 @@ public class farRedDoor {
             .build();
     public static TrajectorySequence stackToBack2 = Robot.trajectorySequenceBuilder(backToStack1.end())
             .setReversed(true)
-            .lineTo(new Vector2d(25,-14))
-            .splineToConstantHeading(new Vector2d(52.5,-14), Math.toRadians(0))
+            .lineTo(new Vector2d(25,-10))
+            .splineToConstantHeading(new Vector2d(52.5,-18), Math.toRadians(0))
             .build();
     public static TrajectorySequence parkLeft = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
             .lineToConstantHeading(new Vector2d(52, -55))

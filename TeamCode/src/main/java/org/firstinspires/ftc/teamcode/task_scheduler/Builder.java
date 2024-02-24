@@ -72,6 +72,19 @@ public class Builder
         return this;
     }
 
+    public Builder conditionalModuleAction(Module m, ModuleState s, Callable<Boolean> conditional)
+    {
+        tasks.add(new ExecutionTask(()->{
+            if(conditional.call())
+            {
+                m.setState(s);
+            }
+        }));
+        lastModuleCalled=m;
+        lastModuleStateCalled=s;
+        return this;
+    }
+
     public Builder await(Callable<Boolean> runCondition)
     {
         tasks.add(new AwaitTask(runCondition));

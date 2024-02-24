@@ -16,7 +16,7 @@ public class Intake extends Module {
     DcMotorEx intake;
     Servo  anglerRight, sweeperLeft, sweeperRight;
     CRServo conveyorLeft, conveyorRight;
-    ColorRangeSensor cs1;
+    ColorRangeSensor cs1, cs2;
     public static boolean telemetryToggle=false;
 
     public enum PowerState implements ModuleState
@@ -54,13 +54,15 @@ public class Intake extends Module {
 
 
     double currentPower, currentPosition, conveyorLeftPower,conveyorRightPower, conveyorPower, sweeperPos;
-    int s1Alpha = 1000, s1Dist = 75, s2Alpha = 1500, s2Dist = 75;
-public static double initOffset = 0.0175;
+    int s1Alpha = 1000, s1Dist = 75, s2Alpha = 2000, s2Dist = 75;
+    public static double initOffset = 0.0175;
     PowerState pwstate;
     PositionState poState;
     ConveyorState cstate;
     SweeperState sstate;
     public static double sweeperOffset=0.06;
+
+    public boolean pixel1Present=false, pixel2Present=false;
 
 
     public Intake(HardwareMap hardwareMap)
@@ -81,6 +83,7 @@ public static double initOffset = 0.0175;
         anglerRight.setDirection(Servo.Direction.REVERSE);
 
         cs1 = hardwareMap.get(ColorRangeSensor.class, "cs1");
+        cs2 = hardwareMap.get(ColorRangeSensor.class, "cs2");
 
 //        cs1 = hardwareMap.get(ColorRangeSensor.class, "cs1");
 //        cs2 = hardwareMap.get(ColorRangeSensor.class, "cs2");
@@ -89,11 +92,11 @@ public static double initOffset = 0.0175;
 
 
 
-    public boolean pixelsPresent()
+    public boolean pixelsPresent(ColorRangeSensor sensor, double threshold)
     {
-        double colorSensorAlpha=cs1.alpha();
+        double colorSensorAlpha=sensor.alpha();
         RobotLog.e("cs alpha: "+ colorSensorAlpha);
-        if(colorSensorAlpha > s1Alpha)
+        if(colorSensorAlpha > threshold)
         {
             return true;
         }
@@ -107,7 +110,7 @@ public static double initOffset = 0.0175;
 
         for(int i=0; i<10; i++)
         {
-            if(pixelsPresent())
+            if(pixelsPresent(cs1, s1Alpha))
             {
                 presentCounter++;
             }
@@ -123,6 +126,37 @@ public static double initOffset = 0.0175;
             return true;
         else
             return false;
+    }
+
+    public boolean pixelsPresentBlocking(ColorRangeSensor sensor, double threshold)
+    {
+        double presentCounter=0;
+        double absentCounter=0;
+
+        for(int i=0; i<10; i++)
+        {
+            if(pixelsPresent(sensor, threshold))
+            {
+                presentCounter++;
+            }
+            else
+            {
+                absentCounter++;
+            }
+        }
+        RobotLog.e("Present Counter " +presentCounter);
+        RobotLog.e("Absent Counter "+ absentCounter);
+
+        if(presentCounter>absentCounter)
+            return true;
+        else
+            return false;
+    }
+
+    public void updatePixelsPresent()
+    {
+        pixel1Present = pixelsPresentBlocking(cs1, s1Alpha);
+        pixel2Present = pixelsPresentBlocking(cs2, s2Alpha);
     }
 
     public ColorRangeSensor getCs()

@@ -26,7 +26,6 @@ object Context
     @JvmField var noHwInit: Boolean=false
     @JvmField var parkSide: ParkSide = ParkSide.LEFT
     @JvmField var autonYellowHeight: SlideState = SlideState.AUTO_LOW
-    @JvmField var pixelsInside: Boolean = false
 
     @JvmStatic fun updateValues()
     {
@@ -53,7 +52,6 @@ object Context
         noHwInit=false
         parkSide=ParkSide.LEFT
         autonYellowHeight=SlideState.AUTO_LOW
-        pixelsInside=false
     }
     @JvmStatic fun clearValues()
     {
@@ -72,6 +70,5 @@ object Context
         noHwInit=false
         parkSide=ParkSide.LEFT;
         autonYellowHeight=SlideState.AUTO_LOW
-        pixelsInside=false
     }
 }

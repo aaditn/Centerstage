@@ -149,6 +149,7 @@ public class Robot extends MecanumDrive
     private AHRS navx;
     ReadTimer chub, ehub;
     public TwoWheelTrackingLocalizer localizer;
+    Thread colorSensors;
 
 
 
@@ -212,6 +213,12 @@ public class Robot extends MecanumDrive
 
         scheduler=new TaskScheduler();
 
+        if(!Context.isTele)
+        {
+            colorSensorsStart();
+        }
+
+
         //navx=new ReadTimer(navxWrapper::update, 20);
         //chub=new ReadTimer(this::cHubUpdate);
         //ehub=new ReadTimer(this::eHubUpdate, 50);
@@ -229,9 +236,33 @@ public class Robot extends MecanumDrive
     public static void destroyInstance()
     {
         if(robot!=null)
+        {
             robot.deposit.onDeath();
+            if(!Context.isTele)
+            {
+                robot.colorSensors.interrupt();
+            }
+        }
 
         robot=null;
+    }
+
+    public void colorSensorsStart()
+    {
+        colorSensors = new Thread()
+        {
+            public void run()
+            {
+                while(!isInterrupted() && Context.opmode.opModeIsActive())
+                {
+                    if(Context.colorSensorsEnabled)
+                    {
+                        intake.updatePixelsPresent();
+                    }
+                }
+            }
+        };
+        colorSensors.start();
     }
 
 

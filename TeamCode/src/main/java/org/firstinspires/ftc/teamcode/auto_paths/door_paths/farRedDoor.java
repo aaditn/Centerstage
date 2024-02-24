@@ -32,12 +32,12 @@ public class farRedDoor {
             .build();
     public static TrajectorySequence leftBackToStack = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(20,-10), Math.toRadians(180))
+            .splineToConstantHeading(new Vector2d(20,-9.5), Math.toRadians(180))
 
-            .lineTo(new Vector2d(-35,-10),
+            .lineTo(new Vector2d(-35,-9.5),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineTo(new Vector2d(-54.5,-10),
+            .lineTo(new Vector2d(-54.5,-9.5),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();

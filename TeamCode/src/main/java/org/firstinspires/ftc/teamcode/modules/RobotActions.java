@@ -508,7 +508,19 @@ public class RobotActions
                 .executeCode(()->slides.macroRunning=false)
                 .build();
     }
-
+public List<Task> quickReset(){
+        return Builder.create()
+                .executeCode(()->slides.macroRunning=true)
+                .delay(150)
+//                .moduleAction(deposit, Deposit.FlipState.PARTIAL)
+                .moduleAction(slides, Slides.SlideState.HALF)
+                .delay(600)
+                .moduleAction(slides, Slides.SlideState.GROUND)
+//                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+            .delay(150)
+                .executeCode(()->slides.macroRunning=false)
+                .build();
+}
     public List<Task> slidesOnly(Slides.SlideState row)
     {
         if(slides.getState()==Slides.SlideState.GROUND|| slides.getState()==Slides.SlideState.GROUND_UNTIL_LIMIT)
@@ -591,7 +603,7 @@ public class RobotActions
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .delay(200)
+                .delay(400)
                 .addTaskList(transitionDepositModified(init, TeleOpRewrite.DepositState.NORMAL))
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                 .moduleAction(deposit, Deposit.RotateState.ZERO)

@@ -43,7 +43,7 @@ public class farRedDoor extends EnhancedOpMode {
         return getTaskList(
                 actions.deployPurple(39, 11, 23),
                 actions.yellowDrop(49, -15, Context.autonYellowHeight),
-                actions.lowerIntake(0, -51.5, 0),
+                actions.lowerIntake(0, -52, 0),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
                 actions.lowerIntake(0, -51.5, 1),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT, true)

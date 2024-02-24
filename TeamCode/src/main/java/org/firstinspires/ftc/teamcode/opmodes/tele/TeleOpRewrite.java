@@ -128,7 +128,9 @@ public class TeleOpRewrite extends EnhancedOpMode {
                 intake.setOperationState(Module.OperationState.PRESET);
             }
 
-
+if(clawManual.wasJustPressed()&&slides.getState()== Slides.SlideState.GROUND&&!slides.macroRunning){
+    scheduler.scheduleTaskList(actions.quickReset());
+}
             //GRAB AND HOLD
 //            if(grabPixel.wasJustPressed()&&slides.getState()==Slides.SlideState.GROUND&&
 //                    deposit.getState(Deposit.FlipState.class)==Deposit.FlipState.TRANSFER)

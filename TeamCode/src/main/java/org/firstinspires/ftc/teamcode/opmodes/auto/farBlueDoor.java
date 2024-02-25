@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
+import static org.firstinspires.ftc.teamcode.Robot.trajectorySequenceBuilder;
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor.blueFarStart;
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor.trajectories;
 
@@ -45,7 +46,7 @@ public class farBlueDoor extends EnhancedOpMode {
                 actions.yellowDrop(49, -15, Context.autonYellowHeight),
                 actions.lowerIntake(0, -54, 0),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT),
-                actions.lowerIntake(0, -54, 1),
+                actions.lowerIntake(0, -54, 0),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT, true)
         );
     }
@@ -75,14 +76,14 @@ public class farBlueDoor extends EnhancedOpMode {
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO) && !(intake.pixel1Present||intake.pixel2Present)) {
                 //RobotLog.e("color sensor "+intake.pixelsPresent());
                 drive.run(Paths.Go_To_Stack);
-                delayLinear(750);
+                delayLinear(300);
                 drive.run(Paths.Score_First);
-                delayLinear(330);
+              //  delayLinear(330);
 
                 if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO) && !(intake.pixel1Present|| intake.pixel2Present)) {
                     //RobotLog.e("color sensor "+intake.pixelsPresent());
                     drive.run(Paths.Return_to_Stack);
-                    delayLinear(750);
+                    delayLinear(300);
                     drive.run(Paths.Score_Second);
                 }
                 else if(intake.pixel1Present&&intake.pixel2Present)
@@ -91,8 +92,12 @@ public class farBlueDoor extends EnhancedOpMode {
                 }
                 else
                 {
-                    //score 1
+                    drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailedOne(49, TeleOpRewrite.DepositState.LEFT));
                 }
+            }
+            else if(intake.pixel1Present)
+            {
+                drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailedOne(49, TeleOpRewrite.DepositState.RIGHT));
             }
             else
             {
@@ -102,6 +107,13 @@ public class farBlueDoor extends EnhancedOpMode {
                 } else if (Context.parkSide.equals(AutoSelector.ParkSide.RIGHT)) {
                     drive.run(Paths.ParkRight);
                 }
+            }
+            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)){
+                drive.followTrajectorySequence(
+                        trajectorySequenceBuilder(drive.getPoseEstimate())
+                                .forward(8)
+                                .build()
+                );
             }
 
             waitForEnd();

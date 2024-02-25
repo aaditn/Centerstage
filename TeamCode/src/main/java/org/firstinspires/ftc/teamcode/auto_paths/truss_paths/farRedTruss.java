@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.enums.Paths;
 public class farRedTruss {
     public static Pose2d redFarStart = new Pose2d(-32.5, -61, Math.toRadians(90)); // Flipped starting pose
     public static TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(redFarStart)
-            .splineToConstantHeading(new Vector2d(-46.5, -41), Math.toRadians(90), // Flipped pose and heading
+            .splineToConstantHeading(new Vector2d(-46.5, -38), Math.toRadians(90), // Flipped pose and heading
                     Robot.getVelocityConstraint(50, 2.4, 15.06),
                     Robot.getAccelerationConstraint(40))// Flipped waypoint // Flipped waypoint
             .build();

@@ -31,12 +31,12 @@ public class closeRedTruss {
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(60))
             .lineToConstantHeading(new Vector2d(-28, -58))
-            .splineToConstantHeading(new Vector2d(-55, -33), Math.toRadians(180),
-                    Robot.getVelocityConstraint(35, 2, 15.06),
-                    Robot.getAccelerationConstraint(35))
-            .lineToConstantHeading(new Vector2d(-58, -33),
+            .splineToConstantHeading(new Vector2d(-55, -34), Math.toRadians(180),
                     Robot.getVelocityConstraint(30, 2, 15.06),
-                    Robot.getAccelerationConstraint(35))
+                    Robot.getAccelerationConstraint(30))
+            .lineToConstantHeading(new Vector2d(-58, -34),
+                    Robot.getVelocityConstraint(30, 2, 15.06),
+                    Robot.getAccelerationConstraint(30))
             .build();
 
     public static TrajectorySequence midPurple = Robot.trajectorySequenceBuilder(redCloseStart)
@@ -92,6 +92,7 @@ public class closeRedTruss {
 
     public static TrajectorySequence stackToBack1 = Robot.trajectorySequenceBuilder(leftBackToStack.end())
             .setReversed(true)
+            .lineTo(new Vector2d(-54, -34))
             .splineToConstantHeading(new Vector2d(-36, -57), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
@@ -103,19 +104,20 @@ public class closeRedTruss {
 
             .setReversed(false)
             .lineToConstantHeading(new Vector2d(-28, -57))
-            .splineToConstantHeading(new Vector2d(-53, -33), Math.toRadians(180),
-                    Robot.getVelocityConstraint(35, 2, 15.06),
-                    Robot.getAccelerationConstraint(35))
-            .lineToConstantHeading(new Vector2d(-57.5, -33),
+            .splineToConstantHeading(new Vector2d(-50, -32), Math.toRadians(180),
                     Robot.getVelocityConstraint(30, 2, 15.06),
-                    Robot.getAccelerationConstraint(35))
+                    Robot.getAccelerationConstraint(30))
+            .lineToConstantHeading(new Vector2d(-57.5, -32),
+                    Robot.getVelocityConstraint(30, 2, 15.06),
+                    Robot.getAccelerationConstraint(30))
             .build();
     public static TrajectorySequence stackToBack2 = Robot.trajectorySequenceBuilder(backToStack1.end())
             .setReversed(true)
-            .splineToConstantHeading(new Vector2d(-36, -57), Math.toRadians(0),
+            .lineTo(new Vector2d(-54, -32))
+            .splineToConstantHeading(new Vector2d(-36, -56), Math.toRadians(0),
                     Robot.getVelocityConstraint(35, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(49, -57),
+            .lineToConstantHeading(new Vector2d(49, -56),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();

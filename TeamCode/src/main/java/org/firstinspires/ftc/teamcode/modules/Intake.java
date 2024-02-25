@@ -29,10 +29,10 @@ public class Intake extends Module {
 
     public enum PositionState implements ModuleState
     {
-        RAISED, MID, DOWN, AUTO;
+        RAISED, MID, DOWN, AUTO,AUTO2;
     }
-    public static double POSITION_RAISED=0,  POSITION_MID=0.13, POSITION_DOWN=0.28, AUTO=POSITION_DOWN;
-    public static double[] positionValues={POSITION_RAISED, POSITION_MID, POSITION_DOWN, AUTO};
+    public static double POSITION_RAISED=0,  POSITION_MID=0.13, POSITION_DOWN=0.28, AUTO=POSITION_DOWN,AUTO2 = .24;
+    public static double[] positionValues={POSITION_RAISED, POSITION_MID, POSITION_DOWN, AUTO,AUTO2};
 
 
     public enum ConveyorState implements  ModuleState
@@ -55,7 +55,7 @@ public class Intake extends Module {
 
     double currentPower, currentPosition, conveyorLeftPower,conveyorRightPower, conveyorPower, sweeperPos;
     int s1Alpha = 1000, s1Dist = 75, s2Alpha = 2000, s2Dist = 75;
-    public static double initOffset = 0.0175;
+    public static double initOffset = 0.01;
     PowerState pwstate;
     PositionState poState;
     ConveyorState cstate;
@@ -200,6 +200,7 @@ public class Intake extends Module {
 if(getState(SweeperState.class).equals(SweeperState.INIT)){
 
     sweeperLeft.setPosition(sweeperPos+initOffset);
+
     sweeperRight.setPosition(sweeperPos+sweeperOffset-initOffset);
 }
 else {

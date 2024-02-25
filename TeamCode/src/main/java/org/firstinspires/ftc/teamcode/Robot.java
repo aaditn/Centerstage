@@ -30,7 +30,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationCon
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.kauailabs.navx.ftc.AHRS;
-import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -45,6 +44,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -89,7 +89,7 @@ public class Robot extends MecanumDrive
 
     //public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(9, 0, 1);
     //public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 1);
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(6,0,0);//9, 0, 1);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(6,0,1);//9, 0, 1);
    public static PIDCoefficients HEADING_PID = new PIDCoefficients(6,0,0);//8, 0, 1);
 
 
@@ -215,6 +215,7 @@ public class Robot extends MecanumDrive
 
         if(!Context.isTele)
         {
+            RobotLog.e("Attempted to start");
             colorSensorsStart();
         }
 
@@ -249,16 +250,22 @@ public class Robot extends MecanumDrive
 
     public void colorSensorsStart()
     {
+        RobotLog.e("Start Method");
         colorSensors = new Thread()
         {
+            @Override
             public void run()
             {
-                while(!isInterrupted() && Context.opmode.opModeIsActive())
+                RobotLog.e("Thread Started");
+                RobotLog.e("" + !isInterrupted() + " "+Context.opmode.opModeIsActive());
+                while(!isInterrupted() && !Context.opmode.isStopRequested())
                 {
                     if(Context.colorSensorsEnabled)
                     {
+                        RobotLog.e("Color Sensors Enabled");
                         intake.updatePixelsPresent();
                     }
+                    //RobotLog.e("Thread Running");
                 }
             }
         };
@@ -320,9 +327,9 @@ public class Robot extends MecanumDrive
 
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-       navx =  AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
-                AHRS.DeviceDataType.kProcessedData,
-                NAVX_DEVICE_UPDATE_RATE_HZ);
+       //navx =  AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
+         //       AHRS.DeviceDataType.kProcessedData,
+           //     NAVX_DEVICE_UPDATE_RATE_HZ);
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(

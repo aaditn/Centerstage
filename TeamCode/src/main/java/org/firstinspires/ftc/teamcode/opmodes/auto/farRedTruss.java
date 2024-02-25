@@ -40,8 +40,8 @@ public class farRedTruss extends EnhancedOpMode {
                 actions.yellowDropTruss(47, -15, Context.autonYellowHeight),
                 actions.lowerIntake(-0, -51.5, 0,true),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT,-35),
-                actions.lowerIntake(-0, -51.5, 1),
-                actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT,-35)
+                actions.lowerIntake(-0, -51.5, 0,true),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT,-35, Slides.SlideState.ROW1)
         );
     }
     @Override
@@ -62,6 +62,7 @@ public class farRedTruss extends EnhancedOpMode {
 
                 if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO) && !(intake.pixel1Present||intake.pixel2Present)) {
                     drive.run(Paths.Return_to_Stack);
+                    delayLinear(250);
                     drive.run(Paths.Score_Second);
                 }
                 else if(intake.pixel1Present&&intake.pixel2Present)
@@ -70,8 +71,12 @@ public class farRedTruss extends EnhancedOpMode {
                 }
                 else
                 {
-
+                    drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailedOne(49, TeleOpRewrite.DepositState.LEFT));
                 }
+            }
+            else if(intake.pixel1Present)
+            {
+                drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailedOne(49, TeleOpRewrite.DepositState.RIGHT));
             }
             waitForEnd();
         }

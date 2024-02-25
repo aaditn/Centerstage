@@ -2,8 +2,9 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.closeBlueTruss.blueCloseStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.closeBlueTruss.trajectories;
+import static org.firstinspires.ftc.teamcode.Robot.trajectorySequenceBuilder;
+import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.closeBlueDoor.blueCloseStart;
+import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.closeBlueDoor.trajectories;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -57,12 +58,20 @@ public class closeBlue extends EnhancedOpMode {
             drive.set(trajectories,auto_tasks());
             drive.run(Paths.Purple);
             drive.run(Paths.Score_Spike);
+            delayLinear(1000);
+            drive.followTrajectorySequence(
+                    trajectorySequenceBuilder(drive.getPoseEstimate())
+                            .forward(-5)
+                            .build()
+            );
+
             RobotLog.e("yellow");
             delayLinear(250);
             RobotLog.e("delaying");
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
                 drive.run(Paths.Go_To_Stack);
                 delayLinear(750);
+
                 drive.run(Paths.Score_First);
                 delayLinear(250);
                 if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO)) {

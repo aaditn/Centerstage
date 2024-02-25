@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farBlueTruss.blueFarStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farBlueTruss.trajectories;
 import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farRedTruss.redFarStart;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -42,7 +40,7 @@ public class farBlueTruss extends EnhancedOpMode {
                 actions.yellowDrop(47, -15, Context.autonYellowHeight),
                 actions.lowerIntake(-0, -51.5, 0),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
-                actions.lowerIntake(-0, -51.5, 1),
+                actions.lowerIntake(-0, -51.5, 0),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT)
         );
     }
@@ -74,8 +72,12 @@ public class farBlueTruss extends EnhancedOpMode {
                 }
                 else
                 {
-                    //score 1
+                    drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailedOne(49, TeleOpRewrite.DepositState.LEFT));
                 }
+            }
+            else if(intake.pixel1Present)
+            {
+                drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailedOne(49, TeleOpRewrite.DepositState.RIGHT));
             }
             waitForEnd();
         }

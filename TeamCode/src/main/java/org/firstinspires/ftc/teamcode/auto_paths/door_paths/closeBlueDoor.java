@@ -21,7 +21,7 @@ public class closeBlueDoor {
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence leftPurpleToBack = Robot.trajectorySequenceBuilder(leftPurple.end())
-            .lineToLinearHeading(new Pose2d(47, 37, Math.toRadians(180)),
+            .lineToLinearHeading(new Pose2d(43, 37, Math.toRadians(180)),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -41,7 +41,7 @@ public class closeBlueDoor {
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence midPurpleToBack = Robot.trajectorySequenceBuilder(midPurple.end())
-            .lineToLinearHeading(new Pose2d(47, 33, Math.toRadians(180)),
+            .lineToLinearHeading(new Pose2d(43, 30.5, Math.toRadians(180)),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();
@@ -64,7 +64,7 @@ public class closeBlueDoor {
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence rightPurpleToBack = Robot.trajectorySequenceBuilder(rightPurple.end())
-            .lineToLinearHeading(new Pose2d(47, 27, Math.toRadians(180)),
+            .lineToLinearHeading(new Pose2d(43, 25, Math.toRadians(180)),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
             .build();

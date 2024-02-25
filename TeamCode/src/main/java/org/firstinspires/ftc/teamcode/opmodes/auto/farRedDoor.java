@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
+import static org.firstinspires.ftc.teamcode.Robot.trajectorySequenceBuilder;
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farRedDoor.redFarStart;
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farRedDoor.trajectories;
 
@@ -43,10 +44,10 @@ public class farRedDoor extends EnhancedOpMode {
         return getTaskList(
                 actions.deployPurple(39, 11, 23),
                 actions.yellowDrop(49, -15, Context.autonYellowHeight),
-                actions.lowerIntake(0, -52, 0),
-                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
-                actions.lowerIntake(0, -51.5, 1),
-                actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT, true)
+                actions.lowerIntake(0, -51.5, 0),
+                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT,-38),
+                actions.lowerIntake(0, -51.5, 0),
+                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38)
         );
     }
     @Override
@@ -74,13 +75,16 @@ public class farRedDoor extends EnhancedOpMode {
             RobotLog.e("delaying");
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO) && !(intake.pixel1Present||intake.pixel2Present)) {
                 drive.run(Paths.Go_To_Stack);
-                delayLinear(750);
+               // delayLinear(750);
+                delayLinear(250);
                 drive.run(Paths.Score_First);
-                delayLinear(330);
+              //  delayLinear(330);
 
                 if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO) && !(intake.pixel1Present||intake.pixel2Present)) {
                     drive.run(Paths.Return_to_Stack);
-                    delayLinear(750);
+                   // delayLinear(750);
+                  //  delayLinear(500);
+                    delayLinear(250);
                     drive.run(Paths.Score_Second);
                 }
                 else if(intake.pixel1Present&&intake.pixel2Present)
@@ -90,17 +94,29 @@ public class farRedDoor extends EnhancedOpMode {
                 else
                 {
                     //score 1
+                    drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailedOne(49, TeleOpRewrite.DepositState.RIGHT));
                 }
+            }
+            else if(intake.pixel1Present)
+            {
+                drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailedOne(49, TeleOpRewrite.DepositState.RIGHT));
             }
             else
             {
-                delayLinear(100);
+            //    delayLinear(100);
                 if (Context.parkSide.equals(AutoSelector.ParkSide.LEFT))
                 {
                     drive.run(Paths.ParkLeft);
                 } else if (Context.parkSide.equals(AutoSelector.ParkSide.RIGHT)) {
                     drive.run(Paths.ParkRight);
                 }
+            }
+            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)){
+                drive.followTrajectorySequence(
+                        trajectorySequenceBuilder(drive.getPoseEstimate())
+                                .forward(8)
+                                .build()
+                );
             }
             waitForEnd();
             RobotLog.e("end");

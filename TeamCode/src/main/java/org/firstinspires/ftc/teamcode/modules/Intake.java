@@ -29,10 +29,10 @@ public class Intake extends Module {
 
     public enum PositionState implements ModuleState
     {
-        RAISED, MID, DOWN, AUTO;
+        RAISED, MID, DOWN, AUTO,AUTO2;
     }
-    public static double POSITION_RAISED=0,  POSITION_MID=0.13, POSITION_DOWN=0.28, AUTO=POSITION_DOWN;
-    public static double[] positionValues={POSITION_RAISED, POSITION_MID, POSITION_DOWN, AUTO};
+    public static double POSITION_RAISED=0,  POSITION_MID=0.13, POSITION_DOWN=0.28, AUTO=POSITION_DOWN,AUTO2 = .24;
+    public static double[] positionValues={POSITION_RAISED, POSITION_MID, POSITION_DOWN, AUTO,AUTO2};
 
 
     public enum ConveyorState implements  ModuleState

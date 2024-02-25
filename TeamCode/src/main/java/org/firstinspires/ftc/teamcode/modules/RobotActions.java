@@ -88,7 +88,7 @@ public class RobotActions
 
         return Builder.create()
                 .delay(50)
-                .moduleAction(intake, Intake.PositionState.AUTO)
+                .moduleAction(intake, Intake.PositionState.AUTO2)
                 .delay(50)
                 .await(() -> ((Math.abs(robot.getPoseEstimate().getHeading() - robot.get(0).getTrajectory().end().getHeading())<Math.toRadians(8))||robot.k!=Paths.Purple) &&
                         (Math.abs(robot.getPoseEstimate().getY() - robot.get(0).getTrajectory().end().getY())<2))
@@ -228,7 +228,39 @@ public class RobotActions
                         .moduleAction(intake, Intake.SweeperState.ZERO)
                         .await(()->robot.getPoseEstimate().getX()>xPos2)
                         .executeCode(()-> RobotLog.e("s"))
-                        .addTaskList(slidesSide(Slides.SlideState.ROW1, Deposit.FlipState.RIGHT))
+                        .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
+                        .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                        .delay(300)
+                        .executeCode(()->Context.colorSensorsEnabled=true)
+                        .addTaskList(scorePixels(state))
+                        .executeCode(()->Context.colorSensorsEnabled=false)
+                        .build();
+            default:
+                return Builder.create().build();
+        }
+    }
+    public List<Task> scorePixels(double xPos, TeleOpRewrite.DepositState state, double xPos2, Slides.SlideState sstate){
+        switch(state) {
+            case LEFT:
+                return Builder.create()
+                        .delay(1000)
+                        .moduleAction(intake, Intake.SweeperState.ZERO)
+                        .await(() -> robot.getPoseEstimate().getX() > xPos2)
+                        .executeCode(() -> RobotLog.e("s"))
+                        .addTaskList(slidesSide(sstate, Deposit.FlipState.LEFT))
+                        .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                        .delay(300)
+                        .executeCode(()->Context.colorSensorsEnabled=true)
+                        .addTaskList(scorePixels(state))
+                        .executeCode(()->Context.colorSensorsEnabled=false)
+                        .build();
+            case RIGHT:
+                return Builder.create()
+                        .delay(1000)
+                        .moduleAction(intake, Intake.SweeperState.ZERO)
+                        .await(()->robot.getPoseEstimate().getX()>xPos2)
+                        .executeCode(()-> RobotLog.e("s"))
+                        .addTaskList(slidesSide(sstate, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
                         .executeCode(()->Context.colorSensorsEnabled=true)
@@ -336,7 +368,7 @@ public class RobotActions
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .delay(600)
+                .delay(500)
                 .addTaskList(transitionDepositModified(init, TeleOpRewrite.DepositState.NORMAL))
                 //.delay(depositIsLeft? 1000: 0)
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)

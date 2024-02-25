@@ -85,6 +85,11 @@ public class Builder
         return this;
     }
 
+    public ConditionalBuilder newConditional()
+    {
+        return new ConditionalBuilder(this);
+    }
+
     public Builder await(Callable<Boolean> runCondition)
     {
         tasks.add(new AwaitTask(runCondition));

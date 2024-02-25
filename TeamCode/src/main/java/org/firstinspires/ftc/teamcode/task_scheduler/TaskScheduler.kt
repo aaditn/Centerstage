@@ -29,7 +29,7 @@ class TaskScheduler
                 for(task in taskList)
                 {
                     val job = async(Dispatchers.Default){task.execute()}
-                    if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java)
+                    if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java||task.javaClass==ConditionalTask::class.java)
                     {
                         job.join()
                     }
@@ -46,13 +46,9 @@ class TaskScheduler
             for(task in taskList)
             {
                 val job = async(Dispatchers.Default){task.execute()}
-                if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java)
+                if(task.javaClass==AwaitTask::class.java||task.javaClass==BlockingTask::class.java||task.javaClass==DelayTask::class.java||task.javaClass==ConditionalTask::class.java)
                 {
-                    while(!job.isCompleted)
-                    {
-                        if(!Context.opmode!!.opModeIsActive())
-                            job.cancel()
-                    }
+                    job.join()
                 }
             }
         }

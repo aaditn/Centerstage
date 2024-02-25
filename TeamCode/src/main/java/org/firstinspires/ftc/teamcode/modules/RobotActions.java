@@ -179,8 +179,10 @@ public class RobotActions
         switch(state) {
             case LEFT:
                 return Builder.create()
+                        .executeCode(()->Context.colorSensorsEnabled=true)
                         .await(() -> robot.getPoseEstimate().getX() > -30)
                         .executeCode(() -> RobotLog.e("s"))
+                        .executeCode(()->Context.colorSensorsEnabled=false)
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
                         .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
@@ -190,8 +192,10 @@ public class RobotActions
                         .build();
             case RIGHT:
                 return Builder.create()
+                        .executeCode(()->Context.colorSensorsEnabled=true)
                         .await(()->robot.getPoseEstimate().getX()>-40)
                         .executeCode(()-> RobotLog.e("s"))
+                        .executeCode(()->Context.colorSensorsEnabled=false)
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
@@ -207,8 +211,10 @@ public class RobotActions
         switch(state) {
             case LEFT:
                 return Builder.create()
+                        .executeCode(()->Context.colorSensorsEnabled=true)
                         .await(() -> robot.getPoseEstimate().getX() > xPos2)
                         .executeCode(() -> RobotLog.e("s"))
+                        .executeCode(()->Context.colorSensorsEnabled=false)
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
                         .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
@@ -218,8 +224,10 @@ public class RobotActions
                         .build();
             case RIGHT:
                 return Builder.create()
+                        .executeCode(()->Context.colorSensorsEnabled=true)
                         .await(()->robot.getPoseEstimate().getX()>xPos2)
                         .executeCode(()-> RobotLog.e("s"))
+                        .executeCode(()->Context.colorSensorsEnabled=false)
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
@@ -305,8 +313,10 @@ public class RobotActions
         switch(state) {
             case LEFT:
                 return Builder.create()
+                        .executeCode(()->Context.colorSensorsEnabled=true)
                         .await(() -> robot.getPoseEstimate().getX() > -19)
                         .executeCode(() -> RobotLog.e("s"))
+                        .executeCode(()->Context.colorSensorsEnabled=false)
                         .addTaskList(slidesSide(Slides.SlideState.ROW1, Deposit.FlipState.LEFT))
                         .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
@@ -316,8 +326,10 @@ public class RobotActions
                         .build();
             case RIGHT:
                 return Builder.create()
+                        .executeCode(()->Context.colorSensorsEnabled=true)
                         .await(()->robot.getPoseEstimate().getX()>-40)
                         .executeCode(()-> RobotLog.e("s"))
+                        .executeCode(()->Context.colorSensorsEnabled=false)
                         .addTaskList(slidesSide(Slides.SlideState.ROW1, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
@@ -568,7 +580,9 @@ public class RobotActions
     {
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
-                .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                .conditionalModuleAction(deposit, Deposit.ClawState.CLOSED1, ()->((intake.pixel1Present && !intake.pixel2Present) || (!intake.pixel1Present && intake.pixel2Present)))
+                .conditionalModuleAction(deposit, Deposit.ClawState.CLOSED2, ()->(intake.pixel1Present&&intake.pixel2Present) || Context.isTele)
+                //.moduleAction(deposit, Deposit.ClawState.CLOSED2)
                 .delay(500)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .delay(150)

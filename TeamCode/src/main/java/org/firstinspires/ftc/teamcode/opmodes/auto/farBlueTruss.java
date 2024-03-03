@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
-import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
+import org.firstinspires.ftc.teamcode.opmodesOld.teleop.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;

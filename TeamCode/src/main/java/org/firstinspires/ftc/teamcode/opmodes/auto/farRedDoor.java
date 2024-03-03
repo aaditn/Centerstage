@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
-import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
+import org.firstinspires.ftc.teamcode.opmodesOld.teleop.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
@@ -45,7 +45,7 @@ public class farRedDoor extends EnhancedOpMode {
                 actions.deployPurple(39, 11, 23),
                 actions.yellowDrop(49, -15, Context.autonYellowHeight),
                 actions.lowerIntake(0, -51.5, 0),
-                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT,-38),
+                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT,true),
                 actions.lowerIntake(0, -51.5, 0),
                 actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38, Slides.SlideState.ROW2)
         );

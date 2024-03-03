@@ -195,7 +195,7 @@ public class CloseRed extends EnhancedOpMode {
         intake.init();
         deposit.init();
 
-        slideupbase=builder.createNew()
+         slideupbase=builder.createNew()
                 .executeCode(()->macroRunning=true)
                 .moduleAction(deposit, DepositOld.WristState.CRADLE)
                 .delay(100)

@@ -5,8 +5,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
-import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
-import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
+import org.firstinspires.ftc.teamcode.opmodesOld.teleop.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.util.Context;
@@ -176,83 +175,38 @@ public class RobotActions
                 .build();
     }
 
-    public List<Task> scorePixels(double xPos, TeleOpRewrite.DepositState state){
-        switch(state) {
-            case LEFT:
-                return Builder.create()
-                        .delay(1000)
-                        .moduleAction(intake, Intake.SweeperState.ZERO)
-                        .executeCode(()->Context.colorSensorsEnabled=true)
-                        .await(() -> robot.getPoseEstimate().getX() > -45)
-                        .executeCode(() -> RobotLog.e("s"))
-                        .executeCode(()->Context.colorSensorsEnabled=false)
-                        .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
-                        .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                        .delay(300)
-                        .executeCode(()->Context.colorSensorsEnabled=true)
-                        .addTaskList(scorePixels(state))
-                        .executeCode(()->Context.colorSensorsEnabled=false)
-                        .build();
-            case RIGHT:
-                return Builder.create()
-                        .delay(1000)
-                        .moduleAction(intake, Intake.SweeperState.ZERO)
-                        .executeCode(()->Context.colorSensorsEnabled=true)
-                        .await(()->robot.getPoseEstimate().getX()>-45)
-                        .executeCode(()-> RobotLog.e("s"))
-                        .executeCode(()->Context.colorSensorsEnabled=false)
-                        .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
-                        .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                        .delay(300)
-                        .executeCode(()->Context.colorSensorsEnabled=true)
-                        .addTaskList(scorePixels(state))
-                        .executeCode(()->Context.colorSensorsEnabled=false)
-                        .build();
-            default:
-                return Builder.create().build();
-        }
+
+    public List<Task> scorePixels(double xPos){
+        return Builder.create()
+                .delay(1000)
+                .moduleAction(intake, Intake.SweeperState.ZERO)
+                .executeCode(()->Context.colorSensorsEnabled=true)
+                .await(() -> robot.getPoseEstimate().getX() > -45)
+                .executeCode(() -> RobotLog.e("s"))
+                .executeCode(()->Context.colorSensorsEnabled=false)
+                .addTaskList(slidesOnly(Slides.SlideState.AUTO_TWO))
+                .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                .delay(300)
+                .executeCode(()->Context.colorSensorsEnabled=true)
+                .addTaskList(scorePixels())
+                .executeCode(()->Context.colorSensorsEnabled=false)
+                .build();
     }
-    public List<Task> scorePixels(double xPos, TeleOpRewrite.DepositState state,double xPos2){
-        switch(state) {
-            case LEFT:
-                return Builder.create()
-                        .delay(1000)
-                        .moduleAction(intake, Intake.SweeperState.ZERO)
-                        //.executeCode(()->Context.colorSensorsEnabled=true)
-                        .await(() -> robot.getPoseEstimate().getX() > xPos2)
-                        .executeCode(() -> RobotLog.e("s"))
-                       // .executeCode(()->Context.colorSensorsEnabled=false)
-                        /*.addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
-                        .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                        .delay(300)
-
-
-                        .executeCode(()->Context.colorSensorsEnabled=true)
-                        .addTaskList(scorePixels(state))
-                        .executeCode(()->Context.colorSensorsEnabled=false)
-
-                         */
-                        .build();
-            case RIGHT:
-                return Builder.create()
-                        .delay(1000)
-                        .moduleAction(intake, Intake.SweeperState.ZERO)
-                      //  .executeCode(()->Context.colorSensorsEnabled=true)
-                        .await(()->robot.getPoseEstimate().getX()>xPos2)
-                        /*.executeCode(()-> RobotLog.e("s"))
-                        .executeCode(()->Context.colorSensorsEnabled=false)
-                        .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
-                        .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                        .delay(300)
-                        .executeCode(()->Context.colorSensorsEnabled=true)
-                        .addTaskList(scorePixels(state))
-                        .executeCode(()->Context.colorSensorsEnabled=false)
-
-                         */
-                        .build();
-            default:
-                return Builder.create().build();
-        }
+    public List<Task> scorePixels(double xPos, TeleOpRewrite.DepositState state){
+            return Builder.create()
+                    .delay(1000)
+                    .moduleAction(intake, Intake.SweeperState.ZERO)
+                    .executeCode(()->Context.colorSensorsEnabled=true)
+                    .await(() -> robot.getPoseEstimate().getX() > -45)
+                    .executeCode(() -> RobotLog.e("s"))
+                    .executeCode(()->Context.colorSensorsEnabled=false)
+                    .addTaskList(slidesOnly(Slides.SlideState.AUTO_TWO))
+                    .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                    .delay(300)
+                    .executeCode(()->Context.colorSensorsEnabled=true)
+                    .addTaskList(scorePixels(state))
+                    .executeCode(()->Context.colorSensorsEnabled=false)
+                    .build();
     }
     public List<Task> scorePixels(double xPos, TeleOpRewrite.DepositState state, double xPos2, Slides.SlideState sstate){
         switch(state) {
@@ -819,43 +773,23 @@ public List<Task> quickReset(){
 
     public List<Task> scorePixels()
     {
-        ModuleState state = deposit.getState(Deposit.FlipState.class);
-        ModuleState extensionState = deposit.getState(Deposit.ExtensionState.class);
-        boolean depositIsLeft = state==Deposit.FlipState.LEFT;
-        boolean depositIsRight = state==Deposit.FlipState.RIGHT;
-        boolean depositIsExtended = state==Deposit.FlipState.DOWN && extensionState ==Deposit.ExtensionState.DEPOSIT;
-        boolean depositIsNormal = state==Deposit.FlipState.DOWN && extensionState != Deposit.ExtensionState.DEPOSIT;
 
         long delay = slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW3? 0:
                 slides.getState(Slides.SlideState.class) == Slides.SlideState.ROW2? 500: 700;
-
-        TeleOpRewrite.DepositState init = depositIsLeft? TeleOpRewrite.DepositState.LEFT: depositIsRight? TeleOpRewrite.DepositState.RIGHT:
-                depositIsExtended? TeleOpRewrite.DepositState.EXTENDED: TeleOpRewrite.DepositState.NORMAL;
-
 
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
                 .delay(400)
-                .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
-                .delay(depositIsExtended? 300: 0)
-                .addTaskList(transitionDepositModified(init, TeleOpRewrite.DepositState.NORMAL))
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                 .moduleAction(deposit, Deposit.RotateState.ZERO)
                 .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .moduleAction(deposit, Deposit.WristState.PARTIAL)
-//                .delay(300)
                 .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
-                //.moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .delay(delay)
                 .moduleAction(slides, Slides.SlideState.GROUND)
                 .await(()->slides.currentPosition()<600)
                 .moduleAction(deposit, Deposit.WristState.TRANSFER)
-                //.moduleAction(deposit, Deposit.WristState.PARTIAL2
-                //.await(slides::isIdle)
-                //.moduleAction(slides, Slides.SlideState.GROUND_UNTIL_LIMIT)
-                //.await(slides::isIdle)
-                .moduleAction(deposit, Deposit.ExtensionState.TRANSFER)
                 .executeCode(()->slides.macroRunning=false)
                 .build();
     }

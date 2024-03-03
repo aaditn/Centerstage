@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
-import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
+import org.firstinspires.ftc.teamcode.opmodesOld.teleop.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
@@ -39,7 +39,7 @@ public class farRedTruss extends EnhancedOpMode {
                 actions.deployPurple(35, 46, 35),
                 actions.yellowDropTruss(47, -15, Context.autonYellowHeight),
                 actions.lowerIntake(-0, -51.5, 0,true),
-                actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT,-35),
+                actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT,true),
                 actions.lowerIntake(-0, -51.5, 0,true),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.LEFT,-35, Slides.SlideState.ROW1)
         );

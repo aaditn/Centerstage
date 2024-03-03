@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodesOld.teleop;
+package org.firstinspires.ftc.teamcode.opmodes.tele;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
@@ -6,7 +6,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -22,7 +21,7 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.Tel;
-@Disabled
+
 @TeleOp(name="V2")
 public class TeleOpV2 extends EnhancedOpMode
 {

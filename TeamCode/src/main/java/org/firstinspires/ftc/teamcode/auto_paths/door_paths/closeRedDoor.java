@@ -83,7 +83,7 @@ public class closeRedDoor {
     public static TrajectorySequence stackToBack1 = Robot.trajectorySequenceBuilder(leftBackToStack.end())
             .setReversed(true)
             .lineTo(new Vector2d(25,-8))
-            .splineToConstantHeading(new Vector2d(48,-16), Math.toRadians(0))
+            .splineToConstantHeading(new Vector2d(48,-28), Math.toRadians(0))
             .build();
     public static TrajectorySequence backToStack1 = Robot.trajectorySequenceBuilder(stackToBack1.end())
 
@@ -98,7 +98,7 @@ public class closeRedDoor {
     public static TrajectorySequence stackToBack2 = Robot.trajectorySequenceBuilder(backToStack1.end())
             .setReversed(true)
             .lineTo(new Vector2d(25,-8))
-            .splineToConstantHeading(new Vector2d(48,-16), Math.toRadians(0))
+            .splineToConstantHeading(new Vector2d(48,-28), Math.toRadians(0))
             .build();
     public static TrajectorySequence parkLeft = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
             .lineToConstantHeading(new Vector2d(52, -55),

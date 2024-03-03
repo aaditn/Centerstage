@@ -19,10 +19,10 @@ public class farRedDoor {
     public static TrajectorySequence leftPurpleToBack = Robot.trajectorySequenceBuilder(leftPurple.end())
             .setReversed(true)
 
-            .splineToSplineHeading(new Pose2d(-12, -8, Math.toRadians(180)), Math.toRadians(0),
+            .splineToSplineHeading(new Pose2d(-12, -9.5, Math.toRadians(180)), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
-            .lineToConstantHeading(new Vector2d(20, -8))
+            .lineToConstantHeading(new Vector2d(20, -9.5))
             .splineToConstantHeading(new Vector2d(40, -28), Math.toRadians(0),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(40))
@@ -32,13 +32,13 @@ public class farRedDoor {
             .build();
     public static TrajectorySequence leftBackToStack = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(20,-10), Math.toRadians(180),
+            .splineToConstantHeading(new Vector2d(20,-9.5), Math.toRadians(180),
                     Robot.getVelocityConstraint(45, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
-            .lineTo(new Vector2d(-20,-10),
+            .lineTo(new Vector2d(-20,-9.5),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
-            .lineTo(new Vector2d(-58.5,-10),
+            .splineToConstantHeading((new Vector2d(-58,-9.5)), Math.toRadians(180),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
             .build();
@@ -60,13 +60,13 @@ public class farRedDoor {
             .build();
     public static TrajectorySequence midBackToStack = Robot.trajectorySequenceBuilder(midPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(20,-10), Math.toRadians(180),
+            .splineToConstantHeading(new Vector2d(20,-9.5), Math.toRadians(180),
                     Robot.getVelocityConstraint(45, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
-            .lineTo(new Vector2d(-20,-10),
+            .lineTo(new Vector2d(-20,-9.5),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
-            .lineTo(new Vector2d(-58,-10),
+            .splineToConstantHeading((new Vector2d(-58,-9.5)), Math.toRadians(180),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
             .build();
@@ -90,13 +90,13 @@ public class farRedDoor {
             .build();
     public static TrajectorySequence rightBackToStack = Robot.trajectorySequenceBuilder(rightPurpleToBack.end())
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(20,-10.5), Math.toRadians(180),
+            .splineToConstantHeading(new Vector2d(20,-9.5), Math.toRadians(180),
                     Robot.getVelocityConstraint(45, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
-            .lineTo(new Vector2d(-20,-10.5),
+            .lineTo(new Vector2d(-20,-9.5),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
-            .lineTo(new Vector2d(-58,-10.5),
+            .splineToConstantHeading((new Vector2d(-58,-9.5)), Math.toRadians(180),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
             .build();
@@ -113,13 +113,13 @@ public class farRedDoor {
     public static TrajectorySequence backToStack1 = Robot.trajectorySequenceBuilder(stackToBack1.end())
 
             .setReversed(false)
-            .splineToConstantHeading(new Vector2d(25,-10), Math.toRadians(180),
+            .splineToConstantHeading(new Vector2d(20,-9.5), Math.toRadians(180),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
-            .lineTo(new Vector2d(-20,-10),
+            .lineTo(new Vector2d(-20,-9.5),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
-            .lineTo(new Vector2d(-59,-10),
+            .splineToConstantHeading((new Vector2d(-59,-9.5)), Math.toRadians(180),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
             .build();

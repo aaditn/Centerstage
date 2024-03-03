@@ -598,6 +598,18 @@ public class Robot extends MecanumDrive
             break;
         }
     }
+
+    public TrajectorySequence get(Paths trajectory) {
+        for (WhipTrajectory item : trajectories) {
+            if (item.getPath().equals(trajectory)) {
+                if (Context.opmode.opModeIsActive())
+                    return item.getTrajectory();
+                {
+                }
+            }
+        }
+        return trajectories.get(1).getTrajectory();
+    }
     public void run(Paths trajectory)
     {
         for(WhipTrajectory item : trajectories){

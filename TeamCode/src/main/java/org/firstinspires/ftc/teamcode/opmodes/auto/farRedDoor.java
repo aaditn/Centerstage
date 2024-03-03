@@ -47,7 +47,7 @@ public class farRedDoor extends EnhancedOpMode {
                 actions.lowerIntake(0, -51.5, 0),
                 actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT,-38),
                 actions.lowerIntake(0, -51.5, 0),
-                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38)
+                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38, Slides.SlideState.ROW2)
         );
     }
     @Override

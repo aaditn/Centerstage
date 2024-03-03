@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farRedTruss.redFarStart;
+import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farBlueTruss.blueFarStart;
+import static org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farBlueTruss.trajectories;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farRedTruss;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
@@ -50,20 +50,20 @@ public class farBlueTruss extends EnhancedOpMode {
 
         if(opModeIsActive())
         {
-            drive.setPoseEstimate(redFarStart); delayLinear((long)Context.autoWaitTime*1000);
-            drive.set(farRedTruss.trajectories,auto_tasks());
+            drive.setPoseEstimate(blueFarStart); delayLinear((long)Context.autoWaitTime*1000);
+            drive.set(trajectories,auto_tasks());
             drive.run(Paths.Purple);
             drive.run(Paths.Score_Spike);
             // delayLinear(250);
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO) && !(intake.pixel1Present||intake.pixel2Present)) {
                 drive.run(Paths.Go_To_Stack);
-                delayLinear(500);
+                //delayLinear(500);
                 drive.run(Paths.Score_First);
                 // delayLinear(250);
 
                 if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO) && !(intake.pixel1Present||intake.pixel2Present)) {
                     drive.run(Paths.Return_to_Stack);
-                    delayLinear(500);
+                  //  delayLinear(500);
                     drive.run(Paths.Score_Second);
                 }
                 else if((intake.pixel1Present&&intake.pixel2Present))

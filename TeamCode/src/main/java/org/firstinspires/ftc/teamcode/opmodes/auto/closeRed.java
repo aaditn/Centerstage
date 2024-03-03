@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.Robot.trajectorySequenceBuilder;
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.closeRedDoor.redCloseStart;
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.closeRedDoor.trajectories;
 
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -58,11 +59,16 @@ public class closeRed extends EnhancedOpMode {
             drive.run(Paths.Score_Spike);
             delayLinear(1000);
             drive.followTrajectorySequence(
-                    trajectorySequenceBuilder(drive.getPoseEstimate())
+                    trajectorySequenceBuilder(drive.get(Paths.Score_Spike).end())
                             .forward(-5)
                             .build()
             );
-            delayLinear(250);
+            delayLinear(3000);
+            drive.followTrajectorySequence(
+                    trajectorySequenceBuilder(drive.getPoseEstimate())
+                            .lineTo(new Vector2d(drive.getPoseEstimate().getX(),-10.5))
+                            .build()
+            );
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
                 drive.run(Paths.Go_To_Stack);
                 delayLinear(750);

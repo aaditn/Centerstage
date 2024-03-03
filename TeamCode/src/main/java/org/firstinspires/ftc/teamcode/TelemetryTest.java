@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farBlueTruss;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
@@ -41,7 +39,7 @@ public class TelemetryTest extends EnhancedOpMode
         AutoSelector.getInstance().loop();
 
         tel.addData("Intake Alpha", intake.getCs().alpha(), 0);
-        tel.addData("Intake Distance", intake.getCs().getDistance(DistanceUnit.MM));
+        tel.addData("Intake 2 alpha", intake.cs2.alpha(), 0);
         tel.update();
     }
 

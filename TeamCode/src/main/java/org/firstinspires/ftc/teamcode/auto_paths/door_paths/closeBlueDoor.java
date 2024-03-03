@@ -21,9 +21,9 @@ public class closeBlueDoor {
                     Robot.getAccelerationConstraint(40))
             .build();
     public static TrajectorySequence leftPurpleToBack = Robot.trajectorySequenceBuilder(leftPurple.end())
-            .lineToLinearHeading(new Pose2d(43, 37, Math.toRadians(180)),
+            .lineToLinearHeading(new Pose2d(43, 36, Math.toRadians(180)),
                     Robot.getVelocityConstraint(40, 2, 15.06),
-                    Robot.getAccelerationConstraint(40))
+                    Robot.getAccelerationConstraint(30))
             .build();
     public static TrajectorySequence leftBackToStack = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
             .setReversed(false)

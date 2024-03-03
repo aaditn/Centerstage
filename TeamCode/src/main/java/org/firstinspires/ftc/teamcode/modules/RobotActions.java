@@ -7,8 +7,8 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 import org.firstinspires.ftc.teamcode.opmodes.tele.TeleOpRewrite;
-import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
+import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.enums.Dice;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
@@ -51,6 +51,7 @@ public class RobotActions
 
         return Builder.create()
             .await(() -> robot.getPoseEstimate().getX() < drop_x)
+                .addTaskList(quickReset())
                 .executeCode(()->Context.colorSensorsEnabled=true)
                 .moduleAction(intake, Intake.PositionState.DOWN)
             .moduleAction(intake, Intake.PowerState.INTAKE)
@@ -90,8 +91,8 @@ public class RobotActions
                 .delay(50)
                 .moduleAction(intake, Intake.PositionState.AUTO2)
                 .delay(50)
-                .await(() -> ((Math.abs(robot.getPoseEstimate().getHeading() - robot.get(0).getTrajectory().end().getHeading())<Math.toRadians(8))||robot.k!=Paths.Purple) &&
-                        (Math.abs(robot.getPoseEstimate().getY() - robot.get(0).getTrajectory().end().getY())<2))
+                .await(() -> (((Math.abs(robot.getPoseEstimate().getHeading() - robot.get(0).getTrajectory().end().getHeading())<Math.toRadians(25)) &&
+                        (Math.abs(robot.getPoseEstimate().getY() - robot.get(0).getTrajectory().end().getY())<4))|| (robot.k!=Paths.Purple)))
                 .moduleAction(intake, Intake.PositionState.DOWN)
                 .delay(300)
                 .moduleAction(intake, Intake.SweeperState.ZERO)
@@ -217,24 +218,28 @@ public class RobotActions
                 return Builder.create()
                         .delay(1000)
                         .moduleAction(intake, Intake.SweeperState.ZERO)
-                        .executeCode(()->Context.colorSensorsEnabled=true)
+                        //.executeCode(()->Context.colorSensorsEnabled=true)
                         .await(() -> robot.getPoseEstimate().getX() > xPos2)
                         .executeCode(() -> RobotLog.e("s"))
-                        .executeCode(()->Context.colorSensorsEnabled=false)
-                        .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
+                       // .executeCode(()->Context.colorSensorsEnabled=false)
+                        /*.addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.LEFT))
                         .await(() -> robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
                         .delay(300)
+
+
                         .executeCode(()->Context.colorSensorsEnabled=true)
                         .addTaskList(scorePixels(state))
                         .executeCode(()->Context.colorSensorsEnabled=false)
+
+                         */
                         .build();
             case RIGHT:
                 return Builder.create()
                         .delay(1000)
                         .moduleAction(intake, Intake.SweeperState.ZERO)
-                        .executeCode(()->Context.colorSensorsEnabled=true)
+                      //  .executeCode(()->Context.colorSensorsEnabled=true)
                         .await(()->robot.getPoseEstimate().getX()>xPos2)
-                        .executeCode(()-> RobotLog.e("s"))
+                        /*.executeCode(()-> RobotLog.e("s"))
                         .executeCode(()->Context.colorSensorsEnabled=false)
                         .addTaskList(slidesSide(Slides.SlideState.AUTO_TWO, Deposit.FlipState.RIGHT))
                         .await(()->robot.getPoseEstimate().getX() > xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
@@ -242,6 +247,8 @@ public class RobotActions
                         .executeCode(()->Context.colorSensorsEnabled=true)
                         .addTaskList(scorePixels(state))
                         .executeCode(()->Context.colorSensorsEnabled=false)
+
+                         */
                         .build();
             default:
                 return Builder.create().build();
@@ -674,9 +681,18 @@ public class RobotActions
     {
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
-                .conditionalModuleAction(deposit, Deposit.ClawState.CLOSED1, ()->((intake.pixel1Present && !intake.pixel2Present) || (!intake.pixel1Present && intake.pixel2Present)))
-                .conditionalModuleAction(deposit, Deposit.ClawState.CLOSED2, ()->(intake.pixel1Present&&intake.pixel2Present) || Context.isTele)
-                //.moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                /*.executeCode(()->
+                {
+                    if((intake.pixel1Present && !intake.pixel2Present) || (!intake.pixel1Present && intake.pixel2Present))
+                    {
+                        deposit.setState(Deposit.ClawState.CLOSED1);
+                    }
+                    else
+                    {
+                        deposit.setState(Deposit.ClawState.CLOSED2);
+                    }
+                })*/
+                .moduleAction(deposit, Deposit.ClawState.CLOSED2)
                 .delay(500)
                 .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .delay(150)
@@ -700,8 +716,12 @@ public List<Task> quickReset(){
                 .delay(150)
 //                .moduleAction(deposit, Deposit.FlipState.PARTIAL)
                 .moduleAction(slides, Slides.SlideState.HALF)
+                .delay(200)
+                .moduleAction(deposit, Deposit.FlipState.RESET)
                 .delay(600)
+                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .moduleAction(slides, Slides.SlideState.GROUND)
+
 //                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
             .delay(150)
                 .executeCode(()->slides.macroRunning=false)

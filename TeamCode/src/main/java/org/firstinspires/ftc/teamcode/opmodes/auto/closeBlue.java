@@ -60,7 +60,7 @@ public class closeBlue extends EnhancedOpMode {
             drive.run(Paths.Score_Spike);
             delayLinear(1000);
             drive.followTrajectorySequence(
-                    trajectorySequenceBuilder(drive.getPoseEstimate())
+                    trajectorySequenceBuilder(drive.get(Paths.Score_Spike).end())
                             .forward(-5)
                             .build()
             );
@@ -68,6 +68,12 @@ public class closeBlue extends EnhancedOpMode {
             RobotLog.e("yellow");
             delayLinear(250);
             RobotLog.e("delaying");
+            delayLinear(3000);
+            drive.followTrajectorySequence(
+                    trajectorySequenceBuilder(drive.get(Paths.Score_Spike).end())
+                            .strafeRight(30)
+                            .build()
+            );
             if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)) {
                 drive.run(Paths.Go_To_Stack);
                 delayLinear(750);

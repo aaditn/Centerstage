@@ -36,7 +36,7 @@ public class BigT_AKA_Trajectory {
             .lineTo(new Vector2d(-36, 37), // Flipped waypoint
                     Robot.getVelocityConstraint(50, 2.4, 15.06),
                     Robot.getAccelerationConstraint(45))
-            .splineToSplineHeading(new Pose2d(-26, 57, Math.toRadians(180)), Math.toRadians(0), // Flipped pose and heading
+            .splineToSplineHeading(new Pose2d(-30, 57, Math.toRadians(180)), Math.toRadians(0), // Flipped pose and heading
                     Robot.getVelocityConstraint(45, 2.4, 15.06),
                     Robot.getAccelerationConstraint(35))
             .lineToConstantHeading(new Vector2d(10, 57), // Flipped pose and heading
@@ -49,6 +49,7 @@ public class BigT_AKA_Trajectory {
 
     public static TrajectorySequence leftBackToStack = Robot.trajectorySequenceBuilder(leftPurpleToBack.end())
             .setReversed(false)
+            .addSpatialMarker()
             .splineToConstantHeading(new Vector2d(10, 58), Math.toRadians(180), // Flipped waypoint and heading
                     Robot.getVelocityConstraint(45, 2, 15.06),
                     Robot.getAccelerationConstraint(25))

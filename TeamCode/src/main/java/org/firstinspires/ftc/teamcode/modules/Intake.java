@@ -16,7 +16,7 @@ public class Intake extends Module {
     DcMotorEx intake;
     Servo  anglerRight, sweeperLeft, sweeperRight;
     CRServo conveyorLeft, conveyorRight;
-    ColorRangeSensor cs1, cs2;
+    public ColorRangeSensor cs1, cs2;
     public static boolean telemetryToggle=false;
 
     public enum PowerState implements ModuleState

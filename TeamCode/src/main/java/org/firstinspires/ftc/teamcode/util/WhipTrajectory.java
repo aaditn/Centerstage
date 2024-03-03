@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.util.enums.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WhipTrajectory {
+public class  WhipTrajectory {
     TrajectorySequence trajectory;
     List<Task> tasks;
     Paths path;

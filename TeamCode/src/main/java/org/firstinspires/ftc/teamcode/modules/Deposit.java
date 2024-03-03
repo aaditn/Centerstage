@@ -14,7 +14,8 @@ public class Deposit extends Module
     Servo leftArm, rightArm, wrist, rotatewrist, claw, extension;
 
     public static boolean telemetryToggle;
-    public static double transferOffset = 0.004;    //public static double offset = 0.005;
+    public static double transferOffset = 0.004;//public static double offset = 0.005;
+    public static double resetOffset=0.01;
 
     public static double depositOffset = -0.005;
     public static double sideOffset = -0.003;
@@ -29,11 +30,11 @@ public class Deposit extends Module
 
     public enum FlipState implements ModuleState
     {
-        TRANSFER, DEPOSIT, PRIMED_OLD, LEFT,RIGHT, DOWN, PARTIAL;
+        TRANSFER, DEPOSIT, PRIMED_OLD, LEFT,RIGHT, DOWN, PARTIAL, RESET;
     }
     public static double ROTATE_MOD = 0.05;
-    public static double FLIP_TRANSFER =0.49, FLIP_DEPOSIT=0.57,FLIP_PRIMED_OLD = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63, FLIP_PARTIAL=0.52;
-    public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT,FLIP_PRIMED_OLD,FLIP_LEFT,FLIP_RIGHT,FLIP_DOWN, FLIP_PARTIAL};
+    public static double FLIP_TRANSFER =0.49, FLIP_DEPOSIT=0.57,FLIP_PRIMED_OLD = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63, FLIP_PARTIAL=0.52, FlIP_RESET = 0.50;
+    public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT,FLIP_PRIMED_OLD,FLIP_LEFT,FLIP_RIGHT,FLIP_DOWN, FLIP_PARTIAL, FlIP_RESET};
 
 
     public enum WristState implements ModuleState
@@ -48,7 +49,7 @@ public class Deposit extends Module
     {
         OPEN, CLOSED1, CLOSED2;
     }
-    public static double CLAW_OPEN=.86, CLAW_CLOSED_1=0.495, CLAW_CLOSED_2=0.57;
+    public static double CLAW_OPEN=.82, CLAW_CLOSED_1=0.42, CLAW_CLOSED_2=0.50;
     public static double[] clawValues={CLAW_OPEN, CLAW_CLOSED_1, CLAW_CLOSED_2};
 
 
@@ -122,7 +123,13 @@ public class Deposit extends Module
         } else if(state.equals(FlipState.DEPOSIT)||state.equals(FlipState.DOWN)){
             flip1Pos = converter.getOutput(getState(FlipState.class))+ depositOffset - transferOffset;
             flip2Pos = converter.getOutput(getState(FlipState.class));
-        }else{
+        }
+        else if(state.equals(FlipState.RESET))
+        {
+            flip1Pos = converter.getOutput(getState(FlipState.class)) - transferOffset +resetOffset;
+            flip2Pos = converter.getOutput(getState(FlipState.class)) -resetOffset;
+        }
+        else{
             flip1Pos = converter.getOutput(getState(FlipState.class))- transferOffset;
             flip2Pos = converter.getOutput(getState(FlipState.class));
         }

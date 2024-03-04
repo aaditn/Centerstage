@@ -41,7 +41,7 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
-    ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesRaise, slidesOverride, depositMacro, depositMacro2, grabPixel, flush, CCW45, CW45, clawManual, pickOne;
+    ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesRaise, slidesLower, slidesOverride, depositMacro, depositMacro2, grabPixel, flush, CCW45, CW45, clawManual, pickOne;
     double ninja;
     int sweeperCounter;
     int wristRotateCounter=4;
@@ -51,9 +51,12 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
     Slides.SlideState[] slideHeights;
     boolean pickState = false;
 
+    boolean resetTrigger = false;
+
     int indexSlides = -1;
 
-    ElapsedTime slideTimer = new ElapsedTime();
+    ElapsedTime upSlideTimer = new ElapsedTime();
+    ElapsedTime downSlideTimer = new ElapsedTime();
     @Override
     public void linearOpMode()
     {
@@ -170,32 +173,48 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
             }
 
             //SLIDES
-            if(slidesRaise.wasJustPressed()&&!slides.macroRunning)
-            {
+            if(slidesRaise.wasJustPressed()&&!slides.macroRunning) {
                 int index = Arrays.asList(slideHeights).indexOf(slides.getState());
                 if (index != -1 && index < slideHeights.length - 1) {
                     scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[index + 1]));
                     indexSlides = index + 1;
-                } else if (index != -1) {
-                    scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[1]));
-                    indexSlides = 1;
                 }
             }
             if (!gamepad1.right_bumper || !slides.macroRunning) {
-                slideTimer.reset();
+                upSlideTimer.reset();
+                indexSlides = Arrays.asList(slideHeights).indexOf(slides.getState());
             } else {
-                int index = (int)(slideTimer.milliseconds() / 100);
+                int index = (int)(upSlideTimer.milliseconds() / 100);
                 int newIndex = Math.min(index + indexSlides, slideHeights.length - 1);
                 scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[newIndex]));
             }
 
+            if(slidesLower.wasJustPressed()&&!slides.macroRunning) {
+                int index = Arrays.asList(slideHeights).indexOf(slides.getState());
+                if (index > 1 && index < slideHeights.length) {
+                    scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[index - 1]));
+                    indexSlides = index - 1;
+                }
+            }
+            if (!gamepad1.left_bumper || !slides.macroRunning) {
+                downSlideTimer.reset();
+                indexSlides = Arrays.asList(slideHeights).indexOf(slides.getState());
+            } else {
+                int index = (int)(downSlideTimer.milliseconds() / 100);
+                int newIndex = Math.max(indexSlides - index, 1);
+                scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[newIndex]));
+            }
+
             //DEPOSIT AND RESET
-            if((sweeperIncrement.wasJustPressed() || depositMacro2.wasJustPressed() ||depositMacro.wasJustPressed())&&!slides.macroRunning&&slides.getState()!=Slides.SlideState.GROUND)
-            {
+            if((sweeperIncrement.wasJustPressed() || depositMacro2.wasJustPressed() || (gamepad1.left_trigger > 0.5 && !resetTrigger))&&!slides.macroRunning&&slides.getState()!=Slides.SlideState.GROUND) {
+                resetTrigger = true;
                 //slides.setOperationState(Module.OperationState.PRESET);
                 scheduler.scheduleTaskList(actions.scorePixels());
                 wristRotateCounter=4;
+            } else if (gamepad1.left_trigger <= 0.5) {
+                resetTrigger = false;
             }
+
             //SLIDE RESET
             if(slidesOverride.wasJustReleased())
             {
@@ -260,7 +279,7 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
                 intakeToggle=new ToggleButtonReader(g1, GamepadKeys.Button.A),
                 sweeperIncrement=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
                 slidesRaise=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
-                depositMacro=new ToggleButtonReader(g1, GamepadKeys.Button.LEFT_BUMPER),
+                slidesLower=new ToggleButtonReader(g1, GamepadKeys.Button.LEFT_BUMPER),
                 pickOne=new ToggleButtonReader(g2, GamepadKeys.Button.A),
                 flush=new ToggleButtonReader(g2, GamepadKeys.Button.X),
                 CCW45=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),

@@ -33,7 +33,7 @@ public class Deposit extends Module
         TRANSFER, DEPOSIT, PRIMED_OLD, LEFT,RIGHT, DOWN, PARTIAL, RESET;
     }
     public static double ROTATE_MOD = 0.05;
-    public static double FLIP_TRANSFER =0.49, FLIP_DEPOSIT=0.57,FLIP_PRIMED_OLD = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.63, FLIP_PARTIAL=0.52, FlIP_RESET = 0.50;
+    public static double FLIP_TRANSFER =0.45, FLIP_DEPOSIT=0.59,FLIP_PRIMED_OLD = FLIP_TRANSFER,FLIP_LEFT = FLIP_DEPOSIT,FLIP_RIGHT = FLIP_DEPOSIT,FLIP_DOWN=0.575, FLIP_PARTIAL=0.48, FlIP_RESET = 0.46;
     public static double[] flipValues={FLIP_TRANSFER, FLIP_DEPOSIT,FLIP_PRIMED_OLD,FLIP_LEFT,FLIP_RIGHT,FLIP_DOWN, FLIP_PARTIAL, FlIP_RESET};
 
 
@@ -41,7 +41,7 @@ public class Deposit extends Module
     {
         TRANSFER, DEPOSIT, HOVER, TELESCOPE, PARTIAL, DOWN, DEPOSIT_SIDE, YELLOW_HOVER;
     }
-    public static double WRIST_TRANSFER=.65, WRIST_DEPOSIT=0.05, WRIST_HOVER=0.25+.12, WRIST_SCOPE=WRIST_TRANSFER, WRIST_PARTIAL=0.45+.12, WRIST_DEPOSIT_DOWN=WRIST_DEPOSIT, WRIST_DEPOSIT_SIDE=WRIST_DEPOSIT, WRIST_YELLOW_HOVER=0.29+.12;
+    public static double WRIST_TRANSFER=.71, WRIST_DEPOSIT=0.05, WRIST_HOVER=0.25+.12, WRIST_SCOPE=WRIST_TRANSFER, WRIST_PARTIAL=0.45+.12, WRIST_DEPOSIT_DOWN=WRIST_DEPOSIT, WRIST_DEPOSIT_SIDE=WRIST_DEPOSIT, WRIST_YELLOW_HOVER=0.29+.12;
     public static double[] wristValues={WRIST_TRANSFER, WRIST_DEPOSIT, WRIST_HOVER, WRIST_SCOPE, WRIST_PARTIAL, WRIST_DEPOSIT_DOWN, WRIST_DEPOSIT_SIDE, WRIST_YELLOW_HOVER};
 
 
@@ -49,7 +49,7 @@ public class Deposit extends Module
     {
         OPEN, CLOSED1, CLOSED2;
     }
-    public static double CLAW_OPEN=.82, CLAW_CLOSED_1=0.42, CLAW_CLOSED_2=0.50;
+    public static double CLAW_OPEN=.73, CLAW_CLOSED_1=0.33, CLAW_CLOSED_2=0.38;
     public static double[] clawValues={CLAW_OPEN, CLAW_CLOSED_1, CLAW_CLOSED_2};
 
 
@@ -57,19 +57,18 @@ public class Deposit extends Module
         ZERO, PLUS_FOURTY_FIVE, PLUS_NINETY, PLUS_ONE_THREE_FIVE, PLUS_ONE_EIGHTY, PLUS_TWO_TWO_FIVE, PLUS_TWO_SEVENTY,
         MINUS_FOURTY_FIVE, MINUS_NINETY, MINUS_ONE_THREE_FIVE, MINUS_ONE_EIGHTY, MINUS_TWO_TWO_FIVE, MINUS_TWO_SEVENTY
     }
-    public static double ROTATE_0=.52, ROTATE_PLUS_45=0.66, ROTATE_PLUS_90=.83, ROTATE_PLUS_135=1, /*UNUSED*/ROTATE_PLUS_180=0.5475, ROTATE_PLUS_225=0.5775, ROTATE_PLUS_270=0.6075;
-    public static double ROTATE_MINUS_45=0.32, ROTATE_MINUS_90=0.15, ROTATE_MINUS_135=0.0/*UNUSED*/, ROTATE_MINUS_180=0.3233, ROTATE_MINUS_225 =0.2955, ROTATE_MINUS_270=0.2677;
+    public static double ROTATE_0=0.4345, ROTATE_PLUS_45=0.4623, ROTATE_PLUS_90=0.49, ROTATE_PLUS_135=0.5210, ROTATE_PLUS_180=0.5475, ROTATE_PLUS_225=0.5775, ROTATE_PLUS_270=0.6075;
+    public static double ROTATE_MINUS_45=0.4067, ROTATE_MINUS_90=0.3789, ROTATE_MINUS_135=0.3511, ROTATE_MINUS_180=0.3233, ROTATE_MINUS_225=0.2955, ROTATE_MINUS_270=0.2677;
 
     public static double[] rotateValues={ROTATE_0, ROTATE_PLUS_45, ROTATE_PLUS_90, ROTATE_PLUS_135, ROTATE_PLUS_180, ROTATE_PLUS_225, ROTATE_PLUS_270,
-    ROTATE_MINUS_45, ROTATE_MINUS_90, ROTATE_MINUS_135, ROTATE_MINUS_180, ROTATE_MINUS_225, ROTATE_MINUS_270};
+            ROTATE_MINUS_45, ROTATE_MINUS_90, ROTATE_MINUS_135, ROTATE_MINUS_180, ROTATE_MINUS_225, ROTATE_MINUS_270};
 
 
-    double flip1Pos, flip2Pos, clawPos, wristPos, rotatePos,extPos;
+    double flip1Pos, flip2Pos, clawPos, wristPos, rotatePos;
     FlipState fstate;
     WristState wstate;
     RotateState wrstate;
     ClawState cstate;
-
     ExtensionState estate;
     public Deposit(HardwareMap hardwareMap)
     {
@@ -97,7 +96,7 @@ public class Deposit extends Module
         wrist.setPosition(wristPos);
         claw.setPosition(clawPos);
         rotatewrist.setPosition(rotatePos);
-        extension.setPosition(extPos);
+     //   extension.setPosition(extPos);
     }
 
     protected void telemetryUpdate()
@@ -136,7 +135,7 @@ public class Deposit extends Module
         wristPos=converter.getOutput(getState(WristState.class));
         clawPos=converter.getOutput(getState(ClawState.class));
         rotatePos=converter.getOutput(getState(RotateState.class));
-        extPos = converter.getOutput(getState(ExtensionState.class));
+        //extPos = converter.getOutput(getState(ExtensionState.class));
     }
 
     @Override

@@ -22,8 +22,10 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.Tel;
 
-@TeleOp(name="V2")
-public class TeleOpV2 extends EnhancedOpMode
+import java.util.Arrays;
+
+@TeleOp(name="A - TeleOp")
+public class ImNotCallingItEthanOp extends EnhancedOpMode
 {
     Robot robot;
     TaskScheduler scheduler;
@@ -37,14 +39,19 @@ public class TeleOpV2 extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
-    ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesBottomRow, slidesSetLine1, slidesSetLine2,
-    slidesSetLine3, slidesOverride, depositMacro, depositMacro2, grabPixel, flush, CCW45, CW45, clawManual, pickOne;
+    ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesRaise, slidesOverride, depositMacro, depositMacro2, grabPixel, flush, CCW45, CW45, clawManual, pickOne;
     double ninja;
     int sweeperCounter;
     int wristRotateCounter=4;
     Intake.SweeperState[] sweeperPositions;
     Deposit.RotateState[] wristRotatePositions;
-boolean pickState = false;
+
+    Slides.SlideState[] slideHeights;
+    boolean pickState = false;
+
+    int indexSlides = -1;
+
+    ElapsedTime slideTimer = new ElapsedTime();
     @Override
     public void linearOpMode()
     {
@@ -153,65 +160,26 @@ boolean pickState = false;
                 deposit.setState(wristRotatePositions[wristRotateCounter]);
             }
 
-if(pickOne.wasJustPressed()){
-    pickState= !pickState;
-    if(pickState) gamepad2.runRumbleEffect(customRumbleEffect0);
-    else gamepad2.runRumbleEffect(customRumbleEffect1);
-}
-
             //SLIDES
-            if(slidesBottomRow.wasJustPressed()&&!slides.macroRunning)
+            if(slidesRaise.wasJustPressed()&&!slides.macroRunning)
             {
-                slides.setOperationState(Module.OperationState.PRESET);
-                if(pickState){
-
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED));
-                }
-                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.RAISED));
-            }
-            else if(slidesSetLine1.wasJustPressed()&&!slides.macroRunning)
-            {
-                slides.setOperationState(Module.OperationState.PRESET);
-                if(pickState){
-
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1));
-                }
-                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW1));
-            }
-            else if(slidesSetLine2.wasJustPressed()&&!slides.macroRunning)
-            {
-                slides.setOperationState(Module.OperationState.PRESET);
-                if(pickState){
-
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2));
-                }
-                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW2));
-            }
-            else if(slidesSetLine3.wasJustPressed()&&!slides.macroRunning)
-            {
-                slides.setOperationState(Module.OperationState.PRESET);
-                if(pickState){
-
-                    scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3));
-                }
-                else scheduler.scheduleTaskList(actions.slidesOnly(Slides.SlideState.ROW3));
-            }
-            //SLIDES MANUAL
-            if((slides.getState()!=Slides.SlideState.GROUND||slidesOverride.isDown())&&!slides.macroRunning&&Math.abs(gamepad2.left_stick_y)>0.3)
-            {
-                slides.setOperationState(Module.OperationState.MANUAL);
-
-                if(slidestimer.milliseconds()>30)
-                {
-                    double newTarget=slides.getTargetPosition() + (15*Math.signum(gamepad2.left_stick_y)*-1);
-//                    if(newTarget<300)
-//                    {
-//                        newTarget=300;
-//                    }
-                    slides.manualChange(newTarget);
-                    slidestimer.reset();
+                int index = Arrays.asList(slideHeights).indexOf(slides.getState());
+                if (index != -1 && index < slideHeights.length - 1) {
+                    scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[index + 1]));
+                    indexSlides = index + 1;
+                } else if (index != -1) {
+                    scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[1]));
+                    indexSlides = 1;
                 }
             }
+            if (!gamepad1.right_bumper || !slides.macroRunning) {
+                slideTimer.reset();
+            } else {
+                int index = (int)(slideTimer.milliseconds() / 100);
+                int newIndex = Math.min(index + indexSlides, slideHeights.length - 1);
+                scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[newIndex]));
+            }
+
             //DEPOSIT AND RESET
             if((sweeperIncrement.wasJustPressed() || depositMacro2.wasJustPressed() ||depositMacro.wasJustPressed())&&!slides.macroRunning&&slides.getState()!=Slides.SlideState.GROUND)
             {
@@ -280,11 +248,8 @@ if(pickOne.wasJustPressed()){
         keyReaders= new KeyReader[]{
                 droneButton1=new ToggleButtonReader(g1, GamepadKeys.Button.Y),
                 intakeToggle=new ToggleButtonReader(g1, GamepadKeys.Button.A),
-                sweeperIncrement=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
-                slidesBottomRow=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_DOWN),
-                slidesSetLine1=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_LEFT),
-                slidesSetLine2=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_UP),
-                slidesSetLine3=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_RIGHT),
+                sweeperIncrement=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
+                slidesRaise=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
                 depositMacro=new ToggleButtonReader(g1, GamepadKeys.Button.LEFT_BUMPER),
                 pickOne=new ToggleButtonReader(g2, GamepadKeys.Button.A),
                 flush=new ToggleButtonReader(g2, GamepadKeys.Button.X),
@@ -309,6 +274,22 @@ if(pickOne.wasJustPressed()){
                 Deposit.RotateState.PLUS_FOURTY_FIVE,
                 Deposit.RotateState.PLUS_NINETY,
                 Deposit.RotateState.PLUS_ONE_THREE_FIVE,
+        };
+        slideHeights=new Slides.SlideState[]{
+                Slides.SlideState.GROUND,
+                Slides.SlideState.RAISED,
+                Slides.SlideState.R1,
+                Slides.SlideState.R2,
+                Slides.SlideState.R3,
+                Slides.SlideState.R4,
+                Slides.SlideState.R5,
+                Slides.SlideState.R6,
+                Slides.SlideState.R7,
+                Slides.SlideState.R8,
+                Slides.SlideState.R9,
+                Slides.SlideState.R10,
+
+
         };
     }
 

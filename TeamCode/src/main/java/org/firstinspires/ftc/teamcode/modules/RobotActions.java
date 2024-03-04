@@ -690,7 +690,6 @@ public List<Task> quickReset(){
                     .moduleAction(deposit, Deposit.ClawState.CLOSED2)
                     .delay(500)
                     .moduleAction(deposit, Deposit.FlipState.PARTIAL)
-                    .delay(250)
                     .moduleAction(slides, row)
                     .delay(200)
                     .moduleAction(deposit, Deposit.WristState.TELESCOPE)

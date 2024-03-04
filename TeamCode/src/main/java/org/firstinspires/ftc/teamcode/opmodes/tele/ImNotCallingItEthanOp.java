@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -27,6 +28,7 @@ import java.util.Arrays;
 @TeleOp(name="A - TeleOp")
 public class ImNotCallingItEthanOp extends EnhancedOpMode
 {
+    DcMotorEx hang;
     Robot robot;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -82,6 +84,13 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
             else
                 ninja = 1;
 
+
+            if(gamepad2.left_trigger>0.5)
+                hang.setPower(1);
+            else if(gamepad2.right_trigger>0.5)
+                hang.setPower(-1);
+            else
+                hang.setPower(0);
 
             //INTAKE TOGGLE
             if(intakeToggle.wasJustPressed())
@@ -216,6 +225,7 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
     {
         this.setLoopTimes(1);
         robot=Robot.getInstance();
+        hang = hardwareMap.get(DcMotorEx.class, "hang");
         scheduler=new TaskScheduler();
         actions=RobotActions.getInstance();
 

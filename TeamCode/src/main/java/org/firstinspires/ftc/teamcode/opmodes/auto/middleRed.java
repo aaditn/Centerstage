@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.Robot.trajectorySequenceBuilder;
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farRedDoor.redFarStart;
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.farRedDoor.trajectories;
 
@@ -19,10 +18,8 @@ import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
-import org.firstinspires.ftc.teamcode.opmodesOld.teleop.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
-import org.firstinspires.ftc.teamcode.util.AutoSelector;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
@@ -30,8 +27,8 @@ import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 
-@Autonomous(name = "Far Red Door")
-public class farRedDoor extends EnhancedOpMode {
+@Autonomous(name = "Middle Red")
+public class middleRed extends EnhancedOpMode {
     Robot drive;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -42,12 +39,14 @@ public class farRedDoor extends EnhancedOpMode {
 
     private List<Task>[] auto_tasks() {
         return getTaskList(
-                actions.deployPurple(-51.5, 34),
+                actions.deployPurple(-51.5, -40),
                 actions.yellowDrop(49, -15, Context.autonYellowHeight),
-                actions.lowerIntake(0, -51.5, 0),
-                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT,true),
-                actions.lowerIntake(0, -51.5, 0),
-                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38, Slides.SlideState.ROW2)
+                actions.lowerIntake(0, -51.5, 1),
+                actions.yellowDrop(49, -15, Context.autonYellowHeight),
+//                actions.scorePixels(48.5, .DepositState.RIGHT,true),
+                actions.lowerIntake(0, -51.5, 2),
+                actions.yellowDrop(49, -15, Context.autonYellowHeight)
+//                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38, Slides.SlideState.ROW2)
         );
     }
     @Override
@@ -73,51 +72,12 @@ public class farRedDoor extends EnhancedOpMode {
             RobotLog.e("yellow");
             delayLinear(550);
             RobotLog.e("delaying");
-            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO) && !(intake.pixel1Present||intake.pixel2Present)) {
-                drive.run(Paths.Go_To_Stack);
-               // delayLinear(750);
-                delayLinear(250);
-                drive.run(Paths.Score_First);
-              //  delayLinear(330);
-
-                if(!Context.autoState.equals(AutoSelector.CyclePixelCount.TWO) && !(intake.pixel1Present||intake.pixel2Present)) {
-                    drive.run(Paths.Return_to_Stack);
-                   // delayLinear(750);
-                  //  delayLinear(500);
-                    delayLinear(250);
-                    drive.run(Paths.Score_Second);
-                }
-                else if(intake.pixel1Present&&intake.pixel2Present)
-                {
-                    drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailed(49, TeleOpRewrite.DepositState.RIGHT));
-                }
-                else
-                {
-                    //score 1
-                    drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailedOne(49, TeleOpRewrite.DepositState.RIGHT));
-                }
-            }
-            else if(intake.pixel1Present)
-            {
-                drive.scheduler.scheduleTaskListBlocking(actions.scorePixelsFailedOne(49, TeleOpRewrite.DepositState.RIGHT));
-            }
-            else
-            {
-            //    delayLinear(100);
-                if (Context.parkSide.equals(AutoSelector.ParkSide.LEFT))
-                {
-                    drive.run(Paths.ParkLeft);
-                } else if (Context.parkSide.equals(AutoSelector.ParkSide.RIGHT)) {
-                    drive.run(Paths.ParkRight);
-                }
-            }
-            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO)){
-                drive.followTrajectorySequence(
-                        trajectorySequenceBuilder(drive.getPoseEstimate())
-                                .forward(8)
-                                .build()
-                );
-            }
+            drive.run(Paths.Go_To_Stack);
+            delayLinear(250);
+            drive.run(Paths.Score_First);
+            drive.run(Paths.Return_to_Stack);
+            delayLinear(250);
+            drive.run(Paths.Score_Second);
             waitForEnd();
             RobotLog.e("end");
         }

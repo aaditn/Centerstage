@@ -23,7 +23,7 @@ public class Intake extends Module {
     {
         INTAKE_AUTO, INTAKE, EXTAKE, OFF;
     }
-    public static double POWER_INTAKE_AUTO=-.8, POWER_INTAKE=-0.9, POWER_EXTAKE=0.9, POWER_OFF=0;
+    public static double POWER_INTAKE_AUTO=-.8, POWER_INTAKE=-1, POWER_EXTAKE=0.9, POWER_OFF=0;
     public static double[] powerValues={POWER_INTAKE_AUTO, POWER_INTAKE, POWER_EXTAKE, POWER_OFF};
 
 

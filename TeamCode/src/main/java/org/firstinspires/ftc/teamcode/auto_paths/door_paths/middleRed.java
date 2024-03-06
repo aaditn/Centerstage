@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
-public class farRedDoor {
-    public static Pose2d redFarStart = new Pose2d(-31, -61, Math.toRadians(-90));
+public class middleRed {
+    public static Pose2d redFarStart = new Pose2d(-35, -61, Math.toRadians(-90));
 
 
     public static TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(redFarStart)
@@ -46,12 +46,19 @@ public class farRedDoor {
             .build();
     public static TrajectorySequence midPurple = Robot.trajectorySequenceBuilder(redFarStart)
             .lineToLinearHeading(new Pose2d(-35.5, -32, Math.toRadians(270.01)))
-            .lineToLinearHeading(new Pose2d(-48, -36, Math.toRadians(-180)),
+            .lineToLinearHeading(new Pose2d(-53, -33, Math.toRadians(-180)),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
-            .lineTo(new Vector2d(-55.5, -36))
             .build();
-    public static TrajectorySequence midPurpleToBack = Robot.trajectorySequenceBuilder(midPurple.end())
+    public static TrajectorySequence midPurplePlusOne = Robot.trajectorySequenceBuilder(midPurple.end())
+//            .lineToLinearHeading(new Pose2d(-52, -33, Math.toRadians(-180)),
+//                    Robot.getVelocityConstraint(45, 2, 15.06),
+//                    Robot.getAccelerationConstraint(40))
+            .lineToLinearHeading(new Pose2d(-55.5, -33, Math.toRadians(-180)),
+                    Robot.getVelocityConstraint(30, 2, 15.06),
+                    Robot.getAccelerationConstraint(30))
+            .build();
+    public static TrajectorySequence midPurpleToBack = Robot.trajectorySequenceBuilder(midPurplePlusOne.end())
 //            .lineTo(new Vector2d(-37, -7.5))
 //            .splineToSplineHeading(new Pose2d(-10, -5, Math.toRadians(180)), Math.toRadians(0),
 //                    Robot.getVelocityConstraint(40, 2, 15.06),
@@ -60,8 +67,8 @@ public class farRedDoor {
 //            .splineToConstantHeading(new Vector2d(40, -33.5), Math.toRadians(0),
 //                    Robot.getVelocityConstraint(40, 2, 15.06),
 //                    Robot.getAccelerationConstraint(40))
-            .lineTo(new Vector2d(51.5, -35),
-                    Robot.getVelocityConstraint(50, 2, 15.06),
+            .lineTo(new Vector2d(47.5, -33.5),
+                    Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
     public static TrajectorySequence midBackToStack = Robot.trajectorySequenceBuilder(midPurpleToBack.end())
@@ -72,7 +79,7 @@ public class farRedDoor {
 //            .lineTo(new Vector2d(-20,-9.5),
 //                    Robot.getVelocityConstraint(30, 2, 15.06),
 //                    Robot.getAccelerationConstraint(30))
-            .splineToConstantHeading((new Vector2d(-58,-35)), Math.toRadians(180),
+            .splineToConstantHeading((new Vector2d(-53,-33.5)), Math.toRadians(180),
                     Robot.getVelocityConstraint(40, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
@@ -112,7 +119,7 @@ public class farRedDoor {
 //            .lineTo(new Vector2d(12,-10),
 //                    Robot.getVelocityConstraint(50, 2, 15.06),
 //                    Robot.getAccelerationConstraint(35))
-            .splineToConstantHeading(new Vector2d(51.5,-35), Math.toRadians(0),
+            .splineToConstantHeading(new Vector2d(52,-33.5), Math.toRadians(0),
                     Robot.getVelocityConstraint(50, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
@@ -125,7 +132,7 @@ public class farRedDoor {
 //            .lineTo(new Vector2d(-20,-9.5),
 //                    Robot.getVelocityConstraint(30, 2, 15.06),
 //                    Robot.getAccelerationConstraint(30))
-            .splineToConstantHeading((new Vector2d(-56.5,-35)), Math.toRadians(180),
+            .splineToConstantHeading((new Vector2d(-53,-33.5)), Math.toRadians(180),
                     Robot.getVelocityConstraint(50, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
@@ -157,13 +164,13 @@ public class farRedDoor {
     };
 
     public static NamedTrajectory[] leftTrajectories = map(
-            new TrajectorySequence[]{midPurple, midPurpleToBack, midBackToStack,stackToBack1, backToStack1,stackToBack2},
+            new TrajectorySequence[]{leftPurple, leftPurpleToBack, leftBackToStack,stackToBack1, backToStack1,stackToBack2},
             trajectoryNames);
     public static NamedTrajectory[] midTrajectories = map(
             new TrajectorySequence[]{midPurple, midPurpleToBack, midBackToStack,stackToBack1, backToStack1,stackToBack2},
             trajectoryNames);
     public static NamedTrajectory[] rightTrajectories = map(
-            new TrajectorySequence[]{midPurple, midPurpleToBack, midBackToStack, stackToBack1, backToStack1,stackToBack2},
+            new TrajectorySequence[]{rightPurple, rightPurpleToBack, rightBackToStack, stackToBack1, backToStack1,stackToBack2},
             trajectoryNames);
     public static NamedTrajectory[][] trajectories = {leftTrajectories,midTrajectories,rightTrajectories};
 

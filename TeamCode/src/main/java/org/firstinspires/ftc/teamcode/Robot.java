@@ -225,7 +225,88 @@ public class Robot extends MecanumDrive
         //ehub=new ReadTimer(this::eHubUpdate, 50);
     }
 
+    public Robot(LinearOpMode l, boolean ethanMadeMe)
+    {
+
+        super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
+        this.l=l;
+
+        if(Context.opmode!=null)
+        {
+            Context.updateValues();
+        }
+
+        tel = Tel.instance();
+
+        hardwareMap=l.hardwareMap;
+        timer=new ElapsedTime();
+
+        modules=new ArrayList<>();
+
+        try {
+            for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+                modules.add(module);
+            }
+
+            for(LynxModule module: modules)
+            {
+                if(module.getImuType()== LynxModuleImuType.BHI260)
+                    controlHub=module;
+                else if(module.getImuType() == LynxModuleImuType.BNO055)
+                    expansionHub=module;
+            }
+
+            //controlHub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+            //expansionHub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("One or more of the REV hubs could not be found. More info: " + e);
+        }
+
+        if(!Context.isTele)
+        {
+            cameraInit();
+        }
+        //teamElementDetector=new TeamElementDetection(l.telemetry);
+        dtInit();
+
+        slides=new Slides(hardwareMap);
+        deposit=new Deposit(hardwareMap);
+        intake=new Intake(hardwareMap);
+        droneLauncher = new DroneLauncher(hardwareMap);
+        hang = hardwareMap.get(DcMotor.class, "hang");
+
+
+        if(!Context.noHwInit)
+        {
+            intake.init();
+            deposit.init();
+            droneLauncher.init();
+        }
+
+        scheduler=new TaskScheduler();
+
+        if(!Context.isTele)
+        {
+            RobotLog.e("Attempted to start");
+            colorSensorsStart();
+        }
+
+
+        //navx=new ReadTimer(navxWrapper::update, 20);
+        //chub=new ReadTimer(this::cHubUpdate);
+        //ehub=new ReadTimer(this::eHubUpdate, 50);
+    }
+
     public static Robot getInstance()
+    {
+        if(robot==null)
+        {
+            robot=new Robot(Context.opmode);
+        }
+        return robot;
+    }
+
+    public static Robot getInstance(boolean ethanMadeMe)
     {
         if(robot==null)
         {

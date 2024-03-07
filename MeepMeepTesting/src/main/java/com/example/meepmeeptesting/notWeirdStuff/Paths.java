@@ -8,4 +8,6 @@ public  enum Paths {
     Score_Second,
     Score_Third,
     Return_to_Stack,
+    Return_to_Stack_Again
+
 };

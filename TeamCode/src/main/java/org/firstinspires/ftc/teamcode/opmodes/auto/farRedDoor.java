@@ -44,9 +44,9 @@ public class farRedDoor extends EnhancedOpMode {
         return getTaskList(
                 actions.deployPurple(-51.5, 34),
                 actions.yellowDrop(49, -15, Context.autonYellowHeight),
-                actions.lowerIntake(0, -51.5, 0),
+                actions.lowerIntake(0, -51.5, 0, false),
                 actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT,true),
-                actions.lowerIntake(0, -51.5, 0),
+                actions.lowerIntake(0, -51.5, 0, false),
                 actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38, Slides.SlideState.ROW2)
         );
     }
@@ -73,7 +73,6 @@ public class farRedDoor extends EnhancedOpMode {
             RobotLog.e("yellow");
             delayLinear(550);
             RobotLog.e("delaying");
-            if(!Context.autoState.equals(AutoSelector.CyclePixelCount.ZERO) && !(intake.pixel1Present||intake.pixel2Present)) {
                 drive.run(Paths.Go_To_Stack);
                // delayLinear(750);
                 delayLinear(250);
@@ -121,8 +120,6 @@ public class farRedDoor extends EnhancedOpMode {
             waitForEnd();
             RobotLog.e("end");
         }
-    }
-
     public void initLoop()
     {
         drive.initLoop();

@@ -43,47 +43,61 @@ public class RobotActions
         intake=robot.intake;
     }
 
+    public List<Task> lowerIntake(double drop_x , double sweep_x,int cycle, boolean lmao)
+    {
+        Intake.SweeperState sweep1 = cycle==0?Intake.SweeperState.ONE_SWEEP: cycle==1?Intake.SweeperState.THREE_SWEEP: cycle==2? Intake.SweeperState.FIVE_SWEEP: Intake.SweeperState.SEVEN_SWEEP;
+        Intake.SweeperState sweep2 = cycle==0?Intake.SweeperState.ZERO: cycle==1?Intake.SweeperState.TWO_SWEEP: cycle==2?Intake.SweeperState.FOUR_SWEEP: Intake.SweeperState.SIX_SWEEP;
+
+        if (cycle == 2 && lmao) {
+            return Builder.create()
+                    .await(() -> robot.getPoseEstimate().getX() < drop_x)
+                    .executeCode(()->Context.colorSensorsEnabled=true)
+                    .moduleAction(intake, Intake.PositionState.MID)
+                    .moduleAction(intake, Intake.PowerState.INTAKE)
+                    .moduleAction(intake, Intake.ConveyorState.INTAKE)
+                    .build();
+        } else {
+            return Builder.create()
+                    .await(() -> robot.getPoseEstimate().getX() < drop_x)
+                    .executeCode(()->Context.colorSensorsEnabled=true)
+                    .moduleAction(intake, Intake.PositionState.DOWN)
+                    .moduleAction(intake, Intake.PowerState.INTAKE)
+                    .moduleAction(intake, Intake.ConveyorState.INTAKE)
+                    /* .await(() -> robot.getPoseEstimate().getX() < sweep_x || (robot.k!=Paths.Return_to_Stack && robot.k!=Paths.Go_To_Stack))
+                         .executeCode(()->Context.colorSensorsEnabled=false)
+                         .conditionalModuleAction(intake, sweep1, ()->!(intake.pixel1Present|| intake.pixel2Present))
+                         .conditionalModuleAction(intake, sweep2, ()->!(intake.pixel1Present|| intake.pixel2Present))
+
+                     */
+                    .await(() -> robot.getPoseEstimate().getX() < sweep_x)
+                    .delay(700)
+                    .moduleAction(intake, sweep2)
+                    .delay(500)
+                    .moduleAction(intake, sweep1)
+
+                    .build();
+        }
+
+    }
+
     public List<Task> lowerIntake(double drop_x , double sweep_x,int cycle)
     {
-        Intake.SweeperState sweep1 = cycle==0?Intake.SweeperState.ONE_SWEEP: cycle==1?Intake.SweeperState.THREE_SWEEP: Intake.SweeperState.FIVE_SWEEP;
-        Intake.SweeperState sweep2 = cycle==0?Intake.SweeperState.TWO_SWEEP: cycle==1?Intake.SweeperState.FOUR_SWEEP: Intake.SweeperState.SIX_SWEEP;
-
-        return Builder.create()
-            .await(() -> robot.getPoseEstimate().getX() < drop_x)
-                .executeCode(()->Context.colorSensorsEnabled=true)
-                .moduleAction(intake, Intake.PositionState.DOWN)
-            .moduleAction(intake, Intake.PowerState.INTAKE)
-            .moduleAction(intake, Intake.ConveyorState.INTAKE)
-           /* .await(() -> robot.getPoseEstimate().getX() < sweep_x || (robot.k!=Paths.Return_to_Stack && robot.k!=Paths.Go_To_Stack))
-                .executeCode(()->Context.colorSensorsEnabled=false)
-                .conditionalModuleAction(intake, sweep1, ()->!(intake.pixel1Present|| intake.pixel2Present))
-                .conditionalModuleAction(intake, sweep2, ()->!(intake.pixel1Present|| intake.pixel2Present))
-
-            */
-                .await(() -> robot.getPoseEstimate().getX() < sweep_x)
-                .moduleAction(intake, sweep2)
-
-            .build();
-    }
-    public List<Task> lowerIntake(double drop_x , double sweep_x,int cycle, boolean x)
-    {
-        Intake.SweeperState sweep1 = cycle==0?Intake.SweeperState.ONE_SWEEP: cycle==1?Intake.SweeperState.THREE_SWEEP: Intake.SweeperState.FIVE_SWEEP;
-        Intake.SweeperState sweep2 = cycle==0?Intake.SweeperState.TWO_SWEEP: cycle==1?Intake.SweeperState.FOUR_SWEEP: Intake.SweeperState.SIX_SWEEP;
+        Intake.SweeperState sweep1 = cycle==0?Intake.SweeperState.ONE_SWEEP: cycle==1?Intake.SweeperState.THREE_SWEEP: cycle==2? Intake.SweeperState.FIVE_SWEEP: Intake.SweeperState.SEVEN_SWEEP;
+        Intake.SweeperState sweep2 = cycle==0?Intake.SweeperState.ZERO: cycle==1?Intake.SweeperState.TWO_SWEEP: cycle==2?Intake.SweeperState.FOUR_SWEEP: Intake.SweeperState.SIX_SWEEP;
 
         return Builder.create()
                 .await(() -> robot.getPoseEstimate().getX() < drop_x)
-                .addTaskList(quickReset())
                 .executeCode(()->Context.colorSensorsEnabled=true)
                 .moduleAction(intake, Intake.PositionState.DOWN)
                 .moduleAction(intake, Intake.PowerState.INTAKE)
                 .moduleAction(intake, Intake.ConveyorState.INTAKE)
-                .await(() -> robot.getPoseEstimate().getX() < sweep_x || (robot.k!=Paths.Return_to_Stack && robot.k!=Paths.Go_To_Stack))
-                .executeCode(()->Context.colorSensorsEnabled=false)
-//            .awaitDtXWithin(-56.5, 4)
-                .conditionalModuleAction(intake, sweep1, ()->!(intake.pixel1Present|| intake.pixel2Present))
-                .delay(750)
-                .conditionalModuleAction(intake, sweep2, ()->!(intake.pixel1Present|| intake.pixel2Present))
+                .await(() -> robot.getPoseEstimate().getX() < sweep_x)
+                .delay(200)
+                .moduleAction(intake, sweep2)
+
                 .build();
+
+
     }
 
     public List<Task> deployPurple(double yLeft, double yMid, double yRight)
@@ -112,8 +126,14 @@ public class RobotActions
                 .moduleAction(intake, Intake.PowerState.INTAKE)
                 .moduleAction(intake, Intake.ConveyorState.INTAKE)
                 .await(() -> robot.getPoseEstimate().getX() < xMid)
-                .moduleAction(intake, Intake.SweeperState.TWO_SWEEP)
-                .delay(200)
+                .delay(700)
+                .moduleAction(intake, Intake.SweeperState.ONE_SWEEP)
+                .build();
+    }
+
+    public List<Task> purpleDoNothing(double yDrop, double xDeposit)
+    {
+        return Builder.create()
                 .build();
     }
 
@@ -134,11 +154,34 @@ public class RobotActions
 
     public List<Task> yellowDrop(double xPos, double startSlides, Slides.SlideState height){
         return Builder.create()
-                .awaitDtXWithin(startSlides,4)
-                .addTaskList(slidesOnlyAutonomousProgrammingVersionForAutomatedControl(height))
+                .await(() -> robot.getPoseEstimate().getY() > startSlides)
+                .addTaskList(slidesOnly(height))
                 .executeCode(()->slides.macroRunning=false)
                 .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                .delay(1000)
+                .delay(600)
+                .addTaskList(scorePixels())
+                //.executeCode(()->Context.colorSensorsEnabled=false)
+                .build();
+    }
+
+    public List<Task> yellowDrop(double xPos, double startSlides, Slides.SlideState height, boolean yellow){
+        return Builder.create()
+                .await(() -> robot.getPoseEstimate().getY() > startSlides)
+                .addTaskList(slidesOnly(height))
+                .executeCode(()->slides.macroRunning=false)
+                .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                .delay(1200)
+                .addTaskList(scorePixels())
+                //.executeCode(()->Context.colorSensorsEnabled=false)
+                .build();
+    }
+    public List<Task> yellowDropCycles(double xPos, double startSlides, Slides.SlideState height){
+        return Builder.create()
+                .await(() -> robot.getPoseEstimate().getX() > startSlides)
+                .addTaskList(slidesOnly(height))
+                .executeCode(()->slides.macroRunning=false)
+                .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                .delay(600)
                 .addTaskList(scorePixels())
                 //.executeCode(()->Context.colorSensorsEnabled=false)
                 .build();
@@ -720,7 +763,7 @@ public List<Task> quickReset(){
         {
             return Builder.create()
                     .executeCode(()->slides.macroRunning=true)
-                    .moduleAction(deposit, Deposit.ClawState.CLOSED1)
+                    .moduleAction(deposit, Deposit.ClawState.CLOSED2)
                     .delay(500)
                     .moduleAction(deposit, Deposit.WristState.TRANSFER)
                     .moduleAction(slides, row)
@@ -797,13 +840,15 @@ public List<Task> quickReset(){
     {
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
+                .moduleAction(deposit, Deposit.FlipState.DEPOSIT)
+                .delay(200)
                 .moduleAction(deposit, Deposit.WristState.FLICK)
-                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .delay(100)
                 .moduleAction(deposit, Deposit.ClawState.OPEN)
                 .delay(200)
                 .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                 .moduleAction(deposit, Deposit.RotateState.ZERO)
+                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                 .delay(100)
                 .moduleAction(deposit, Deposit.WristState.PARTIAL)
                 .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))

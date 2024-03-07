@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 public class farRedDoor {
-    public static Pose2d redFarStart = new Pose2d(-31, -61, Math.toRadians(-90));
+    public static Pose2d redFarStart = new Pose2d(-35, -61, Math.toRadians(-90));
 
 
     public static TrajectorySequence leftPurple = Robot.trajectorySequenceBuilder(redFarStart)
@@ -49,7 +49,7 @@ public class farRedDoor {
             .lineToLinearHeading(new Pose2d(-48, -36, Math.toRadians(-180)),
                     Robot.getVelocityConstraint(30, 2, 15.06),
                     Robot.getAccelerationConstraint(30))
-            .lineTo(new Vector2d(-55.5, -36))
+            .lineTo(new Vector2d(-52, -36))
             .build();
     public static TrajectorySequence midPurpleToBack = Robot.trajectorySequenceBuilder(midPurple.end())
 //            .lineTo(new Vector2d(-37, -7.5))
@@ -60,7 +60,10 @@ public class farRedDoor {
 //            .splineToConstantHeading(new Vector2d(40, -33.5), Math.toRadians(0),
 //                    Robot.getVelocityConstraint(40, 2, 15.06),
 //                    Robot.getAccelerationConstraint(40))
-            .lineTo(new Vector2d(51.5, -35),
+            .lineTo(new Vector2d(20, -35),
+                    Robot.getVelocityConstraint(50, 2, 15.06),
+                    Robot.getAccelerationConstraint(35))
+            .splineToConstantHeading(new Vector2d(51.5, -37), Math.toRadians(180),
                     Robot.getVelocityConstraint(50, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
@@ -125,7 +128,7 @@ public class farRedDoor {
 //            .lineTo(new Vector2d(-20,-9.5),
 //                    Robot.getVelocityConstraint(30, 2, 15.06),
 //                    Robot.getAccelerationConstraint(30))
-            .splineToConstantHeading((new Vector2d(-56.5,-35)), Math.toRadians(180),
+            .splineToConstantHeading((new Vector2d(-59,-35)), Math.toRadians(180),
                     Robot.getVelocityConstraint(50, 2, 15.06),
                     Robot.getAccelerationConstraint(35))
             .build();
@@ -153,6 +156,7 @@ public class farRedDoor {
             Paths.Score_First,
             Paths.Return_to_Stack,
             Paths.Score_Second,
+
 
     };
 

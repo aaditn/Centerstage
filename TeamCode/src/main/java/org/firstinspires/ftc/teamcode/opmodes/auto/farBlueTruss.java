@@ -38,9 +38,9 @@ public class farBlueTruss extends EnhancedOpMode {
         return getTaskList(
                 actions.deployPurple(35, 46, 35),
                 actions.yellowDrop(47, -15, Context.autonYellowHeight),
-                actions.lowerIntake(-0, -51.5, 0),
+                actions.lowerIntake(-0, -51.5, 0, false),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT),
-                actions.lowerIntake(-0, -51.5, 0),
+                actions.lowerIntake(-0, -51.5, 0, false),
                 actions.scorePixels(49, TeleOpRewrite.DepositState.RIGHT)
         );
     }

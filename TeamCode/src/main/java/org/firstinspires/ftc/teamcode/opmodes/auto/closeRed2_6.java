@@ -2,8 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
-import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.middleRed.redFarStart;
-import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.middleRed.trajectories;
+import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.closeRed2_6.trajectories;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -27,8 +26,8 @@ import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 
-@Autonomous(name = "Middle Red")
-public class middleRed extends EnhancedOpMode {
+@Autonomous(name = "Close 2+6")
+public class closeRed2_6 extends EnhancedOpMode {
     Robot drive;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -39,50 +38,52 @@ public class middleRed extends EnhancedOpMode {
 
     private List<Task>[] auto_tasks() {
         return getTaskList(
-                actions.deployPurple(-49, -40),
-                actions.yellowDrop(46, -15, Slides.SlideState.HALF),
-                actions.lowerIntake(0, -51.5, 1, true),
-                actions.yellowDrop(46, -15,  Context.autonYellowHeight),
-//                actions.scorePixels(48.5, .DepositState.RIGHT,true),
-                actions.lowerIntake(0, -51.5, 2, true),
-                actions.yellowDrop(46, -15, Slides.SlideState.AUTO_TWO)
-//                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38, Slides.SlideState.ROW2)
+                actions.yellowDrop(53, -40, Slides.SlideState.HALF, true),
+                actions.lowerIntake(0, -48, 1),
+                actions.yellowDropCycles(46, 0,  Context.autonYellowHeight),
+                actions.lowerIntake(0, -48, 2),
+                actions.yellowDropCycles(46, 0, Slides.SlideState.AUTO_TWO),
+                actions.lowerIntake(0, -48, 3),
+                actions.yellowDropCycles(46, 10, Slides.SlideState.ROW1)
         );
     }
     @Override
     public void linearOpMode() {
         ElapsedTime timeToInit3 = new ElapsedTime();
         RobotLog.e("Static Force Initialization Begins");
-        List<NamedTrajectory[][]> batchInit6  = Batch.allTrajectories;
-        RobotLog.e("All Trajectories Loaded in: "+ timeToInit3.seconds()
-                +", Mark: " + batchInit6.toString() +",Key: "+batchInit6.get(0)[0][0].getName());
+        List<NamedTrajectory[][]> batchInit6 = Batch.allTrajectories;
+        RobotLog.e("All Trajectories Loaded in: " + timeToInit3.seconds()
+                + ", Mark: " + batchInit6.toString() + ",Key: " + batchInit6.get(0)[0][0].getName());
         List<Pose2d> batchInitPT26 = Batch.allStarts;
-        RobotLog.e("All Start Pos Loaded in: "+timeToInit3.seconds()+", Mark: " +batchInitPT26.toString());
+        RobotLog.e("All Start Pos Loaded in: " + timeToInit3.seconds() + ", Mark: " + batchInitPT26.toString());
         waitForStart();
+        RobotLog.e("Loggy");
 
-        if(opModeIsActive())
-        {
-            drive.setPoseEstimate(redFarStart);
-            delayLinear((long)Context.autoWaitTime*1000);
-            drive.set(trajectories,auto_tasks());
+        if (opModeIsActive()) {
+            RobotLog.e("Just log it");
+            drive.setPoseEstimate(new Pose2d(15,-61,Math.toRadians(-90)));
+            RobotLog.e("Just log it twice");
+            delayLinear((long) Context.autoWaitTime * 1000);
+            RobotLog.e("things not mapped");
+            drive.set(trajectories, auto_tasks());
             RobotLog.e("things mapped");
             drive.run(Paths.Purple);
-            RobotLog.e("purple");
-            drive.run(Paths.Score_Spike);
-            RobotLog.e("yellow");
-            delayLinear(250);
             RobotLog.e("delaying");
             drive.run(Paths.Go_To_Stack);
-            delayLinear(250);
             drive.run(Paths.Score_First);
+
             drive.run(Paths.Return_to_Stack);
-            delayLinear(250);
+
             drive.run(Paths.Score_Second);
+
+            drive.run(Paths.Return_to_Stack_Again);
+
+            drive.run(Paths.Score_Third);
+
             waitForEnd();
             RobotLog.e("end");
         }
     }
-
     public void initLoop()
     {
         drive.initLoop();
@@ -111,9 +112,9 @@ public class middleRed extends EnhancedOpMode {
         slides.init();
         drone.init();
         intake.setOperationState(Module.OperationState.PRESET);
-        intake.setState(Intake.SweeperState.ZERO);
         deposit.setState(Deposit.FlipState.TRANSFER);
-        deposit.setState(Deposit.ClawState.OPEN);
+        deposit.setState(Deposit.ClawState.CLOSED_AGAIN);
+        intake.setState(Intake.SweeperState.ZERO);
         //RobotLog.e("ROLLIT HAHAHAHAHAHAHAHAHAHAHAHA");
     }
 

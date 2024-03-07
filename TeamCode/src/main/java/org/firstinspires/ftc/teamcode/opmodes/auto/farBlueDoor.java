@@ -44,9 +44,9 @@ public class farBlueDoor extends EnhancedOpMode {
         return getTaskList(
                 actions.deployPurple(39, 11, 23),
                 actions.yellowDrop(49, -15, Context.autonYellowHeight),
-                actions.lowerIntake(0, -54, 0),
+                actions.lowerIntake(0, -54, 0, false),
                 actions.scorePixels(48.5, TeleOpRewrite.DepositState.LEFT),
-                actions.lowerIntake(0, -54, 0),
+                actions.lowerIntake(0, -54, 0, false),
                 actions.scorePixels(48.5, TeleOpRewrite.DepositState.LEFT, true)
         );
     }

@@ -109,7 +109,7 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
             {
                 intake.setOperationState(Module.OperationState.PRESET);
 
-                if(intake.getState(Intake.PositionState.class)==Intake.PositionState.RAISED)
+                if(intake.getState(Intake.PositionState.class)==Intake.PositionState.MID || intake.getState(Intake.PositionState.class)==Intake.PositionState.RAISED)
                 {
                     scheduler.scheduleTaskList(actions.lowerIntake());
                 }
@@ -120,12 +120,12 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
                 }
             }
             //INTAKE SWEEPERS
-//            if(sweeperIncrement.wasJustPressed()&&intake.getState(Intake.PositionState.class)==Intake.PositionState.DOWN)
-//            {
-//                if(sweeperCounter<3)
-//                    sweeperCounter++;
-//                intake.setState(sweeperPositions[sweeperCounter-1]);
-//            }
+            if(sweeperIncrement.wasJustPressed()&&intake.getState(Intake.PositionState.class)==Intake.PositionState.DOWN)
+            {
+                if(sweeperCounter<3)
+                    sweeperCounter++;
+                intake.setState(sweeperPositions[sweeperCounter-1]);
+            }
             //INTAKE FLUSH
             if(flush.isDown())
             {
@@ -143,13 +143,7 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
             else if(Math.abs(gamepad2.right_stick_y)>0.5)
             {
                 intake.setOperationState(Module.OperationState.MANUAL);
-                double newPower;
-                if (Math.abs(gamepad2.right_stick_y) > 0.7) {
-                    newPower = Math.signum(-gamepad1.right_stick_y);
-                } else {
-                    newPower = -gamepad1.right_stick_y;
-                }
-                intake.manualChange(newPower);
+                intake.manualChange(-gamepad2.right_stick_y);
             }
             else
             {
@@ -166,13 +160,13 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
 //                //TODO tune floaty position(get it from Ethan)
 //            }
             //MANUAL CLAW OPEN CLOSE
-            if(clawManual.wasJustPressed())
-            {
-                if(deposit.getState(Deposit.ClawState.class)==Deposit.ClawState.OPEN)
-                    deposit.setState(Deposit.ClawState.CLOSED2);
-                else if(deposit.getState(Deposit.ClawState.class)==Deposit.ClawState.CLOSED2)
-                    deposit.setState(Deposit.ClawState.OPEN);
-            }
+//            if(clawManual.wasJustPressed())
+//            {
+//                if(deposit.getState(Deposit.ClawState.class)==Deposit.ClawState.OPEN)
+//                    deposit.setState(Deposit.ClawState.CLOSED2);
+//                else if(deposit.getState(Deposit.ClawState.class)==Deposit.ClawState.CLOSED2)
+//                    deposit.setState(Deposit.ClawState.OPEN);
+//            }
 
 
             //SPIN THE ROTATE WRIST
@@ -251,7 +245,7 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
             */
 
             //DEPOSIT AND RESET
-            if((/*sweeperIncrement.wasJustPressed() || */depositMacro2.wasJustPressed() || (gamepad1.left_trigger > 0.5 && !resetTrigger))&&!slides.macroRunning&&slides.getState()!=Slides.SlideState.GROUND) {
+            if((sweeperIncrement.wasJustPressed() || depositMacro2.wasJustPressed() || (gamepad1.left_trigger > 0.5 && !resetTrigger))&&!slides.macroRunning&&slides.getState()!=Slides.SlideState.GROUND) {
                 resetTrigger = true;
                 //slides.setOperationState(Module.OperationState.PRESET);
                 indexStore = Arrays.asList(slideHeights).indexOf(slides.getState());
@@ -329,16 +323,16 @@ public class ImNotCallingItEthanOp extends EnhancedOpMode
         keyReaders= new KeyReader[]{
                 droneButton1=new ToggleButtonReader(g1, GamepadKeys.Button.Y),
                 intakeToggle=new ToggleButtonReader(g1, GamepadKeys.Button.A),
-               // sweeperIncrement=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_LEFT),
+                sweeperIncrement=new ToggleButtonReader(g1, GamepadKeys.Button.X),
                 slidesRaise=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
                 slidesLower=new ToggleButtonReader(g1, GamepadKeys.Button.LEFT_BUMPER),
                 G2slidesRaise=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
                 G2slidesLower=new ToggleButtonReader(g1, GamepadKeys.Button.LEFT_BUMPER),
-                pickOne=new ToggleButtonReader(g2, GamepadKeys.Button.A),
+//                pickOne=new ToggleButtonReader(g2, GamepadKeys.Button.A),
                 flush=new ToggleButtonReader(g2, GamepadKeys.Button.X),
                 CCW45=new ToggleButtonReader(g2, GamepadKeys.Button.LEFT_BUMPER),
                 CW45=new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_BUMPER),
-                clawManual=new ToggleButtonReader(g1, GamepadKeys.Button.X),
+//                clawManual=new ToggleButtonReader(g1, GamepadKeys.Button.X),
                 depositMacro2= new ToggleButtonReader(g2, GamepadKeys.Button.Y),
                 slidesOverride=new ToggleButtonReader(g2, GamepadKeys.Button.B),
                 slides1=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_DOWN),

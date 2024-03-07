@@ -40,9 +40,9 @@ public class closeBlue extends EnhancedOpMode {
         return getTaskList(
                 actions.deployPurple(39, 46, 39),
                 actions.yellowDrop(47, 26, true),
-                actions.lowerIntake(-50, -56.5, 0),
+                actions.lowerIntake(-50, -56.5, 0, false),
                 actions.scorePixels(49),
-                actions.lowerIntake(-50, -56.5, 1),
+                actions.lowerIntake(-50, -56.5, 1, false),
                 actions.scorePixels(49)
         );
     }

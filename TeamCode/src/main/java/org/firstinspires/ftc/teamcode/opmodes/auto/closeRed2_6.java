@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
+import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.closeRed2_6.redCloseStart;
 import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.closeRed2_6.trajectories;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -40,11 +41,11 @@ public class closeRed2_6 extends EnhancedOpMode {
         return getTaskList(
                 actions.yellowDrop(53, -40, Slides.SlideState.HALF, true),
                 actions.lowerIntake(0, -48, 1),
-                actions.yellowDropCycles(46, 0,  Context.autonYellowHeight),
+                actions.yellowDropCycles(46, 0,  Slides.SlideState.HALF, Deposit.RotateState.PLUS_NINETY),
                 actions.lowerIntake(0, -48, 2),
-                actions.yellowDropCycles(46, 0, Slides.SlideState.AUTO_TWO),
+                actions.yellowDropCycles(46, 0, Slides.SlideState.R1, Deposit.RotateState.PLUS_NINETY),
                 actions.lowerIntake(0, -48, 3),
-                actions.yellowDropCycles(46, 10, Slides.SlideState.ROW1)
+                actions.yellowDropCycles(46, 10, Slides.SlideState.R2, Deposit.RotateState.MINUS_FOURTY_FIVE)
         );
     }
     @Override
@@ -61,7 +62,7 @@ public class closeRed2_6 extends EnhancedOpMode {
 
         if (opModeIsActive()) {
             RobotLog.e("Just log it");
-            drive.setPoseEstimate(new Pose2d(15,-61,Math.toRadians(-90)));
+            drive.setPoseEstimate(redCloseStart);
             RobotLog.e("Just log it twice");
             delayLinear((long) Context.autoWaitTime * 1000);
             RobotLog.e("things not mapped");

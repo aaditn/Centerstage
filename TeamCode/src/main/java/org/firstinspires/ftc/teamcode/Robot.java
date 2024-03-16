@@ -46,6 +46,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -73,6 +74,7 @@ import org.firstinspires.ftc.teamcode.util.ReadTimer;
 import org.firstinspires.ftc.teamcode.util.Tel;
 import org.firstinspires.ftc.teamcode.util.WhipTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
+import org.firstinspires.ftc.teamcode.vision.AprilTagPipeline;
 import org.firstinspires.ftc.teamcode.vision.TeamElementDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -710,6 +712,58 @@ public class Robot extends MecanumDrive
 
     }
 
+    public void run(Paths trajectory, AprilTagPipeline vision, Telemetry telemetry, List<Pose2d> previous)
+    {
+        for(WhipTrajectory item : trajectories){
+            if(item.getPath().equals(trajectory)){
+                if(Context.opmode.opModeIsActive())
+                {
+                    k = trajectory;
+                    followTrajectorySequenceAsync(item.getTrajectory());
+                    scheduler.scheduleTaskList(item.getTasks());
+                    AprilTagRun(vision, telemetry, previous);
+                    waitForIdle();
+                }
+                else
+                    break;
+            }
+        }
+        //RobotLog.e("WE DIDNT FIND THE TRAJECTORY BRO");
+
+    }
+
+    public void AprilTagRun(AprilTagPipeline vision, Telemetry telemetry, List<Pose2d> previous) {
+        double aprilTagConfidence = 0.5;
+        if (k.equals(Paths.Score_First) || k.equals(Paths.Score_Second) || k.equals(Paths.Score_Third) || k.equals(Paths.Score_Spike)) {
+            if (robot.getPoseEstimate().getX() > 20 && robot.getPoseEstimate().getX() < 50) {
+                Pose2d current = robot.getPoseEstimate();
+                vision.setEstHeading(current.getHeading());
+                vision.telemetryAprilTag(telemetry);
+                List<Pose2d> detectionPositions = vision.getPos();
+                int i = 0;
+                for(Pose2d exist : detectionPositions) {
+
+                    Tel.instance().addData("exist", exist.getX());
+                    Tel.instance().addData("prev", previous.get(i).getX());
+                    Tel.instance().addData("rawExternalHeading", robot.getRawExternalHeading());
+                    if(exist.getX() != previous.get(i).getX()) {
+                        robot.setPoseEstimate(new Pose2d(
+                                (current.getX() + exist.getX() * aprilTagConfidence) / (1 + aprilTagConfidence),
+                                (current.getY() + exist.getY() * aprilTagConfidence) / (1 + aprilTagConfidence),
+                                (robot.getRawExternalHeading())
+                        ));
+
+                    }
+                    previous.set(i,exist);
+                    i++;
+                }
+                Pose2d updatePos = robot.getPoseEstimate();
+                // if it doesn't pass through apriltag you still want to update imu
+                robot.setPoseEstimate(new Pose2d(updatePos.getX(), updatePos.getY(), robot.getRawExternalHeading()));
+            }
+        }
+    }
+
     @SafeVarargs
     public static List<Task>[] getTaskList(List<Task>... tasks) {
         return (tasks);
@@ -885,5 +939,10 @@ public class Robot extends MecanumDrive
             return true;
         }
         return false;
+    }
+
+    public double getTotalCurrent() {
+        return controlHub.getCurrent(CurrentUnit.AMPS) + expansionHub.getCurrent(CurrentUnit.AMPS);
+
     }
 }

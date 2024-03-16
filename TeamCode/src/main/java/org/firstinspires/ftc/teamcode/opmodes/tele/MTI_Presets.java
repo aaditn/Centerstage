@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.PresetPackage;
 import org.firstinspires.ftc.teamcode.util.Tel;
 
-@TeleOp(group = "MTI", name = "A - TelePresets")
+@TeleOp(name = "A - Tele_Presets")
 public class MTI_Presets extends EnhancedOpMode
 {
     DcMotorEx hang;
@@ -39,14 +39,20 @@ public class MTI_Presets extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
-    ButtonReader droneButton1, intakeToggle, sweeperIncrement, presetMacro, slidesOverride, flush, slidesLower;
-    double ninja;
+    ButtonReader droneButton1, intakeToggle, sweeperIncrement, presetMacro, slidesOverride, slidesLower, addToArray, subtractToArray, switchWrist;
+    double ninja = 1;
+    double ninjaStrafe = 1;
     int sweeperCounter;
     Intake.SweeperState[] sweeperPositions;
-    Deposit.RotateState[] wristRotatePositions;
-    Slides.SlideState[] slideHeights;
+    PresetPackage[] presetsOld;
 
     PresetPackage[] presets;
+
+    boolean runOnce = true, isHang = false;
+
+    Deposit.WristState state = Deposit.WristState.HOVER;
+    String stateName = "FLICK";
+    boolean isStopped;
 
     int arrayIndex = 0;
     ElapsedTime hangWait = new ElapsedTime();
@@ -56,39 +62,41 @@ public class MTI_Presets extends EnhancedOpMode
         waitForStart();
 
         hangWait.reset();
+        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        hang.setTargetPosition(0);
+//        hang.setPower(0);
+        hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        intake.setState(Intake.PositionState.MID);
+
         while(opModeIsActive())
         {
             for (KeyReader reader : keyReaders)
             {
                 reader.readValue();
             }
-
-
             //NORMAL DT MOVEMENT
             if(!robot.isBusy())
             {
                 double x = gamepad1.left_stick_y * ninja;
-                double y = gamepad1.left_stick_x * ninja;
+                double y = gamepad1.left_stick_x * ninjaStrafe;
                 double rx = -gamepad1.right_stick_x * ninja;
 
                 robot.setLocalDrivePowers(new Pose2d(x, y, rx));
             }
-            //NINJA
-            if (gamepad1.right_trigger > 0.3)
-                ninja = 0.5;
-            else
-                ninja = 1;
 
 
-            if(gamepad2.left_trigger>0.5 && hangWait.seconds() > 90)
-                hang.setPower(1);
-            else if(gamepad2.right_trigger>0.5 && hangWait.seconds() > 90)
+            if(gamepad1.left_trigger>0.5 && hangWait.seconds() > 90) {
                 hang.setPower(-1);
-            else
+                isHang = true;
+            } else if(gamepad1.right_trigger>0.5 && hangWait.seconds() > 90) {
+                hang.setPower(1);
+                isHang = false;
+            } else {
                 hang.setPower(0);
-
+            }
             //INTAKE TOGGLE
-            if(intakeToggle.wasJustPressed())
+           /* if(intakeToggle.wasJustPressed())
             {
                 intake.setOperationState(Module.OperationState.PRESET);
 
@@ -102,6 +110,11 @@ public class MTI_Presets extends EnhancedOpMode
                     sweeperCounter=0;
                 }
             }
+
+            */
+            if (Slides.SlideState.GROUND.equals(slides.getState(Slides.SlideState.class))) {
+                isStopped = true;
+            }
             //INTAKE SWEEPERS
             if(sweeperIncrement.wasJustPressed()&&intake.getState(Intake.PositionState.class)==Intake.PositionState.DOWN)
             {
@@ -109,53 +122,48 @@ public class MTI_Presets extends EnhancedOpMode
                     sweeperCounter++;
                 intake.setState(sweeperPositions[sweeperCounter-1]);
             }
-            //INTAKE FLUSH
-            if(flush.isDown())
-            {
-                intake.setOperationState(Module.OperationState.PRESET);
-                intake.setState(Intake.ConveyorState.INTAKE);
-                intake.setState(Intake.PowerState.EXTAKE);
-            }
-            else if(flush.wasJustReleased())
-            {
-                intake.setOperationState(Module.OperationState.PRESET);
-                intake.setState(Intake.PowerState.OFF);
-                intake.setState(Intake.ConveyorState.OFF);
-            }
-            //INTAKE MANUAL POWER
-            else if(Math.abs(gamepad2.right_stick_y)>0.5)
-            {
-                intake.setOperationState(Module.OperationState.MANUAL);
-                intake.manualChange(-gamepad2.right_stick_y);
-            }
-            else
-            {
-                //intake.setState(Intake.ConveyorState.OFF);
-                intake.setOperationState(Module.OperationState.PRESET);
-            }
 
-            if((slidesLower.wasJustPressed()) && !slides.getState().equals(Slides.SlideState.GROUND)) {
+            if((slidesLower.isDown())) {
+                ninja = 0.4;
+                ninjaStrafe = 0.3;
+            }
+            if (slidesLower.wasJustReleased()) {
                 scheduler.scheduleTaskList(actions.scorePixels());
+                ninja = 1;
+                ninjaStrafe = 1;
                 arrayIndex++;
+                presets[arrayIndex].returnLEDs(gamepad1);
+                presets[arrayIndex].returnLEDs(gamepad2);
             }
             if (presetMacro.wasJustPressed()) {
 
-                PresetPackage presetPackage = presets[arrayIndex];
-                scheduler.scheduleTaskList(actions.slidesOnly(presetPackage.slideState, presetPackage.rotateState));
+                if (arrayIndex < presets.length) {
+                    PresetPackage presetPackage = presets[arrayIndex];
+                    isStopped = false;
+                    scheduler.scheduleTaskList(actions.slidesOnly(presetPackage.slideState, presetPackage.rotateState, state));
+                }
             }
 
-            //SLIDE RESET
-            if(slidesOverride.wasJustReleased())
-            {
-                slides.setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
-            else if(slides.getMotorRunMode()==DcMotor.RunMode.STOP_AND_RESET_ENCODER)
-            {
-                slides.setState(Slides.SlideState.GROUND);
-                slides.setOperationState(Module.OperationState.PRESET);
-                slides.setMotorRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+            if (switchWrist.wasJustPressed()) {
+                if (state == Deposit.WristState.FLICK) {
+                    state = Deposit.WristState.HOVER;
+                    stateName = "HOVER";
+                } else {
+                    state = Deposit.WristState.FLICK;
+                    stateName = "FLICK";
+                }
+
+                if (!slides.getState().equals(Slides.SlideState.GROUND)) {
+                    scheduler.scheduleTaskList(actions.slidesOnly(null, null, state));
+                }
             }
 
+            if (addToArray.wasJustPressed()) {
+                arrayIndex++;
+            }
+            if (subtractToArray.wasJustPressed()) {
+                arrayIndex--;
+            }
 
             //DRONE
             if (droneButton1.wasJustPressed())
@@ -165,6 +173,25 @@ public class MTI_Presets extends EnhancedOpMode
                 else if(drone.getState()==DroneLauncher.State.RELEASED)
                     drone.setState(DroneLauncher.State.LOCKED);
             }
+
+            if (intakeToggle.wasJustPressed()) {
+                if (intake.getState(Intake.PowerState.class).equals(Intake.PowerState.OFF)) {
+                    intake.setState(Intake.PowerState.INTAKE);
+                } else {
+                    intake.setState(Intake.PowerState.OFF);
+                }
+            }
+            if (gamepad1.x && !isHang) {
+                intake.setState(Intake.PowerState.EXTAKE);
+                intake.setState(Intake.ConveyorState.EXTAKE);
+            } else if (Slides.SlideState.GROUND.equals(slides.getState(Slides.SlideState.class)) && isStopped && !isHang) {
+                intake.setState(Intake.PowerState.INTAKE);
+                intake.setState(Intake.ConveyorState.INTAKE);
+            } else {
+                intake.setState(Intake.PowerState.OFF);
+                intake.setState(Intake.ConveyorState.OFF);
+            }
+
         }
     }
 
@@ -185,10 +212,14 @@ public class MTI_Presets extends EnhancedOpMode
         intake.init();
         deposit.init();
         drone.init();
-        intake.setOperationState(Module.OperationState.MANUAL);
+        intake.setOperationState(Module.OperationState.PRESET);
+
+
 
         g1=new GamepadEx(gamepad1);
         g2=new GamepadEx(gamepad2);
+
+        gamepad1.setLedColor(1, 1, 1, 1000);
 
         customRumbleEffect0 = new Gamepad.RumbleEffect.Builder()
                 .addStep(1.0, 1.0, 200)
@@ -207,9 +238,10 @@ public class MTI_Presets extends EnhancedOpMode
                 intakeToggle=new ToggleButtonReader(g1, GamepadKeys.Button.A),
                 sweeperIncrement=new ToggleButtonReader(g1, GamepadKeys.Button.X),
                 presetMacro=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
-                slidesLower=new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
-                flush=new ToggleButtonReader(g2, GamepadKeys.Button.X),
-                slidesOverride=new ToggleButtonReader(g2, GamepadKeys.Button.B)
+                slidesLower=new ToggleButtonReader(g1, GamepadKeys.Button.LEFT_BUMPER),
+                addToArray=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_UP),
+                subtractToArray=new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_DOWN),
+                switchWrist=new ToggleButtonReader(g1, GamepadKeys.Button.B)
         };
 
         sweeperPositions=new Intake.SweeperState[]{
@@ -220,50 +252,40 @@ public class MTI_Presets extends EnhancedOpMode
                 Intake.SweeperState.FIVE_SWEEP,
                 Intake.SweeperState.SIX_SWEEP
         };
-        wristRotatePositions=new Deposit.RotateState[]{
-                Deposit.RotateState.MINUS_ONE_EIGHTY,
-                Deposit.RotateState.MINUS_ONE_THREE_FIVE,
-                Deposit.RotateState.MINUS_NINETY,
-                Deposit.RotateState.MINUS_FOURTY_FIVE,
-                Deposit.RotateState.ZERO,
-                Deposit.RotateState.PLUS_FOURTY_FIVE,
-                Deposit.RotateState.PLUS_NINETY,
-                Deposit.RotateState.PLUS_ONE_THREE_FIVE,
+        presetsOld = new PresetPackage[]{
+                new PresetPackage(0, "yellow", "yellow", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R1),
+                new PresetPackage(1,"purple", "purple", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.HALF),
+                new PresetPackage(2, "black", "black", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R1),
+                new PresetPackage(3, "green", "white", Deposit.RotateState.PLUS_FOURTY_FIVE, Slides.SlideState.R2),
+                new PresetPackage(4, "white", "white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R2),
+                new PresetPackage(5, "green", "green", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R2),
+                new PresetPackage(6, "white", "yellow", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R3),
+                new PresetPackage(7, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R3),
+                new PresetPackage(8,"yellow", "purple", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R4),
+                new PresetPackage(9,"green", "white", Deposit.RotateState.MINUS_FOURTY_FIVE, Slides.SlideState.R45),
+                new PresetPackage(10, "white", "white", Deposit.RotateState.MINUS_FOURTY_FIVE, Slides.SlideState.R35),
+                new PresetPackage(11,"purple", "white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R5),
+                new PresetPackage(12,"white", "green", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R6),
+                new PresetPackage(13,"green", "green", Deposit.RotateState.ZERO, Slides.SlideState.R8),
         };
-        slideHeights=new Slides.SlideState[]{
-                Slides.SlideState.GROUND,
-
-                Slides.SlideState.HALF,
-                Slides.SlideState.R1,
-                Slides.SlideState.R2,
-
-                Slides.SlideState.R3,
-                Slides.SlideState.R4,
-                Slides.SlideState.R5,
-
-                Slides.SlideState.R6,
-                Slides.SlideState.R7,
-                Slides.SlideState.R8,
-
-                Slides.SlideState.R9,
-        };
-
         presets = new PresetPackage[]{
-                new PresetPackage(0, "Yellow Finish Mosaic", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R1),
-                new PresetPackage(1,"Start Purple Mosaic", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.HALF),
-                new PresetPackage(2, "Finish Purple Mosaic", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R1),
-                new PresetPackage(3, "White Fill Mosaic Gap", Deposit.RotateState.MINUS_FOURTY_FIVE, Slides.SlideState.R2),
-                new PresetPackage(4, "Blanket White Right", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R2),
-                new PresetPackage(5, "Blanket White Left", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R2),
-                new PresetPackage(6, "Yellow Colored Mosaic", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R3),
-                new PresetPackage(7, "Start Green Mosaic", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R3),
-                new PresetPackage(8,"Finish Green Mosaic", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R4),
-                new PresetPackage(9,"Purple Colored Mosaic", Deposit.RotateState.PLUS_FOURTY_FIVE, Slides.SlideState.R5),
-                new PresetPackage(10, "Green Finish Mosaic", Deposit.RotateState.PLUS_FOURTY_FIVE, Slides.SlideState.R4),
-                new PresetPackage(11,"Blanket White Right", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R5),
-                new PresetPackage(12,"Yellow Purple Colored Mosaic", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R6),
-                new PresetPackage(13,"Green Finish Colored Mosaic", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R7),
-                new PresetPackage(14, "Reach 3rd Set Line", Deposit.RotateState.PLUS_FOURTY_FIVE, Slides.SlideState.R9)
+                new PresetPackage(0, "yellow", "yellow", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R1),
+                new PresetPackage(1,"purple", "purple", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.HALF),
+                new PresetPackage(2, "black", "black", Deposit.RotateState.MINUS_NINETY, Slides.SlideState.R1),
+                new PresetPackage(3, "green", "white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R2),
+                new PresetPackage(4, "white", "white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R2),
+                new PresetPackage(5, "green", "green", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R3),
+                new PresetPackage(6, "white", "yellow", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R3),
+                new PresetPackage(7, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R4),
+                new PresetPackage(8,"yellow", "purple", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R5),
+                new PresetPackage(9,"green", "white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R6),
+                new PresetPackage(10, "white", "white", Deposit.RotateState.ZERO, Slides.SlideState.R8),
+                new PresetPackage(11,"purple", "white", Deposit.RotateState.PLUS_FOURTY_FIVE, Slides.SlideState.R35),
+                new PresetPackage(12,"white", "green", Deposit.RotateState.PLUS_FOURTY_FIVE, Slides.SlideState.R45),
+                new PresetPackage(13, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R6),
+                new PresetPackage(14, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R6),
+                new PresetPackage(15, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R6),
+
         };
     }
 
@@ -276,7 +298,11 @@ public class MTI_Presets extends EnhancedOpMode
     public void primaryLoop()
     {
         robot.primaryLoop();
-        Tel.instance().addData("hang", hang.getCurrentPosition());
+        Tel.instance().addData("Total Current Draw", robot.getTotalCurrent());
+        Tel.instance().addData("Preset", presets[arrayIndex].color1 + ", " + presets[arrayIndex].color2);
+        Tel.instance().addData("Hang", hang.getCurrentPosition());
+        Tel.instance().addData("Wrist State", stateName);
+
 
     }
 }

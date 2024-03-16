@@ -1,11 +1,8 @@
 package com.example.meepmeeptesting;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.example.meepmeeptesting.notWeirdStuff.BotBuilder;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
-import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class MeepMeepTesting {
@@ -27,16 +24,6 @@ public class MeepMeepTesting {
 
 
 
-        RoadRunnerBotEntity WHYAMIHERE = new DefaultBotBuilder(meepMeep)
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .setColorScheme(new ColorSchemeRedDark())
-                .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                                .lineTo(new Vector2d(5, 0))
-                                .turn(Math.toRadians(-45))
-
-                                .build()
-                );
 
 
 

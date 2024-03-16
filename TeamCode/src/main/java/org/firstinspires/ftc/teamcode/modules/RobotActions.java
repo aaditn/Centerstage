@@ -163,6 +163,28 @@ public class RobotActions
                 //.executeCode(()->Context.colorSensorsEnabled=false)
                 .build();
     }
+    public List<Task> yellowMiddleDrop(double xPos, double startSlides, Slides.SlideState height){
+        return Builder.create()
+                .await(() -> robot.getPoseEstimate().getX() > startSlides)
+                .addTaskList(slidesOnly(height))
+                .executeCode(()->slides.macroRunning=false)
+                .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                .delay(600)
+                .addTaskList(scorePixels())
+                //.executeCode(()->Context.colorSensorsEnabled=false)
+                .build();
+    }
+    public List<Task> yellowMiddleDropButJustForTheLastCycle(double xPos, double startSlides, Slides.SlideState height){
+        return Builder.create()
+                .await(() -> robot.getPoseEstimate().getX() > startSlides)
+                .addTaskList(slidesOnly(height))
+                .executeCode(()->slides.macroRunning=false)
+                .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
+                .delay(1200)
+                .addTaskList(scorePixels())
+                //.executeCode(()->Context.colorSensorsEnabled=false)
+                .build();
+    }
 
     public List<Task> yellowDrop(double xPos, double startSlides, Slides.SlideState height, boolean yellow){
         return Builder.create()
@@ -759,23 +781,27 @@ public List<Task> quickReset(){
                 .build();
     }
 
-    public List<Task> slidesOnly(Slides.SlideState slideState, Deposit.RotateState rotateState) {
+    public List<Task> slidesOnly(Slides.SlideState slideState, Deposit.RotateState rotateState, Deposit.WristState state) {
 
+        if (!slides.getState().equals(Slides.SlideState.GROUND)) {
+            return Builder.create()
+                    .moduleAction(deposit, state)
+                    .build();
+        }
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.CLOSED2)
                 .delay(400)
-                .moduleAction(slides, slideState)
                 .moduleAction(deposit, Deposit.FlipState.PARTIAL)
+                .moduleAction(slides, slideState)
                 // .delay(100)
                 // .moduleAction(deposit, Deposit.WristState.TELESCOPE)
-                .delay(100)
+                .delay(200)
                 .moduleAction(deposit, rotateState)
                 .delay(100)
                 .moduleAction(deposit, Deposit.FlipState.DOWN)
-                .moduleAction(deposit, Deposit.WristState.HOVER)
+                .moduleAction(deposit, state)
                 .delay(300)
-                .moduleAction(deposit, Deposit.RotateState.PLUS_NINETY)
                 .await(slides::isIdle)
                 //.await(()->slides.getStatus()==Module.Status.IDLE)
                 .executeCode(()->slides.macroRunning=false)
@@ -845,21 +871,42 @@ public List<Task> quickReset(){
     public List<Task> scorePixels()
     {
 
-        return Builder.create()
-                .executeCode(()->slides.macroRunning=true)
-                .moduleAction(deposit, Deposit.ClawState.OPEN)
-                .delay(400)
-                .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
-                .moduleAction(deposit, Deposit.RotateState.ZERO)
-                .moduleAction(deposit, Deposit.FlipState.TRANSFER)
-                .moduleAction(deposit, Deposit.WristState.PARTIAL)
-                .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
-                .delay(0)
-                .moduleAction(slides, Slides.SlideState.GROUND)
-                .await(()->slides.currentPosition()<600)
-                .moduleAction(deposit, Deposit.WristState.TRANSFER)
-                .executeCode(()->slides.macroRunning=false)
-                .build();
+        if (!Slides.SlideState.R8.equals(slides.getState())) {
+            return Builder.create()
+                    .executeCode(()->slides.macroRunning=true)
+                    .moduleAction(deposit, Deposit.WristState.FLICK)
+                    .delay(250)
+                    .moduleAction(deposit, Deposit.ClawState.OPEN)
+                    .delay(450)
+                    .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
+                    .moduleAction(deposit, Deposit.RotateState.ZERO)
+                    .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                    .moduleAction(deposit, Deposit.WristState.PARTIAL)
+                    .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
+                    .delay(0)
+                    .moduleAction(slides, Slides.SlideState.GROUND)
+                    .await(()->slides.currentPosition()<600)
+                    .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                    .executeCode(()->slides.macroRunning=false)
+                    .build();
+        } else {
+            return Builder.create()
+                    .executeCode(()->slides.macroRunning=true)
+                    .moduleAction(deposit, Deposit.ClawState.OPEN)
+                    .delay(450)
+                    .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
+                    .moduleAction(deposit, Deposit.RotateState.ZERO)
+                    .moduleAction(deposit, Deposit.FlipState.TRANSFER)
+                    .moduleAction(deposit, Deposit.WristState.PARTIAL)
+                    .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
+                    .delay(0)
+                    .moduleAction(slides, Slides.SlideState.GROUND)
+                    .await(()->slides.currentPosition()<600)
+                    .moduleAction(deposit, Deposit.WristState.TRANSFER)
+                    .executeCode(()->slides.macroRunning=false)
+                    .build();
+        }
+
     }
 
     public List<Task> scorePixelsFlick()

@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.auto_paths.door_paths.closeRed2_6;
 import org.firstinspires.ftc.teamcode.auto_paths.door_paths.closeRedDoor;
 import org.firstinspires.ftc.teamcode.auto_paths.door_paths.farBlueDoor;
 import org.firstinspires.ftc.teamcode.auto_paths.door_paths.farRedDoor;
+import org.firstinspires.ftc.teamcode.auto_paths.door_paths.middleRed;
 import org.firstinspires.ftc.teamcode.auto_paths.truss_paths.closeBlueTruss;
 import org.firstinspires.ftc.teamcode.auto_paths.truss_paths.closeRedTruss;
 import org.firstinspires.ftc.teamcode.auto_paths.truss_paths.farBlueTruss;
@@ -28,6 +29,7 @@ public class Batch {
             add(closeRedDoor.trajectories);
             add(closeBlueDoor.trajectories);
             add(closeRed2_6.trajectories);
+            add(middleRed.trajectories);
         }
     };
     public static List<Pose2d> allStarts = new ArrayList<Pose2d>(){{
@@ -40,6 +42,7 @@ public class Batch {
         add(closeRedDoor.redCloseStart);
         add(closeBlueDoor.blueCloseStart);
         add(closeRed2_6.redCloseStart);
+        add(middleRed.redFarStart);
     }
     };
 }

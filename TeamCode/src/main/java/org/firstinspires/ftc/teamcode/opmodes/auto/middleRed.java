@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.auto_paths.door_paths.middleRed.tra
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -24,7 +25,9 @@ import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
+import org.firstinspires.ftc.teamcode.vision.AprilTagPipeline;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name = "Middle Red")
@@ -37,15 +40,20 @@ public class middleRed extends EnhancedOpMode {
     Slides slides;
     DroneLauncher drone;
 
+    double aprilTagConfidence =.1;
+    private AprilTagPipeline vision = new AprilTagPipeline();
+
+
+    List<Pose2d> previous = new ArrayList<>();
+
     private List<Task>[] auto_tasks() {
         return getTaskList(
                 actions.deployPurple(-49, -40),
-                actions.yellowDrop(46, -15, Slides.SlideState.HALF),
+                actions.yellowMiddleDrop(48, -15, Slides.SlideState.HALF),
                 actions.lowerIntake(0, -51.5, 1, true),
-                actions.yellowDrop(46, -15,  Context.autonYellowHeight),
-//                actions.scorePixels(48.5, .DepositState.RIGHT,true),
+                actions.yellowMiddleDrop(46, -15,  Slides.SlideState.HALF),
                 actions.lowerIntake(0, -51.5, 2, true),
-                actions.yellowDrop(46, -15, Slides.SlideState.AUTO_TWO)
+                actions.yellowMiddleDrop(46, -15, Slides.SlideState.R1)
 //                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38, Slides.SlideState.ROW2)
         );
     }
@@ -70,13 +78,14 @@ public class middleRed extends EnhancedOpMode {
             RobotLog.e("purple");
             drive.run(Paths.Score_Spike);
             RobotLog.e("yellow");
-            delayLinear(250);
+            delayLinear(400);
             RobotLog.e("delaying");
             drive.run(Paths.Go_To_Stack);
-            delayLinear(250);
+            delayLinear(600);
             drive.run(Paths.Score_First);
-            drive.run(Paths.Return_to_Stack);
             delayLinear(250);
+            drive.run(Paths.Return_to_Stack);
+            delayLinear(600);
             drive.run(Paths.Score_Second);
             waitForEnd();
             RobotLog.e("end");
@@ -89,8 +98,7 @@ public class middleRed extends EnhancedOpMode {
     }
 
     public void onStart() {
-
-        drive.closeCameras();
+       drive.closeCameras();
     }
 
     @Override
@@ -114,6 +122,19 @@ public class middleRed extends EnhancedOpMode {
         intake.setState(Intake.SweeperState.ZERO);
         deposit.setState(Deposit.FlipState.TRANSFER);
         deposit.setState(Deposit.ClawState.OPEN);
+
+        vision.initAprilTag(hardwareMap);
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        int count = 0;
+
+        vision.setEstHeading(drive.getPoseEstimate().getHeading());
+        previous.add(new Pose2d(0,0,0));
+        previous.add(new Pose2d(0,0,0));
+        previous.add(new Pose2d(0,0,0));
+        previous.add(new Pose2d(0,0,0));
+        previous.add(new Pose2d(0,0,0));
+        previous.add(new Pose2d(0,0,0));
         //RobotLog.e("ROLLIT HAHAHAHAHAHAHAHAHAHAHAHA");
     }
 

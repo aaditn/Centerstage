@@ -37,8 +37,8 @@ public class Slides extends Module
     }
     public static double GROUND_UNTIL_LIMIT=-200, GROUND=0,  RAISED=300, AUTO_LOW=350, AUTO_TWO=500, ROW1=700, ROW2=1000, ROW3=1400;
 
-    static double offset = -69 - 15;
-    public static double HALF=240 + offset, R1=350 + offset, R2=520 + offset, R3=660 + offset, R35=720 + offset, R4=815 + offset, R45 = 850 + offset, R5=935 + offset, R6=1070 + offset, R7=1170 + offset, R8=1270 + offset, R9 = 1400;
+    static double offset = -95;
+    public static double HALF=150, R1=310, R2=460, R3=600, R35=520, R4=740, R45 = 640, R5=880, R6=1020, R7=1190, R8=1225, R9 = 1400;
     public static double[] stateValues={GROUND_UNTIL_LIMIT, GROUND, HALF, AUTO_LOW, AUTO_TWO, RAISED, ROW1, ROW2, ROW3,
     R1, R2, R3, R35, R4, R45, R5, R6, R7, R8, R9};
     SlideState state;

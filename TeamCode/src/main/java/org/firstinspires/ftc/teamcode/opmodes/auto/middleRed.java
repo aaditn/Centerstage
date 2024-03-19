@@ -25,9 +25,7 @@ import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
-import org.firstinspires.ftc.teamcode.vision.AprilTagPipeline;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name = "Middle Red")
@@ -40,20 +38,22 @@ public class middleRed extends EnhancedOpMode {
     Slides slides;
     DroneLauncher drone;
 
-    double aprilTagConfidence =.1;
+   /* double aprilTagConfidence =.1;
     private AprilTagPipeline vision = new AprilTagPipeline();
 
+    */
 
-    List<Pose2d> previous = new ArrayList<>();
+
+   // List<Pose2d> previous = new ArrayList<>();
 
     private List<Task>[] auto_tasks() {
         return getTaskList(
                 actions.deployPurple(-49, -40),
                 actions.yellowMiddleDrop(48, -15, Slides.SlideState.HALF),
                 actions.lowerIntake(0, -51.5, 1, true),
-                actions.yellowMiddleDrop(46, -15,  Slides.SlideState.HALF),
+                actions.yellowMiddleDrop(46, -15,  Slides.SlideState.R1),
                 actions.lowerIntake(0, -51.5, 2, true),
-                actions.yellowMiddleDrop(46, -15, Slides.SlideState.R1)
+                actions.yellowMiddleDrop(46, -15, Slides.SlideState.R2)
 //                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38, Slides.SlideState.ROW2)
         );
     }
@@ -98,7 +98,7 @@ public class middleRed extends EnhancedOpMode {
     }
 
     public void onStart() {
-       drive.closeCameras();
+       // drive.closeCameras();
     }
 
     @Override
@@ -123,8 +123,9 @@ public class middleRed extends EnhancedOpMode {
         deposit.setState(Deposit.FlipState.TRANSFER);
         deposit.setState(Deposit.ClawState.OPEN);
 
-        vision.initAprilTag(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+      /*  vision.initAprilTag(hardwareMap);
 
         int count = 0;
 
@@ -134,7 +135,11 @@ public class middleRed extends EnhancedOpMode {
         previous.add(new Pose2d(0,0,0));
         previous.add(new Pose2d(0,0,0));
         previous.add(new Pose2d(0,0,0));
+
+
         previous.add(new Pose2d(0,0,0));
+
+       */
         //RobotLog.e("ROLLIT HAHAHAHAHAHAHAHAHAHAHAHA");
     }
 

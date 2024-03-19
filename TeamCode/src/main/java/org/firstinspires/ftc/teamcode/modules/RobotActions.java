@@ -48,35 +48,26 @@ public class RobotActions
         Intake.SweeperState sweep1 = cycle==0?Intake.SweeperState.ONE_SWEEP: cycle==1?Intake.SweeperState.THREE_SWEEP: cycle==2? Intake.SweeperState.FIVE_SWEEP: Intake.SweeperState.SEVEN_SWEEP;
         Intake.SweeperState sweep2 = cycle==0?Intake.SweeperState.ZERO: cycle==1?Intake.SweeperState.TWO_SWEEP: cycle==2?Intake.SweeperState.FOUR_SWEEP: Intake.SweeperState.SIX_SWEEP;
 
-        if (cycle == 2 && lmao) {
-            return Builder.create()
-                    .await(() -> robot.getPoseEstimate().getX() < drop_x)
-                    .executeCode(()->Context.colorSensorsEnabled=true)
-                    .moduleAction(intake, Intake.PositionState.MID)
-                    .moduleAction(intake, Intake.PowerState.INTAKE)
-                    .moduleAction(intake, Intake.ConveyorState.INTAKE)
-                    .build();
-        } else {
-            return Builder.create()
-                    .await(() -> robot.getPoseEstimate().getX() < drop_x)
-                    .executeCode(()->Context.colorSensorsEnabled=true)
-                    .moduleAction(intake, Intake.PositionState.DOWN)
-                    .moduleAction(intake, Intake.PowerState.INTAKE)
-                    .moduleAction(intake, Intake.ConveyorState.INTAKE)
-                    /* .await(() -> robot.getPoseEstimate().getX() < sweep_x || (robot.k!=Paths.Return_to_Stack && robot.k!=Paths.Go_To_Stack))
-                         .executeCode(()->Context.colorSensorsEnabled=false)
-                         .conditionalModuleAction(intake, sweep1, ()->!(intake.pixel1Present|| intake.pixel2Present))
-                         .conditionalModuleAction(intake, sweep2, ()->!(intake.pixel1Present|| intake.pixel2Present))
+        return Builder.create()
+                .await(() -> robot.getPoseEstimate().getX() < drop_x)
+                .executeCode(()->Context.colorSensorsEnabled=true)
+                .moduleAction(intake, Intake.PositionState.DOWN)
+                .moduleAction(intake, Intake.PowerState.INTAKE)
+                .moduleAction(intake, Intake.ConveyorState.INTAKE)
+                /* .await(() -> robot.getPoseEstimate().getX() < sweep_x || (robot.k!=Paths.Return_to_Stack && robot.k!=Paths.Go_To_Stack))
+                     .executeCode(()->Context.colorSensorsEnabled=false)
+                     .conditionalModuleAction(intake, sweep1, ()->!(intake.pixel1Present|| intake.pixel2Present))
+                     .conditionalModuleAction(intake, sweep2, ()->!(intake.pixel1Present|| intake.pixel2Present))
 
-                     */
-                    .await(() -> robot.getPoseEstimate().getX() < sweep_x)
-                    .delay(700)
-                    .moduleAction(intake, sweep2)
-                    .delay(500)
-                    .moduleAction(intake, sweep1)
+                 */
+                .await(() -> robot.getPoseEstimate().getX() < sweep_x)
+                .delay(700)
+                .moduleAction(intake, sweep2)
+                .delay(500)
+                .moduleAction(intake, sweep1)
 
-                    .build();
-        }
+                .build();
+
 
     }
 

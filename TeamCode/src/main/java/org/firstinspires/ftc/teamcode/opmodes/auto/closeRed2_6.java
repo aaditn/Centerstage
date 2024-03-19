@@ -114,7 +114,6 @@ public class closeRed2_6 extends EnhancedOpMode {
         drone.init();
         intake.setOperationState(Module.OperationState.PRESET);
         deposit.setState(Deposit.FlipState.TRANSFER);
-        deposit.setState(Deposit.ClawState.CLOSED_AGAIN);
         intake.setState(Intake.SweeperState.ZERO);
         //RobotLog.e("ROLLIT HAHAHAHAHAHAHAHAHAHAHAHA");
     }

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
+import org.firstinspires.ftc.teamcode.opmodes.tele.MTI_PresetsButItIs295SoItIsBetter;
 import org.firstinspires.ftc.teamcode.opmodesOld.teleop.TeleOpRewrite;
 import org.firstinspires.ftc.teamcode.task_scheduler.Builder;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
@@ -866,9 +867,9 @@ public List<Task> quickReset(){
             return Builder.create()
                     .executeCode(()->slides.macroRunning=true)
                     .moduleAction(deposit, Deposit.WristState.FLICK)
-                    .delay(250)
+                 //   .delay(100)
                     .moduleAction(deposit, Deposit.ClawState.OPEN)
-                    .delay(450)
+                    .delay(150)
                     .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                     .moduleAction(deposit, Deposit.RotateState.ZERO)
                     .moduleAction(deposit, Deposit.FlipState.TRANSFER)
@@ -879,6 +880,7 @@ public List<Task> quickReset(){
                     .await(()->slides.currentPosition()<600)
                     .moduleAction(deposit, Deposit.WristState.TRANSFER)
                     .executeCode(()->slides.macroRunning=false)
+                    .executeCode(()-> MTI_PresetsButItIs295SoItIsBetter.driveType = MTI_PresetsButItIs295SoItIsBetter.DriveType.EXIT_BACKSTAGE)
                     .build();
         } else {
             return Builder.create()
@@ -890,11 +892,13 @@ public List<Task> quickReset(){
                     .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                     .moduleAction(deposit, Deposit.WristState.PARTIAL)
                     .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
-                    .delay(0)
                     .moduleAction(slides, Slides.SlideState.GROUND)
+                    .delay(50)
+                    .executeCode(()-> MTI_PresetsButItIs295SoItIsBetter.driveType = MTI_PresetsButItIs295SoItIsBetter.DriveType.EXIT_BACKSTAGE)
                     .await(()->slides.currentPosition()<600)
                     .moduleAction(deposit, Deposit.WristState.TRANSFER)
                     .executeCode(()->slides.macroRunning=false)
+
                     .build();
         }
 

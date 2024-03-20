@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.RobotActions;
 import org.firstinspires.ftc.teamcode.modules.Slides;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
+import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.PresetPackage;
@@ -60,6 +61,12 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
 
     double multiplier;
     ElapsedTime hangWait = new ElapsedTime();
+
+    public static enum DriveType implements ModuleState {
+        NORMAL, EXIT_BACKSTAGE
+    }
+
+    public static DriveType driveType;
     @Override
     public void linearOpMode()
     {
@@ -79,9 +86,7 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
             {
                 reader.readValue();
             }
-            //NORMAL DT MOVEMENT
-            if(!robot.isBusy())
-            {
+            if (driveType.equals(DriveType.NORMAL)) {
                 if (Math.abs(gamepad1.left_stick_y) < 0.3) {
                     x = ninja * 1.67 * Math.abs(gamepad1.left_stick_y);
                 } else {
@@ -98,13 +103,22 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
                 } else {
                     rx = ninja *  (0.33 +  0.5 * Math.pow(Math.abs(gamepad1.right_stick_x), 1.4));
                 }
+                if (x > 0.85 && rx < 0.2) {
+                    x *= 1.5;
+                    y /= 1.5;
+                }
                 x *= Math.signum(gamepad1.left_stick_y);
                 y *= Math.signum(gamepad1.left_stick_x);
                 rx *= Math.signum(gamepad1.right_stick_x);
 
                 robot.setLocalDrivePowers(new Pose2d(x, y, -rx));
+            } else if (driveType.equals(DriveType.EXIT_BACKSTAGE)) {
+                ElapsedTime timer = new ElapsedTime();
+                while (opModeIsActive() && !isStopRequested() && timer.milliseconds() < 300) { // teehee loop times go brrr
+                    robot.setLocalDrivePowers(new Pose2d(0.8, 0, -0.6));
+                }
+                driveType = DriveType.NORMAL;
             }
-
 
             if(gamepad2.left_trigger>0.5 || (gamepad1.left_trigger>0.5 && hangWait.seconds() > 90)) {
                 hang.setPower(-1);
@@ -115,23 +129,8 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
             } else {
                 hang.setPower(0);
             }
-            //INTAKE TOGGLE
-           /* if(intakeToggle.wasJustPressed())
-            {
-                intake.setOperationState(Module.OperationState.PRESET);
 
-                if(intake.getState(Intake.PositionState.class)==Intake.PositionState.MID || intake.getState(Intake.PositionState.class)==Intake.PositionState.RAISED)
-                {
-                    scheduler.scheduleTaskList(actions.lowerIntake());
-                }
-                else if(intake.getState(Intake.PositionState.class)==Intake.PositionState.DOWN)
-                {
-                    scheduler.scheduleTaskList(actions.raiseIntake());
-                    sweeperCounter=0;
-                }
-            }
 
-            */
             if (Slides.SlideState.GROUND.equals(slides.getState(Slides.SlideState.class))) {
                 isStopped = true;
             }
@@ -219,7 +218,7 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
     public void initialize()
     {
         this.setLoopTimes(1);
-        robot=Robot.getInstance(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        robot=Robot.getInstance();
         hang = hardwareMap.get(DcMotorEx.class, "hang");
         scheduler=new TaskScheduler();
         actions=RobotActions.getInstance();
@@ -284,10 +283,10 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
                 new PresetPackage(8,"yellow", "purple", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R5),
                 new PresetPackage(9,"green", "yellow", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R6),
                 new PresetPackage(10,"green", "purple", Deposit.RotateState.PLUS_FOURTY_FIVE, Slides.SlideState.R45),
-                new PresetPackage(11, "white", "white", Deposit.RotateState.ZERO, Slides.SlideState.R8),
-                new PresetPackage(12, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R6),
-                new PresetPackage(13, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R6),
-                new PresetPackage(14, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R6),
+                new PresetPackage(11, "white", "white", Deposit.RotateState.PlUS_FIFTEEN, Slides.SlideState.R8),
+                new PresetPackage(12, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R4),
+                new PresetPackage(13, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R4),
+                new PresetPackage(14, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R5),
 
         };
     }

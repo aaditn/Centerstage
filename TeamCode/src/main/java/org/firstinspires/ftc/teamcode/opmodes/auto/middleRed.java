@@ -52,8 +52,8 @@ public class middleRed extends EnhancedOpMode {
                 actions.yellowMiddleDrop(48, -15, Slides.SlideState.HALF),
                 actions.lowerIntake(0, -51.5, 1, true),
                 actions.yellowMiddleDrop(46, -15,  Slides.SlideState.R1),
-                actions.lowerIntake(0, -51.5, 2, true),
-                actions.yellowMiddleDrop(46, -15, Slides.SlideState.R2)
+                actions.lowerIntake(-30, -51.5, 2, true),
+                actions.yellowMiddleDrop(46, -15, Slides.SlideState.R1)
 //                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38, Slides.SlideState.ROW2)
         );
     }
@@ -77,8 +77,9 @@ public class middleRed extends EnhancedOpMode {
             drive.run(Paths.Purple);
             RobotLog.e("purple");
             drive.run(Paths.Score_Spike);
+            delayLinear(200);
             RobotLog.e("yellow");
-            delayLinear(400);
+            delayLinear(250);
             RobotLog.e("delaying");
             drive.run(Paths.Go_To_Stack);
             delayLinear(600);
@@ -87,6 +88,7 @@ public class middleRed extends EnhancedOpMode {
             drive.run(Paths.Return_to_Stack);
             delayLinear(600);
             drive.run(Paths.Score_Second);
+            delayLinear(100);
             waitForEnd();
             RobotLog.e("end");
         }

@@ -33,14 +33,14 @@ public class Slides extends Module
     PIDCoefficients standardcoeff, closecoeff, downcoeff;
     public enum SlideState implements ModuleState
     {
-        GROUND_UNTIL_LIMIT, GROUND, HALF, AUTO_LOW,AUTO_TWO, RAISED, ROW1, ROW2, ROW3, R1, R2, R3, R35, R4, R45, R5, R6, R7, R8, R9;
+        GROUND_UNTIL_LIMIT, GROUND, HALF, AUTO_LOW,AUTO_TWO, RAISED, ROW1, ROW2, ROW3, R1, R1_5, R2, R3, R35, R4, R45, R5, R6, R7, R8, R9;
     }
     public static double GROUND_UNTIL_LIMIT=-200, GROUND=0,  RAISED=300, AUTO_LOW=350, AUTO_TWO=500, ROW1=700, ROW2=1000, ROW3=1400;
 
     static double offset = -95;
-    public static double HALF=150, R1=310, R2=460, R3=600, R35=520, R4=740, R45 = 640, R5=880, R6=1020, R7=1190, R8=1190, R9 = 1400;
+    public static double HALF=150, R1=280, R1_5=350, R2=460, R3=600, R35=470, R4=740, R45 = 610, R5=880, R6=1020, R7=1190, R8=1190, R9 = 1400;
     public static double[] stateValues={GROUND_UNTIL_LIMIT, GROUND, HALF, AUTO_LOW, AUTO_TWO, RAISED, ROW1, ROW2, ROW3,
-    R1, R2, R3, R35, R4, R45, R5, R6, R7, R8, R9};
+    R1, R1_5,R2, R3, R35, R4, R45, R5, R6, R7, R8, R9};
     SlideState state;
 
 

@@ -7,7 +7,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -42,43 +41,38 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
-    ButtonReader droneButton1, intakeToggle, sweeperIncrement, presetMacro, slidesOverride, slidesLower, addToArray, subtractToArray, switchWrist;
+    ButtonReader droneButton1, intakeToggle, sweeperIncrement, presetMacro, slidesLower, addToArray, subtractToArray, switchWrist;
     double ninja = 1;
     double ninjaStrafe = 1;
     int sweeperCounter;
     Intake.SweeperState[] sweeperPositions;
-    PresetPackage[] presetsOld;
 
     PresetPackage[] presets;
 
-    boolean runOnce = true, isHang = false;
+    boolean isHang = false;
 
     Deposit.WristState state = Deposit.WristState.HOVER;
     String stateName = "FLICK";
     boolean isStopped;
 
     int arrayIndex = 0;
-
-    double multiplier;
     ElapsedTime hangWait = new ElapsedTime();
 
-    public static enum DriveType implements ModuleState {
-        NORMAL, EXIT_BACKSTAGE
+    public enum DriveType implements ModuleState {
+        NORMAL, EXIT_BACKSTAGE, LAST_CYCLE
     }
 
-    public static DriveType driveType;
+    public static DriveType driveType = DriveType.EXIT_BACKSTAGE;
     @Override
     public void linearOpMode()
     {
         waitForStart();
 
         hangWait.reset();
-        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        hang.setTargetPosition(0);
-//        hang.setPower(0);
-        hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         intake.setState(Intake.PositionState.MID);
+
+        driveType = DriveType.EXIT_BACKSTAGE;
 
         while(opModeIsActive())
         {
@@ -114,8 +108,15 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
                 robot.setLocalDrivePowers(new Pose2d(x, y, -rx));
             } else if (driveType.equals(DriveType.EXIT_BACKSTAGE)) {
                 ElapsedTime timer = new ElapsedTime();
-                while (opModeIsActive() && !isStopRequested() && timer.milliseconds() < 300) { // teehee loop times go brrr
-                    robot.setLocalDrivePowers(new Pose2d(0.8, 0, -0.6));
+                while (opModeIsActive() && !isStopRequested() && timer.milliseconds() < 800) { // teehee loop times go brrr
+                    robot.setLocalDrivePowers(new Pose2d(1, 0, -0.3));
+                }
+                driveType = DriveType.NORMAL;
+            }
+            else if (driveType.equals(DriveType.LAST_CYCLE)) {
+                ElapsedTime timer = new ElapsedTime();
+                while (opModeIsActive() && !isStopRequested() && timer.milliseconds() < 500) { // teehee loop times go brrr
+                    robot.setLocalDrivePowers(new Pose2d(1, 0, 0));
                 }
                 driveType = DriveType.NORMAL;
             }
@@ -123,7 +124,7 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
             if(gamepad2.left_trigger>0.5 || (gamepad1.left_trigger>0.5 && hangWait.seconds() > 90)) {
                 hang.setPower(-1);
                 isHang = true;
-            } else if(gamepad1.right_trigger>0.5 && hangWait.seconds() > 90) {
+            } else if(gamepad2.right_trigger>0.5 || (gamepad1.right_trigger>0.5 && hangWait.seconds() > 90)) {
                 hang.setPower(1);
                 isHang = false;
             } else {
@@ -143,7 +144,7 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
             }
 
             if((slidesLower.isDown())) {
-                ninja = 0.4;
+                ninja = 0.5;
                 ninjaStrafe = 0.3;
             }
             if (slidesLower.wasJustReleased()) {
@@ -178,10 +179,24 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
             }
 
             if (addToArray.wasJustPressed()) {
-                arrayIndex++;
+                PresetPackage presetPackage;
+                if (arrayIndex < presets.length - 1) {
+                    arrayIndex++;
+                    if (!slides.getState().equals(Slides.SlideState.GROUND)) {
+                        presetPackage = presets[arrayIndex];
+                        scheduler.scheduleTaskList(actions.slidesOnly(presetPackage.slideState, presetPackage.rotateState, state));
+                    }
+                }
             }
             if (subtractToArray.wasJustPressed()) {
-                arrayIndex--;
+                PresetPackage presetPackage;
+                if (arrayIndex >= 1) {
+                    arrayIndex--;
+                    if (!slides.getState().equals(Slides.SlideState.GROUND)) {
+                        presetPackage = presets[arrayIndex];
+                        scheduler.scheduleTaskList(actions.slidesOnly(presetPackage.slideState, presetPackage.rotateState, state));
+                    }
+                }
             }
 
             //DRONE
@@ -283,8 +298,8 @@ public class MTI_PresetsButItIs295SoItIsBetter extends EnhancedOpMode
                 new PresetPackage(8,"yellow", "purple", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R5),
                 new PresetPackage(9,"green", "yellow", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R6),
                 new PresetPackage(10,"green", "purple", Deposit.RotateState.PLUS_FOURTY_FIVE, Slides.SlideState.R45),
-                new PresetPackage(11, "white", "white", Deposit.RotateState.PlUS_FIFTEEN, Slides.SlideState.R8),
                 new PresetPackage(12, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R4),
+                new PresetPackage(11, "white", "white", Deposit.RotateState.PlUS_FIFTEEN, Slides.SlideState.R8),
                 new PresetPackage(13, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R4),
                 new PresetPackage(14, "white","white", Deposit.RotateState.PLUS_NINETY, Slides.SlideState.R5),
 

@@ -49,6 +49,15 @@ public class RobotActions
         Intake.SweeperState sweep1 = cycle==0?Intake.SweeperState.ONE_SWEEP: cycle==1?Intake.SweeperState.THREE_SWEEP: cycle==2? Intake.SweeperState.FIVE_SWEEP: Intake.SweeperState.SEVEN_SWEEP;
         Intake.SweeperState sweep2 = cycle==0?Intake.SweeperState.ZERO: cycle==1?Intake.SweeperState.TWO_SWEEP: cycle==2?Intake.SweeperState.FOUR_SWEEP: Intake.SweeperState.SIX_SWEEP;
 
+        if (cycle == 2) {
+            return Builder.create()
+                    .await(() -> robot.getPoseEstimate().getX() < drop_x)
+                    .executeCode(()->Context.colorSensorsEnabled=true)
+                    .moduleAction(intake, Intake.PositionState.MID)
+                    .moduleAction(intake, Intake.PowerState.INTAKE)
+                    .moduleAction(intake, Intake.ConveyorState.INTAKE)
+                    .build();
+        }
         return Builder.create()
                 .await(() -> robot.getPoseEstimate().getX() < drop_x)
                 .executeCode(()->Context.colorSensorsEnabled=true)
@@ -64,7 +73,7 @@ public class RobotActions
                 .await(() -> robot.getPoseEstimate().getX() < sweep_x)
                 .delay(700)
                 .moduleAction(intake, sweep2)
-                .delay(500)
+                .delay(700)
                 .moduleAction(intake, sweep1)
 
                 .build();
@@ -161,7 +170,7 @@ public class RobotActions
                 .addTaskList(slidesOnly(height))
                 .executeCode(()->slides.macroRunning=false)
                 .await(()->robot.getPoseEstimate().getX()>xPos||(robot.k != Paths.Score_First&&robot.k != Paths.Score_Second&&robot.k != Paths.Score_Third))
-                .delay(600)
+                .delay(750)
                 .addTaskList(scorePixels())
                 //.executeCode(()->Context.colorSensorsEnabled=false)
                 .build();
@@ -777,6 +786,8 @@ public List<Task> quickReset(){
 
         if (!slides.getState().equals(Slides.SlideState.GROUND)) {
             return Builder.create()
+                    .moduleAction(slides, slideState)
+                    .moduleAction(deposit, rotateState)
                     .moduleAction(deposit, state)
                     .build();
         }
@@ -869,24 +880,27 @@ public List<Task> quickReset(){
                     .moduleAction(deposit, Deposit.WristState.FLICK)
                  //   .delay(100)
                     .moduleAction(deposit, Deposit.ClawState.OPEN)
-                    .delay(150)
+                    .delay(250)
                     .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                     .moduleAction(deposit, Deposit.RotateState.ZERO)
                     .moduleAction(deposit, Deposit.FlipState.TRANSFER)
                     .moduleAction(deposit, Deposit.WristState.PARTIAL)
+                    .executeCode(()-> MTI_PresetsButItIs295SoItIsBetter.driveType = MTI_PresetsButItIs295SoItIsBetter.DriveType.EXIT_BACKSTAGE)
                     .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
                     .delay(0)
                     .moduleAction(slides, Slides.SlideState.GROUND)
                     .await(()->slides.currentPosition()<600)
                     .moduleAction(deposit, Deposit.WristState.TRANSFER)
                     .executeCode(()->slides.macroRunning=false)
-                    .executeCode(()-> MTI_PresetsButItIs295SoItIsBetter.driveType = MTI_PresetsButItIs295SoItIsBetter.DriveType.EXIT_BACKSTAGE)
+
                     .build();
         } else {
             return Builder.create()
                     .executeCode(()->slides.macroRunning=true)
                     .moduleAction(deposit, Deposit.ClawState.OPEN)
-                    .delay(450)
+                    .delay(300)
+                    .executeCode(()-> MTI_PresetsButItIs295SoItIsBetter.driveType = MTI_PresetsButItIs295SoItIsBetter.DriveType.LAST_CYCLE)
+                    .delay(150)
                     .moduleAction(deposit, Deposit.ExtensionState.TRANSFER_PARTIAL)
                     .moduleAction(deposit, Deposit.RotateState.ZERO)
                     .moduleAction(deposit, Deposit.FlipState.TRANSFER)
@@ -894,7 +908,6 @@ public List<Task> quickReset(){
                     .executeCode(()->slides.setOperationState(Module.OperationState.PRESET))
                     .moduleAction(slides, Slides.SlideState.GROUND)
                     .delay(50)
-                    .executeCode(()-> MTI_PresetsButItIs295SoItIsBetter.driveType = MTI_PresetsButItIs295SoItIsBetter.DriveType.EXIT_BACKSTAGE)
                     .await(()->slides.currentPosition()<600)
                     .moduleAction(deposit, Deposit.WristState.TRANSFER)
                     .executeCode(()->slides.macroRunning=false)

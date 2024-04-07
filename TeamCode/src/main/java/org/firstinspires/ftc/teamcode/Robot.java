@@ -1,35 +1,13 @@
 package org.firstinspires.ftc.teamcode;
-
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_ANG_ACCEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_ANG_VEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.TRACK_WIDTH;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.encoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.util.WhipTrajectory.map;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.control.PIDCoefficients;
-import com.acmerobotics.roadrunner.drive.DriveSignal;
-import com.acmerobotics.roadrunner.drive.MecanumDrive;
-import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
-import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.MecanumVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.kauailabs.navx.ftc.AHRS;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -57,14 +35,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
 import org.firstinspires.ftc.teamcode.modules.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.Intake;
-import org.firstinspires.ftc.teamcode.modules.NavxWrapper;
 import org.firstinspires.ftc.teamcode.modules.Slides;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.TwoWheelTrackingLocalizer;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
-import org.firstinspires.ftc.teamcode.roadrunner.util.LynxModuleUtil;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.AutoSelector;
@@ -85,30 +56,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 @Config
 public class Robot extends MecanumDrive
 {
-
-    //public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(9, 0, 1);
-    //public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 1);
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(6,0,1);//9, 0, 1);
-   public static PIDCoefficients HEADING_PID = new PIDCoefficients(6,0,0);//8, 0, 1);
-
-
     public static double LATERAL_MULTIPLIER = 2.3;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
-
-    private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 100;
-
-    private TrajectorySequenceRunner trajectorySequenceRunner;
-
-    public static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
-    public static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
-
-    private TrajectoryFollower follower;
     private IMU imu;
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
 
@@ -127,7 +83,7 @@ public class Robot extends MecanumDrive
 
     LinearOpMode l;
     HardwareMap hardwareMap;
-    public Paths k = Paths.Score_Third;
+    public Paths k = Paths.Back3;
     Tel tel;
     public Slides slides;
     public Deposit deposit;
@@ -147,18 +103,14 @@ public class Robot extends MecanumDrive
     public static boolean dashTeleEnabled=true;
     private LynxModule controlHub;
     private LynxModule expansionHub;
-    NavxWrapper navxWrapper;
-    private AHRS navx;
     ReadTimer chub, ehub;
-    public TwoWheelTrackingLocalizer localizer;
     Thread colorSensors;
 
 
-
-    public Robot(LinearOpMode l)
+    public Robot(LinearOpMode l, Pose2d... startPose)
     {
 
-        super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
+        super(l.hardwareMap, startPose[0]);
         this.l=l;
 
         if(Context.opmode!=null)
@@ -227,88 +179,8 @@ public class Robot extends MecanumDrive
         //ehub=new ReadTimer(this::eHubUpdate, 50);
     }
 
-    public Robot(LinearOpMode l, boolean ethanMadeMe)
-    {
-
-        super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
-        this.l=l;
-
-        if(Context.opmode!=null)
-        {
-            Context.updateValues();
-        }
-
-        tel = Tel.instance();
-
-        hardwareMap=l.hardwareMap;
-        timer=new ElapsedTime();
-
-        modules=new ArrayList<>();
-
-        try {
-            for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
-                modules.add(module);
-            }
-
-            for(LynxModule module: modules)
-            {
-                if(module.getImuType()== LynxModuleImuType.BHI260)
-                    controlHub=module;
-                else if(module.getImuType() == LynxModuleImuType.BNO055)
-                    expansionHub=module;
-            }
-
-            //controlHub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-            //expansionHub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("One or more of the REV hubs could not be found. More info: " + e);
-        }
-
-        if(!Context.isTele)
-        {
-            cameraInit();
-        }
-        //teamElementDetector=new TeamElementDetection(l.telemetry);
-        dtInit();
-
-        slides=new Slides(hardwareMap);
-        deposit=new Deposit(hardwareMap);
-        intake=new Intake(hardwareMap);
-        droneLauncher = new DroneLauncher(hardwareMap);
-        hang = hardwareMap.get(DcMotor.class, "hang");
-
-
-        if(!Context.noHwInit)
-        {
-            intake.init();
-            deposit.init();
-            droneLauncher.init();
-        }
-
-        scheduler=new TaskScheduler();
-
-        if(!Context.isTele)
-        {
-            RobotLog.e("Attempted to start");
-            colorSensorsStart();
-        }
-
-
-        //navx=new ReadTimer(navxWrapper::update, 20);
-        //chub=new ReadTimer(this::cHubUpdate);
-        //ehub=new ReadTimer(this::eHubUpdate, 50);
-    }
 
     public static Robot getInstance()
-    {
-        if(robot==null)
-        {
-            robot=new Robot(Context.opmode);
-        }
-        return robot;
-    }
-
-    public static Robot getInstance(boolean ethanMadeMe)
     {
         if(robot==null)
         {
@@ -386,7 +258,8 @@ public class Robot extends MecanumDrive
 
     public void updateDrivePowers()
     {
-        setWeightedDrivePower(localDrivePowers);
+        PoseVelocity2d poseVelocity2d = new PoseVelocity2d(localDrivePowers.position, localDrivePowers.heading.real);
+        setDrivePowers(poseVelocity2d);
     }
 
     public void closeCameras()
@@ -396,23 +269,11 @@ public class Robot extends MecanumDrive
 
     public void dtInit()
     {
-
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
-                new Pose2d(3, 3, Math.toRadians(10)), 0);
-
-        LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
-
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
-
-
-        // TODO: adjust the names of the following hardware devices to match your configuration
-       //navx =  AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
-         //       AHRS.DeviceDataType.kProcessedData,
-           //     NAVX_DEVICE_UPDATE_RATE_HZ);
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -445,30 +306,8 @@ public class Robot extends MecanumDrive
             motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
             motor.setMotorType(motorConfigurationType);
         }
-
-        if (RUN_USING_ENCODER) {
-            setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-
-        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
-            setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
-        }
-
         // TODO: reverse any motors using DcMotor.setDirection()
 
-        List<Integer> lastTrackingEncPositions = new ArrayList<>();
-        List<Integer> lastTrackingEncVels = new ArrayList<>();
-
-        localizer = new TwoWheelTrackingLocalizer(hardwareMap, this);
-        // TODO: if desired, use setLocalizer() to change the localization method
-        setLocalizer(localizer);
-
-        trajectorySequenceRunner = new TrajectorySequenceRunner(
-                follower, HEADING_PID, batteryVoltageSensor,
-                lastEncPositions, lastEncVels, lastTrackingEncPositions, lastTrackingEncVels
-        );
 
     }
 
@@ -505,7 +344,8 @@ public class Robot extends MecanumDrive
         if(isBusy()||!Context.isTele)
         {
             update();
-            Tel.instance().addData("DT Vel", getPoseVelocity(), 1);
+            Tel.instance().addData("DT Vel", pose.position.div(2), 1);
+            Tel.instance().addData("DT Vel", pose.position.div(3), 1);
         }
         else {
             updateDrivePowers();
@@ -620,55 +460,10 @@ public class Robot extends MecanumDrive
         return current;
     }
 
-    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
-        return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
-    }
-
-    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, boolean reversed) {
-        return new TrajectoryBuilder(startPose, reversed, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
-    }
-
-    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, double startHeading) {
-        return new TrajectoryBuilder(startPose, startHeading, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
-    }
-
-    public static TrajectorySequenceBuilder trajectorySequenceBuilder(Pose2d startPose) {
-        return new TrajectorySequenceBuilder(
-                startPose,
-                VEL_CONSTRAINT, ACCEL_CONSTRAINT,
-                MAX_ANG_VEL, MAX_ANG_ACCEL
-        );
-    }
-
-    public void turnAsync(double angle) {
-        trajectorySequenceRunner.followTrajectorySequenceAsync(
-                trajectorySequenceBuilder(getPoseEstimate())
-                        .turn(angle)
-                        .build()
-        );
-    }
-
-    public void turn(double angle) {
-        turnAsync(angle);
-        waitForIdle();
-    }
-
-    public void followTrajectoryAsync(Trajectory trajectory) {
-        trajectorySequenceRunner.followTrajectorySequenceAsync(
-                trajectorySequenceBuilder(trajectory.start())
-                        .addTrajectory(trajectory)
-                        .build()
-        );
-    }
-
-    public void followTrajectory(Trajectory trajectory) {
-        followTrajectoryAsync(trajectory);
-        waitForIdle();
-    }
     public  WhipTrajectory get (int index){
         return this.trajectories.get(index);
     }
-    public void set(NamedTrajectory[][] trajectories,List<Task>[] actions){
+    public void set(NamedTrajectory [][] trajectories, List<Task>[] actions){
         switch (Context.dice){
             default:
             this.trajectories = map(trajectories[0], actions);
@@ -682,7 +477,7 @@ public class Robot extends MecanumDrive
         }
     }
 
-    public TrajectorySequence get(Paths trajectory) {
+    public NamedTrajectory get(Paths trajectory) {
         for (WhipTrajectory item : trajectories) {
             if (item.getPath().equals(trajectory)) {
                 if (Context.opmode.opModeIsActive())
@@ -700,7 +495,7 @@ public class Robot extends MecanumDrive
                 if(Context.opmode.opModeIsActive())
                 {
                     k = trajectory;
-                    followTrajectorySequenceAsync(item.getTrajectory());
+                    followTrajectorySequenceAsync(item.getTrajectory().getAction());
                     scheduler.scheduleTaskList(item.getTasks());
                     waitForIdle();
                 }
@@ -714,12 +509,13 @@ public class Robot extends MecanumDrive
 
     public void run(Paths trajectory, AprilTagPipeline vision, Telemetry telemetry, List<Pose2d> previous)
     {
+        TelemetryPacket packet = new TelemetryPacket();
         for(WhipTrajectory item : trajectories){
             if(item.getPath().equals(trajectory)){
                 if(Context.opmode.opModeIsActive())
                 {
                     k = trajectory;
-                    followTrajectorySequenceAsync(item.getTrajectory());
+                    item.getTrajectory().getAction().run(packet);
                     scheduler.scheduleTaskList(item.getTasks());
                     AprilTagRun(vision, telemetry, previous);
                     waitForIdle();
@@ -734,32 +530,32 @@ public class Robot extends MecanumDrive
 
     public void AprilTagRun(AprilTagPipeline vision, Telemetry telemetry, List<Pose2d> previous) {
         double aprilTagConfidence = 0.5;
-        if (k.equals(Paths.Score_First) || k.equals(Paths.Score_Second) || k.equals(Paths.Score_Third) || k.equals(Paths.Score_Spike)) {
-            if (robot.getPoseEstimate().getX() > 20 && robot.getPoseEstimate().getX() < 50) {
-                Pose2d current = robot.getPoseEstimate();
-                vision.setEstHeading(current.getHeading());
+        if (k.equals(Paths.Back1) || k.equals(Paths.Back2) || k.equals(Paths.Back3)) {
+            if (robot.pose.position.x > 20 && robot.pose.position.x < 50) {
+                Pose2d current = robot.pose;
+                vision.setEstHeading(current.heading.real);
                 vision.telemetryAprilTag(telemetry);
                 List<Pose2d> detectionPositions = vision.getPos();
                 int i = 0;
                 for(Pose2d exist : detectionPositions) {
 
-                    Tel.instance().addData("exist", exist.getX());
-                    Tel.instance().addData("prev", previous.get(i).getX());
+                    Tel.instance().addData("exist", exist.position.x);
+                    Tel.instance().addData("prev",  exist.position.x);
                     Tel.instance().addData("rawExternalHeading", robot.getRawExternalHeading());
-                    if(exist.getX() != previous.get(i).getX()) {
-                        robot.setPoseEstimate(new Pose2d(
-                                (current.getX() + exist.getX() * aprilTagConfidence) / (1 + aprilTagConfidence),
-                                (current.getY() + exist.getY() * aprilTagConfidence) / (1 + aprilTagConfidence),
+                    if(exist.position.x != previous.get(i).position.x) {
+                        robot.pose = new Pose2d(
+                                (current.position.x + exist.position.x * aprilTagConfidence) / (1 + aprilTagConfidence),
+                                (current.position.y + exist.position.y * aprilTagConfidence) / (1 + aprilTagConfidence),
                                 (robot.getRawExternalHeading())
-                        ));
+                        );
 
                     }
                     previous.set(i,exist);
                     i++;
                 }
-                Pose2d updatePos = robot.getPoseEstimate();
+                Pose2d updatePos = robot.pose;
                 // if it doesn't pass through apriltag you still want to update imu
-                robot.setPoseEstimate(new Pose2d(updatePos.getX(), updatePos.getY(), robot.getRawExternalHeading()));
+                robot.pose = (new Pose2d(updatePos.position.x, updatePos.position.y, robot.getRawExternalHeading()));
             }
         }
     }
@@ -768,39 +564,13 @@ public class Robot extends MecanumDrive
     public static List<Task>[] getTaskList(List<Task>... tasks) {
         return (tasks);
     }
-    public void followTrajectorySequenceAsync(TrajectorySequence trajectorySequence) {
-        trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence);
-    }
-
-    public void followTrajectorySequence(TrajectorySequence trajectorySequence)
-    {
-        if(Context.opmode.opModeIsActive())
-        {
-            followTrajectorySequenceAsync(trajectorySequence);
-            waitForIdle();
-        }
-    }
-
-    public void followTrajectorySequence(TrajectorySequence trajectorySequence, List<Task> taskList)
-    {
-        if(Context.opmode.opModeIsActive())
-        {
-            followTrajectorySequenceAsync(trajectorySequence);
-            //maybe make it not blocking? or terminate after
-            scheduler.scheduleTaskList(taskList);
-            waitForIdle();
-        }
-    }
-
-    public Pose2d getLastError() {
-        return trajectorySequenceRunner.getLastPoseError();
+    public void followTrajectorySequenceAsync(Action trajectorySequence) {
+        TelemetryPacket packet = new TelemetryPacket();
+        trajectorySequence.run(packet);
     }
 
     public void update() {
         updatePoseEstimate();
-        DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
-        if (signal != null) setDriveSignal(signal);
-        //Context.debug++;
     }
 
     public void waitForIdle() {
@@ -822,9 +592,13 @@ public class Robot extends MecanumDrive
             }
         }
     }
+    
+    public double piTagOrUs(double x, double y) {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    }
 
     public boolean isBusy() {
-        return trajectorySequenceRunner.isBusy();
+        return piTagOrUs(robot.pose.position.div(2).x, robot.pose.position.div(2).y) < 3; // thresh
     }
 
     public void setMode(DcMotor.RunMode runMode) {
@@ -849,83 +623,11 @@ public class Robot extends MecanumDrive
             motor.setPIDFCoefficients(runMode, compensatedCoefficients);
         }
     }
-
-    public void setWeightedDrivePower(Pose2d drivePower) {
-        Pose2d vel = drivePower;
-        if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY())
-                + Math.abs(drivePower.getHeading()) > 1) {
-            // re-normalize the powers according to the weights
-            double denom = VX_WEIGHT * Math.abs(drivePower.getX())
-                    + VY_WEIGHT * Math.abs(drivePower.getY())
-                    + OMEGA_WEIGHT * Math.abs(drivePower.getHeading());
-
-            vel = new Pose2d(
-                    VX_WEIGHT * drivePower.getX(),
-                    VY_WEIGHT * drivePower.getY(),
-                    OMEGA_WEIGHT * drivePower.getHeading()
-            ).div(denom);
-        }
-
-        setDrivePower(vel);
-    }
-
-    @NonNull
-    @Override
-    public List<Double> getWheelPositions() {
-        lastEncPositions.clear();
-
-        List<Double> wheelPositions = new ArrayList<>();
-        for (DcMotorEx motor : motors) {
-            int position = motor.getCurrentPosition();
-            lastEncPositions.add(position);
-            wheelPositions.add(encoderTicksToInches(position));
-        }
-        return wheelPositions;
-    }
-
-    @Override
-    public List<Double> getWheelVelocities() {
-        lastEncVels.clear();
-
-        List<Double> wheelVelocities = new ArrayList<>();
-        for (DcMotorEx motor : motors) {
-            int vel = (int) motor.getVelocity();
-            lastEncVels.add(vel);
-            wheelVelocities.add(encoderTicksToInches(vel));
-        }
-        return wheelVelocities;
-    }
-
-    @Override
-    public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
-    }
-
-    @Override
     public double getRawExternalHeading() {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
      //   return Math.toRadians(-navx.getYaw());
     }
 
-    @Override
-    public Double getExternalHeadingVelocity()
-    {
-        return (Double)0.0;
-    }
-
-    public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
-        return new MinVelocityConstraint(Arrays.asList(
-                new AngularVelocityConstraint(maxAngularVel),
-                new MecanumVelocityConstraint(maxVel, trackWidth)
-        ));
-    }
-
-    public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
-        return new ProfileAccelerationConstraint(maxAccel);
-    }
     public boolean isPixelCs1() {
         int distance = 70;
         if (cs1.getDistance(DistanceUnit.MM) < distance) {

@@ -31,44 +31,45 @@ object Context
     {
         if (opmode!!.javaClass.isAnnotationPresent(Autonomous::class.java))
         {
-            isTele=false
+            isTele =false
         }
-        dashTeleEnabled= Robot.dashTeleEnabled
+        dashTeleEnabled = Robot.dashTeleEnabled
     }
+
 
     @JvmStatic fun resetValues()
     {
-        tel=null;
-        isTeamRed=true;
-        isTele=true;
-        debug=0;
-        statusError="Functioning Normally"
-        autoWaitTime=0
-        autoState= CyclePixelCount.ZERO
-        colorSensorsEnabled=false
-        trajStatus="Not Loaded"
-        dice= Dice.UNINITIALIZED
-        dashTeleEnabled=true
-        noHwInit=false
-        parkSide=ParkSide.LEFT
-        autonYellowHeight=SlideState.AUTO_LOW
+        tel =null;
+        isTeamRed =true;
+        isTele =true;
+        debug =0;
+        statusError ="Functioning Normally"
+        autoWaitTime =0
+        autoState = CyclePixelCount.ZERO
+        colorSensorsEnabled =false
+        trajStatus ="Not Loaded"
+        dice = Dice.UNINITIALIZED
+        dashTeleEnabled =true
+        noHwInit =false
+        parkSide =ParkSide.LEFT
+        autonYellowHeight =SlideState.AUTO_LOW
     }
     @JvmStatic fun clearValues()
     {
         //opmode=null;
-        tel=null;
-        isTeamRed=true;
-        isTele=true;
-        debug=0;
-        statusError="Functioning Normally"
-        autoWaitTime=0
-        autoState= CyclePixelCount.ZERO
-        colorSensorsEnabled=false
-        trajStatus="Not Loaded"
-        dice= Dice.UNINITIALIZED
-        dashTeleEnabled=true
-        noHwInit=false
-        parkSide=ParkSide.LEFT;
-        autonYellowHeight=SlideState.AUTO_LOW
+        tel =null;
+        isTeamRed =true;
+        isTele =true;
+        debug =0;
+        statusError ="Functioning Normally"
+        autoWaitTime =0
+        autoState = CyclePixelCount.ZERO
+        colorSensorsEnabled =false
+        trajStatus ="Not Loaded"
+        dice = Dice.UNINITIALIZED
+        dashTeleEnabled =true
+        noHwInit =false
+        parkSide =ParkSide.LEFT;
+        autonYellowHeight =SlideState.AUTO_LOW
     }
 }

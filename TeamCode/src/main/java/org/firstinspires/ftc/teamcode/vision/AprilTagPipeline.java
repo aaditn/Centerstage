@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -111,9 +111,9 @@ public List<Pose2d> getPos(){
                         72-(sideBackBoard+tag1-getY(cameraX,cameraY,detection)),
                         est_heading
                 ));
-                telemetry.addData("TAGX", detections.get(0).getX());
-                telemetry.addData("TAGY", detections.get(0).getY());
-                telemetry.addData("TAGR", detections.get(0).getHeading());
+                telemetry.addData("TAGX", detections.get(0).position.x);
+                telemetry.addData("TAGY", detections.get(0).position.y);
+                telemetry.addData("TAGR", detections.get(0).heading.real);
             }
             if(detection.id==2){
                 detections.set(1,new Pose2d(

@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import com.qualcomm.robotcore.util.RobotLog;
-
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class  WhipTrajectory {
-    TrajectorySequence trajectory;
+public class WhipTrajectory {
+    NamedTrajectory trajectory;
     List<Task> tasks;
     Paths path;
     WhipTrajectory(NamedTrajectory trajectory,List<Task>tasks){
@@ -18,7 +15,7 @@ public class  WhipTrajectory {
         this.tasks = tasks;
         this.path =trajectory.name;
     }
-    public TrajectorySequence getTrajectory(){
+    public NamedTrajectory getTrajectory(){
         return trajectory;
     }
     public List<Task> getTasks(){
@@ -29,7 +26,6 @@ public class  WhipTrajectory {
     }
     public static List<WhipTrajectory> map(NamedTrajectory[] trajs, List<Task>[] taskLists){
         List<WhipTrajectory> added = new ArrayList<>();
-        RobotLog.e("Length " + trajs.length + " Other Length " + taskLists.length);
         if(Context.opmode.opModeIsActive())
         {
             for(int i =0; i<trajs.length;i++){

@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.non_module_testing;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -38,7 +38,7 @@ public class SuitedLocalizationTest extends LinearOpMode {
 
         int count = 0;
 
-        vision.setEstHeading(drive.getPoseEstimate().getHeading());
+        vision.setEstHeading(drive.pose.heading.real);
         previous.add(new Pose2d(0,0,0));
         previous.add(new Pose2d(0,0,0));
         previous.add(new Pose2d(0,0,0));
@@ -47,7 +47,7 @@ public class SuitedLocalizationTest extends LinearOpMode {
         previous.add(new Pose2d(0,0,0));
         waitForStart();
         drive.setYaw();
-        drive.setPoseEstimate(startPos);
+        drive.pose = startPos;
         while (!isStopRequested()) {
             drive.setLocalDrivePowers(
                     new Pose2d(
@@ -58,22 +58,22 @@ public class SuitedLocalizationTest extends LinearOpMode {
             );
             drive.primaryLoop();
             drive.update();
-            Pose2d current = drive.getPoseEstimate();
-            vision.setEstHeading(current.getHeading());
+            Pose2d current = drive.pose;
+            vision.setEstHeading(current.heading.real);
             vision.telemetryAprilTag(telemetry);
             List<Pose2d> detectionPositions = vision.getPos();
             int i = 0;
             for(Pose2d exist : detectionPositions) {
 
-                Tel.instance().addData("exist", exist.getX());
-                Tel.instance().addData("prev", previous.get(i).getX());
+                Tel.instance().addData("exist", exist.position.x);
+                Tel.instance().addData("prev", previous.get(i).position.x);
                 Tel.instance().addData("count", count);
                 Tel.instance().addData("rawExternalHeading", drive.getRawExternalHeading());
                 count++;
-                if(exist.getX() != previous.get(i).getX()) {
-                    drive.setPoseEstimate(new Pose2d(
-                            (current.getX() + exist.getX() * aprilTagConfidence) / (1 + aprilTagConfidence),
-                            (current.getY() + exist.getY() * aprilTagConfidence) / (1 + aprilTagConfidence),
+                if(exist.position.x != previous.get(i).position.x) {
+                    drive.pose = (new Pose2d(
+                            (current.position.x + exist.position.x * aprilTagConfidence) / (1 + aprilTagConfidence),
+                            (current.position.y + exist.position.y * aprilTagConfidence) / (1 + aprilTagConfidence),
                             (drive.getRawExternalHeading())
                     ));
 
@@ -81,13 +81,13 @@ public class SuitedLocalizationTest extends LinearOpMode {
                 previous.set(i,exist);
                 i++;
             }
-            Pose2d updatePos = drive.getPoseEstimate();
+            Pose2d updatePos = drive.pose;
             // if it doesn't pass through apriltag you still want to update imu
-            drive.setPoseEstimate(new Pose2d(updatePos.getX(), updatePos.getY(), drive.getRawExternalHeading()));
+            drive.pose = (new Pose2d(updatePos.position.x, updatePos.position.y, drive.getRawExternalHeading()));
 
-            Tel.instance().addData("x", current.getX());
-            Tel.instance().addData("y",current.getY());
-            Tel.instance().addData("heading",Math.toDegrees(current.getHeading()));
+            Tel.instance().addData("x", current.position.x);
+            Tel.instance().addData("y",current.position.y);
+            Tel.instance().addData("heading",Math.toDegrees(current.heading.real));
 
 
         }

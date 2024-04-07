@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.os.SystemClock;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.Pose2d;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -53,9 +53,9 @@ public class CustomAprilTagImpl extends AprilTagProcessorImpl
 
     public Object processFrame(Mat input, long captureTimeNanos)
     {
-        Pose2d poseAtStart = Robot.getInstance().localizer.getPoseEstimate();
+        Pose2d poseAtStart = Robot.getInstance().pose;
         super.processFrame(input, captureTimeNanos);
-        Pose2d poseAtEnd = Robot.getInstance().localizer.getPoseEstimate();
+        Pose2d poseAtEnd = Robot.getInstance().pose;
 
         return 0;
     }

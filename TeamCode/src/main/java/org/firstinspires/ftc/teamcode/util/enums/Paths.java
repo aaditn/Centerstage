@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode.util.enums;
 
 public enum Paths {
-    Purple,
-    Score_Spike,
-    Go_To_Stack,
-    Score_First,
-    Score_Second,
-    Score_Third,
-    Return_to_Stack,
-    Return_to_Stack_Again,
-    ParkLeft,
-    ParkRight
+    Purple_Yellow,
+    Stack1,
+    Back1,
+    Back2,
+    Back3
 };

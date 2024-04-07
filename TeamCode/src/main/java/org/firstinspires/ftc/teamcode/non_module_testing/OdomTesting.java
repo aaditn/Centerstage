@@ -2,10 +2,9 @@ package org.firstinspires.ftc.teamcode.non_module_testing;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.Tel;
@@ -29,20 +28,20 @@ public class OdomTesting extends EnhancedOpMode
         tel = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Context.resetValues();
         Context.tel=tel;
-        frontRightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fr"));
-        backLeftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "bl"));
-        backRightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "br"));
-        frontLeftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fl"));
+        frontRightEncoder = hardwareMap.get(Encoder.class, "fr");
+        frontLeftEncoder = hardwareMap.get(Encoder.class, "fl");
+        backRightEncoder = hardwareMap.get(Encoder.class, "br");
+        backLeftEncoder = hardwareMap.get(Encoder.class, "bl");
 
     }
 
     @Override
     public void primaryLoop()
     {
-        Tel.instance().addData("front right", frontRightEncoder.getCurrentPosition());
-        Tel.instance().addData("back left", backLeftEncoder.getCurrentPosition());
-        Tel.instance().addData("back right", backRightEncoder.getCurrentPosition());
-        Tel.instance().addData("front left", frontLeftEncoder.getCurrentPosition());
+        Tel.instance().addData("front right", frontRightEncoder.getPositionAndVelocity().position);
+        Tel.instance().addData("back left", backLeftEncoder.getPositionAndVelocity().position);
+        Tel.instance().addData("back right", backRightEncoder.getPositionAndVelocity().position);
+        Tel.instance().addData("front left", frontLeftEncoder.getPositionAndVelocity().position);
         Tel.instance().update();
     }
 }

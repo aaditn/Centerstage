@@ -3,17 +3,17 @@ package org.firstinspires.ftc.teamcode.modules;
 import android.util.Log;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
-import org.firstinspires.ftc.teamcode.util.BPIDFController;
 import org.firstinspires.ftc.teamcode.util.Tel;
 
 @Config
@@ -22,7 +22,7 @@ public class Slides extends Module
     public DcMotorEx slide1;
     public DcMotorEx slide2;
     public TouchSensor slidesLimit;
-    BPIDFController controller;
+    PIDFController controller;
     public double targetPosition, motorPower;
     public double debugValue=0;
     public static double slideCap=1500;

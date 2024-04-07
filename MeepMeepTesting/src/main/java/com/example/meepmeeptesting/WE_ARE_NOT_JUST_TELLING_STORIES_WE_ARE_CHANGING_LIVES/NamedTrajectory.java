@@ -1,11 +1,6 @@
-package org.firstinspires.ftc.teamcode.util;
+package com.example.meepmeeptesting.WE_ARE_NOT_JUST_TELLING_STORIES_WE_ARE_CHANGING_LIVES;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-
-import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.enums.Compare;
 
@@ -16,7 +15,7 @@ import java.util.concurrent.Callable;
 
 public class Builder
 {
-    List<Task> tasks=new ArrayList<Task>();
+    List<Task> tasks= new ArrayList<>();
     Module lastModuleCalled;
     ModuleState lastModuleStateCalled;
     LinearOpMode l;
@@ -108,24 +107,23 @@ public class Builder
         return this;
     }
 
-    public Builder awaitButtonPress(ButtonReader b)
-    {
-        tasks.add(new AwaitTask(()->b.wasJustPressed()));
-        return this;
-    }
-
     public Builder executeBlockingCode(codeExecutable code)
     {
         tasks.add(new BlockingTask(code));
         return this;
     }
 
+    public Builder awaitButtonPress(ButtonReader b)
+    {
+        tasks.add(new AwaitTask(()->b.wasJustPressed()));
+        return this;
+    }
     public Builder awaitDtXPosition(double x, Compare c)
     {
         if(c==Compare.GREATER)
-            tasks.add(new AwaitTask(()->drive.getPoseEstimate().getX()>x));
+            tasks.add(new AwaitTask(()->drive.pose.position.x>x));
         else if(c==Compare.LESSER)
-            tasks.add(new AwaitTask(()->drive.getPoseEstimate().getX()<x));
+            tasks.add(new AwaitTask(()->drive.pose.position.x<x));
         return this;
     }
     public Builder runTaskList(List<Task> x){
@@ -136,27 +134,21 @@ public class Builder
     public Builder awaitDtYPosition(double y, Compare c)
     {
         if(c==Compare.GREATER)
-            tasks.add(new AwaitTask(()->drive.getPoseEstimate().getY()>y));
+            tasks.add(new AwaitTask(()->drive.pose.position.y>y));
         else if(c==Compare.LESSER)
-            tasks.add(new AwaitTask(()->drive.getPoseEstimate().getY()<y));
+            tasks.add(new AwaitTask(()->drive.pose.position.y<y));
         return this;
     }
 
     public Builder awaitDtXWithin(double x, double threshold)
     {
-        tasks.add(new AwaitTask(()->Math.abs(drive.getPoseEstimate().getX()-x)<threshold));
+        tasks.add(new AwaitTask(()->Math.abs(drive.pose.position.x-x)<threshold));
         return this;
     }
 
     public Builder awaitDtYWithin(double y, double threshold)
     {
-        tasks.add(new AwaitTask(()->Math.abs(drive.getPoseEstimate().getY()-y)<threshold));
-        return this;
-    }
-
-    public Builder driveTrajAsync(TrajectorySequence sequence)
-    {
-        tasks.add(new ExecutionTask(()->drive.followTrajectorySequenceAsync(sequence)));
+        tasks.add(new AwaitTask(()->Math.abs(drive.pose.position.y-y)<threshold));
         return this;
     }
 

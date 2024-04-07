@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.tele;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -84,10 +84,6 @@ public class MTI_V2 extends EnhancedOpMode
                 double rx = -gamepad1.right_stick_x * ninja;
 
                 robot.setLocalDrivePowers(new Pose2d(x, y, rx));
-            }
-
-            if (cycleMosaic.wasJustPressed()) {
-                depositCycles = !depositCycles;
             }
 
             //NINJA

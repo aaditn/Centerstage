@@ -38,7 +38,7 @@ public class SuitedLocalizationTest extends LinearOpMode {
 
         int count = 0;
 
-        vision.setEstHeading(drive.pose.heading.real);
+        vision.setEstHeading(drive.pose.heading.toDouble());
         previous.add(new Pose2d(0,0,0));
         previous.add(new Pose2d(0,0,0));
         previous.add(new Pose2d(0,0,0));
@@ -59,7 +59,7 @@ public class SuitedLocalizationTest extends LinearOpMode {
             drive.primaryLoop();
             drive.update();
             Pose2d current = drive.pose;
-            vision.setEstHeading(current.heading.real);
+            vision.setEstHeading(current.heading.toDouble());
             vision.telemetryAprilTag(telemetry);
             List<Pose2d> detectionPositions = vision.getPos();
             int i = 0;
@@ -87,7 +87,7 @@ public class SuitedLocalizationTest extends LinearOpMode {
 
             Tel.instance().addData("x", current.position.x);
             Tel.instance().addData("y",current.position.y);
-            Tel.instance().addData("heading",Math.toDegrees(current.heading.real));
+            Tel.instance().addData("heading",Math.toDegrees(current.heading.toDouble()));
 
 
         }

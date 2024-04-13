@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -30,7 +31,6 @@ public class closeRed extends EnhancedOpMode {
     Robot drive;
     TaskScheduler scheduler;
     RobotActions actions;
-    closeRedPath pathObj;
     Deposit deposit;
     Intake intake;
     Slides slides;
@@ -38,7 +38,7 @@ public class closeRed extends EnhancedOpMode {
     private List<Task>[] auto_tasks() {
         return getTaskList(
                 actions.addTasks(Arrays.asList(
-                    actions.deployPurple(-35, -46, -35),
+                    actions.deployPurple(1, 1, 1),
                     actions.autoDrop(48, -15, Slides.SlideState.HALF, Deposit.RotateState.PLUS_NINETY)
                 )),
                 actions.lowerIntake(0, -51.5, 1, true),
@@ -51,11 +51,15 @@ public class closeRed extends EnhancedOpMode {
 
     @Override
     public void linearOpMode() {
+        ElapsedTime time = new ElapsedTime();
 
-        pathObj = new closeRedPath(drive);
+        RobotLog.e("Starting Time Trajectory" + time.milliseconds());
+        closeRedPath pathObj = new closeRedPath(drive);
         NamedTrajectory[][] trajectories = pathObj.trajectories;
+        RobotLog.e("Ending Time Trajectory" + time.milliseconds());
         RobotLog.e("Static Force Initialization Begins");
 
+// 608.74777
         waitForStart();
 
         if(opModeIsActive())
@@ -89,11 +93,11 @@ public class closeRed extends EnhancedOpMode {
     @Override
     public void initialize() {
         this.setLoopTimes(10);
+
         drive = Robot.getInstance();
 
         Context.isTeamRed = true;
         scheduler = new TaskScheduler();
-        actions = RobotActions.getInstance();
         deposit = drive.deposit;
         intake = drive.intake;
         slides = drive.slides;
@@ -110,11 +114,17 @@ public class closeRed extends EnhancedOpMode {
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        actions = RobotActions.getInstance();
+
+
+
+
+
       /*  vision.initAprilTag(hardwareMap);
 
         int count = 0;
 
-        vision.setEstHeading(drive.pose.heading.real);
+        vision.setEstHeading(drive.pose.heading.toDouble());
         previous.add(new Pose2d(0,0,0));
         previous.add(new Pose2d(0,0,0));
         previous.add(new Pose2d(0,0,0));

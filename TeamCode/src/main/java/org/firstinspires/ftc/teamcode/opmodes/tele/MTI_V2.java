@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -29,6 +30,8 @@ import java.util.Arrays;
 public class MTI_V2 extends EnhancedOpMode
 {
     DcMotorEx hang;
+
+    Servo purplePlacer;
     Robot robot;
     TaskScheduler scheduler;
     RobotActions actions;
@@ -41,25 +44,19 @@ public class MTI_V2 extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
-    ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesRaise, slidesLower, slidesOverride, depositMacro, depositMacro2, grabPixel, flush, CCW45, CW45, clawManual, pickOne, slides1, slides2, slides3, slides4, cycleMosaic, G2slidesRaise, G2slidesLower;
+    ButtonReader droneButton1, intakeToggle, sweeperIncrement, slidesRaise, slidesLower, slidesOverride, depositMacro, depositMacro2, grabPixel, flush, CCW45, CW45, adjustToggle, slides1, slides2, slides3, slides4, cycleMosaic, G2slidesRaise, G2slidesLower;
     double ninja;
+
+    Deposit.WristState state = Deposit.WristState.ADJUST;
+    boolean isAdjust = false;
     int sweeperCounter;
     int wristRotateCounter=4;
     Intake.SweeperState[] sweeperPositions;
     Deposit.RotateState[] wristRotatePositions;
-
     Slides.SlideState[] slideHeights;
     boolean depositCycles = false;
-    boolean pickState = false;
-
     boolean resetTrigger = false;
-
-    int indexSlides = -1;
-
     int indexStore = 3;
-
-    ElapsedTime upSlideTimer = new ElapsedTime();
-    ElapsedTime downSlideTimer = new ElapsedTime();
 
     ElapsedTime hangWait = new ElapsedTime();
     @Override
@@ -74,24 +71,16 @@ public class MTI_V2 extends EnhancedOpMode
             {
                 reader.readValue();
             }
+            double x = gamepad1.left_stick_y * ninja;
+            double y = gamepad1.left_stick_x * ninja;
+            double rx = -gamepad1.right_stick_x * ninja;
 
-
-            //NORMAL DT MOVEMENT
-            if(!robot.isBusy())
-            {
-                double x = gamepad1.left_stick_y * ninja;
-                double y = gamepad1.left_stick_x * ninja;
-                double rx = -gamepad1.right_stick_x * ninja;
-
-                robot.setLocalDrivePowers(new Pose2d(x, y, rx));
-            }
-
+            robot.setLocalDrivePowers(new Pose2d(x, y, rx));
             //NINJA
             if (gamepad1.right_trigger > 0.3)
                 ninja = 0.5;
             else
                 ninja = 1;
-
 
             if(gamepad2.left_trigger>0.5 && hangWait.seconds() > 90)
                 hang.setPower(1);
@@ -184,35 +173,38 @@ public class MTI_V2 extends EnhancedOpMode
             }
 
             //SLIDES
-            if(slidesRaise.wasJustPressed()) {
+            if(slidesRaise.isDown()) {
+                isAdjust = true;
+            }
+            if (slidesRaise.wasJustReleased()) {
+                isAdjust = false;
                 int index = Arrays.asList(slideHeights).indexOf(slides.getState());
                 if (index != -1 && index < slideHeights.length - 1) {
                     indexStore = Math.min(slideHeights.length - 1, indexStore + 1);
-                    scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[indexStore]));
+                    scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[indexStore], state));
                 }
             }
-            /*if (!gamepad1.right_bumper) {
-                upSlideTimer.reset();
-                indexSlides = Arrays.asList(slideHeights).indexOf(slides.getState());
-            } else {
-                int index = (int)(upSlideTimer.milliseconds() / 100);
-                int newIndex = Math.min(index + indexSlides, slideHeights.length - 1);
-                scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[newIndex]));
+
+            if (!slides.getState().equals(Slides.SlideState.GROUND)) {
+                if (isAdjust) {
+                    state = Deposit.WristState.ADJUST;
+                } else {
+                    state = Deposit.WristState.DOWN;
+                }
             }
-            */
 
             if(slidesLower.wasJustPressed()) {
                 int index = Arrays.asList(slideHeights).indexOf(slides.getState());
                 if (index > 1 && index < slideHeights.length) {
                     indexStore = Math.max(1, indexStore - 1);
-                    scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[indexStore]));
+                    scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[indexStore], state));
                 }
             } else if (G2slidesLower.wasJustPressed()) {
                 int index = Arrays.asList(slideHeights).indexOf(slides.getState());
                 if (index > 1 && index < slideHeights.length) {
                     indexStore = Math.max(1, indexStore - 1);
                     if (!slides.getState().equals(Slides.SlideState.GROUND)) {
-                        scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[indexStore]));
+                        scheduler.scheduleTaskList(actions.slidesOnly(slideHeights[indexStore], state));
                     }
                 }
             }
@@ -287,6 +279,7 @@ public class MTI_V2 extends EnhancedOpMode
         this.setLoopTimes(1);
         robot=Robot.getInstance();
         hang = hardwareMap.get(DcMotorEx.class, "hang");
+        purplePlacer = hardwareMap.get(Servo.class, "purplePlacer");
         scheduler=new TaskScheduler();
         actions=RobotActions.getInstance();
 
@@ -335,7 +328,7 @@ public class MTI_V2 extends EnhancedOpMode
                 slides2=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_LEFT),
                 slides3=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_UP),
                 slides4=new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_RIGHT),
-                cycleMosaic=new ToggleButtonReader(g2, GamepadKeys.Button.A)
+                cycleMosaic=new ToggleButtonReader(g2, GamepadKeys.Button.A),
 
         };
 
@@ -358,20 +351,14 @@ public class MTI_V2 extends EnhancedOpMode
                 Deposit.RotateState.PLUS_ONE_THREE_FIVE,
         };
         slideHeights=new Slides.SlideState[]{
-                Slides.SlideState.GROUND,
-
-                Slides.SlideState.HALF,
                 Slides.SlideState.R1,
                 Slides.SlideState.R2,
-
                 Slides.SlideState.R3,
                 Slides.SlideState.R4,
                 Slides.SlideState.R5,
-
                 Slides.SlideState.R6,
                 Slides.SlideState.R7,
                 Slides.SlideState.R8,
-
                 Slides.SlideState.R9,
         };
     }

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 @Config
@@ -158,6 +159,9 @@ public class Intake extends Module {
         pixel1Present = pixelsPresentBlocking(cs1, s1Alpha);
         pixel2Present = pixelsPresentBlocking(cs2, s2Alpha);
     }
+    public boolean isUnderCurrent(double amps) {
+        return (intake.getCurrent(CurrentUnit.AMPS) < amps);
+    }
 
     public ColorRangeSensor getCs()
     {
@@ -265,4 +269,5 @@ else {
             this.position = position;
         }
     }
+
 }

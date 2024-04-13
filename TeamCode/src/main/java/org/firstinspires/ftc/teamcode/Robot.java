@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+
 import static org.firstinspires.ftc.teamcode.util.WhipTrajectory.map;
 
 import android.util.Log;
@@ -8,6 +9,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Rotation2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -19,6 +22,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.LynxModuleImuType;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -88,12 +92,13 @@ public class Robot extends MecanumDrive
     public Slides slides;
     public Deposit deposit;
     public Intake intake;
+    public Servo purplePlacer;
 
     public DroneLauncher droneLauncher;
     OpenCvWebcam camera;
 
     public TeamElementDetection teamElementDetector;
-    Pose2d localDrivePowers;
+    Pose2d localDrivePowers = new Pose2d(new Vector2d(0,0), new Rotation2d(0,0));
     ElapsedTime timer;
     public boolean waitingForCS=false;
     public boolean tapeDetected=false;
@@ -156,6 +161,7 @@ public class Robot extends MecanumDrive
         intake=new Intake(hardwareMap);
         droneLauncher = new DroneLauncher(hardwareMap);
         hang = hardwareMap.get(DcMotor.class, "hang");
+       // purplePlacer = hardwareMap.get(Servo.class, "purplePlacer");
 
 
         if(!Context.noHwInit)
@@ -184,7 +190,8 @@ public class Robot extends MecanumDrive
     {
         if(robot==null)
         {
-            robot=new Robot(Context.opmode);
+            assert Context.opmode != null;
+            robot=new Robot(Context.opmode, new Pose2d(0,0,0));
         }
         return robot;
     }
@@ -258,7 +265,7 @@ public class Robot extends MecanumDrive
 
     public void updateDrivePowers()
     {
-        PoseVelocity2d poseVelocity2d = new PoseVelocity2d(localDrivePowers.position, localDrivePowers.heading.real);
+        PoseVelocity2d poseVelocity2d = new PoseVelocity2d(localDrivePowers.position, localDrivePowers.heading.toDouble());
         setDrivePowers(poseVelocity2d);
     }
 
@@ -341,7 +348,7 @@ public class Robot extends MecanumDrive
 
 
 //        navxWrapper.update();
-        if(isBusy()||!Context.isTele)
+        if(!Context.isTele)
         {
             update();
             Tel.instance().addData("DT Vel", pose.position.div(2), 1);
@@ -463,7 +470,7 @@ public class Robot extends MecanumDrive
     public  WhipTrajectory get (int index){
         return this.trajectories.get(index);
     }
-    public void set(NamedTrajectory [][] trajectories, List<Task>[] actions){
+    public void set(NamedTrajectory[][] trajectories, List<Task>[] actions){
         switch (Context.dice){
             default:
             this.trajectories = map(trajectories[0], actions);
@@ -533,7 +540,7 @@ public class Robot extends MecanumDrive
         if (k.equals(Paths.Back1) || k.equals(Paths.Back2) || k.equals(Paths.Back3)) {
             if (robot.pose.position.x > 20 && robot.pose.position.x < 50) {
                 Pose2d current = robot.pose;
-                vision.setEstHeading(current.heading.real);
+                vision.setEstHeading(current.heading.toDouble());
                 vision.telemetryAprilTag(telemetry);
                 List<Pose2d> detectionPositions = vision.getPos();
                 int i = 0;
@@ -646,5 +653,21 @@ public class Robot extends MecanumDrive
     public double getTotalCurrent() {
         return controlHub.getCurrent(CurrentUnit.AMPS) + expansionHub.getCurrent(CurrentUnit.AMPS);
 
+    }
+
+    public double getCurrentMotor(int index) {
+        if (index == 0) {
+            return leftFront.getCurrent(CurrentUnit.AMPS);
+        }
+        if (index == 1) {
+            return rightFront.getCurrent(CurrentUnit.AMPS);
+        }
+        if (index == 2) {
+            return leftBack.getCurrent(CurrentUnit.AMPS);
+        }
+        if (index == 3) {
+            return rightBack.getCurrent(CurrentUnit.AMPS);
+        }
+        return 0;
     }
 }

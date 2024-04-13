@@ -113,7 +113,7 @@ public List<Pose2d> getPos(){
                 ));
                 telemetry.addData("TAGX", detections.get(0).position.x);
                 telemetry.addData("TAGY", detections.get(0).position.y);
-                telemetry.addData("TAGR", detections.get(0).heading.real);
+                telemetry.addData("TAGR", detections.get(0).heading.toDouble());
             }
             if(detection.id==2){
                 detections.set(1,new Pose2d(

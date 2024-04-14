@@ -70,7 +70,6 @@ public class closeRed extends EnhancedOpMode {
             delayLinear((long)Context.autoWaitTime*1000);
             drive.set(trajectories,auto_tasks());
             RobotLog.e("things mapped");
-
             drive.run(Paths.Purple_Yellow);
             RobotLog.e("purple");
             drive.run(Paths.Stack1);

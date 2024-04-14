@@ -26,6 +26,7 @@ import com.acmerobotics.roadrunner.Time;
 import com.acmerobotics.roadrunner.TimeTrajectory;
 import com.acmerobotics.roadrunner.TimeTurn;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.TrajectoryBuilderParams;
 import com.acmerobotics.roadrunner.TurnConstraints;
 import com.acmerobotics.roadrunner.Twist2dDual;
@@ -63,6 +64,14 @@ import java.util.List;
 @Config
 public class MecanumDrive {
     public static boolean isBusy = false;
+
+    public TimeTrajectory timeTrajectory;
+    public DisplacementTrajectory displacementTrajectory;
+    public List<TimeTrajectory> currentTrajList;
+    private double beginTs = -1;
+    public int index = 0;
+
+    private double[] xPoints, yPoints;
 
     public static class Params {
         // IMU orientation
@@ -260,16 +269,119 @@ public class MecanumDrive {
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }
 
+    public void followTrajectorySequence(List<TimeTrajectory> t) {
+        if (index == 0) {
+            currentTrajList = t;
+        }
+        timeTrajectory = t.get(index);
 
-    public MecanumDrive(HardwareMap hardwareMap, Pose2d pose, boolean isDrive) {
-        this.pose = pose;
+        List<Double> disps = com.acmerobotics.roadrunner.Math.range(
+                0, timeTrajectory.path.length(),
+                Math.max(2, (int) Math.ceil(timeTrajectory.path.length() / 2)));
+        xPoints = new double[disps.size()];
+        yPoints = new double[disps.size()];
+        for (int i = 0; i < disps.size(); i++) {
+            Pose2d p = timeTrajectory.path.get(disps.get(i), 1).value();
+            xPoints[i] = p.position.x;
+            yPoints[i] = p.position.y;
+        }
+        displacementTrajectory = new DisplacementTrajectory(timeTrajectory.path, timeTrajectory.profile.dispProfile);
+    }
 
-        LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
+    public void updateTrajectory(TelemetryPacket p) {
+        double t;
+        if (beginTs < 0) {
+            beginTs = Actions.now();
+            t = 0;
+            isBusy = true;
+        } else {
+            t = Actions.now() - beginTs;
+        }
 
-        lazyImu = new LazyImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
-                PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));
 
-        FlightRecorder.write("MECANUM_PARAMS", PARAMS);
+        if (t >= timeTrajectory.duration) {
+            boolean imStupidSoImJustGonnaDoThis = false;
+            if (currentTrajList != null) {
+                if (index < currentTrajList.size() - 1) {
+                    index++;
+                    followTrajectorySequence(currentTrajList);
+                } else {
+                    imStupidSoImJustGonnaDoThis = true;
+                }
+            } else {
+                imStupidSoImJustGonnaDoThis = true;
+            }
+            if (imStupidSoImJustGonnaDoThis) {
+                leftFront.setPower(0);
+                leftBack.setPower(0);
+                rightBack.setPower(0);
+                rightFront.setPower(0);
+                isBusy = false;
+                index = 0;
+                return;
+            }
+
+        }
+//            double d = project(displacementTrajectory.path, pose.position, lastDisp);
+//            lastDisp = d;
+//            Pose2dDual<Arclength> arcTarget = displacementTrajectory.path.get(d, 3);
+//
+//            Pose2dDual<Time> txWorldTarget = new Pose2dDual<> (arcTarget.position.reparam(paramNum), arcTarget.heading.reparam(paramNum));
+        // might be losing 2nd and 3rd derivative in the reparam I'm not sure
+        Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
+
+        targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
+
+        PoseVelocity2d robotVelRobot = updatePoseEstimate();
+
+        PoseVelocity2dDual<Time> command = new HolonomicController(
+                PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
+                PARAMS.axialVelGain, PARAMS.lateralVelGain, PARAMS.headingVelGain
+        )
+                .compute(txWorldTarget, pose, robotVelRobot);
+        driveCommandWriter.write(new DriveCommandMessage(command));
+
+        MecanumKinematics.WheelVelocities<Time> wheelVels = kinematics.inverse(command);
+        double voltage = voltageSensor.getVoltage();
+
+        final MotorFeedforward feedforward = new MotorFeedforward(PARAMS.kS,
+                PARAMS.kV / PARAMS.inPerTick, PARAMS.kA / PARAMS.inPerTick);
+        double leftFrontPower = feedforward.compute(wheelVels.leftFront) / voltage;
+        double leftBackPower = feedforward.compute(wheelVels.leftBack) / voltage;
+        double rightBackPower = feedforward.compute(wheelVels.rightBack) / voltage;
+        double rightFrontPower = feedforward.compute(wheelVels.rightFront) / voltage;
+        mecanumCommandWriter.write(new MecanumCommandMessage(
+                voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower
+        ));
+
+        leftFront.setPower(leftFrontPower);
+        leftBack.setPower(leftBackPower);
+        rightBack.setPower(rightBackPower);
+        rightFront.setPower(rightFrontPower);
+
+        p.put("x", pose.position.x);
+        p.put("y", pose.position.y);
+        p.put("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
+
+        Pose2d error = txWorldTarget.value().minusExp(pose);
+        p.put("xError", error.position.x);
+        p.put("yError", error.position.y);
+        p.put("headingError (deg)", Math.toDegrees(error.heading.toDouble()));
+
+        // only draw when active; only one drive action should be active at a time
+        Canvas c = p.fieldOverlay();
+        drawPoseHistory(c);
+
+        c.setStroke("#4CAF50");
+        Drawing.drawRobot(c, txWorldTarget.value());
+
+        c.setStroke("#3F51B5");
+        Drawing.drawRobot(c, pose);
+
+        c.setStroke("#4CAF50FF");
+        c.setStrokeWidth(1);
+        c.strokePolyline(xPoints, yPoints);
+
     }
     public void setDrivePowers(PoseVelocity2d powers) {
         MecanumKinematics.WheelVelocities<Time> wheelVels = new MecanumKinematics(1).inverse(
@@ -290,7 +402,6 @@ public class MecanumDrive {
         public final TimeTrajectory timeTrajectory; 
         public final DisplacementTrajectory displacementTrajectory;
         private double beginTs = -1;
-
         private final double[] xPoints, yPoints;
 
         public FollowTrajectoryAction(TimeTrajectory t) {
@@ -398,7 +509,6 @@ public class MecanumDrive {
             c.strokePolyline(xPoints, yPoints);
         }
     }
-
     public final class TurnAction implements Action {
         private final TimeTurn turn;
 
@@ -521,6 +631,18 @@ public class MecanumDrive {
                 ),
                 beginPose, 0.0,
                 defaultTurnConstraints,
+                defaultVelConstraint, defaultAccelConstraint
+        );
+    }
+    public TrajectoryBuilder trajectoryBuilder(Pose2d beginPose) {
+        return new TrajectoryBuilder(
+                new TrajectoryBuilderParams(
+                        1e-6,
+                        new ProfileParams(
+                                0.25, 0.1, 1e-2
+                        )
+                ),
+                beginPose, 0.0,
                 defaultVelConstraint, defaultAccelConstraint
         );
     }

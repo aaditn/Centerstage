@@ -352,7 +352,7 @@ public class Robot extends MecanumDrive
         {
             update();
             Tel.instance().addData("DT Vel", pose.position.div(2), 1);
-            Tel.instance().addData("DT Vel", pose.position.div(3), 1);
+            Tel.instance().addData("DT Accel", pose.position.div(3), 1);
         }
         else {
             updateDrivePowers();
@@ -503,34 +503,12 @@ public class Robot extends MecanumDrive
                 {
                     k = trajectory;
                     scheduler.scheduleTaskList(item.getTasks());
-                    runTraj(item.getTrajectory().getAction());
+                    followTrajectorySequence(item.getTrajectory().getAction());
                 }
                 else
                     break;
             }
         }
-        //RobotLog.e("WE DIDNT FIND THE TRAJECTORY BRO");
-
-    }
-
-    public void run(Paths trajectory, AprilTagPipeline vision, Telemetry telemetry, List<Pose2d> previous)
-    {
-        TelemetryPacket packet = new TelemetryPacket();
-        for(WhipTrajectory item : trajectories){
-            if(item.getPath().equals(trajectory)){
-                if(Context.opmode.opModeIsActive())
-                {
-                    k = trajectory;
-                    item.getTrajectory().getAction().run(packet);
-                    scheduler.scheduleTaskList(item.getTasks());
-                    AprilTagRun(vision, telemetry, previous);
-                    runTraj(item.getTrajectory().getAction());
-                }
-                else
-                    break;
-            }
-        }
-        //RobotLog.e("WE DIDNT FIND THE TRAJECTORY BRO");
 
     }
 
@@ -573,9 +551,11 @@ public class Robot extends MecanumDrive
 
     public void update() {
         updatePoseEstimate();
+        TelemetryPacket p = new TelemetryPacket();
+        updateTrajectory(p);
     }
 
-    public void runTraj(Action trajectorySequence) {
+    public void waitForIdle(Action trajectorySequence) {
         while (!Thread.currentThread().isInterrupted() && isBusy() && Context.opmode.opModeIsActive())
         {
             TelemetryPacket packet = new TelemetryPacket();

@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
 
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -22,6 +21,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
+import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 
@@ -68,8 +68,7 @@ public class closeRed extends EnhancedOpMode {
         {
             drive.pose = closeRedPath.closeRedStart;
             delayLinear((long)Context.autoWaitTime*1000);
-            Actions.runBlocking(pathObj.purple_yellow);
-           /* drive.set(trajectories,auto_tasks());
+            drive.set(trajectories,auto_tasks());
             RobotLog.e("things mapped");
 
             drive.run(Paths.Purple_Yellow);
@@ -80,8 +79,8 @@ public class closeRed extends EnhancedOpMode {
             delayLinear(250);
             RobotLog.e("delaying");
             drive.run(Paths.Back1);
-            
-            */
+
+
             waitForEnd();
             RobotLog.e("end");
         }

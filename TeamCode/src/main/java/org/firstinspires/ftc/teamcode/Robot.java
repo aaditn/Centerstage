@@ -502,14 +502,8 @@ public class Robot extends MecanumDrive
                 if(Context.opmode.opModeIsActive())
                 {
                     k = trajectory;
-                    RobotLog.e("isBusyBefore" + isBusy);
-                    followTrajectorySequenceAsync(item.getTrajectory().getAction());
                     scheduler.scheduleTaskList(item.getTasks());
-                    RobotLog.e("lalalalalalala" + robot.k.name());//smh
-                    RobotLog.e("isBusyAfter" + isBusy);
-                    Tel.instance().addData("traj", robot.k.name());
-                    Tel.instance().addData("isBusy", isBusy);
-                    waitForIdle();
+                    runTraj(item.getTrajectory().getAction());
                 }
                 else
                     break;
@@ -530,7 +524,7 @@ public class Robot extends MecanumDrive
                     item.getTrajectory().getAction().run(packet);
                     scheduler.scheduleTaskList(item.getTasks());
                     AprilTagRun(vision, telemetry, previous);
-                    waitForIdle();
+                    runTraj(item.getTrajectory().getAction());
                 }
                 else
                     break;
@@ -576,18 +570,17 @@ public class Robot extends MecanumDrive
     public static List<Task>[] getTaskList(List<Task>... tasks) {
         return (tasks);
     }
-    public void followTrajectorySequenceAsync(Action trajectorySequence) {
-        TelemetryPacket packet = new TelemetryPacket();
-        trajectorySequence.run(packet);
-    }
 
     public void update() {
         updatePoseEstimate();
     }
 
-    public void waitForIdle() {
+    public void runTraj(Action trajectorySequence) {
         while (!Thread.currentThread().isInterrupted() && isBusy() && Context.opmode.opModeIsActive())
         {
+            TelemetryPacket packet = new TelemetryPacket();
+            trajectorySequence.run(packet);
+            
             Method x =null;
             try{
                 x= Context.opmode.getClass().getMethod("primaryLoop",(Class<?>[]) null);

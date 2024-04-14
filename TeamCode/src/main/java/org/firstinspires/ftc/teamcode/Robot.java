@@ -502,8 +502,13 @@ public class Robot extends MecanumDrive
                 if(Context.opmode.opModeIsActive())
                 {
                     k = trajectory;
+                    RobotLog.e("isBusyBefore" + isBusy);
                     followTrajectorySequenceAsync(item.getTrajectory().getAction());
                     scheduler.scheduleTaskList(item.getTasks());
+                    RobotLog.e("lalalalalalala" + robot.k.name());//smh
+                    RobotLog.e("isBusyAfter" + isBusy);
+                    Tel.instance().addData("traj", robot.k.name());
+                    Tel.instance().addData("isBusy", isBusy);
                     waitForIdle();
                 }
                 else
@@ -588,7 +593,7 @@ public class Robot extends MecanumDrive
                 x= Context.opmode.getClass().getMethod("primaryLoop",(Class<?>[]) null);
             }
             catch(NoSuchMethodException ignored){
-
+                RobotLog.e("waitForIdle");
         }
             if(x==null){
                 //RobotLog.e("yep");
@@ -605,7 +610,7 @@ public class Robot extends MecanumDrive
     }
 
     public boolean isBusy() {
-        return piTagOrUs(robot.pose.position.div(2).x, robot.pose.position.div(2).y) < 3; // thresh
+        return isBusy; // thresh
     }
 
     public void setMode(DcMotor.RunMode runMode) {

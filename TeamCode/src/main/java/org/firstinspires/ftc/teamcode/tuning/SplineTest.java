@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.tuning;
 
+import static org.firstinspires.ftc.teamcode.MecanumDrive.isBusy;
+
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.TankDrive;
@@ -35,5 +38,8 @@ public final class SplineTest extends LinearOpMode {
         } else {
             throw new RuntimeException();
         }
+        telemetry.addData("isBusy", isBusy);
+        telemetry.update();
+        RobotLog.e("isBusy: " + isBusy);
     }
 }

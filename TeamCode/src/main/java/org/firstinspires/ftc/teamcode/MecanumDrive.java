@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static com.acmerobotics.roadrunner.Curves.project;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -11,7 +9,6 @@ import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Actions;
 import com.acmerobotics.roadrunner.AngularVelConstraint;
-import com.acmerobotics.roadrunner.Arclength;
 import com.acmerobotics.roadrunner.DisplacementTrajectory;
 import com.acmerobotics.roadrunner.DualNum;
 import com.acmerobotics.roadrunner.HolonomicController;
@@ -65,24 +62,27 @@ import java.util.List;
 
 @Config
 public class MecanumDrive {
+    public static boolean isBusy = false;
+
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
         //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
         public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
-                RevHubOrientationOnRobot.LogoFacingDirection.UP;
+                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD;
         public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+                RevHubOrientationOnRobot.UsbFacingDirection.DOWN;
 
         // drive model parameters
-        public double inPerTick = 1;
-        public double lateralInPerTick = inPerTick;
-        public double trackWidthTicks = 0;
+        public double inPerTick = 0.00052845;
+        public double lateralInPerTick = 0.0029685;
+        public double trackWidthTicks = 24381.568238066153;
+
 
         // feedforward parameters (in tick units)
-        public double kS = 0;
-        public double kV = 0;
-        public double kA = 0;
+        public double kS = 1.444675558746403;
+        public double kV =  0.000072189979;
+        public double kA = 0.00002;
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;
@@ -94,13 +94,13 @@ public class MecanumDrive {
         public double maxAngAccel = Math.PI;
 
         // path controller gains
-        public double axialGain = 0.0;
-        public double lateralGain = 0.0;
-        public double headingGain = 0.0; // shared with turn
+        public double axialGain = 8.0;
+        public double lateralGain = 30.0;
+        public double headingGain = 8.0; // shared with turn
 
-        public double axialVelGain = 0.0;
-        public double lateralVelGain = 0.0;
-        public double headingVelGain = 0.0; // shared with turn
+        public double axialVelGain = 1.0;
+        public double lateralVelGain = 1.0;
+        public double headingVelGain = 1.0; // shared with turn
     }
 
     private double lastDisp;
@@ -255,7 +255,7 @@ public class MecanumDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        localizer = new TwoDeadWheelLocalizer(hardwareMap, lazyImu.get(), PARAMS.inPerTick);
+        localizer = new TwoDeadWheelLocalizer(hardwareMap, lazyImu.get(), PARAMS.inPerTick, PARAMS.lateralInPerTick);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }
@@ -315,6 +315,7 @@ public class MecanumDrive {
             if (beginTs < 0) {
                 beginTs = Actions.now();
                 t = 0;
+                isBusy = true;
             } else {
                 t = Actions.now() - beginTs;
             }
@@ -324,15 +325,16 @@ public class MecanumDrive {
                 leftBack.setPower(0);
                 rightBack.setPower(0);
                 rightFront.setPower(0);
-
+                isBusy = false;
                 return false;
             }
-            double d = project(displacementTrajectory.path, pose.position, lastDisp);
-            lastDisp = d;
-            Pose2dDual<Arclength> arcTarget = displacementTrajectory.path.get(d, 3);
-
-            Pose2dDual<Time> txWorldTarget = new Pose2dDual<> (arcTarget.position.reparam(paramNum), arcTarget.heading.reparam(paramNum));
+//            double d = project(displacementTrajectory.path, pose.position, lastDisp);
+//            lastDisp = d;
+//            Pose2dDual<Arclength> arcTarget = displacementTrajectory.path.get(d, 3);
+//
+//            Pose2dDual<Time> txWorldTarget = new Pose2dDual<> (arcTarget.position.reparam(paramNum), arcTarget.heading.reparam(paramNum));
             // might be losing 2nd and 3rd derivative in the reparam I'm not sure
+            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
 
             targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
 

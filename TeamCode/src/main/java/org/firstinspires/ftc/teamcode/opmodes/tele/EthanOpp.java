@@ -116,7 +116,7 @@ public class EthanOpp extends EnhancedOpMode
                 robot.setLocalDrivePowers(new Pose2d(x, y, -rx));
             } else if (driveType.equals(DriveType.EXIT_BACKSTAGE)) {
                 ElapsedTime timer = new ElapsedTime();
-                while (opModeIsActive() && !isStopRequested() && timer.milliseconds() < 800) { // teehee loop times go brrr intake.setState(Intake.PowerState.OFF);robot.setLocalDrivePowers(new Pose2d(1, 0, -0.3));
+                while (opModeIsActive() && !isStopRequested() && timer.milliseconds() < 100) { // teehee loop times go brrr intake.setState(Intake.PowerState.OFF);robot.setLocalDrivePowers(new Pose2d(1, 0, -0.3));
                     // robot.setLocalDrivePowers(new Pose2d(1, 0, -0.3));
                 }
                 driveType = DriveType.NORMAL;
@@ -188,7 +188,7 @@ public class EthanOpp extends EnhancedOpMode
 
             if ((slidesLower.isDown())) {
                 ninja = 0.5;
-                ninjaStrafe = 0.3;
+                ninjaStrafe = 0.7;
             }
             if (slidesLower.wasJustReleased()) {
                 scheduler.scheduleTaskList(actions.scorePixels());
@@ -199,11 +199,17 @@ public class EthanOpp extends EnhancedOpMode
                 isStopped = false;
                 activePreset.wristState = Deposit.WristState.HOVER;
                 activePreset.rotateState = Deposit.RotateState.PLUS_NINETY;
-            } else if (presetMacro.isDown()) {
+                slidesIndex++;
+                activePreset.slideState = slideStates[slidesIndex];
+            } else if (presetMacro.isDown() && presetMacro.stateJustChanged()) {
                 ninja = 0.5;
-                ninjaStrafe = 0.3;
+                ninjaStrafe = 0.7;
                 activePreset.rotateState = Deposit.RotateState.ZERO;
                 activePreset.wristState = Deposit.WristState.ADJUST;
+                if (slidesIndex > 0) {
+                    slidesIndex--;
+                    activePreset.slideState = slideStates[slidesIndex];
+                }
             }
 
             //DRONE
@@ -233,7 +239,7 @@ public class EthanOpp extends EnhancedOpMode
                 lastTouchpad = gamepad2.touchpad;
             }
 
-            if (intake.isUnderCurrent(4)) {
+            if (intake.isUnderCurrent(20)) {
                 if (!touchpadVal) {
                     if (Math.abs(gamepad2.right_stick_x + gamepad2.right_stick_y) > 0.2) {
                         boolean isUp = -Math.signum(gamepad2.right_stick_y) > 0;
@@ -257,7 +263,7 @@ public class EthanOpp extends EnhancedOpMode
                     intake.setState(Intake.ConveyorState.OFF);
                 }
                 extakeTimer.reset();
-            } else if (extakeTimer.milliseconds() < 500 || intake.isUnderCurrent(3)) {
+            } else if (extakeTimer.milliseconds() < 500 || intake.isUnderCurrent(20)) {
                 gamepad1.rumble(500);
                 gamepad2.rumble(500);
                 intake.setState(Intake.PowerState.EXTAKE);
@@ -371,6 +377,7 @@ public class EthanOpp extends EnhancedOpMode
         };
 
         slideStates = new Slides.SlideState[]{
+                Slides.SlideState.HALF,
                 Slides.SlideState.R1,
                 Slides.SlideState.R2,
                 Slides.SlideState.R3,

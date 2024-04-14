@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import static org.firstinspires.ftc.teamcode.Robot.getTaskList;
 
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -21,9 +22,7 @@ import org.firstinspires.ftc.teamcode.task_scheduler.TaskScheduler;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
-import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Autonomous(name = "Close Red")
@@ -37,10 +36,13 @@ public class closeRed extends EnhancedOpMode {
     DroneLauncher drone;
     private List<Task>[] auto_tasks() {
         return getTaskList(
-                actions.addTasks(Arrays.asList(
+               /* actions.addTasks(Arrays.asList(
                     actions.deployPurple(1, 1, 1),
                     actions.autoDrop(48, -15, Slides.SlideState.HALF, Deposit.RotateState.PLUS_NINETY)
                 )),
+
+                */
+                actions.deployPurple(1, 1, 1),
                 actions.lowerIntake(0, -51.5, 1, true),
                 actions.autoDrop(46, -15,  Slides.SlideState.R1, Deposit.RotateState.PLUS_NINETY)
 //                actions.lowerIntake(-30, -51.5, 2, true),
@@ -66,8 +68,10 @@ public class closeRed extends EnhancedOpMode {
         {
             drive.pose = closeRedPath.closeRedStart;
             delayLinear((long)Context.autoWaitTime*1000);
-            drive.set(trajectories,auto_tasks());
+            Actions.runBlocking(pathObj.purple_yellow);
+           /* drive.set(trajectories,auto_tasks());
             RobotLog.e("things mapped");
+
             drive.run(Paths.Purple_Yellow);
             RobotLog.e("purple");
             drive.run(Paths.Stack1);
@@ -76,6 +80,8 @@ public class closeRed extends EnhancedOpMode {
             delayLinear(250);
             RobotLog.e("delaying");
             drive.run(Paths.Back1);
+            
+            */
             waitForEnd();
             RobotLog.e("end");
         }

@@ -22,10 +22,10 @@ public class Intake extends Module {
 
     public enum PowerState implements ModuleState
     {
-        INTAKE_AUTO, INTAKE, EXTAKE, OFF;
+        INTAKE_AUTO, INTAKE, EXTAKE, OFF, SLOW;
     }
-    public static double POWER_INTAKE_AUTO=-.8, POWER_INTAKE=-1, POWER_EXTAKE=0.9, POWER_OFF=0;
-    public static double[] powerValues={POWER_INTAKE_AUTO, POWER_INTAKE, POWER_EXTAKE, POWER_OFF};
+    public static double POWER_INTAKE_AUTO=-.8, POWER_INTAKE=-1, POWER_EXTAKE=0.9, POWER_OFF=0, SLOW = 0.1;
+    public static double[] powerValues={POWER_INTAKE_AUTO, POWER_INTAKE, POWER_EXTAKE, POWER_OFF, SLOW};
 
 
     public enum PositionState implements ModuleState

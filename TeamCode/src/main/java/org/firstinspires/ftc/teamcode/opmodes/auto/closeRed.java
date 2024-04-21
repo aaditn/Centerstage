@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.auto_paths.closeRedPath;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
@@ -36,13 +37,8 @@ public class closeRed extends EnhancedOpMode {
     DroneLauncher drone;
     private List<Task>[] auto_tasks() {
         return getTaskList(
-               /* actions.addTasks(Arrays.asList(
-                    actions.deployPurple(1, 1, 1),
-                    actions.autoDrop(48, -15, Slides.SlideState.HALF, Deposit.RotateState.PLUS_NINETY)
-                )),
-
-                */
-                actions.deployPurple(1, 1, 1),
+                actions.deployPurple(0.3, 0.3, 0.3),
+                actions.autoDrop(48, -15, Slides.SlideState.HALF, Deposit.RotateState.PLUS_NINETY),
                 actions.lowerIntake(0, -51.5, 1, true),
                 actions.autoDrop(46, -15,  Slides.SlideState.R1, Deposit.RotateState.PLUS_NINETY)
 //                actions.lowerIntake(-30, -51.5, 2, true),
@@ -79,12 +75,15 @@ public class closeRed extends EnhancedOpMode {
             delayLinear((long)Context.autoWaitTime*1000);
             drive.set(trajectories,auto_tasks());
             RobotLog.e("things mapped");
-            drive.run(Paths.Purple_Yellow);
-            delayLinear(1000);
-            RobotLog.e("purple");
+            drive.run(Paths.Purple);
+            RobotLog.e("purple: "  + drive.pose.toString());
+            delayLinear(500);
+            drive.run(Paths.Yellow);
+            RobotLog.e("yellow: "  + drive.pose);
+            delayLinear(500);
             drive.run(Paths.Stack1);
             delayLinear(200);
-            RobotLog.e("yellow");
+            RobotLog.e("stack: "+ drive.pose);
             delayLinear(250);
             RobotLog.e("delaying");
             drive.run(Paths.Back1);
@@ -102,6 +101,14 @@ public class closeRed extends EnhancedOpMode {
 
     public void onStart() {
        // drive.closeCameras();
+    }
+
+    public void turnOffMotors() {
+        drive.leftFront.setPower(0);
+        drive.leftBack.setPower(0);
+        drive.rightBack.setPower(0);
+        drive.rightFront.setPower(0);
+        MecanumDrive.isBusy = false;
     }
     @Override
     public void initialize() {

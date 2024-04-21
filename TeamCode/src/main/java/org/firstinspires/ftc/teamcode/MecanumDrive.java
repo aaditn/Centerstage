@@ -316,16 +316,6 @@ public class MecanumDrive {
         }
 
 
-        if (t >= timeTrajectory.duration) {
-            leftFront.setPower(0);
-            leftBack.setPower(0);
-            rightBack.setPower(0);
-            rightFront.setPower(0);
-            isBusy = false;
-        }
-
-
-
 //            double d = project(displacementTrajectory.path, pose.position, lastDisp);
 //            lastDisp = d;
 //            Pose2dDual<Arclength> arcTarget = displacementTrajectory.path.get(d, 3);
@@ -358,10 +348,19 @@ public class MecanumDrive {
                 voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower
         ));
 
-        leftFront.setPower(leftFrontPower);
-        leftBack.setPower(leftBackPower);
-        rightBack.setPower(rightBackPower);
-        rightFront.setPower(rightFrontPower);
+        if (t >= timeTrajectory.duration) {
+            leftFront.setPower(0);
+            leftBack.setPower(0);
+            rightBack.setPower(0);
+            rightFront.setPower(0);
+            isBusy = false;
+        } else {
+            leftFront.setPower(leftFrontPower);
+            leftBack.setPower(leftBackPower);
+            rightBack.setPower(rightBackPower);
+            rightFront.setPower(rightFrontPower);
+        }
+
 
         p.put("x", pose.position.x);
         p.put("y", pose.position.y);

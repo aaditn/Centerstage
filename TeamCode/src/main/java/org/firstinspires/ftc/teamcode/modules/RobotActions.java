@@ -87,10 +87,11 @@ public class RobotActions
         double open = 0.5;
 
         return Builder.create()
-                .executeCode(() -> robot.purplePlacer.setPosition(closed))
                 .delay((long) y)
-                .executeCode(() -> robot.purplePlacer.setPosition(open))
-                .addTaskList(autoDrop(46, 20, Slides.SlideState.AUTO_LOW, Deposit.RotateState.PLUS_NINETY))
+                .executeCode(() -> intake.setState(Intake.PowerState.SLOW))
+                .delay(200)
+                .executeCode(() -> intake.setState(Intake.PowerState.OFF))
+
                 .build();
     }
 

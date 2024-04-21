@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Rotation2d;
@@ -17,7 +16,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.LynxModuleImuType;
@@ -58,7 +56,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Config
@@ -70,7 +67,6 @@ public class Robot extends MecanumDrive
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
     private IMU imu;
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
 
     private DcMotor hang;
     private List<DcMotorEx> motors;
@@ -99,6 +95,8 @@ public class Robot extends MecanumDrive
 
     public TeamElementDetection teamElementDetector;
     Pose2d localDrivePowers = new Pose2d(new Vector2d(0,0), new Rotation2d(0,0));
+
+    public List<PoseVelocity2d> localVeloPowers = new ArrayList<>();
     ElapsedTime timer;
     public boolean waitingForCS=false;
     public boolean tapeDetected=false;
@@ -153,15 +151,13 @@ public class Robot extends MecanumDrive
         {
             cameraInit();
         }
-        //teamElementDetector=new TeamElementDetection(l.telemetry);
-        dtInit();
 
         slides=new Slides(hardwareMap);
         deposit=new Deposit(hardwareMap);
         intake=new Intake(hardwareMap);
         droneLauncher = new DroneLauncher(hardwareMap);
         hang = hardwareMap.get(DcMotor.class, "hang");
-       // purplePlacer = hardwareMap.get(Servo.class, "purplePlacer");
+        purplePlacer = hardwareMap.get(Servo.class, "purplePlacer");
 
 
         if(!Context.noHwInit)
@@ -265,8 +261,12 @@ public class Robot extends MecanumDrive
 
     public void updateDrivePowers()
     {
-        PoseVelocity2d poseVelocity2d = new PoseVelocity2d(localDrivePowers.position, localDrivePowers.heading.toDouble());
-        setDrivePowers(poseVelocity2d);
+        if (Context.drive != null) {
+            Context.drive.driveWithCorrection(localVeloPowers.get(0), localVeloPowers.get(1));
+        } else {
+            PoseVelocity2d poseVelocity2d = new PoseVelocity2d(localDrivePowers.position, localDrivePowers.heading.toDouble());
+            setDrivePowers(poseVelocity2d);
+        }
     }
 
     public void closeCameras()
@@ -297,16 +297,6 @@ public class Robot extends MecanumDrive
         ));
         imu.initialize(parameters);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "fl");
-        leftRear = hardwareMap.get(DcMotorEx.class, "bl");
-        rightRear = hardwareMap.get(DcMotorEx.class, "br");
-        rightFront = hardwareMap.get(DcMotorEx.class, "fr");
-//        cs3 = hardwareMap.get(ColorRangeSensor .class, "cs3");
-//        cs2 = hardwareMap.get(ColorRangeSensor.class, "cs2");
-//        cs1 = hardwareMap.get(ColorRangeSensor.class, "cs1");
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -384,7 +374,7 @@ public class Robot extends MecanumDrive
 
         if(l.isStarted())
         {
-            if((isBusy()||!Context.isTele))
+            if((isBusy ||!Context.isTele))
                 update();
             else {
                 updateDrivePowers();
@@ -501,9 +491,14 @@ public class Robot extends MecanumDrive
             if(item.getPath().equals(trajectory)){
                 if(Context.opmode.opModeIsActive())
                 {
+                    RobotLog.e("isBusyBefore " + isBusy);
                     k = trajectory;
                     scheduler.scheduleTaskList(item.getTasks());
                     followTrajectorySequence(item.getTrajectory().getAction());
+                    RobotLog.e("isBusyMid " + isBusy);
+                    RobotLog.e("lalalalalala:" + item.getTrajectory().getName());
+                    waitForIdle();
+                    RobotLog.e("isBusyAfter " + isBusy);
                 }
                 else
                     break;
@@ -555,12 +550,11 @@ public class Robot extends MecanumDrive
         updateTrajectory(p);
     }
 
-    public void waitForIdle(Action trajectorySequence) {
-        while (!Thread.currentThread().isInterrupted() && isBusy() && Context.opmode.opModeIsActive())
+    public void waitForIdle() {
+        RobotLog.e("lalalalalalalalalalaalalalalalalala");
+        while (!Thread.currentThread().isInterrupted() && isBusy && Context.opmode.opModeIsActive())
         {
-            TelemetryPacket packet = new TelemetryPacket();
-            trajectorySequence.run(packet);
-            
+            RobotLog.e("tis looping");
             Method x =null;
             try{
                 x= Context.opmode.getClass().getMethod("primaryLoop",(Class<?>[]) null);
@@ -582,15 +576,14 @@ public class Robot extends MecanumDrive
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
-    public boolean isBusy() {
-        return isBusy; // thresh
-    }
 
-    public void setMode(DcMotor.RunMode runMode) {
+   /* public void setMode(DcMotor.RunMode runMode) {
         for (DcMotorEx motor : motors) {
             motor.setMode(runMode);
         }
     }
+
+    */
 
     public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
         for (DcMotorEx motor : motors) {

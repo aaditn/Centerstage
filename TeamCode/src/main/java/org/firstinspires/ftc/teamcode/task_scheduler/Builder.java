@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.task_scheduler;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
@@ -154,7 +155,7 @@ public class Builder
 
     public Builder awaitDrivetrainCompletion()
     {
-        tasks.add(new AwaitTask(()->!drive.isBusy()));
+        tasks.add(new AwaitTask(()->!MecanumDrive.isBusy));
         return this;
     }
 

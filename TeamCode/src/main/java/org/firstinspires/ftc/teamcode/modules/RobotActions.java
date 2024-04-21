@@ -90,6 +90,7 @@ public class RobotActions
                 .executeCode(() -> robot.purplePlacer.setPosition(closed))
                 .delay((long) y)
                 .executeCode(() -> robot.purplePlacer.setPosition(open))
+                .addTaskList(autoDrop(46, 20, Slides.SlideState.AUTO_LOW, Deposit.RotateState.PLUS_NINETY))
                 .build();
     }
 

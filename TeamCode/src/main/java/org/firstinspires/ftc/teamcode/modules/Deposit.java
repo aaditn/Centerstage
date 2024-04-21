@@ -69,14 +69,12 @@ public class Deposit extends Module
     WristState wstate;
     RotateState wrstate;
     ClawState cstate;
-    ExtensionState estate;
     public Deposit(HardwareMap hardwareMap)
     {
         super(false, telemetryToggle);
         leftArm=hardwareMap.get(Servo.class, "leftArm");
         rightArm=hardwareMap.get(Servo.class, "rightArm");
         rightArm.setDirection(Servo.Direction.REVERSE);
-        extension = hardwareMap.get(Servo.class, "extension");
         wrist=hardwareMap.get(Servo.class, "wrist");
         rotatewrist=hardwareMap.get(Servo.class, "rotatewrist");
         claw=hardwareMap.get(Servo.class, "claw");
@@ -144,8 +142,8 @@ public class Deposit extends Module
         wstate=WristState.TRANSFER;
         wrstate= RotateState.ZERO;
         cstate=ClawState.OPEN;
-        estate = ExtensionState.TRANSFER;
-        setInternalStates(fstate, wstate, wrstate, cstate,estate);
+
+        setInternalStates(fstate, wstate, wrstate, cstate);
     }
 
     @Override
@@ -161,14 +159,13 @@ public class Deposit extends Module
         converter.add(WristState.values(), wristValues);
         converter.add(ClawState.values(), clawValues);
         converter.add(RotateState.values(), rotateValues);
-        converter.add(ExtensionState.values(), extValues);
     }
 
     public void onDeath()
     {
         /*leftArm.getController().pwmDisable();
         rightArm.getController().pwmDisable();
-        extension.getController().pwmDisable();
+
         wrist.getController().pwmDisable();
         rotatewrist.getController().pwmDisable();*/
     }

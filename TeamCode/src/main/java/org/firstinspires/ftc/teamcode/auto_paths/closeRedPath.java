@@ -44,10 +44,10 @@ public class closeRedPath {
         leftTrajectories = map(
                 Arrays.asList(purple_yellow, stack1, back1),
                         trajectoryNames);
-        leftTrajectories = map(
+        midTrajectories = map(
                 Arrays.asList(purple_yellow, stack1, back1),
                 trajectoryNames);
-        leftTrajectories = map(
+        rightTrajectories = map(
                 Arrays.asList(purple_yellow, stack1, back1),
                 trajectoryNames);
         trajectories = new NamedTrajectory[][]{leftTrajectories, midTrajectories, rightTrajectories};

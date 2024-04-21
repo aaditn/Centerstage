@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util
 import com.acmerobotics.dashboard.FtcDashboard
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
+import com.qualcomm.robotcore.util.RobotLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -69,6 +70,7 @@ abstract class EnhancedOpMode(): LinearOpMode ()
     }
     fun waitForEnd()
     {
+        RobotLog.e("waiting for end fine")
         while (!isStopRequested && opModeIsActive()) {
         }
     }

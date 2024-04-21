@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.tele;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -10,6 +11,7 @@ import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -29,6 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @TeleOp(name = "A - Ethan Opp")
+@Config
 public class EthanOpp extends EnhancedOpMode
 {
     DcMotorEx hang;
@@ -44,7 +47,7 @@ public class EthanOpp extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
-    ButtonReader droneButton1, intakeToggle, presetMacro, slidesLower, flipRotator, tiltRotator, slideDown, slideUp;
+    ButtonReader droneButton1, intakeToggle, presetMacro, slidesLower, flipRotator, tiltRotator, slideDown, slideUp, lala;
     TriggerReader intakeUp_rotateLeft, intakeDown_rotateRight;
     double ninja = 1;
     double ninjaStrafe = 1;
@@ -54,6 +57,7 @@ public class EthanOpp extends EnhancedOpMode
     Intake.SweeperState[] sweeperPositions;
     Slides.SlideState[] slideStates;
 
+    Servo purplePlacer; // 0.173 down, 0.19 up
     List<Deposit.RotateState> rotateStates;
     PresetPackage activePreset = new PresetPackage(Slides.SlideState.R1, Deposit.RotateState.PLUS_NINETY, Deposit.WristState.HOVER);
     boolean isHang = false;
@@ -64,6 +68,7 @@ public class EthanOpp extends EnhancedOpMode
     ElapsedTime hangWait = new ElapsedTime();
 
     boolean isSweeperDown = false;
+    public static double purple = 0;
 
     public enum DriveType implements ModuleState {
         NORMAL, EXIT_BACKSTAGE
@@ -80,6 +85,7 @@ public class EthanOpp extends EnhancedOpMode
 
         driveType = DriveType.EXIT_BACKSTAGE;
 
+
         while (opModeIsActive()) {
             for (KeyReader reader : keyReaders) {
                 reader.readValue();
@@ -87,6 +93,11 @@ public class EthanOpp extends EnhancedOpMode
                     isChanged = true;
                 }
             }
+
+            if (lala.wasJustPressed()) {
+                purplePlacer.setPosition(purple);
+            }
+
             if (driveType.equals(DriveType.NORMAL)) {
                 if (Math.abs(gamepad1.left_stick_y) < 0.3) {
                     x = ninja * 1.67 * Math.abs(gamepad1.left_stick_y);
@@ -220,7 +231,7 @@ public class EthanOpp extends EnhancedOpMode
                     drone.setState(DroneLauncher.State.LOCKED);
             }
 
-            if (intakeToggle.wasJustPressed()) {
+           if (intakeToggle.wasJustPressed()) {
                 if (intake.getState(Intake.PowerState.class).equals(Intake.PowerState.OFF)) {
                     intake.setState(Intake.PowerState.INTAKE);
                     intake.setState(Intake.PowerState.OFF);
@@ -239,7 +250,7 @@ public class EthanOpp extends EnhancedOpMode
                 lastTouchpad = gamepad2.touchpad;
             }
 
-            if (intake.isUnderCurrent(20)) {
+           if (intake.isUnderCurrent(20)) {
                 if (!touchpadVal) {
                     if (Math.abs(gamepad2.right_stick_x + gamepad2.right_stick_y) > 0.2) {
                         boolean isUp = -Math.signum(gamepad2.right_stick_y) > 0;
@@ -269,6 +280,8 @@ public class EthanOpp extends EnhancedOpMode
                 intake.setState(Intake.PowerState.EXTAKE);
                 intake.setState(Intake.ConveyorState.EXTAKE);
             }
+
+
             if (slideUp.wasJustPressed() && slidesIndex < slideStates.length - 1) {
                 slidesIndex++;
                 activePreset.slideState = slideStates[slidesIndex];
@@ -323,6 +336,7 @@ public class EthanOpp extends EnhancedOpMode
         this.setLoopTimes(1);
         robot = Robot.getInstance();
         hang = hardwareMap.get(DcMotorEx.class, "hang");
+        purplePlacer = hardwareMap.get(Servo.class, "purplePlacer");
         scheduler = new TaskScheduler();
         actions = RobotActions.getInstance();
 
@@ -364,7 +378,8 @@ public class EthanOpp extends EnhancedOpMode
                 tiltRotator = new ToggleButtonReader(g1, GamepadKeys.Button.B),
                 flipRotator = new ToggleButtonReader(g1, GamepadKeys.Button.A),
                 slideDown = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_DOWN),
-                slideUp = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_UP)
+                slideUp = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_UP),
+                lala = new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_STICK_BUTTON)
         };
 
         sweeperPositions = new Intake.SweeperState[]{

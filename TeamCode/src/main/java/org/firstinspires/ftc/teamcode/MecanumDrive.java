@@ -49,6 +49,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
@@ -71,6 +72,7 @@ public class MecanumDrive {
     private double beginTs = -1;
     public int index = 0;
 
+    boolean isLast = false;
     private double[] xPoints, yPoints;
 
     public static class Params {
@@ -230,6 +232,14 @@ public class MecanumDrive {
         }
     }
 
+    public void setMode(DcMotor.RunMode runMode) {
+       leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+    }
+
     public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
         this.pose = pose;
 
@@ -273,8 +283,11 @@ public class MecanumDrive {
         if (index == 0) {
             currentTrajList = t;
         }
-        timeTrajectory = t.get(index);
-
+        isBusy = true;
+        timeTrajectory = t.get(0);
+        for (int i = 0; i < t.size(); i++) {
+            RobotLog.e("for log lmao: " + t.get(i).toString());
+        }
         List<Double> disps = com.acmerobotics.roadrunner.Math.range(
                 0, timeTrajectory.path.length(),
                 Math.max(2, (int) Math.ceil(timeTrajectory.path.length() / 2)));
@@ -286,6 +299,8 @@ public class MecanumDrive {
             yPoints[i] = p.position.y;
         }
         displacementTrajectory = new DisplacementTrajectory(timeTrajectory.path, timeTrajectory.profile.dispProfile);
+
+        beginTs = -1;
     }
 
     public void updateTrajectory(TelemetryPacket p) {
@@ -294,34 +309,23 @@ public class MecanumDrive {
             beginTs = Actions.now();
             t = 0;
             isBusy = true;
+            RobotLog.e("teehee");
         } else {
+            RobotLog.e("t changed");
             t = Actions.now() - beginTs;
         }
 
 
         if (t >= timeTrajectory.duration) {
-            boolean imStupidSoImJustGonnaDoThis = false;
-            if (currentTrajList != null) {
-                if (index < currentTrajList.size() - 1) {
-                    index++;
-                    followTrajectorySequence(currentTrajList);
-                } else {
-                    imStupidSoImJustGonnaDoThis = true;
-                }
-            } else {
-                imStupidSoImJustGonnaDoThis = true;
-            }
-            if (imStupidSoImJustGonnaDoThis) {
-                leftFront.setPower(0);
-                leftBack.setPower(0);
-                rightBack.setPower(0);
-                rightFront.setPower(0);
-                isBusy = false;
-                index = 0;
-                return;
-            }
-
+            leftFront.setPower(0);
+            leftBack.setPower(0);
+            rightBack.setPower(0);
+            rightFront.setPower(0);
+            isBusy = false;
         }
+
+
+
 //            double d = project(displacementTrajectory.path, pose.position, lastDisp);
 //            lastDisp = d;
 //            Pose2dDual<Arclength> arcTarget = displacementTrajectory.path.get(d, 3);

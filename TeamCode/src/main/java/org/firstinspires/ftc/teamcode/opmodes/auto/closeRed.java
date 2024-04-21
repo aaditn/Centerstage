@@ -53,6 +53,7 @@ public class closeRed extends EnhancedOpMode {
 
     @Override
     public void linearOpMode() {
+
         ElapsedTime time = new ElapsedTime();
 
         RobotLog.e("Starting Time Trajectory" + time.milliseconds());
@@ -66,11 +67,20 @@ public class closeRed extends EnhancedOpMode {
 
         if(opModeIsActive())
         {
+
+            for (NamedTrajectory[] nArr: trajectories) {
+                for (NamedTrajectory n: nArr) {
+                    RobotLog.e("size" + n.getAction().size());
+                }
+            }
+
+
             drive.pose = closeRedPath.closeRedStart;
             delayLinear((long)Context.autoWaitTime*1000);
             drive.set(trajectories,auto_tasks());
             RobotLog.e("things mapped");
             drive.run(Paths.Purple_Yellow);
+            delayLinear(1000);
             RobotLog.e("purple");
             drive.run(Paths.Stack1);
             delayLinear(200);
@@ -93,7 +103,6 @@ public class closeRed extends EnhancedOpMode {
     public void onStart() {
        // drive.closeCameras();
     }
-
     @Override
     public void initialize() {
         this.setLoopTimes(10);

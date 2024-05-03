@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.modules.moduleUtil.Module;
@@ -10,7 +11,6 @@ import org.firstinspires.ftc.teamcode.task_scheduler.Task;
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.PresetPackage;
 import org.firstinspires.ftc.teamcode.util.enums.Dice;
-import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
 import java.util.List;
 @Config
@@ -82,14 +82,15 @@ public class RobotActions
     public List<Task> deployPurple(double yLeft, double yMid, double yRight)
     {
         double y = Context.dice == Dice.MIDDLE?yMid: Context.dice == Dice.RIGHT?yRight: yLeft;
-
         double closed = 1;
         double open = 0.5;
 
+        RobotLog.e("y is " + y);
         return Builder.create()
+                .executeCode(() -> deposit.setState(Deposit.ClawState.CLOSED1))
                 .delay((long) y)
                 .executeCode(() -> intake.setState(Intake.PowerState.SLOW))
-                .delay(200)
+                .delay(500)
                 .executeCode(() -> intake.setState(Intake.PowerState.OFF))
 
                 .build();
@@ -100,8 +101,8 @@ public class RobotActions
                 .await(() -> robot.pose.position.x > startSlides)
                 .addTaskList(slidesOnly(height, rotateState))
                 .executeCode(()->slides.macroRunning=false)
-                .await(()->robot.pose.position.x>xPos||(robot.k != Paths.Back1&&robot.k != Paths.Back2&&robot.k != Paths.Back3))
-                .delay(750)
+                .await(()->robot.pose.position.x>xPos)
+                .delay(250)
                 .addTaskList(scorePixels())
                 //.executeCode(()->Context.colorSensorsEnabled=false)
                 .build();

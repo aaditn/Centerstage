@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import com.acmerobotics.roadrunner.TimeTrajectory;
-import com.acmerobotics.roadrunner.Trajectory;
+import com.acmerobotics.roadrunner.Action;
 
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
@@ -10,8 +9,8 @@ import java.util.List;
 
 public class NamedTrajectory {
     Paths name;
-    List<Trajectory> action;
-    NamedTrajectory(List<Trajectory> action, Paths path){
+    Action action;
+    NamedTrajectory(Action action, Paths path){
         this.action = action;
         this.name =path;
     }
@@ -19,14 +18,10 @@ public class NamedTrajectory {
         return name;
     }
 
-    public List<TimeTrajectory> getAction() {
-        List<TimeTrajectory> list = new ArrayList<>();
-        for (Trajectory t: action) {
-            list.add(new TimeTrajectory(t));
-        }
-        return list;
+    public Action getAction() {
+        return action;
     }
-    public static NamedTrajectory[] map(List<List<Trajectory>> trajs, Paths[] paths){
+    public static NamedTrajectory[] map(List<Action> trajs, Paths[] paths){
         List<NamedTrajectory> added = new ArrayList<>();
         for(int i =0; i<trajs.size();i++){
             added.add(new NamedTrajectory(trajs.get(i),paths[i]));

@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode.non_module_testing;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.ftc.Encoder;
+import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
+import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.util.Context;
 import org.firstinspires.ftc.teamcode.util.EnhancedOpMode;
@@ -28,10 +31,10 @@ public class OdomTesting extends EnhancedOpMode
         tel = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Context.resetValues();
         Context.tel=tel;
-        frontRightEncoder = hardwareMap.get(Encoder.class, "fr");
-        frontLeftEncoder = hardwareMap.get(Encoder.class, "fl");
-        backRightEncoder = hardwareMap.get(Encoder.class, "br");
-        backLeftEncoder = hardwareMap.get(Encoder.class, "bl");
+        frontRightEncoder = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "fr")));
+        frontLeftEncoder = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "fl")));
+        backRightEncoder = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "br")));
+        backLeftEncoder = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "bl")));
 
     }
 

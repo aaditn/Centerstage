@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.auto_paths.closeRedPath;
 import org.firstinspires.ftc.teamcode.modules.Deposit;
@@ -28,7 +27,7 @@ import java.util.List;
 
 @Autonomous(name = "Close Red")
 public class closeRed extends EnhancedOpMode {
-    Robot drive;
+    public static Robot drive;
     TaskScheduler scheduler;
     RobotActions actions;
     Deposit deposit;
@@ -37,7 +36,7 @@ public class closeRed extends EnhancedOpMode {
     DroneLauncher drone;
     private List<Task>[] auto_tasks() {
         return getTaskList(
-                actions.deployPurple(0.3, 0.3, 0.3),
+                actions.deployPurple(1400, 1400, 1400),
                 actions.autoDrop(48, -15, Slides.SlideState.HALF, Deposit.RotateState.PLUS_NINETY),
                 actions.lowerIntake(0, -51.5, 1, true),
                 actions.autoDrop(46, -15,  Slides.SlideState.R1, Deposit.RotateState.PLUS_NINETY)
@@ -53,7 +52,7 @@ public class closeRed extends EnhancedOpMode {
         ElapsedTime time = new ElapsedTime();
 
         RobotLog.e("Starting Time Trajectory" + time.milliseconds());
-        closeRedPath pathObj = new closeRedPath(drive);
+        closeRedPath pathObj = new closeRedPath();
         NamedTrajectory[][] trajectories = pathObj.trajectories;
         RobotLog.e("Ending Time Trajectory" + time.milliseconds());
         RobotLog.e("Static Force Initialization Begins");
@@ -64,11 +63,11 @@ public class closeRed extends EnhancedOpMode {
         if(opModeIsActive())
         {
 
-            for (NamedTrajectory[] nArr: trajectories) {
+           /* for (NamedTrajectory[] nArr: trajectories) {
                 for (NamedTrajectory n: nArr) {
                     RobotLog.e("size" + n.getAction().size());
                 }
-            }
+            }*/
 
 
             drive.pose = closeRedPath.closeRedStart;
@@ -76,17 +75,17 @@ public class closeRed extends EnhancedOpMode {
             drive.set(trajectories,auto_tasks());
             RobotLog.e("things mapped");
             drive.run(Paths.Purple);
-            RobotLog.e("purple: "  + drive.pose.toString());
-            delayLinear(500);
+            RobotLog.e("purple: "  + drive.pose);
+           // delayLinear(500);
             drive.run(Paths.Yellow);
             RobotLog.e("yellow: "  + drive.pose);
-            delayLinear(500);
+           // delayLinear(500);
             drive.run(Paths.Stack1);
-            delayLinear(200);
             RobotLog.e("stack: "+ drive.pose);
-            delayLinear(250);
             RobotLog.e("delaying");
             drive.run(Paths.Back1);
+            RobotLog.e("back: "+ drive.pose);
+            RobotLog.e("back duration: " + drive.trajectoryDuration);
 
 
             waitForEnd();
@@ -103,13 +102,7 @@ public class closeRed extends EnhancedOpMode {
        // drive.closeCameras();
     }
 
-    public void turnOffMotors() {
-        drive.leftFront.setPower(0);
-        drive.leftBack.setPower(0);
-        drive.rightBack.setPower(0);
-        drive.rightFront.setPower(0);
-        MecanumDrive.isBusy = false;
-    }
+
     @Override
     public void initialize() {
         this.setLoopTimes(10);

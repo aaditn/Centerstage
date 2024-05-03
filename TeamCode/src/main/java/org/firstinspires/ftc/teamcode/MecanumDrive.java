@@ -69,11 +69,17 @@ public class MecanumDrive {
     public TimeTrajectory timeTrajectory;
     public DisplacementTrajectory displacementTrajectory;
     public List<TimeTrajectory> currentTrajList;
+    public static double trajectoryDuration = 0;
     private double beginTs = -1;
+    public DisplacementTrajectory dt;
+    public HolonomicController contr;
+
+    private double[] xPoints;
+    private double[] yPoints;
+    double disp;
     public int index = 0;
 
     boolean isLast = false;
-    private double[] xPoints, yPoints;
 
     public static class Params {
         // IMU orientation
@@ -96,9 +102,9 @@ public class MecanumDrive {
         public double kA = 0.00002;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 50;
+        public double maxWheelVel = 40;
         public double minProfileAccel = -30;
-        public double maxProfileAccel = 50;
+        public double maxProfileAccel = 30;
 
         // turn profile parameters (in radians)
         public double maxAngVel = Math.PI; // shared with path
@@ -285,6 +291,10 @@ public class MecanumDrive {
         }
         isBusy = true;
         timeTrajectory = t.get(0);
+        for (int j = 0; j < t.size(); j++) {
+            trajectoryDuration += t.get(j).duration;
+        }
+        RobotLog.e("Trajectory Duration: " +  + trajectoryDuration);
         for (int i = 0; i < t.size(); i++) {
             RobotLog.e("for log lmao: " + t.get(i).toString());
         }
@@ -301,6 +311,26 @@ public class MecanumDrive {
         displacementTrajectory = new DisplacementTrajectory(timeTrajectory.path, timeTrajectory.profile.dispProfile);
 
         beginTs = -1;
+
+
+       /* TimeTrajectory t = tee.get(0);
+
+        dt = new DisplacementTrajectory(t.path, t.profile.dispProfile);
+
+        List<Double> disps = com.acmerobotics.roadrunner.Math.range(
+                0, dt.path.length(),
+                Math.max(2, (int) Math.ceil(dt.path.length() / 2)));
+        xPoints = new double[disps.size()];
+        yPoints = new double[disps.size()];
+        for (int i = 0; i < disps.size(); i++) {
+            Pose2d p = t.path.get(disps.get(i), 1).value();
+            xPoints[i] = p.position.x;
+            yPoints[i] = p.position.y;
+        }
+        contr = new HolonomicController(PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain);
+        disp = 0;
+
+        */
     }
 
     public void updateTrajectory(TelemetryPacket p) {
@@ -314,6 +344,8 @@ public class MecanumDrive {
             RobotLog.e("t changed");
             t = Actions.now() - beginTs;
         }
+        RobotLog.e("beginTs: "+beginTs);
+        RobotLog.e("tee: " + t);
 
 
 //            double d = project(displacementTrajectory.path, pose.position, lastDisp);
@@ -348,12 +380,13 @@ public class MecanumDrive {
                 voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower
         ));
 
-        if (t >= timeTrajectory.duration) {
+        if (t >= trajectoryDuration) {
             leftFront.setPower(0);
             leftBack.setPower(0);
             rightBack.setPower(0);
             rightFront.setPower(0);
             isBusy = false;
+            trajectoryDuration = 0;
         } else {
             leftFront.setPower(leftFrontPower);
             leftBack.setPower(leftBackPower);
@@ -384,7 +417,56 @@ public class MecanumDrive {
         c.setStroke("#4CAF50FF");
         c.setStrokeWidth(1);
         c.strokePolyline(xPoints, yPoints);
+       /* if (disp + 1 > dt.length()) {
+            leftFront.setPower(0);
+            leftBack.setPower(0);
+            rightBack.setPower(0);
+            rightFront.setPower(0);
 
+            isBusy = false;
+        }
+        PoseVelocity2d robotVelRobot = updatePoseEstimate();
+        disp = dt.project(pose.position, disp);
+        Pose2dDual<Time> poseTarget = dt.get(disp);
+        PoseVelocity2dDual<Time> cmd = contr.compute(poseTarget, pose, robotVelRobot);
+
+        MecanumKinematics.WheelVelocities<Time> wheelVels = kinematics.inverse(cmd);
+        double voltage = voltageSensor.getVoltage();
+        final MotorFeedforward feedforward = new MotorFeedforward(PARAMS.kS, PARAMS.kV / PARAMS.inPerTick, PARAMS.kA / PARAMS.inPerTick);
+        leftFront.setPower(feedforward.compute(wheelVels.leftFront) / voltage);
+        leftBack.setPower(feedforward.compute(wheelVels.leftBack) / voltage);
+        rightBack.setPower(feedforward.compute(wheelVels.rightBack) / voltage);
+        rightFront.setPower(feedforward.compute(wheelVels.rightFront) / voltage);
+
+
+
+        FlightRecorder.write("TARGET_POSE", new PoseMessage(poseTarget.value()));
+
+        p.put("x", pose.position.x);
+        p.put("y", pose.position.y);
+        p.put("heading (deg)", Math.toDegrees(pose.heading.log()));
+
+        Pose2d error = poseTarget.value().minusExp(pose);
+        p.put("xError", error.position.x);
+        p.put("yError", error.position.y);
+        p.put("headingError (deg)", Math.toDegrees(error.heading.log()));
+
+        // only draw when active; only one drive action should be active at a time
+        Canvas c = p.fieldOverlay();
+        drawPoseHistory(c);
+
+        c.setStroke("#4CAF50");
+        Drawing.drawRobot(c, poseTarget.value());
+
+        c.setStroke("#3F51B5");
+        Drawing.drawRobot(c, pose);
+
+        c.setStroke("#4CAF50FF");
+        c.setStrokeWidth(1);
+        c.strokePolyline(xPoints, yPoints);
+        isBusy = true;
+
+        */
     }
     public void setDrivePowers(PoseVelocity2d powers) {
         MecanumKinematics.WheelVelocities<Time> wheelVels = new MecanumKinematics(1).inverse(
@@ -425,6 +507,7 @@ public class MecanumDrive {
 
         @Override
         public boolean run(@NonNull TelemetryPacket p) {
+            double time = Actions.now();
             double t;
             if (beginTs < 0) {
                 beginTs = Actions.now();
@@ -501,6 +584,8 @@ public class MecanumDrive {
             c.setStroke("#4CAF50FF");
             c.setStrokeWidth(1);
             c.strokePolyline(xPoints, yPoints);
+
+            RobotLog.e("Loop times: " + (Actions.now() - time));
 
             return true;
         }

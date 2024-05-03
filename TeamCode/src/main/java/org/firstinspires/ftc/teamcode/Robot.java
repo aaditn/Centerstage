@@ -340,9 +340,8 @@ public class Robot extends MecanumDrive
 //        navxWrapper.update();
         if(!Context.isTele)
         {
-            update();
-            Tel.instance().addData("DT Vel", pose.position.div(2), 1);
-            Tel.instance().addData("DT Accel", pose.position.div(3), 1);
+           // update();
+
         }
         else {
             updateDrivePowers();
@@ -350,6 +349,7 @@ public class Robot extends MecanumDrive
                 hang.setPower(hangPower);
             }
         }
+        Tel.instance().addData("DT Pose", pose.position);
 
         if(timer.milliseconds()>500)
         {
@@ -494,10 +494,11 @@ public class Robot extends MecanumDrive
                     RobotLog.e("isBusyBefore " + isBusy);
                     k = trajectory;
                     scheduler.scheduleTaskList(item.getTasks());
-                    followTrajectorySequence(item.getTrajectory().getAction());
+                   // followTrajectorySequence(item.getTrajectory().getAction());
+                    isBusy = true;
+                    RobotLog.e(item.getTrajectory().getName() + ": " + trajectoryDuration);
                     RobotLog.e("isBusyMid " + isBusy);
-                    RobotLog.e("lalalalalala:" + item.getTrajectory().getName());
-                    waitForIdle();
+                    waitForIdle(item);
                     RobotLog.e("isBusyAfter " + isBusy);
                 }
                 else
@@ -547,14 +548,15 @@ public class Robot extends MecanumDrive
     public void update() {
         updatePoseEstimate();
         TelemetryPacket p = new TelemetryPacket();
-        updateTrajectory(p);
+        //updateTrajectory(p);
+      //  item.getTrajectory().getAction().run(new TelemetryPacket());
     }
 
-    public void waitForIdle() {
-        RobotLog.e("lalalalalalalalalalaalalalalalalala");
+    public void waitForIdle(WhipTrajectory item) {
         while (!Thread.currentThread().isInterrupted() && isBusy && Context.opmode.opModeIsActive())
         {
-            RobotLog.e("tis looping");
+
+            item.getTrajectory().getAction().run(new TelemetryPacket());
             Method x =null;
             try{
                 x= Context.opmode.getClass().getMethod("primaryLoop",(Class<?>[]) null);
@@ -564,7 +566,7 @@ public class Robot extends MecanumDrive
         }
             if(x==null){
                 //RobotLog.e("yep");
-                update();
+                //update();
                 break;
             }else {
                 //RobotLog.e("nah");

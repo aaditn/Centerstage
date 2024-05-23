@@ -102,7 +102,6 @@ public class RobotActions
                 .addTaskList(slidesOnly(height, rotateState))
                 .executeCode(()->slides.macroRunning=false)
                 .await(()->robot.pose.position.x>xPos)
-                .delay(250)
                 .addTaskList(scorePixels())
                 //.executeCode(()->Context.colorSensorsEnabled=false)
                 .build();
@@ -115,11 +114,29 @@ public class RobotActions
                     .moduleAction(deposit, rotateState)
                     .moduleAction(deposit, Deposit.WristState.FLICK)
                     .build();
+        } else if (deposit.getState().equals(Deposit.FlipState.PRELOAD)) {
+            return Builder.create()
+                    .executeCode(()->slides.macroRunning=true)
+                    .moduleAction(deposit, Deposit.FlipState.PARTIAL)
+                    .moduleAction(slides, slideState)
+                    // .delay(100)
+                    // .moduleAction(deposit, Deposit.WristState.TELESCOPE)
+                    .delay(200)
+                    .moduleAction(deposit, rotateState)
+                    .delay(100)
+                    .moduleAction(deposit, Deposit.FlipState.DOWN)
+                    .moduleAction(deposit, Deposit.WristState.FLICK)
+                    .delay(300)
+                    .await(slides::isIdle)
+                    //.await(()->slides.getStatus()==Module.Status.IDLE)
+                    .executeCode(()->slides.macroRunning=false)
+                    .executeCode(()->slides.instantAdd=false)
+                    .build();
         }
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
                 .moduleAction(deposit, Deposit.ClawState.CLOSED2)
-                .delay(400)
+                .delay(500)
                 .moduleAction(deposit, Deposit.FlipState.PARTIAL)
                 .moduleAction(slides, slideState)
                 // .delay(100)

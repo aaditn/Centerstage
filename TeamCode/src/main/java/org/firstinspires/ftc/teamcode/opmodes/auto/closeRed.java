@@ -36,12 +36,14 @@ public class closeRed extends EnhancedOpMode {
     DroneLauncher drone;
     private List<Task>[] auto_tasks() {
         return getTaskList(
-                actions.deployPurple(1400, 1400, 1400),
+                actions.deployPurple(1100, 1100, 1100),
                 actions.autoDrop(35, -15, Slides.SlideState.R1, Deposit.RotateState.PLUS_NINETY),
                 actions.lowerIntake(0, -51.5, 1, true),
-                actions.autoDrop(35, -15,  Slides.SlideState.R2, Deposit.RotateState.PLUS_NINETY),
+                actions.autoDrop(37, -23,  Slides.SlideState.R4, Deposit.RotateState.ZERO),
                 actions.lowerIntake(0, -51.5, 1, true),
-                actions.autoDrop(35, -15,  Slides.SlideState.R3, Deposit.RotateState.PLUS_NINETY)
+                actions.autoDrop(37, -23,  Slides.SlideState.R4, Deposit.RotateState.ZERO),
+                actions.lowerIntake(0, -51.5, 1, true),
+                actions.autoDrop(37, -23,  Slides.SlideState.R4, Deposit.RotateState.ZERO)
 //                actions.lowerIntake(-30, -51.5, 2, true),
 //                actions.autoDrop(46, -15, Slides.SlideState.R1, Deposit.RotateState.PLUS_NINETY)
 //                actions.scorePixels(48.5, TeleOpRewrite.DepositState.RIGHT, -38, Slides.SlideState.ROW2)
@@ -76,18 +78,17 @@ public class closeRed extends EnhancedOpMode {
             delayLinear((long)Context.autoWaitTime*1000);
             drive.set(trajectories,auto_tasks());
             RobotLog.e("things mapped");
+
             drive.run(Paths.Purple);
-            RobotLog.e("purple: "  + drive.pose);
-           // delayLinear(500);
             drive.run(Paths.Yellow);
-            RobotLog.e("yellow: "  + drive.pose);
-           // delayLinear(500);
             drive.run(Paths.Stack1);
-            RobotLog.e("stack: "+ drive.pose);
-            RobotLog.e("delaying");
             drive.run(Paths.Back1);
-            RobotLog.e("back: "+ drive.pose);
-            RobotLog.e("back duration: " + drive.trajectoryDuration);
+            drive.run(Paths.Stack1);
+            drive.run(Paths.Back1);
+            drive.run(Paths.Stack1);
+            drive.run(Paths.Back1);
+
+
 
 
             waitForEnd();

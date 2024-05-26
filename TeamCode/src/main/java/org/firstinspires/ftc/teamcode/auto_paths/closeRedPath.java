@@ -31,25 +31,24 @@ public class closeRedPath {
                 .splineToSplineHeading(new Pose2d(35, -26, Math.toRadians(180)), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(48, -26, Math.toRadians(180)), Math.toRadians(0))
                 .build();
-        stack1 = drive.actionBuilder(new Pose2d(48, -30, Math.toRadians(180)))
-                .splineToSplineHeading(new Pose2d(0, -8, Math.toRadians(180)), Math.toRadians(180))
+        stack1 = drive.actionBuilder(new Pose2d(48, -26, Math.toRadians(180)))
+                .splineToSplineHeading(new Pose2d(20, -9, Math.toRadians(180)), Math.toRadians(180))
                 .lineToXSplineHeading(-58, Math.toRadians(180))
                 .build();
         back1 = drive.actionBuilder(new Pose2d(-58, -9, Math.toRadians(180)))
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(0, -8), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(25, -22, Math.toRadians(150)), Math.toRadians(-30))
-                .splineToSplineHeading(new Pose2d(48, -30, Math.toRadians(180)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(0, -9), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(48, -18, Math.toRadians(170)), Math.toRadians(-10))
                 .build();
 
         leftTrajectories = map(
-                Arrays.asList(purple, yellow, stack1, back1),
+                Arrays.asList(purple, yellow, stack1, back1, stack1, back1, stack1, back1),
                 trajectoryNames);
         midTrajectories = map(
-                Arrays.asList(purple, yellow, stack1, back1),
+                Arrays.asList(purple, yellow, stack1, back1, stack1, back1, stack1, back1),
                 trajectoryNames);
         rightTrajectories = map(
-                Arrays.asList(purple, yellow, stack1, back1),
+                Arrays.asList(purple, yellow, stack1, back1, stack1, back1, stack1, back1),
                 trajectoryNames);
         trajectories = new NamedTrajectory[][]{leftTrajectories, midTrajectories, rightTrajectories};
     }
@@ -60,6 +59,10 @@ public class closeRedPath {
             Paths.Yellow,
             Paths.Stack1,
             Paths.Back1,
+            Paths.Stack2,
+            Paths.Back2,
+            Paths.Stack3,
+            Paths.Back3
     };
 
 }

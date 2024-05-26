@@ -98,6 +98,7 @@ public class RobotActions
 
     public List<Task> autoDrop(double xPos, double startSlides, Slides.SlideState height, Deposit.RotateState rotateState){
         return Builder.create()
+                .moduleAction(deposit, Deposit.ClawState.CLOSED1)
                 .await(() -> robot.pose.position.x > startSlides)
                 .addTaskList(slidesOnly(height, rotateState))
                 .executeCode(()->slides.macroRunning=false)
@@ -117,6 +118,7 @@ public class RobotActions
         } else if (deposit.getState().equals(Deposit.FlipState.PRELOAD)) {
             return Builder.create()
                     .executeCode(()->slides.macroRunning=true)
+                    .moduleAction(deposit, Deposit.ClawState.CLOSED1)
                     .moduleAction(deposit, Deposit.FlipState.PARTIAL)
                     .moduleAction(slides, slideState)
                     // .delay(100)
@@ -135,15 +137,15 @@ public class RobotActions
         }
         return Builder.create()
                 .executeCode(()->slides.macroRunning=true)
-                .moduleAction(deposit, Deposit.ClawState.CLOSED2)
+                .moduleAction(deposit, Deposit.ClawState.CLOSED1)
                 .delay(500)
                 .moduleAction(deposit, Deposit.FlipState.PARTIAL)
-                .moduleAction(slides, slideState)
                 // .delay(100)
                 // .moduleAction(deposit, Deposit.WristState.TELESCOPE)
                 .delay(200)
                 .moduleAction(deposit, rotateState)
                 .delay(100)
+                .moduleAction(slides, slideState)
                 .moduleAction(deposit, Deposit.FlipState.DOWN)
                 .moduleAction(deposit, Deposit.WristState.FLICK)
                 .delay(300)

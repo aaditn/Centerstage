@@ -5,6 +5,8 @@ public enum Paths {
     Yellow,
     Stack1,
     Back1,
+    Stack2,
     Back2,
+    Stack3,
     Back3
 };

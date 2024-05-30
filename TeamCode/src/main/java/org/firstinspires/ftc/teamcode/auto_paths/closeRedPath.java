@@ -7,6 +7,8 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.util.NamedTrajectory;
 import org.firstinspires.ftc.teamcode.util.enums.Paths;
 
@@ -32,8 +34,12 @@ public class closeRedPath {
                 .splineToSplineHeading(new Pose2d(48, -26, Math.toRadians(180)), Math.toRadians(0))
                 .build();
         stack1 = drive.actionBuilder(new Pose2d(48, -26, Math.toRadians(180)))
-                .splineToSplineHeading(new Pose2d(20, -9, Math.toRadians(180)), Math.toRadians(180))
-                .lineToXSplineHeading(-58, Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(20, -9, Math.toRadians(180)), Math.toRadians(180),
+                        Robot.getVelocityConstraint(MecanumDrive.PARAMS.maxWheelVel, MecanumDrive.PARAMS.maxAngVel),
+                        Robot.getAccelerationConstraint(-25, 25))
+                .lineToXSplineHeading(-58, Math.toRadians(180),
+                        Robot.getVelocityConstraint(MecanumDrive.PARAMS.maxWheelVel , MecanumDrive.PARAMS.maxAngVel),
+                        Robot.getAccelerationConstraint(-25, 25))
                 .build();
         back1 = drive.actionBuilder(new Pose2d(-58, -9, Math.toRadians(180)))
                 .setReversed(true)

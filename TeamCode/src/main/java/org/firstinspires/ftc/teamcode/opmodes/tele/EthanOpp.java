@@ -11,7 +11,6 @@ import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -47,7 +46,7 @@ public class EthanOpp extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
-    ButtonReader droneButton1, intakeToggle, presetMacro, slidesLower, flipRotator, tiltRotator, slideDown, slideUp, lala;
+    ButtonReader droneButton1, intakeToggle, presetMacro, slidesLower, flipRotator, tiltRotator, slideDown, slideUp, lala, intakePos;
     TriggerReader intakeUp_rotateLeft, intakeDown_rotateRight;
     double ninja = 1;
     double ninjaStrafe = 1;
@@ -56,8 +55,6 @@ public class EthanOpp extends EnhancedOpMode
     ElapsedTime extakeTimer = new ElapsedTime();
     Intake.SweeperState[] sweeperPositions;
     Slides.SlideState[] slideStates;
-
-    Servo purplePlacer; // 0.173 down, 0.19 up
     List<Deposit.RotateState> rotateStates;
     PresetPackage activePreset = new PresetPackage(Slides.SlideState.R1, Deposit.RotateState.PLUS_NINETY, Deposit.WristState.HOVER);
     boolean isHang = false;
@@ -92,10 +89,6 @@ public class EthanOpp extends EnhancedOpMode
                 if ((reader.stateJustChanged() && (!slides.getState().equals(Slides.SlideState.GROUND))) || presetMacro.stateJustChanged()) {
                     isChanged = true;
                 }
-            }
-
-            if (lala.wasJustPressed()) {
-                purplePlacer.setPosition(purple);
             }
 
             if (driveType.equals(DriveType.NORMAL)) {
@@ -133,10 +126,10 @@ public class EthanOpp extends EnhancedOpMode
                 driveType = DriveType.NORMAL;
             }
 
-            if (gamepad2.left_trigger > 0.5 && hangWait.seconds() > 90) {
+            if (gamepad2.left_trigger > 0.5) {
                 hang.setPower(-1);
                 isHang = true;
-            } else if (gamepad2.right_trigger > 0.5 && hangWait.seconds() > 90) {
+            } else if (gamepad2.right_trigger > 0.5) {
                 hang.setPower(1);
                 isHang = false;
             } else {
@@ -281,6 +274,13 @@ public class EthanOpp extends EnhancedOpMode
                 intake.setState(Intake.ConveyorState.EXTAKE);
             }
 
+           if (intakePos.wasJustPressed()) {
+               if (intake.getState(Intake.PositionState.class).equals(Intake.PositionState.MID)) {
+                   intake.setState(Intake.PositionState.DOWN);
+               } else {
+                   intake.setState(Intake.PositionState.MID);
+               }
+           }
 
             if (slideUp.wasJustPressed() && slidesIndex < slideStates.length - 1) {
                 slidesIndex++;
@@ -336,7 +336,6 @@ public class EthanOpp extends EnhancedOpMode
         this.setLoopTimes(1);
         robot = Robot.getInstance();
         hang = hardwareMap.get(DcMotorEx.class, "hang");
-        purplePlacer = hardwareMap.get(Servo.class, "purplePlacer");
         scheduler = new TaskScheduler();
         actions = RobotActions.getInstance();
 
@@ -379,7 +378,8 @@ public class EthanOpp extends EnhancedOpMode
                 flipRotator = new ToggleButtonReader(g1, GamepadKeys.Button.A),
                 slideDown = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_DOWN),
                 slideUp = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_UP),
-                lala = new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                lala = new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_STICK_BUTTON),
+                intakePos = new ToggleButtonReader(g2, GamepadKeys.Button.A)
         };
 
         sweeperPositions = new Intake.SweeperState[]{

@@ -137,6 +137,7 @@ public class closeRed extends EnhancedOpMode {
         deposit.setState(Deposit.RotateState.ZERO);
         deposit.setState(Deposit.ClawState.CLOSED1);
 
+        intake.setState(Intake.PositionState.RAISED);
 
 
 

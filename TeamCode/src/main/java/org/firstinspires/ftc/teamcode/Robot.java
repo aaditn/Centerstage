@@ -6,10 +6,16 @@ import android.util.Log;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.AccelConstraint;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.Rotation2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,7 +26,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.LynxModuleImuType;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -56,6 +61,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Config
@@ -88,7 +94,7 @@ public class Robot extends MecanumDrive
     public Slides slides;
     public Deposit deposit;
     public Intake intake;
-    public Servo purplePlacer;
+
 
     public DroneLauncher droneLauncher;
     OpenCvWebcam camera;
@@ -157,7 +163,6 @@ public class Robot extends MecanumDrive
         intake=new Intake(hardwareMap);
         droneLauncher = new DroneLauncher(hardwareMap);
         hang = hardwareMap.get(DcMotor.class, "hang");
-        purplePlacer = hardwareMap.get(Servo.class, "purplePlacer");
 
 
         if(!Context.noHwInit)
@@ -642,5 +647,15 @@ public class Robot extends MecanumDrive
             return rightBack.getCurrent(CurrentUnit.AMPS);
         }
         return 0;
+    }
+    public static VelConstraint getVelocityConstraint(double maxVel, double maxAngularVel) {
+        return new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(maxVel),
+                new AngularVelConstraint(maxAngularVel)
+        ));
+    }
+
+    public static AccelConstraint getAccelerationConstraint(double minAccel, double maxAccel) {
+        return new ProfileAccelConstraint(minAccel, maxAccel);
     }
 }

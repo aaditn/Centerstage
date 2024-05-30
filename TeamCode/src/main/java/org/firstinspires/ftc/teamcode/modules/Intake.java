@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.modules.moduleUtil.ModuleState;
 @Config
 public class Intake extends Module {
     DcMotorEx intake;
-    Servo  anglerRight, sweeperLeft, sweeperRight;
+    Servo  anglerRight, anglerLeft, sweeperLeft, sweeperRight;
     CRServo conveyorLeft, conveyorRight;
     public ColorRangeSensor cs1, cs2;
     public static boolean telemetryToggle=false;
@@ -32,7 +32,7 @@ public class Intake extends Module {
     {
         RAISED, MID, DOWN, AUTO,AUTO2;
     }
-    public static double POSITION_RAISED=0,  POSITION_MID=0.13, POSITION_DOWN=0.28, AUTO=POSITION_DOWN,AUTO2 = .24;
+    public static double POSITION_RAISED=0,  POSITION_MID=0.25, POSITION_DOWN=0.38, AUTO=POSITION_DOWN,AUTO2 = .036;
     public static double[] positionValues={POSITION_RAISED, POSITION_MID, POSITION_DOWN, AUTO,AUTO2};
 
 
@@ -82,6 +82,7 @@ public class Intake extends Module {
 
         anglerRight = hardwareMap.get(Servo.class, "anglerRight");
         anglerRight.setDirection(Servo.Direction.REVERSE);
+        anglerLeft = hardwareMap.get(Servo.class, "anglerLeft");
 
         cs1 = hardwareMap.get(ColorRangeSensor.class, "cs1");
         cs2 = hardwareMap.get(ColorRangeSensor.class, "cs2");
@@ -201,6 +202,7 @@ public class Intake extends Module {
         intake.setPower(currentPower);
 
         anglerRight.setPosition(currentPosition);
+        anglerLeft.setPosition(currentPosition);
 if(getState(SweeperState.class).equals(SweeperState.INIT)){
 
     sweeperLeft.setPosition(sweeperPos+initOffset);

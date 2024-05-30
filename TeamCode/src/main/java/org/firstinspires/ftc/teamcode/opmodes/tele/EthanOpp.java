@@ -46,7 +46,7 @@ public class EthanOpp extends EnhancedOpMode
     Gamepad.RumbleEffect customRumbleEffect0;
     Gamepad.RumbleEffect customRumbleEffect1;
     KeyReader[] keyReaders;
-    ButtonReader droneButton1, intakeToggle, presetMacro, slidesLower, flipRotator, tiltRotator, slideDown, slideUp, lala, intakePos;
+    ButtonReader droneButton1, intakeToggle, presetMacro, slidesLower, flipRotator, tiltRotator, slideDown, slideUp, lala, intakePos, intakeOff;
     TriggerReader intakeUp_rotateLeft, intakeDown_rotateRight;
     double ninja = 1;
     double ninjaStrafe = 1;
@@ -232,7 +232,7 @@ public class EthanOpp extends EnhancedOpMode
                     intake.setState(Intake.PowerState.OFF);
                 }
             }
-            if (gamepad2.touchpad && !lastTouchpad) {
+            if (/*gamepad2.touchpad*/ intakeOff.wasJustPressed() && !lastTouchpad) {
                 if (touchpadVal) {
                     intake.setState(Intake.PowerState.OFF);
                     intake.setState(Intake.ConveyorState.OFF);
@@ -240,26 +240,23 @@ public class EthanOpp extends EnhancedOpMode
                 lastTouchpad = true;
                 touchpadVal = !touchpadVal;
             } else if (lastTouchpad) {
-                lastTouchpad = gamepad2.touchpad;
+                lastTouchpad = intakeOff.wasJustPressed();//gamepad2.touchpad;
             }
 
            if (intake.isUnderCurrent(20)) {
                 if (!touchpadVal) {
-                    if (Math.abs(gamepad2.right_stick_x + gamepad2.right_stick_y) > 0.2) {
+                    if (Math.abs(gamepad2.right_stick_x + gamepad2.right_stick_y) > 0.1) {
                         boolean isUp = -Math.signum(gamepad2.right_stick_y) > 0;
-                        boolean isRight = Math.signum(gamepad2.right_stick_x) > 0;
-                        if (isUp && isRight) { // quadrant 1
+                        if (isUp) { // no more quadrants said alex
                             intake.setState(Intake.PowerState.INTAKE);
-                            intake.setState(Intake.ConveyorState.INTAKE);
-                        } else if (!isUp && isRight) { // quadrant 4
-                            intake.setState(Intake.PowerState.EXTAKE);
                             intake.setState(Intake.ConveyorState.INTAKE);
                         } else {
                             intake.setState(Intake.PowerState.EXTAKE);
                             intake.setState(Intake.ConveyorState.EXTAKE);
                         }
                     } else {
-                        intake.setState(Intake.PowerState.INTAKE);
+//                        intake.setState(Intake.PowerState.INTAKE);
+                        intake.setState(Intake.PowerState.OFF);
                         intake.setState(Intake.ConveyorState.INTAKE);
                     }
                 } else {
@@ -370,8 +367,8 @@ public class EthanOpp extends EnhancedOpMode
         keyReaders = new KeyReader[]{
                 droneButton1 = new ToggleButtonReader(g1, GamepadKeys.Button.DPAD_LEFT),
                 intakeToggle = new ToggleButtonReader(g1, GamepadKeys.Button.A),
-                intakeDown_rotateRight = new TriggerReader(g1, GamepadKeys.Trigger.RIGHT_TRIGGER),
-                intakeUp_rotateLeft = new TriggerReader(g1, GamepadKeys.Trigger.LEFT_TRIGGER),
+                intakeDown_rotateRight = new TriggerReader(g1, GamepadKeys.Trigger.LEFT_TRIGGER),
+                intakeUp_rotateLeft = new TriggerReader(g1, GamepadKeys.Trigger.RIGHT_TRIGGER),
                 presetMacro = new ToggleButtonReader(g1, GamepadKeys.Button.RIGHT_BUMPER),
                 slidesLower = new ToggleButtonReader(g1, GamepadKeys.Button.LEFT_BUMPER),
                 tiltRotator = new ToggleButtonReader(g1, GamepadKeys.Button.B),
@@ -379,7 +376,8 @@ public class EthanOpp extends EnhancedOpMode
                 slideDown = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_DOWN),
                 slideUp = new ToggleButtonReader(g2, GamepadKeys.Button.DPAD_UP),
                 lala = new ToggleButtonReader(g2, GamepadKeys.Button.RIGHT_STICK_BUTTON),
-                intakePos = new ToggleButtonReader(g2, GamepadKeys.Button.A)
+                intakePos = new ToggleButtonReader(g2, GamepadKeys.Button.A),
+                intakeOff = new ToggleButtonReader(g2, GamepadKeys.Button.X)
         };
 
         sweeperPositions = new Intake.SweeperState[]{

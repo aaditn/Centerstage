@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -65,7 +66,7 @@ import java.util.List;
 @Config
 public class MecanumDrive {
     public static boolean isBusy = false;
-
+    FtcDashboard dash;
     public TimeTrajectory timeTrajectory;
     public DisplacementTrajectory displacementTrajectory;
     public List<TimeTrajectory> currentTrajList;
@@ -254,6 +255,7 @@ public class MecanumDrive {
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
+        dash = FtcDashboard.getInstance();
 
         // TODO: make sure your config has motors with these names (or change them)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
@@ -586,6 +588,8 @@ public class MecanumDrive {
             c.strokePolyline(xPoints, yPoints);
 
             RobotLog.e("Loop times: " + (Actions.now() - time));
+
+            dash.sendTelemetryPacket(p);
 
             return true;
         }

@@ -28,6 +28,13 @@ public class Intake extends Module {
     public static double[] powerValues={POWER_INTAKE_AUTO, POWER_INTAKE, POWER_EXTAKE, POWER_OFF, SLOW};
 
 
+    public enum PurpleState implements ModuleState
+    {
+        ZERO, PURPLE;
+    }
+    public static double ZERO = 0, PURPLE = 300;
+    public static double[] purpleValues={ZERO, PURPLE};
+
     public enum PositionState implements ModuleState
     {
         RAISED, MID, DOWN, AUTO,AUTO2;
@@ -54,7 +61,7 @@ public class Intake extends Module {
             SWEEPER_FOUR,SWEEPER_FIVE,SWEEPER_SIX,SWEEPER_SEVEN,SWEEPER_EIGHT};
 
 
-    double currentPower, currentPosition, conveyorLeftPower,conveyorRightPower, conveyorPower, sweeperPos;
+    double currentPower, currentPosition, conveyorLeftPower,conveyorRightPower, conveyorPower, sweeperPos, purplePosition;
     int s1Alpha = 1000, s1Dist = 75, s2Alpha = 2000, s2Dist = 75;
     public static double initOffset = 0.01;
     PowerState pwstate;
@@ -200,7 +207,6 @@ public class Intake extends Module {
     protected void write()
     {
         intake.setPower(currentPower);
-
         anglerRight.setPosition(currentPosition);
         anglerLeft.setPosition(currentPosition);
 if(getState(SweeperState.class).equals(SweeperState.INIT)){
@@ -225,6 +231,7 @@ else {
         conveyorPower=converter.getOutput(getState(ConveyorState.class));
         sweeperPos=converter.getOutput(getState(SweeperState.class));
         currentPosition=converter.getOutput(getState(PositionState.class));
+
     }
 
     @Override

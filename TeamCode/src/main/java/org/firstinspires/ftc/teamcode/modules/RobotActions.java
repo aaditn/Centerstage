@@ -45,8 +45,8 @@ public class RobotActions
 
     public List<Task> lowerIntake(double drop_x , double sweep_x,int cycle, boolean lmao)
     {
-        Intake.SweeperState sweep1 = cycle==0?Intake.SweeperState.ONE_SWEEP: cycle==1?Intake.SweeperState.THREE_SWEEP: cycle==2? Intake.SweeperState.FIVE_SWEEP: Intake.SweeperState.SEVEN_SWEEP;
-        Intake.SweeperState sweep2 = cycle==0?Intake.SweeperState.ZERO: cycle==1?Intake.SweeperState.TWO_SWEEP: cycle==2?Intake.SweeperState.FOUR_SWEEP: Intake.SweeperState.SIX_SWEEP;
+        Intake.SweeperState sweep1 = cycle==1?Intake.SweeperState.ONE_SWEEP: cycle==2?Intake.SweeperState.THREE_SWEEP: cycle==3? Intake.SweeperState.FIVE_SWEEP: Intake.SweeperState.SEVEN_SWEEP;
+        Intake.SweeperState sweep2 = cycle==1?Intake.SweeperState.TWO_SWEEP: cycle==2?Intake.SweeperState.FOUR_SWEEP: cycle==3?Intake.SweeperState.SIX_SWEEP: Intake.SweeperState.EIGHT_SWEEP;
 
         if (cycle == 2) {
             return Builder.create()
@@ -70,7 +70,7 @@ public class RobotActions
 
                  */
                 .await(() -> robot.pose.position.x < sweep_x)
-                .delay(700)
+                .delay(600)
                 .moduleAction(intake, sweep2)
                 .delay(700)
                 .moduleAction(intake, sweep1)
@@ -89,9 +89,9 @@ public class RobotActions
         return Builder.create()
                 .executeCode(() -> deposit.setState(Deposit.ClawState.CLOSED1))
                 .delay((long) y)
-                .executeCode(() -> intake.setState(Intake.PowerState.SLOW))
+                 .executeCode(() -> intake.setState(Intake.PowerState.SLOW))
                 .delay(500)
-                .executeCode(() -> intake.setState(Intake.PowerState.OFF))
+                 .executeCode(() -> intake.setState(Intake.PowerState.OFF))
 
                 .build();
     }

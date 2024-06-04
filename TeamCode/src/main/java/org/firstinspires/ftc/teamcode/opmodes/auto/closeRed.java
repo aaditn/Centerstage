@@ -38,11 +38,11 @@ public class closeRed extends EnhancedOpMode {
         return getTaskList(
                 actions.deployPurple(1100, 1100, 1100),
                 actions.autoDrop(35, -15, Slides.SlideState.R1, Deposit.RotateState.PLUS_NINETY),
-                actions.lowerIntake(0, -51.5, 1, true),
+                actions.lowerIntake(0, -48.5, 1, true),
                 actions.autoDrop(37, -23,  Slides.SlideState.R4, Deposit.RotateState.ZERO),
-                actions.lowerIntake(0, -51.5, 1, true),
+                actions.lowerIntake(0, -48.5, 2, true),
                 actions.autoDrop(37, -23,  Slides.SlideState.R4, Deposit.RotateState.ZERO),
-                actions.lowerIntake(0, -51.5, 1, true),
+                actions.lowerIntake(0, -48.5, 3, true),
                 actions.autoDrop(37, -23,  Slides.SlideState.R4, Deposit.RotateState.ZERO)
 //                actions.lowerIntake(-30, -51.5, 2, true),
 //                actions.autoDrop(46, -15, Slides.SlideState.R1, Deposit.RotateState.PLUS_NINETY)

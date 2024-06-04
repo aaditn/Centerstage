@@ -34,17 +34,17 @@ public class closeRedPath {
                 .splineToSplineHeading(new Pose2d(48, -26, Math.toRadians(180)), Math.toRadians(0))
                 .build();
         stack1 = drive.actionBuilder(new Pose2d(48, -26, Math.toRadians(180)))
-                .splineToSplineHeading(new Pose2d(20, -9, Math.toRadians(180)), Math.toRadians(180),
+                .splineToSplineHeading(new Pose2d(20, -12, Math.toRadians(180)), Math.toRadians(180),
                         Robot.getVelocityConstraint(MecanumDrive.PARAMS.maxWheelVel, MecanumDrive.PARAMS.maxAngVel),
                         Robot.getAccelerationConstraint(-25, 25))
                 .lineToXSplineHeading(-58, Math.toRadians(180),
                         Robot.getVelocityConstraint(MecanumDrive.PARAMS.maxWheelVel , MecanumDrive.PARAMS.maxAngVel),
                         Robot.getAccelerationConstraint(-25, 25))
                 .build();
-        back1 = drive.actionBuilder(new Pose2d(-58, -9, Math.toRadians(180)))
+        back1 = drive.actionBuilder(new Pose2d(-58, -12, Math.toRadians(180)))
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(0, -9), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(48, -18, Math.toRadians(170)), Math.toRadians(-10))
+                .splineToConstantHeading(new Vector2d(0, -12), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(45, -22, Math.toRadians(170)), Math.toRadians(-10))
                 .build();
 
         leftTrajectories = map(
